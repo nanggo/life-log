@@ -3,25 +3,23 @@
 // feel free to remove this file.
 
 // URL of your website
-export const website = 'https://sveltekit-blog-template.vercel.app'
+export const website = 'https://blog.nanggo.net'
 
-export const firstName = 'Jordan'
-export const lastName = 'Doe'
+export const firstName = 'Jisung'
+export const lastName = 'Yoo'
 export const name = `${firstName} ${lastName}`
 
 // Used for the landing page & footer of posts
-export const avatar = 'https://picsum.photos/id/203/250/250'
-export const bio = `\
-I’m ${firstName}, a software engineer based in Canada. Lorem ipsum dolor sit amet, consectetur
-adipiscing elit. Phasellus accumsan quam at eros malesuada, id luctus lectus efficitur. Nulla
-sit amet arcu mi. Duis quis mauris malesuada, posuere orci et, pulvinar nisl. Nam malesuada
-vehicula sapien vitae sagittis.
+export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
+export const bio = `
+현실의 문제를 소프트웨어로 해결하는 것을 좋아하는 개발자입니다. 
 `
 
 // Your social usernames, empty strings won't be used.
 // For sake of the live demo, I'm using `username/repo` for github,
 // but you can replace with just your username.
-export const github = 'mattjennings/sveltekit-blog-template'
+export const github = 'nanggo'
 export const twitter = ''
-export const linkedin = ''
+export const linkedin = 'jisung-yoo'
 export const instagram = ''
+export const email = 'yamsiri@gmail.com'
