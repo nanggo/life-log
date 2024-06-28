@@ -5,9 +5,9 @@
 // URL of your website
 export const website = 'https://blog.nanggo.net'
 
-export const firstName = 'Jisung'
-export const lastName = 'Yoo'
-export const name = `${firstName} ${lastName}`
+// export const firstName = 'Jisung'
+// export const lastName = 'Yoo'
+export const name = `NANGGO`
 
 // Used for the landing page & footer of posts
 export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
