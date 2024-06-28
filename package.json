@@ -38,6 +38,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@vercel/speed-insights": "^1.0.12",
 		"clsx": "^1.2.1",
 		"date-fns": "^2.29.1",
 		"heroicons-svelte": "^0.0.1",
