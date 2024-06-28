@@ -1,10 +1,11 @@
 <script>
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
+  import { inject } from '@vercel/analytics'
   import '../app.css'
   import '../prism.css'
   import MoonIcon from 'heroicons-svelte/solid/MoonIcon.svelte'
   import SunIcon from 'heroicons-svelte/solid/SunIcon.svelte'
-  import { browser } from '$app/environment'
+  import { browser, dev } from '$app/environment'
   import { name } from '$lib/info'
   import { page } from '$app/stores'
 
@@ -17,9 +18,8 @@
     }, 0)
   }
 
-  // if (browser) {
+  inject({ mode: dev ? 'development' : 'production' })
   injectSpeedInsights()
-  // }
 </script>
 
 <div class="flex flex-col min-h-screen">
