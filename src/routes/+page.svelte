@@ -9,7 +9,7 @@
 </script>
 
 <svelte:head>
-  <title>{name}</title>
+  <title>{name}'s life log</title>
   <meta name="description" content={bio} />
 </svelte:head>
 
