@@ -12,7 +12,7 @@
 </script>
 
 <svelte:head>
-  <title>{name} | Posts</title>
+  <title>{name}'s life log | Posts</title>
 </svelte:head>
 
 <div class="flex flex-col flex-grow">

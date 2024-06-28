@@ -22,7 +22,7 @@ export async function GET({ setHeaders }) {
 
   const xml = `<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
-        <title>${name}</title>
+        <title>${name}'s life log</title>
         <link>${website}</link>
         <description>${websiteDescription}</description>
         <atom:link href="${website}/rss.xml" rel="self" type="application/rss+xml" />
