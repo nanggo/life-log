@@ -84,7 +84,7 @@
       </header>
 
       <!-- render the post -->
-      <div class="prose dark:prose-invert ">
+      <div class="prose dark:prose-invert">
         <svelte:component this={data.component} />
       </div>
     </article>
@@ -97,7 +97,7 @@
           <SocialLinks />
         </div>
         <div class="flex justify-center order-2 md:order-1 md:col-span-2">
-          <a href="/" class="inline-block rounded-full">
+          <a href="/about" class="inline-block rounded-full">
             <img
               src={avatar}
               alt={name}
@@ -105,7 +105,9 @@
             />
           </a>
         </div>
-        <p class="order-3 text-base text-zinc-600 dark:text-zinc-400">
+        <p
+          class="order-3 text-base text-zinc-600 dark:text-zinc-400 flex justify-center col-span-2"
+        >
           {bio}
         </p>
       </div>
