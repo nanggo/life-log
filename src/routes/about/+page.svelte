@@ -149,6 +149,7 @@
   }
 
   :global(.about table) {
+    margin-top: 15px;
     margin-bottom: 13px;
   }
 
