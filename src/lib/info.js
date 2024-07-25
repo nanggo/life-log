@@ -21,3 +21,7 @@ export const twitter = ''
 export const linkedin = 'jisung-yoo'
 export const instagram = ''
 export const email = 'yamsiri@gmail.com'
+
+// posts page 소개글
+export const topic = '일상 기록'
+export const detail = '주제에 제한을 두지 않고 제 일상에 대해 기록합니다.'
