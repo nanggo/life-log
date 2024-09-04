@@ -58,9 +58,6 @@ title: About NANGGO | NANGGO's LIFELOG
 #### BOS 2.0 (Bithumb Operating System) 개발(2024.01 ~ 2024.03)
 
 - Event 관리 설계 및 개발
-  - Event 목록 검색, 조회
-  - Event 상세 조회
-  - Event 등록, 수정, 삭제
 
 ## [SK C&C](https://www.skcc.co.kr)
 
@@ -108,7 +105,6 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - Minimum Guarantee 정산을 위한 로직 추가
 - 정산 결과 추가
-- PDF 다운로드 기능 추가
 
 #### Audio Book(2022.02 ~ 2022.06)
 
