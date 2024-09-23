@@ -46,6 +46,7 @@ export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: 
       readingTime: readingTime(html.structuredText).text
     }
   })
+  .filter((post) => !post.draft)
   // sort by date
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   // add references to the next/previous post
