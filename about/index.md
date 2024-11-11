@@ -38,7 +38,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | SOC(Security Operation Center) Web Console Renewal             |
 |       _tech_ | Next.js, TypeScript, Zustand, React-Query, Tailwind, Mono Repo |
 
-#### SOC(Security Operation Center) Web Console 리뉴얼 (2024.05 ~ 2024.10)
+#### SOC(Security Operation Center) Web Console (2024.05 ~ 2024.10)
 
 - Mono Repo 변환
 - Next.js 14 환경 설정
@@ -54,7 +54,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | BOS 2.0(Bithumb Operating System) |
 |       _tech_ | React.js, TypeScript, Mobx        |
 
-#### BOS 2.0 (Bithumb Operating System) 개발(2024.01 ~ 2024.03)
+#### BOS 2.0 (Bithumb Operating System) (2024.01 ~ 2024.03)
 
 - Event 관리 설계 및 개발
 
@@ -85,27 +85,27 @@ title: About NANGGO | NANGGO's LIFELOG
 
 > 카카오엔터테인먼트에 인수된 북미 웹소설 플랫폼
 
-#### Share Web 개발(2022.11 ~ 2023.03)
+#### Share Web (2022.11 ~ 2023.03)
 
 - RadishFiction [스토리](https://radishfiction.com/stories/8602), [작가](https://radishfiction.com/writers/751)를 공유할 수 있는 반응형 웹페이지 개발
 - Server Side Rendering 적용
 - Search Engine Optimization 적용
 - CI/CD 적용
 
-#### Geo Block(2023.01)
+#### Geo Block (2023.01)
 
 - 유저의 접속 국가에 따라 판매 가능 컨텐츠 관리 기능 개발
 
-#### Series Linking(2022.12)
+#### Series Linking (2022.12)
 
 - 작품의 시리즈물을 연결하여 유저에게 노출할 수 있도록 관리할 수 있는 기능 개발
 
-#### Minimum Guarantee(2022.08 ~ 2022.10)
+#### Minimum Guarantee (2022.08 ~ 2022.10)
 
 - Minimum Guarantee 정산을 위한 로직 추가
 - 정산 결과 추가
 
-#### Audio Book(2022.02 ~ 2022.06)
+#### Audio Book (2022.02 ~ 2022.06)
 
 - AudioBook 관리 프론트엔드 개발 (컨텐츠, 큐레이션, 정산)
 
@@ -118,7 +118,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | Doosan CONNECT                               |
 |       _tech_ | Vue.js, TypeScript, Google Map API, chart.js |
 
-#### Doosan CONNECT(중장비 관리 앱) Frontend 개발
+#### Doosan CONNECT(중장비 관리 앱)
 
 - 장비 상세 개발
 
@@ -131,7 +131,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | [아모레몰](https://www.amoremall.com) 개편       |
 |       _tech_ | Next.js, React.js, TypeScript, Redux, Redux-saga |
 
-#### [아모레몰](https://www.amoremall.com) Frontend 개발
+#### [아모레몰](https://www.amoremall.com)
 
 - 홈, BEST, 브랜드, 브랜드 전체보기 개발
 
@@ -144,11 +144,11 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | Stove TV, [인디게임 상점](https://indie.onstove.com) |
 |       _tech_ | Nuxt.js, Vue.js, TypeScript, Rxjs                    |
 
-#### [인디게임 상점](https://store.onstove.com) Frontend 개발(2020.08 ~ 2021.01)
+#### [인디게임 상점](https://store.onstove.com) (2020.08 ~ 2021.01)
 
 - 홈, 데모게임, 전체게임, 검색, 게임 빌드 및 검수 기능 개발
 
-#### Stove TV(Smilegate Stove Media Platform) Frontend 개발(2020.05 ~ 2020.07)
+#### Stove TV(Smilegate Stove Media Platform) (2020.05 ~ 2020.07)
 
 - 방송 설정 및 업로드 화면 개발
 
@@ -161,7 +161,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | [EDGE & NEXT](https://edgennext.com/) - 클라우드 기반 병원 정보 시스템 |
 |       _tech_ | .NETFramework, EntityFramework, MongoDB, MySQL, Ember.js, JavaScript   |
 
-#### EDGE & NEXT - 클라우드 기반 병원 정보 시스템 개발(2017.01 ~ 2020.05)
+#### EDGE & NEXT - 클라우드 기반 병원 정보 시스템 (2017.01 ~ 2020.05)
 
 - 약제 마스터 세팅 Frontend 개발
 - 오더 수행 도메인 Backend & Frontend 개발
