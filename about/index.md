@@ -4,7 +4,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 # 유지성 (NANGGO)
 
-<div align="right"><sub><i>Last updated: 2024.05.10</i></sub></div>
+<div align="right"><sub><i>Last updated: 2024.11.11</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
@@ -33,18 +33,17 @@ title: About NANGGO | NANGGO's LIFELOG
 
 |              |                                                                |
 | -----------: | -------------------------------------------------------------- |
-|   **period** | 2024.05 ~                                                      |
+|   **period** | 2024.05 ~ 2024.10                                              |
 | **position** | Lead Frontend Developer (freelance)                            |
 | **projects** | SOC(Security Operation Center) Web Console Renewal             |
 |       _tech_ | Next.js, TypeScript, Zustand, React-Query, Tailwind, Mono Repo |
 
-#### SOC(Security Operation Center) Web Console 리뉴얼 (2024.05 ~ )
+#### SOC(Security Operation Center) Web Console 리뉴얼 (2024.05 ~ 2024.10)
 
 - Mono Repo 변환
-- Next.js 14 적용
-- 구조 생성
-- 프로젝트 설정
-- 페이지 개발
+- Next.js 14 환경 설정
+- 프로젝트 구조 생성
+- 페이지 개발(모니터링, 분석설정, 공통)
 
 ## [Bithumb](https://www.bithumb.com)
 
@@ -61,12 +60,12 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## [SK C&C](https://www.skcc.co.kr)
 
-|              |                                                              |
-| -----------: | ------------------------------------------------------------ |
-|   **period** | 2023.10 ~ 2023.12                                            |
-| **position** | Frontend Developer (freelance)                               |
-| **projects** | tok.AI - Generative AI based app platform - Report Generator |
-|       _tech_ | Next.js, React.js, Redux                                     |
+|              |                                                                                                                     |
+| -----------: | ------------------------------------------------------------------------------------------------------------------- |
+|   **period** | 2023.10 ~ 2023.12                                                                                                   |
+| **position** | Frontend Developer (freelance)                                                                                      |
+| **projects** | [tok.AI](https://www.skcc.co.kr/ai-data/ai-report-automation) - Generative AI based app platform - Report Generator |
+|       _tech_ | Next.js, React.js, Redux                                                                                            |
 
 #### tok.AI - Report Generator(2023.10 ~ 2023.12)
 
@@ -145,7 +144,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | Stove TV, [인디게임 상점](https://indie.onstove.com) |
 |       _tech_ | Nuxt.js, Vue.js, TypeScript, Rxjs                    |
 
-#### [인디게임 상점](https://indie.onstove.com) Frontend 개발(2020.08 ~ 2021.01)
+#### [인디게임 상점](https://store.onstove.com) Frontend 개발(2020.08 ~ 2021.01)
 
 - 홈, 데모게임, 전체게임, 검색, 게임 빌드 및 검수 기능 개발
 
