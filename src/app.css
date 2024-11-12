@@ -20,4 +20,15 @@
   hr {
     @apply border-zinc-100 dark:border-zinc-700/25;
   }
+
+  @media print {
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+
+    body {
+      overflow: visible !important;
+    }
+  }
 }

@@ -177,4 +177,23 @@
   :global(.about h2 a:hover) {
     text-decoration: none;
   }
+
+  @media print {
+    :global(*::-webkit-scrollbar) {
+      display: none !important;
+    }
+
+    :global(*) {
+      -ms-overflow-style: none !important;
+      scrollbar-width: none !important;
+    }
+
+    :global(.about) {
+      overflow: visible !important;
+    }
+
+    :global(html, body) {
+      overflow: visible !important;
+    }
+  }
 </style>
