@@ -1,4 +1,4 @@
-import { browser } from '$app/environment'
+import { browser, dev } from '$app/environment'
 import { format } from 'date-fns'
 import { parse } from 'node-html-parser'
 import readingTime from 'reading-time/lib/reading-time.js'
@@ -46,7 +46,7 @@ export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: 
       readingTime: readingTime(html.structuredText).text
     }
   })
-  .filter((post) => !post.draft)
+  .filter((post) => dev || !post.draft)
   // sort by date
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
   // add references to the next/previous post
