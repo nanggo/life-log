@@ -9,7 +9,7 @@
   <slot slot="eyebrow" name="eyebrow" />
   <slot slot="title">{post.title}</slot>
   <div slot="description" class="prose dark:prose-invert">
-    {@html post.preview.html}
+    {@html post.preview.html ?? ''}
   </div>
   <div slot="actions">
     <div class="flex items-center text-teal-500">
