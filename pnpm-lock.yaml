@@ -20,6 +20,9 @@ importers:
       date-fns:
         specifier: ^2.29.1
         version: 2.29.1
+      github-slugger:
+        specifier: ^2.0.0
+        version: 2.0.0
       heroicons-svelte:
         specifier: ^0.0.1
         version: 0.0.1(svelte@3.54.0)(typescript@4.9.4)
@@ -776,6 +779,9 @@ packages:
 
   github-slugger@1.4.0:
     resolution: {integrity: sha512-w0dzqw/nt51xMVmlaV1+JRzN+oCa1KfcgGEWhxUG16wbdA+Xnt/yoFO8Z8x/V82ZcZ0wy6ln9QDup5avbhiDhQ==}
+
+  github-slugger@2.0.0:
+    resolution: {integrity: sha512-IaOQ9puYtjrkq7Y0Ygl9KDZnrf/aiUJYUpVf89y8kyaxbRG7Y1SrX/jaumrv81vc61+kiMempujsM3Yw7w5qcw==}
 
   glob-parent@5.1.2:
     resolution: {integrity: sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow==}
@@ -2332,6 +2338,8 @@ snapshots:
   functional-red-black-tree@1.0.1: {}
 
   github-slugger@1.4.0: {}
+
+  github-slugger@2.0.0: {}
 
   glob-parent@5.1.2:
     dependencies:

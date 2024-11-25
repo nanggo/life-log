@@ -2,11 +2,18 @@
   import { browser } from '$app/environment'
   import { onMount } from 'svelte'
   import Card from './Card.svelte'
+  import GithubSlugger from 'github-slugger'
 
   export let post
 
   let elements = []
-  let headings = post.headings
+  let headings = post.headings.map((heading) => {
+    const slugger = new GithubSlugger()
+    return {
+      ...heading,
+      slug: slugger.slug(heading.value)
+    }
+  })
 
   onMount(() => {
     updateHeadings()
@@ -17,19 +24,22 @@
   let scrollY
 
   function updateHeadings() {
-    headings = post.headings
-
     if (browser) {
       elements = headings.map((heading) => {
-        return document.getElementById(heading.id)
+        return document.getElementById(heading.slug)
       })
     }
   }
   function setActiveHeading() {
     scrollY = window.scrollY
 
-    const visibleIndex =
-      elements.findIndex((element) => element.offsetTop + element.clientHeight > scrollY) - 1
+    // 현재 스크롤 위치보다 위에 있는 마지막 요소를 찾음
+    const visibleIndex = elements.reduce((lastVisible, element, index) => {
+      if (element && element.offsetTop <= scrollY) {
+        return index
+      }
+      return lastVisible
+    }, 0)
 
     activeHeading = headings[visibleIndex]
 
@@ -46,7 +56,7 @@
   }
 </script>
 
-<svelte:window on:scroll={setActiveHeading} />
+<svelte:window on:scroll={setActiveHeading} on:hashchange={setActiveHeading} />
 
 <Card>
   <slot slot="description">
@@ -60,7 +70,9 @@
             Math.max(0, heading.depth - 1)
           }`}
         >
-          <a href={`#${heading.id}`}>{heading.value}</a>
+          <a href="#{heading.slug}">
+            {heading.value}
+          </a>
         </li>
       {/each}
     </ul>
