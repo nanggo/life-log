@@ -11,7 +11,7 @@ export const name = `NANGGO`
 
 // Used for the landing page & footer of posts
 export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
-export const bio = `현실의 문제를 소프트웨어로 해결하는 것을 좋아하는 개발자입니다.`
+export const bio = `love to write and code`
 
 // Your social usernames, empty strings won't be used.
 // For sake of the live demo, I'm using `username/repo` for github,
@@ -24,4 +24,4 @@ export const email = 'yamsiri@gmail.com'
 
 // posts page 소개글
 export const topic = '일상 기록'
-export const detail = '주제에 제한을 두지 않고 제 일상에 대해 기록합니다.'
+export const detail = '마음가는 대로 쓰는 모노로그'
