@@ -23,5 +23,5 @@ export const instagram = ''
 export const email = 'yamsiri@gmail.com'
 
 // posts page 소개글
-export const topic = '일상 기록'
-export const detail = '마음가는 대로 쓰는 모노로그'
+export const topic = 'daily snapshot'
+export const detail = '순간이 모여 이뤄지는 삶의 궤적'
