@@ -2,21 +2,21 @@
 title: About NANGGO | NANGGO's LIFELOG
 ---
 
-# 유지성 (NANGGO)
+# 유지성
 
-<div align="right"><sub><i>Last updated: 2024.11.11</i></sub></div>
+<div align="right"><sub><i>Last updated: 2025.01.21</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
-1. 문제 해결을 위해 고민하는
-2. 효율적으로 일하기 위해 노력하는
+1. 도전을 좋아하는
+2. 효율적으로 일하는
 3. 커뮤니케이션을 좋아하는
 
 **저는 `______` 조직을 선호합니다.**
 
 1. 자유로운
 2. 수평적인
-3. 정보를 투명하게 공유하는
+3. 투명한
 
 <br/>
 
