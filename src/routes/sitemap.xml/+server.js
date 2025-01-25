@@ -35,6 +35,10 @@ export async function GET({ setHeaders }) {
         <loc>${website}</loc>
         <priority>1.0</priority>
       </url>
+      <url>
+        <loc>${website}/about</loc>
+        <priority>0.8</priority>
+      </url>
 
       ${posts
         .map(
