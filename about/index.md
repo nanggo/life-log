@@ -4,7 +4,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 # 유지성
 
-<div align="right"><sub><i>Last updated: 2025.01.21</i></sub></div>
+<div align="right"><sub><i>Last updated: 2025.03.03</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
@@ -28,6 +28,20 @@ title: About NANGGO | NANGGO's LIFELOG
 | **Contact**  | <yamsiri@gmail.com>                  |
 
 # Experiences
+
+## [SK Telecom](https://www.sktelecom.com/)
+
+|              |                                                                                                         |
+| -----------: | ------------------------------------------------------------------------------------------------------- |
+|   **period** | 2025.02 ~                                                                                               |
+| **position** | Frontend Developer (freelance)                                                                          |
+| **projects** | SKT FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
+|       _tech_ | React, Redux, Redux-saga                                                                                |
+
+#### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발(2025.02 ~)
+
+- 정산 관리 개발
+- 공정 관리 개발
 
 ## [AhnLab](https://www.ahnlab.com)
 
