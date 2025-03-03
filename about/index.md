@@ -38,7 +38,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | SKT FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
 |       _tech_ | React, Redux, Redux-saga                                                                                |
 
-#### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발(2025.02 ~)
+#### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 (2025.02 ~)
 
 - 정산 관리 개발
 - 공정 관리 개발
