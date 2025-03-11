@@ -1,3 +1,5 @@
+export const prerender = false
+
 import { posts } from '$lib/data/posts'
 import { paginate } from '$lib/util'
 import { error } from '@sveltejs/kit'
