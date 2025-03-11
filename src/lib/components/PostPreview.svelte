@@ -10,9 +10,14 @@
   function handleTagClick(tag) {
     goto(`/posts?tag=${tag}`)
   }
+
+  // 안전한 URL 생성
+  function getSafeUrl(slug) {
+    return `/post/${encodeURIComponent(slug)}`
+  }
 </script>
 
-<Card href={`/post/${post.slug}`} data-sveltekit-prefetch>
+<Card href={getSafeUrl(post.slug)} data-sveltekit-prefetch>
   <slot slot="eyebrow" name="eyebrow" />
   <slot slot="title">{post.title}</slot>
   <div slot="description" class="prose dark:prose-invert">

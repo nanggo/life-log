@@ -16,6 +16,11 @@ export async function load({ params, url }) {
     filteredPosts = posts.filter((post) => post.tags && post.tags.includes(tagFilter))
   }
 
+  // 날짜순으로 정렬 (최신순)
+  filteredPosts = filteredPosts.sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  )
+
   const postsForPage = paginate(filteredPosts, { limit, page })
 
   // if page doesn't exist, 404
