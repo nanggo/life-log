@@ -3,17 +3,26 @@
   import ArrowRightIcon from './ArrowRightIcon.svelte'
   import Tags from './Tags.svelte'
   import { goto } from '$app/navigation'
+  import { createSafeSlug } from '$lib/utils/posts'
 
   export let post
 
   // 태그 클릭 시 필터링
   function handleTagClick(tag) {
-    goto(`/posts?tag=${tag}`)
+    goto(`/posts?tag=${encodeURIComponent(tag)}`)
   }
 
   // 안전한 URL 생성
   function getSafeUrl(slug) {
-    return `/post/${encodeURIComponent(slug)}`
+    if (!slug) return '/posts'
+
+    try {
+      // 유틸리티 함수를 사용하여 안전한 URL 생성
+      return `/post/${createSafeSlug(slug)}`
+    } catch (err) {
+      console.error('Error creating URL:', err)
+      return '/posts'
+    }
   }
 </script>
 

@@ -4,11 +4,12 @@
 
 import { posts } from '$lib/data/posts'
 import { website } from '$lib/info'
+import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
 // make sure this matches your post route
-const getPostUrl = (slug) => `${website}/post/${encodeURIComponent(slug)}`
+const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 
 /**
  * @type {import('@sveltejs/kit').RequestHandler}

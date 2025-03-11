@@ -1,22 +1,49 @@
 import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
+import { normalizeSlug, compareSlug } from '$lib/utils/posts'
+
+// 동적 요청 처리를 위해 prerender 비활성화
+export const prerender = false
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {
   const { slug } = params
 
-  // 정규화된 slug 비교를 위한 함수
-  const normalizeSlug = (s) => s.toLowerCase().replace(/-/g, '_').replace(/\s+/g, '_')
+  try {
+    if (!slug) {
+      throw error(404, 'Slug parameter is missing')
+    }
 
-  // 정규화된 slug로 포스트 찾기
-  const normalizedRequestSlug = normalizeSlug(slug)
-  const post = posts.find((post) => normalizeSlug(post.slug) === normalizedRequestSlug)
+    const decodedSlug = decodeURIComponent(slug)
+    const normalizedRequestSlug = normalizeSlug(decodedSlug)
 
-  if (!post) {
-    throw error(404, 'Post not found')
-  }
+    // 1. 정확한 매칭 시도
+    let post = posts.find((post) => post.slug === decodedSlug)
 
-  return {
-    post
+    // 2. 정규화된 매칭 시도
+    if (!post) {
+      post = posts.find((post) => compareSlug(post.slug, decodedSlug))
+    }
+
+    // 3. 부분 매칭 시도 (더 관대한 매칭)
+    if (!post) {
+      post = posts.find(
+        (post) =>
+          normalizeSlug(post.slug).includes(normalizedRequestSlug) ||
+          normalizedRequestSlug.includes(normalizeSlug(post.slug))
+      )
+    }
+
+    if (!post) {
+      console.error(`Post not found: ${decodedSlug}`)
+      throw error(404, `Post not found: ${decodedSlug}`)
+    }
+
+    return {
+      post
+    }
+  } catch (err) {
+    console.error(`Error loading post ${slug}:`, err)
+    throw error(404, `Post not found: ${slug}`)
   }
 }
