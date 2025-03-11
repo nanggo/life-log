@@ -5,6 +5,8 @@
   import SocialLinks from '$lib/components/SocialLinks.svelte'
   import { afterNavigate } from '$app/navigation'
   import PostDate from '$lib/components/PostDate.svelte'
+  import Tags from '$lib/components/Tags.svelte'
+  import { goto } from '$app/navigation'
 
   /** @type {import('./$types').PageData} */
   export let data
@@ -30,6 +32,11 @@
     if (canGoBack) {
       history.back()
     }
+  }
+
+  // 태그 클릭 핸들러
+  function handleTagClick(tag) {
+    goto(`/posts?tag=${tag}`)
   }
 </script>
 
@@ -81,6 +88,7 @@
           {data.post.title}
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
+        <Tags tags={data.post.tags ?? []} clickable={true} onClick={handleTagClick} />
       </header>
 
       <!-- render the post -->
