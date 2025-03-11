@@ -31,8 +31,16 @@ export async function load({ params, url }) {
   // 다음 페이지 존재 여부 계산 (필터링된 포스트 기준)
   const hasNextPage = page * limit < filteredPosts.length
 
-  // 모든 태그 수집
-  const allTags = [...new Set(posts.flatMap((post) => post.tags || []).filter(Boolean))]
+  // 모든 태그 수집 (let으로 변경하여 재할당 가능하게 함)
+  let allTags = [...new Set(posts.flatMap((post) => post.tags || []).filter(Boolean))]
+
+  // 선택된 태그가 있으면 맨 앞으로 이동
+  if (tagFilter && allTags.includes(tagFilter)) {
+    // 선택된 태그를 배열에서 제거
+    const filteredTags = allTags.filter((tag) => tag !== tagFilter)
+    // 선택된 태그를 맨 앞에 추가
+    allTags = [tagFilter, ...filteredTags]
+  }
 
   return {
     posts: postsForPage,
