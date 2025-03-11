@@ -8,12 +8,18 @@
   export let hasNextPage
   /** @type {string} */
   export let basePath = '/posts'
+  /** @type {string|null} */
+  export let tagFilter = null
+
+  $: queryParams = tagFilter ? `?tag=${tagFilter}` : ''
+  $: prevPageUrl = `${basePath}/${currentPage - 1}${queryParams}`
+  $: nextPageUrl = `${basePath}/${currentPage + 1}${queryParams}`
 </script>
 
 <div class="flex items-center justify-between pt-16 pb-8">
   {#if currentPage > 1}
     <a
-      href={`${basePath}/${currentPage - 1}`}
+      href={prevPageUrl}
       data-sveltekit-prefetch
       class="flex items-center gap-1 text-sm font-medium text-teal-500"
     >
@@ -26,7 +32,7 @@
 
   {#if hasNextPage}
     <a
-      href={`${basePath}/${currentPage + 1}`}
+      href={nextPageUrl}
       data-sveltekit-prefetch
       class="flex items-center gap-1 text-sm font-medium text-teal-500"
     >

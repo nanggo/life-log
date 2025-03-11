@@ -1,7 +1,10 @@
 ---
 title: html input에서 accept 속성 이해하기
-date: 2023-11-14 16:11:45
-category: tip
+date: 2023-11-14T16:11:45.000Z
+tags:
+  - html
+  - input
+  - accept
 thumbnail: ''
 draft: false
 ---

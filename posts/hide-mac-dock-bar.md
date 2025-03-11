@@ -1,7 +1,9 @@
 ---
 title: 맥 독바 바로 숨기기
-date: 2024-03-27 11:03:98
-category: settings
+date: 2024-03-27T11:04:38.000Z
+tags:
+  - mac
+  - dock
 thumbnail: ''
 draft: false
 ---

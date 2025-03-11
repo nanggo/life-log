@@ -1,7 +1,12 @@
 ---
 title: Controlled vs. Uncontrolled Components
-date: 2023-08-28 20:08:56
-category: react
+date: 2023-08-28T20:08:56.000Z
+tags:
+  - react
+  - form
+  - 상태관리
+  - 컴포넌트패턴
+  - frontend
 thumbnail: ''
 draft: false
 ---

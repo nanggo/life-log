@@ -1,7 +1,11 @@
 ---
 title: 보장, 그 말의 무게
-date: 2023-10-30 22:10:31
-category: life
+date: 2023-10-30T22:10:31.000Z
+tags:
+  - 소비자경험
+  - 고객서비스
+  - 약속
+  - 무신사
 thumbnail: ''
 draft: false
 ---

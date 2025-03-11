@@ -18,6 +18,22 @@ const processPostMetadata = ([filepath, post]) => {
   const html = parse(post.default.render().html)
   const preview = post.metadata.preview ? parse(post.metadata.preview) : html.querySelector('p')
 
+  // 태그 처리 로직 수정 - 배열과 문자열 모두 지원
+  let tags = []
+  if (post.metadata.tags) {
+    // 이미 배열인 경우
+    if (Array.isArray(post.metadata.tags)) {
+      tags = post.metadata.tags
+    }
+    // 문자열인 경우 (하위 호환성)
+    else if (typeof post.metadata.tags === 'string') {
+      tags = post.metadata.tags
+        .split('#')
+        .filter((tag) => tag.trim().length > 0)
+        .map((tag) => tag.trim())
+    }
+  }
+
   return {
     ...post.metadata,
     slug: filepath
@@ -30,7 +46,8 @@ const processPostMetadata = ([filepath, post]) => {
       html: preview?.toString(),
       text: preview?.structuredText ?? preview?.toString()
     },
-    readingTime: readingTime(html.structuredText).text
+    readingTime: readingTime(html.structuredText).text,
+    tags
   }
 }
 

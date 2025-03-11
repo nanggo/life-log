@@ -1,7 +1,9 @@
 ---
 title: 근황
-date: 2023-06-14 11:06:23
-category: life
+date: 2023-06-14T11:06:23.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: false
 ---

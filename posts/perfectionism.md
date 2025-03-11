@@ -1,7 +1,9 @@
 ---
 title: 완벽주의
-date: 2024-01-15 22:01:73
-category: life
+date: 2024-01-15T22:02:13.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: false
 ---

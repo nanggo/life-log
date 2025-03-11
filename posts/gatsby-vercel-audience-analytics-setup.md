@@ -1,7 +1,10 @@
 ---
 title: gatsby에 vercel audience analytics 설정하기
-date: 2023-04-12 01:04:71
-category: gatsby
+date: 2023-04-12T01:05:11.000Z
+tags:
+  - gatsby
+  - vercel
+  - analytics
 thumbnail: ''
 draft: false
 ---

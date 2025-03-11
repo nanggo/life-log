@@ -1,7 +1,9 @@
 ---
 title: 프리랜서 생활 회고
-date: 2024-02-27 17:02:28
-category: life
+date: 2024-02-27T17:02:28.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: true
 ---

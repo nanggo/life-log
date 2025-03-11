@@ -1,6 +1,9 @@
 ---
-title: '프리랜서 1년 회고'
+title: 프리랜서 1년 회고
 date: '2024-10-17'
+tags:
+  - 잡담
+  - 일상
 draft: false
 ---
 

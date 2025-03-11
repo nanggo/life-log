@@ -1,7 +1,9 @@
 ---
 title: 자존감
-date: 2024-01-08 22:01:12
-category: life
+date: 2024-01-08T22:01:12.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: false
 ---
