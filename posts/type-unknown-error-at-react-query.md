@@ -1,7 +1,10 @@
 ---
 title: react-query에서 Type "unknown" is not assignable to type 에러
-date: 2023-03-25 14:03:40
-category: troubleshoot
+date: 2023-03-25T14:03:40.000Z
+tags:
+  - react
+  - typescript
+  - error
 draft: false
 ---
 

@@ -1,7 +1,9 @@
 ---
 title: 근황2
-date: 2023-07-07 15:07:97
-category: life
+date: 2023-07-07T15:08:37.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: false
 ---

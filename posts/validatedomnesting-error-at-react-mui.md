@@ -1,7 +1,10 @@
 ---
 title: react mui에서 validateDOMNesting 에러
-date: 2023-03-25 14:03:27
-category: troubleshoot
+date: 2023-03-25T14:03:27.000Z
+tags:
+  - react
+  - mui
+  - error
 draft: false
 ---
 
@@ -26,9 +29,7 @@ function MyTableComponent() {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell component="th">
-            {/* 여기에 헤더 내용을 입력하세요 */}
-          </TableCell>
+          <TableCell component="th">{/* 여기에 헤더 내용을 입력하세요 */}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>

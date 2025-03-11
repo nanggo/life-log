@@ -1,7 +1,10 @@
 ---
 title: docker-compose 별칭 설정하기
-date: 2023-05-21 19:05:50
-category: tip
+date: 2023-05-21T19:05:50.000Z
+tags:
+  - docker
+  - docker-compose
+  - tip
 thumbnail: ''
 draft: false
 ---

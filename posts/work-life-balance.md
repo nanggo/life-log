@@ -1,7 +1,9 @@
 ---
 title: 워라벨
-date: 2024-01-21 22:01:16
-category: life
+date: 2024-01-21T22:01:16.000Z
+tags:
+  - 잡담
+  - 일상
 thumbnail: ''
 draft: false
 ---

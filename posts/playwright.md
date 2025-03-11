@@ -1,6 +1,12 @@
 ---
-title: 'playwright'
+title: playwright
 date: '2025-01-07 14:14:33'
+tags:
+  - playwright
+  - e2e
+  - 테스트자동화
+  - 웹테스트
+  - 자동화도구
 draft: false
 ---
 

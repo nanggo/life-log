@@ -1,7 +1,11 @@
 ---
 title: 깊은 복사
-date: 2023-06-15 10:06:64
-category: tip
+date: 2023-06-15T10:07:04.000Z
+tags:
+  - javascript
+  - deepcopy
+  - 객체복사
+  - 자료구조
 thumbnail: ''
 draft: false
 ---
