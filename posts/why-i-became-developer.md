@@ -1,5 +1,5 @@
 ---
-title: 개발자가 된 이유
+title: "개발자가 된 이유"
 date: '2024-11-25'
 tags:
   - 개발자경험
@@ -7,6 +7,7 @@ tags:
   - 프로그래밍
   - 자기성찰
 draft: false
+slug: "why-i-became-developer"
 ---
 
 면접에서 간혹 이런 질문을 받는다.

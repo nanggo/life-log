@@ -1,11 +1,12 @@
 ---
-title: 안녕 레디쉬
+title: "안녕 레디쉬"
 date: 2023-04-01T15:04:11.000Z
 tags:
   - 레디쉬
   - 퇴사
 draft: false
 thumbnail: ./radish.png
+slug: "index"
 ---
 
 ![radish](./radish.png)

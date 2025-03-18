@@ -1,5 +1,5 @@
 ---
-title: docker-compose 별칭 설정하기
+title: "docker-compose 별칭 설정하기"
 date: 2023-05-21T19:05:50.000Z
 tags:
   - docker
@@ -7,6 +7,7 @@ tags:
   - tip
 thumbnail: ''
 draft: false
+slug: "setting-up-alias-in-docker-compose"
 ---
 
 Oracle Cloud Infrastructure(OCI)에서 Docker를 다룰 때, 매번 `docker-compose`를 길게 입력하는 게 은근 귀찮을 때가 있다. 이럴 때 `dc`라는 alias를 설정해두면 훨씬 편하게 쓸 수 있다.

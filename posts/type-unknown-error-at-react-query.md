@@ -1,11 +1,12 @@
 ---
-title: react-query에서 Type "unknown" is not assignable to type 에러
+title: "react-query에서 Type "unknown" is not assignable to type 에러"
 date: 2023-03-25T14:03:40.000Z
 tags:
   - react
   - typescript
   - error
 draft: false
+slug: "type-unknown-error-at-react-query"
 ---
 
 `Type 'unknown' is not assignable to type` 오류는 TypeScript에서 'unknown' 타입의 값을 다른, 더 구체적인 타입의 변수나 속성에 할당하려고 할 때 일반적으로 발생한다. react-query 컨텍스트에서 이 오류는 쿼리에서 반환되는 데이터를 처리할 때 발생하며, TypeScript가 데이터의 타입을 올바르게 추론할 수 없는 경우에 발생한다.

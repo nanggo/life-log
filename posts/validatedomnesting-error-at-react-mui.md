@@ -1,11 +1,12 @@
 ---
-title: react mui에서 validateDOMNesting 에러
+title: "react mui에서 validateDOMNesting 에러"
 date: 2023-03-25T14:03:27.000Z
 tags:
   - react
   - mui
   - error
 draft: false
+slug: "validatedomnesting-error-at-react-mui"
 ---
 
 # 현상
