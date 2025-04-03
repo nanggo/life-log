@@ -2,8 +2,8 @@ import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
-// 동적 요청 처리를 위해 prerender 비활성화
-export const prerender = false
+// 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
+export const prerender = true
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load({ params }) {

@@ -4,6 +4,8 @@
  *
  * @type {import('@sveltejs/kit').PageLoad}
  */
+export const prerender = true
+
 export async function load({ data }) {
   // load the markdown file based on slug
   const component = data.post.isIndexFile
