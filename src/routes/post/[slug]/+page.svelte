@@ -1,5 +1,5 @@
 <script>
-  import { website, name, bio, avatar } from '$lib/info.js'
+  import { website, name, bio, avatar, github, twitter, linkedin } from '$lib/info.js'
   import ToC from '$lib/components/ToC.svelte'
   import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
@@ -7,6 +7,8 @@
   import PostDate from '$lib/components/PostDate.svelte'
   import Tags from '$lib/components/Tags.svelte'
   import { goto } from '$app/navigation'
+  import { generateBlogPostSchema, generatePersonSchema } from '$lib/utils/schema.js'
+  import SEO from '$lib/components/SEO.svelte'
 
   /** @type {import('./$types').PageData} */
   export let data
@@ -17,7 +19,12 @@
     data.post.title
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 
-  const url = `${website}/${data.post.slug}`
+  const url = `${website}/post/${data.post.slug}`
+
+  // SEO를 위한 구조화된 데이터 생성
+  const author = { name, avatar, github, twitter, linkedin }
+  const blogPostSchema = generateBlogPostSchema(data.post, author, website)
+  const personSchema = generatePersonSchema(author, website)
 
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination
@@ -40,6 +47,9 @@
   }
 </script>
 
+<SEO schema={blogPostSchema} />
+<SEO schema={personSchema} />
+
 <svelte:head>
   <title>{data.post.title} - {name}</title>
   <meta name="description" content={data.post.preview.text} />
@@ -47,18 +57,29 @@
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="article" />
   <meta property="og:title" content={data.post.title} />
   <meta property="og:description" content={data.post.preview.text} />
   <meta property="og:image" content={ogImage} />
+  <meta property="article:published_time" content={new Date(data.post.date).toISOString()} />
+  {#if data.post.updated}
+    <meta property="article:modified_time" content={new Date(data.post.updated).toISOString()} />
+  {/if}
+  {#if data.post.tags && data.post.tags.length > 0}
+    {#each data.post.tags as tag}
+      <meta property="article:tag" content={tag} />
+    {/each}
+  {/if}
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta property="twitter:domain" content={website} />
+  <meta property="twitter:domain" content={new URL(website).hostname} />
   <meta property="twitter:url" content={url} />
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.post.preview.text} />
   <meta name="twitter:image" content={ogImage} />
+
+  <link rel="canonical" href={url} />
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">

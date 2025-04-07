@@ -1,3 +1,9 @@
 # https://www.robotstxt.org/robotstxt.html
 User-agent: *
-Disallow:
+Allow: /
+
+# Host
+Host: https://blog.nanggo.net
+
+# Sitemaps
+Sitemap: https://blog.nanggo.net/sitemap.xml
