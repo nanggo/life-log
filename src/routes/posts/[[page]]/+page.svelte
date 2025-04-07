@@ -46,6 +46,7 @@
   <meta property="og:url" content={currentUrl} />
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={metaDescription} />
+  <meta property="og:site_name" content={name} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary" />

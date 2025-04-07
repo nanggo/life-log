@@ -19,6 +19,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:title" content={data.aboutData.title} />
   <meta property="og:description" content="About NANGGO" />
+  <meta property="og:site_name" content={name} />
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary" />

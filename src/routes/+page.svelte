@@ -24,6 +24,7 @@
   <meta property="og:title" content={title} />
   <meta property="og:description" content={bio} />
   <meta property="og:image" content={avatar} />
+  <meta property="og:site_name" content={name} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary" />

@@ -51,6 +51,7 @@
   <meta property="og:title" content={data.post.title} />
   <meta property="og:description" content={data.post.preview.text} />
   <meta property="og:image" content={ogImage} />
+  <meta property="og:site_name" content={name} />
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
