@@ -2,14 +2,52 @@
   import ArrowRightIcon from '$lib/components/ArrowRightIcon.svelte'
   import PostsList from '$lib/components/PostsList.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
-  import { avatar, bio, name } from '$lib/info.js'
+  import { avatar, bio, name, website, github, twitter, linkedin } from '$lib/info.js'
+  import { generateWebsiteSchema, generatePersonSchema } from '$lib/utils/schema.js'
+  import SEO from '$lib/components/SEO.svelte'
   /** @type {import('./$types').PageData} */
   export let data
+
+  // SEO를 위한 구조화된 데이터 생성
+  const websiteSchema = generateWebsiteSchema({
+    name: `${name}'s life log`,
+    url: website,
+    description: bio
+  })
+
+  const personSchema = generatePersonSchema(
+    {
+      name,
+      avatar,
+      github,
+      twitter,
+      linkedin
+    },
+    website
+  )
 </script>
+
+<SEO schema={websiteSchema} />
+<SEO schema={personSchema} />
 
 <svelte:head>
   <title>{name}'s life log</title>
   <meta name="description" content={bio} />
+
+  <!-- Open Graph / 소셜 미디어 -->
+  <meta property="og:title" content={`${name}'s life log`} />
+  <meta property="og:description" content={bio} />
+  <meta property="og:url" content={website} />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content={`${website}/og-image.jpg`} />
+
+  <!-- Twitter 카드 -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={`${name}'s life log`} />
+  <meta name="twitter:description" content={bio} />
+  <meta name="twitter:image" content={`${website}/og-image.jpg`} />
+
+  <link rel="canonical" href={website} />
 </svelte:head>
 
 <div class="flex flex-col flex-grow gap-8 pb-16">
@@ -21,6 +59,9 @@
           src={avatar}
           alt={name}
           class="mx-auto rounded-full w-36 h-36 ring-2 ring-zinc-200 dark:ring-zinc-700"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
         />
       </a>
       <div class="flex gap-6">

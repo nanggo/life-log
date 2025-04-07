@@ -6,7 +6,7 @@
   import MoonIcon from 'heroicons-svelte/solid/MoonIcon.svelte'
   import SunIcon from 'heroicons-svelte/solid/SunIcon.svelte'
   import { browser, dev } from '$app/environment'
-  import { name } from '$lib/info'
+  import { name, website } from '$lib/info'
   import { page } from '$app/stores'
 
   let isDarkMode = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
@@ -20,7 +20,28 @@
 
   inject({ mode: dev ? 'development' : 'production' })
   injectSpeedInsights()
+
+  // SEO를 위한 기본 메타데이터 설정
+  $: metaTitle = $page.data.title || name
+  $: metaDescription = $page.data.description || '낭고의 일상 기록 블로그'
+  $: metaImage = $page.data.image || `${website}/og-image.jpg`
+  $: canonicalUrl = $page.data.canonicalUrl || `${website}${$page.url.pathname}`
 </script>
+
+<svelte:head>
+  <title>{metaTitle}</title>
+  <meta name="description" content={metaDescription} />
+  <meta property="og:title" content={metaTitle} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:image" content={metaImage} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={metaTitle} />
+  <meta name="twitter:description" content={metaDescription} />
+  <meta name="twitter:image" content={metaImage} />
+  <link rel="canonical" href={canonicalUrl} />
+</svelte:head>
 
 <div class="flex flex-col min-h-screen">
   <div class="flex flex-col flex-grow w-full px-4 py-2">
