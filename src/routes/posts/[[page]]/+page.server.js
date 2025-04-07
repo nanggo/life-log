@@ -1,5 +1,5 @@
 // 특정 태그 조합으로는 정적 생성 가능하도록 함
-export const prerender = 'auto'
+export const prerender = false
 
 import { posts } from '$lib/data/posts'
 import { paginate } from '$lib/util'
