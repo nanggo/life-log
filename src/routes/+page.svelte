@@ -2,14 +2,36 @@
   import ArrowRightIcon from '$lib/components/ArrowRightIcon.svelte'
   import PostsList from '$lib/components/PostsList.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
-  import { avatar, bio, name } from '$lib/info.js'
+  import { avatar, bio, name, website } from '$lib/info.js'
   /** @type {import('./$types').PageData} */
   export let data
+
+  const url = website
+  const title = `${name}'s life log`
 </script>
 
 <svelte:head>
-  <title>{name}'s life log</title>
+  <title>{title}</title>
   <meta name="description" content={bio} />
+  <meta name="author" content={name} />
+
+  <!-- 표준 메타 태그 -->
+  <link rel="canonical" href={url} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={url} />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={bio} />
+  <meta property="og:image" content={avatar} />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta property="twitter:domain" content={website} />
+  <meta property="twitter:url" content={url} />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={bio} />
+  <meta name="twitter:image" content={avatar} />
 </svelte:head>
 
 <div class="flex flex-col flex-grow gap-8 pb-16">
