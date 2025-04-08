@@ -1,5 +1,5 @@
 <script>
-  import { detail, name, topic } from '$lib/info.js'
+  import { detail, name, topic, website, bio } from '$lib/info.js'
   import PostsList from '$lib/components/PostsList.svelte'
   import Pagination from '$lib/components/Pagination.svelte'
   import Tags from '$lib/components/Tags.svelte'
@@ -20,10 +20,40 @@
       goto(`/posts?tag=${tag}`)
     }
   }
+
+  // 현재 페이지 URL 생성
+  $: currentUrl = `${website}/posts${data.page > 1 ? '/' + data.page : ''}${data.tagFilter ? '?tag=' + data.tagFilter : ''}`
+
+  // 페이지 타이틀 생성
+  $: pageTitle = data.tagFilter
+    ? `${data.tagFilter} - ${name}'s life log | Posts`
+    : `${name}'s life log | Posts`
+
+  // 메타 설명 생성
+  $: metaDescription = data.tagFilter ? `${detail} - ${data.tagFilter} 관련 포스트 모음` : detail
 </script>
 
 <svelte:head>
-  <title>{name}'s life log | Posts</title>
+  <title>{pageTitle}</title>
+  <meta name="description" content={metaDescription} />
+  <meta name="author" content={name} />
+
+  <!-- 표준 메타 태그 -->
+  <link rel="canonical" href={currentUrl} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={currentUrl} />
+  <meta property="og:title" content={pageTitle} />
+  <meta property="og:description" content={metaDescription} />
+  <meta property="og:site_name" content={name} />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary" />
+  <meta property="twitter:domain" content={website} />
+  <meta property="twitter:url" content={currentUrl} />
+  <meta name="twitter:title" content={pageTitle} />
+  <meta name="twitter:description" content={metaDescription} />
 </svelte:head>
 
 <div class="flex flex-col flex-grow">
