@@ -2,8 +2,7 @@
 title: "소프트웨어 개발을 위한 실전 가이드 "Street Coder"
 date: 2023-11-28T23:11:04.000Z
 tags:
-  - 책리뷰
-  - 개발
+  - 리뷰
 thumbnail: ''
 draft: true
 slug: "street-coder"

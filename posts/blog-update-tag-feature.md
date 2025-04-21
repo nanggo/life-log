@@ -2,9 +2,7 @@
 title: '블로그 업데이트 - 태그 기능 추가'
 date: '2025-03-18 23:28:23'
 tags:
-  - 블로그
-  - 태그
-  - UI/UX
+  - frontend
 draft: false
 slug: 'blog-update-tag-feature'
 ---

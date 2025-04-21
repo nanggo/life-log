@@ -1,14 +1,10 @@
 ---
-title: "AWS ECR CannotPullContainerError 해결"
+title: 'AWS ECR CannotPullContainerError 해결'
 date: 2023-03-16T16:03:34.000Z
 tags:
-  - aws
-  - ecr
-  - docker
-  - troubleshooting
   - devops
 draft: false
-slug: "resolve-aws-ecr-cannotpullcontainererror"
+slug: 'resolve-aws-ecr-cannotpullcontainererror'
 ---
 
 # 문제 발생 및 원인

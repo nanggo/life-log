@@ -1,12 +1,11 @@
 ---
-title: "프리랜서 생활 회고"
+title: '프리랜서 생활 회고'
 date: 2024-02-27T17:02:28.000Z
 tags:
-  - 잡담
-  - 일상
+  - 회고
 thumbnail: ''
 draft: true
-slug: "freelancer-life-retrospective"
+slug: 'freelancer-life-retrospective'
 ---
 
 작년 10월부터 다시 프리랜서 생활을 시작한 후 어느덧 5개월이 지났다. 해가 바뀐 이 시점에서 프리랜서 생활에 대해서 다시 돌아보고자 한다. 프리랜서 생활의 장점은 내가 원하는 도메인과 기술 스

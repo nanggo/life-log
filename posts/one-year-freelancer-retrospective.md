@@ -1,11 +1,10 @@
 ---
-title: "프리랜서 1년 회고"
+title: '프리랜서 1년 회고'
 date: '2024-10-17'
 tags:
-  - 잡담
-  - 일상
+  - 회고
 draft: false
-slug: "one-year-freelancer-retrospective"
+slug: 'one-year-freelancer-retrospective'
 ---
 
 프리랜서 생활을 다시 시작한지 어느덧 1년이 지났다. 돌아보면 설렘과 두려움이 공존했던 그 시작점이 떠오른다. 이 글에서는 지난 1년 동안 프리랜서로 일하면서 느낀 점, 배우게 된 것들, 그리고 앞으로의 방향성을 공유하려 한다.
