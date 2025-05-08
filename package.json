@@ -9,9 +9,7 @@
 		"check": "svelte-check --tsconfig ./jsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./jsconfig.json --watch",
 		"lint": "prettier --check . && eslint --ignore-path .gitignore .",
-		"format": "prettier --write .",
-		"convert-tags": "node scripts/convert-tags.js",
-		"convert-posts": "node scripts/convert-posts.js"
+		"format": "prettier --write ."
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-auto": "^2.1.0",
