@@ -33,15 +33,19 @@ title: About NANGGO | NANGGO's LIFELOG
 
 |              |                                                                                                         |
 | -----------: | ------------------------------------------------------------------------------------------------------- |
-|   **period** | 2025.02 ~                                                                                               |
+|   **period** | 2025.02 ~ 2025. 04                                                                                      |
 | **position** | Frontend Developer (freelance)                                                                          |
 | **projects** | SKT FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
 |       _tech_ | React, Redux, Redux-saga                                                                                |
 
-#### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 (2025.02 ~)
+#### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발
 
 - 정산 관리 개발
+  - 정산 관리
+  - 단가 관리
+  - 자재 관리
 - 공정 관리 개발
+  - 2군 공정 관리
 
 ## [AhnLab](https://www.ahnlab.com)
 
@@ -52,7 +56,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | SOC(Security Operation Center) Web Console Renewal             |
 |       _tech_ | Next.js, TypeScript, Zustand, React-Query, Tailwind, Mono Repo |
 
-#### SOC(Security Operation Center) Web Console (2024.05 ~ 2024.10)
+#### SOC(Security Operation Center) Web Console
 
 - Mono Repo 변환
 - Next.js 14 환경 설정
@@ -68,7 +72,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | BOS 2.0(Bithumb Operating System) |
 |       _tech_ | React.js, TypeScript, Mobx        |
 
-#### BOS 2.0 (Bithumb Operating System) (2024.01 ~ 2024.03)
+#### BOS 2.0 (Bithumb Operating System)
 
 - Event 관리 설계 및 개발
 
@@ -81,7 +85,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | [tok.AI](https://www.skcc.co.kr/ai-data/ai-report-automation) - Generative AI based app platform - Report Generator |
 |       _tech_ | Next.js, React.js, Redux                                                                                            |
 
-#### tok.AI - Report Generator(2023.10 ~ 2023.12)
+#### tok.AI - Report Generator
 
 - 프로젝트 구조 설계 및 환경 설정
 - 공통 컴포넌트 개발
@@ -175,7 +179,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | **projects** | [EDGE & NEXT](https://edgennext.com/) - 클라우드 기반 병원 정보 시스템 |
 |       _tech_ | .NETFramework, EntityFramework, MongoDB, MySQL, Ember.js, JavaScript   |
 
-#### EDGE & NEXT - 클라우드 기반 병원 정보 시스템 (2017.01 ~ 2020.05)
+#### EDGE & NEXT - 클라우드 기반 병원 정보 시스템
 
 - 약제 마스터 세팅 Frontend 개발
 - 오더 수행 도메인 Backend & Frontend 개발
