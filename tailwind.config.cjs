@@ -211,12 +211,12 @@ module.exports = {
             color: 'var(--tw-prose-bullets)'
           },
           'li :is(ol, ul)': {
-            marginTop: theme('spacing.4'),
-            marginBottom: theme('spacing.4')
+            marginTop: theme('spacing.1'),
+            marginBottom: theme('spacing.1')
           },
           'li :is(li, p)': {
-            marginTop: theme('spacing.3'),
-            marginBottom: theme('spacing.3')
+            marginTop: theme('spacing.1'),
+            marginBottom: theme('spacing.1')
           },
 
           // Code blocks
