@@ -4,7 +4,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 # 유지성
 
-<div align="right"><sub><i>Last updated: 2025.03.03</i></sub></div>
+<div align="right"><sub><i>Last updated: 2025.04.30</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
