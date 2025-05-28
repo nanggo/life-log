@@ -4,7 +4,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 # 유지성
 
-<div align="right"><sub><i>Last updated: 2025.04.30</i></sub></div>
+<div align="right"><sub><i>Last updated: 2025.05.28</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
@@ -31,30 +31,26 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## [SK Telecom](https://www.sktelecom.com/)
 
-|              |                                                                                                         |
-| -----------: | ------------------------------------------------------------------------------------------------------- |
-|   **period** | 2025.02 ~ 2025. 04                                                                                      |
-| **position** | Frontend Developer (freelance)                                                                          |
-| **projects** | SKT FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
-|       _tech_ | React, Redux, Redux-saga                                                                                |
+|              |                                                                                                     |
+| -----------: | --------------------------------------------------------------------------------------------------- |
+|   **period** | 2025.02 ~ 2025. 04                                                                                  |
+| **position** | Frontend Developer (freelance)                                                                      |
+| **projects** | FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
+|       _tech_ | React, Redux, Redux-saga                                                                            |
 
 #### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발
 
-- 정산 관리 개발
-  - 정산 관리
-  - 단가 관리
-  - 자재 관리
-- 공정 관리 개발
-  - 2군 공정 관리
+- 정산 관리 개발 (정산, 단가, 자재 관리)
+- 공정 관리 개발 (2군 공정 관리)
 
 ## [AhnLab](https://www.ahnlab.com)
 
-|              |                                                                |
-| -----------: | -------------------------------------------------------------- |
-|   **period** | 2024.05 ~ 2024.10                                              |
-| **position** | Lead Frontend Developer (freelance)                            |
-| **projects** | SOC(Security Operation Center) Web Console Renewal             |
-|       _tech_ | Next.js, TypeScript, Zustand, React-Query, Tailwind, Mono Repo |
+|              |                                                                           |
+| -----------: | ------------------------------------------------------------------------- |
+|   **period** | 2024.05 ~ 2024.10                                                         |
+| **position** | Lead Frontend Developer (freelance)                                       |
+| **projects** | SOC(Security Operation Center) Web Console Renewal                        |
+|       _tech_ | TypeScript, Next.js(React), Zustand, React-Query, Tailwind CSS, Mono Repo |
 
 #### SOC(Security Operation Center) Web Console
 
@@ -70,7 +66,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2024.01 ~ 2024.03                 |
 | **position** | Frontend Developer (freelance)    |
 | **projects** | BOS 2.0(Bithumb Operating System) |
-|       _tech_ | React.js, TypeScript, Mobx        |
+|       _tech_ | TypeScript, React, Mobx           |
 
 #### BOS 2.0 (Bithumb Operating System)
 
@@ -83,7 +79,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2023.10 ~ 2023.12                                                                                                   |
 | **position** | Frontend Developer (freelance)                                                                                      |
 | **projects** | [tok.AI](https://www.skcc.co.kr/ai-data/ai-report-automation) - Generative AI based app platform - Report Generator |
-|       _tech_ | Next.js, React.js, Redux                                                                                            |
+|       _tech_ | Next.js(React), Redux                                                                                               |
 
 #### tok.AI - Report Generator
 
@@ -94,12 +90,12 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## [RadishFiction](https://radishfiction.com)
 
-|              |                                                                                                      |
-| -----------: | ---------------------------------------------------------------------------------------------------- |
-|   **period** | 2022.01 ~ 2023.03                                                                                    |
-| **position** | Frontend Engineer (full-time)                                                                        |
-| **projects** | Audio Book, Geo Block, Series Linking, Share Web                                                     |
-|       _tech_ | Next.js, React.js, TypeScript, React-Query, Tailwind, Material UI, AWS(EKS, ECR, CloudFront), Docker |
+|              |                                                                                             |
+| -----------: | ------------------------------------------------------------------------------------------- |
+|   **period** | 2022.01 ~ 2023.03                                                                           |
+| **position** | Frontend Engineer (full-time)                                                               |
+| **projects** | Audio Book, Geo Block, Series Linking, Share Web                                            |
+|       _tech_ | TypeScript, Next.js(React), React-Query, Tailwind CSS, Material UI, AWS(CloudFront), Docker |
 
 > 카카오엔터테인먼트에 인수된 북미 웹소설 플랫폼
 
@@ -129,12 +125,12 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## 현대두산인프라코어
 
-|              |                                              |
-| -----------: | -------------------------------------------- |
-|   **period** | 2021.09 ~ 2021.11                            |
-| **position** | Frontend Developer (freelance)               |
-| **projects** | Doosan CONNECT                               |
-|       _tech_ | Vue.js, TypeScript, Google Map API, chart.js |
+|              |                                           |
+| -----------: | ----------------------------------------- |
+|   **period** | 2021.09 ~ 2021.11                         |
+| **position** | Frontend Developer (freelance)            |
+| **projects** | Doosan CONNECT                            |
+|       _tech_ | TypeScript, Vue, Google Map API, chart.js |
 
 #### Doosan CONNECT(중장비 관리 앱)
 
@@ -142,12 +138,12 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## 아모레퍼시픽
 
-|              |                                                  |
-| -----------: | ------------------------------------------------ |
-|   **period** | 2021.02 ~ 2021.08                                |
-| **position** | Frontend Developer (freelance)                   |
-| **projects** | [아모레몰](https://www.amoremall.com) 개편       |
-|       _tech_ | Next.js, React.js, TypeScript, Redux, Redux-saga |
+|              |                                               |
+| -----------: | --------------------------------------------- |
+|   **period** | 2021.02 ~ 2021.08                             |
+| **position** | Frontend Developer (freelance)                |
+| **projects** | [아모레몰](https://www.amoremall.com) 개편    |
+|       _tech_ | TypeScript, Next.js(React), Redux, Redux-saga |
 
 #### [아모레몰](https://www.amoremall.com)
 
@@ -160,7 +156,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2020.05 ~ 2021.01                                    |
 | **position** | Frontend Developer (freelance)                       |
 | **projects** | Stove TV, [인디게임 상점](https://indie.onstove.com) |
-|       _tech_ | Nuxt.js, Vue.js, TypeScript, Rxjs                    |
+|       _tech_ | TypeScript, Nuxt.js(Vue.js), RxJS                    |
 
 #### [인디게임 상점](https://store.onstove.com) (2020.08 ~ 2021.01)
 
@@ -177,7 +173,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2016.12 ~ 2020.05                                                      |
 | **position** | Fullstack Developer (full-time)                                        |
 | **projects** | [EDGE & NEXT](https://edgennext.com/) - 클라우드 기반 병원 정보 시스템 |
-|       _tech_ | .NETFramework, EntityFramework, MongoDB, MySQL, Ember.js, JavaScript   |
+|       _tech_ | JavaScript, Ember.js, .NET Framework, Entity Framework, MongoDB, MySQL |
 
 #### EDGE & NEXT - 클라우드 기반 병원 정보 시스템
 
