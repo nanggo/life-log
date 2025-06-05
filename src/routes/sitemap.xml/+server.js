@@ -8,6 +8,23 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
+// Helper for XML escaping
+const escapeXml = (unsafe) => {
+  if (typeof unsafe !== 'string') {
+    return ''; // 또는 적절한 기본값 반환
+  }
+  return unsafe.replace(/[<>&'"']/g, (c) => {
+    switch (c) {
+      case '<': return '&lt;';
+      case '>': return '&gt;';
+      case '&': return '&amp;';
+      case '\'': return '&apos;';
+      case '"': return '&quot;';
+    }
+    return c;
+  });
+};
+
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 
@@ -57,16 +74,25 @@ export async function GET({ setHeaders }) {
       </url>
 
       ${posts
-        .map(
-          (post) => `<url>
+        .map((post) => {
+          let imageXml = '';
+          if (post.thumbnail && typeof post.thumbnail === 'string') {
+            // Construct image URL relative to the post's path
+            // post.slug is already the processed slug for the directory
+            const imageUrl = `${website}/post/${post.slug}/${post.thumbnail.replace(/^\.\//, '')}`;
+            imageXml = `
+      <image:image>
+        <image:loc>${imageUrl}</image:loc>
+        <image:caption>${escapeXml(post.title)}</image:caption>
+      </image:image>`;
+          }
+          return `<url>
             <loc>${getPostUrl(post.slug)}</loc>
-            <lastmod
-              >${safeToISOString(post.updated || post.date)}</lastmod
-            >
+            <lastmod>${safeToISOString(post.updated || post.date)}</lastmod>
             <changefreq>daily</changefreq>
-            <priority>1.0</priority>
-          </url>`
-        )
+            <priority>1.0</priority>${imageXml}
+          </url>`;
+        })
         .join('')}
     </urlset>`
 

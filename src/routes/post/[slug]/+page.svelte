@@ -47,7 +47,7 @@
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="article" />
   <meta property="og:title" content={data.post.title} />
   <meta property="og:description" content={data.post.preview.text} />
   <meta property="og:image" content={ogImage} />
@@ -60,6 +60,34 @@
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.post.preview.text} />
   <meta name="twitter:image" content={ogImage} />
+
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": data.post.title,
+      "description": data.post.preview.text,
+      "image": ogImage,
+      "datePublished": new Date(data.post.date + 'T00:00:00Z').toISOString(),
+      "dateModified": data.post.updated ? new Date(data.post.updated + 'T00:00:00Z').toISOString() : new Date(data.post.date + 'T00:00:00Z').toISOString(),
+      "author": {
+        "@type": "Person",
+        "name": name
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": name,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${website}/favicon.png`
+        }
+      },
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": url
+      }
+    })}
+  </script>
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">
