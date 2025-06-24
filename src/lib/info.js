@@ -7,7 +7,7 @@ export const website = 'https://blog.nanggo.net'
 
 // export const firstName = 'Jisung'
 // export const lastName = 'Yoo'
-export const name = `낭고네`
+export const name = `낭고넷`
 
 // Used for the landing page & footer of posts
 export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
