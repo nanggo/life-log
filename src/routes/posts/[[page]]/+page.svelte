@@ -98,13 +98,3 @@
 
   <Pagination currentPage={data.page} {hasNextPage} tagFilter={data.tagFilter} />
 </div>
-
-<style>
-  a {
-    @apply flex items-center gap-2 font-medium text-zinc-700;
-  }
-
-  :global(.dark) a {
-    @apply text-zinc-300;
-  }
-</style>
