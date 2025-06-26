@@ -55,12 +55,6 @@ export async function load({ params, url }) {
     return countDiff !== 0 ? countDiff : a.localeCompare(b)
   })
 
-  // 선택된 태그가 있으면 맨 앞으로 이동
-  if (tagFilter && allTags.includes(tagFilter)) {
-    const filteredTags = allTags.filter((tag) => tag !== tagFilter)
-    allTags = [tagFilter, ...filteredTags]
-  }
-
   return {
     posts: postsForPage,
     page,
