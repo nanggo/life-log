@@ -38,6 +38,31 @@
   function handleTagClick(tag) {
     goto(`/posts?tag=${tag}`)
   }
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url
+    },
+    headline: data.post.title,
+    image: ogImage,
+    datePublished: data.post.date,
+    author: {
+      '@type': 'Person',
+      name: name
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: name,
+      logo: {
+        '@type': 'ImageObject',
+        url: `${website}/favicon.png`
+      }
+    },
+    description: data.post.preview.text
+  }
 </script>
 
 <svelte:head>
@@ -60,6 +85,8 @@
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.post.preview.text} />
   <meta name="twitter:image" content={ogImage} />
+
+  <script type="application/ld+json">{@html JSON.stringify(jsonLd)}</script>
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">
