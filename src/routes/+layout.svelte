@@ -9,6 +9,8 @@
   import { name, description, author, website } from '$lib/info'
   import { page } from '$app/stores'
 
+  export let data
+
   let isDarkMode = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
 
   function disableTransitionsTemporarily() {
@@ -23,7 +25,7 @@
 </script>
 
 <svelte:head>
-  <title>{title}</title>
+  <title>{data.title}</title>
   <meta name="description" content={description} />
   <meta name="author" content={author} />
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
@@ -31,14 +33,14 @@
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content={new URL($page.url.pathname, website).href} />
-  <meta property="og:title" content={title} />
+  <meta property="og:title" content={data.title} />
   <meta property="og:description" content={description} />
   <meta property="og:image" content={`${website}/favicon.png`} />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="twitter:url" content={new URL($page.url.pathname, website).href} />
-  <meta property="twitter:title" content={title} />
+  <meta property="twitter:title" content={data.title} />
   <meta property="twitter:description" content={description} />
   <meta property="twitter:image" content={`${website}/favicon.png`} />
 </svelte:head>

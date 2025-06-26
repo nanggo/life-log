@@ -1,2 +1,10 @@
-// remove this if you do not want your pages to be prerendered
+import { name } from '$lib/info'
+
 export const prerender = true
+
+export const load = ({ url }) => {
+  return {
+    title: name,
+    url: url.pathname
+  }
+}
