@@ -1,6 +1,7 @@
 import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
+import { website, name, avatar } from '$lib/info.js'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -39,8 +40,40 @@ export async function load({ params }) {
       throw error(404, `Post not found: ${decodedSlug}`)
     }
 
+    const ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+      post.title
+    )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+
+    const url = `${website}/${post.slug}`
+
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      mainEntityOfPage: {
+        '@type': 'WebPage',
+        '@id': url
+      },
+      headline: post.title,
+      image: ogImage,
+      datePublished: post.date,
+      author: {
+        '@type': 'Person',
+        name: name
+      },
+      publisher: {
+        '@type': 'Organization',
+        name: name,
+        logo: {
+          '@type': 'ImageObject',
+          url: `${website}/favicon.png`
+        }
+      },
+      description: post.preview.text
+    }
+
     return {
-      post
+      post,
+      jsonLd: JSON.stringify(jsonLd)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)
