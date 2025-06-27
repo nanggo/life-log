@@ -39,10 +39,10 @@
     }
   }
 
-  $: if (selectedTag) {
-    // 선택된 태그가 변경될 때마다 맨 앞으로 스크롤
-    setTimeout(scrollToStart, 50)
-  }
+  // $: if (selectedTag) {
+  //   // 선택된 태그가 변경될 때마다 맨 앞으로 스크롤
+  //   setTimeout(scrollToStart, 50)
+  // }
 
   onMount(() => {
     if (scrollContainer) {
