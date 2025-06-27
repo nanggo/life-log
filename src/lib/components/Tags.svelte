@@ -21,40 +21,10 @@
   // 선택된 태그 버튼 참조 - 객체로 참조 저장
   let tagElements = {}
 
-  // 마우스 휠 이벤트로 가로 스크롤 처리
-  function handleWheel(event) {
-    if (scrollContainer) {
-      event.preventDefault()
-
-      // 스크롤 속도 조절 (휠 감도)
-      const scrollSpeed = 25
-      scrollContainer.scrollLeft += event.deltaY > 0 ? scrollSpeed : -scrollSpeed
-    }
-  }
-
-  // 스크롤을 맨 앞으로 이동시키는 함수
-  function scrollToStart() {
-    if (scrollContainer) {
-      scrollContainer.scrollLeft = 0
-    }
-  }
-
-  // $: if (selectedTag) {
-  //   // 선택된 태그가 변경될 때마다 맨 앞으로 스크롤
-  //   setTimeout(scrollToStart, 50)
-  // }
-
   onMount(() => {
     if (scrollContainer) {
-      // passive: false를 설정하여 preventDefault가 작동하도록 함
-      scrollContainer.addEventListener('wheel', handleWheel, { passive: false })
-
       // 초기 로드 시 맨 앞으로 스크롤
-      scrollToStart()
-
-      return () => {
-        scrollContainer.removeEventListener('wheel', handleWheel)
-      }
+      scrollContainer.scrollLeft = 0
     }
   })
 
