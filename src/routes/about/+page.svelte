@@ -13,11 +13,8 @@
     '@type': 'Person',
     name: name,
     url: website,
-    sameAs: [
-      `https://github.com/${github}`,
-      `https://linkedin.com/in/${linkedin}`
-    ],
-    jobTitle: 'Software Engineer', // Replace with your actual job title
+    sameAs: [`https://github.com/${github}`, `https://linkedin.com/in/${linkedin}`],
+    jobTitle: 'Frontend Engineer',
     description: bio,
     email: email
   }
@@ -42,7 +39,9 @@
   <meta name="twitter:title" content={data.aboutData.title} />
   <meta name="twitter:description" content="About NANGGO" />
 
-  <script type="application/ld+json">{@html JSON.stringify(jsonLd)}</script>
+  <script type="application/ld+json">
+{@html JSON.stringify(jsonLd)}
+  </script>
 </svelte:head>
 <!-- 
 <div class="max-w-2xl mx-auto lg:max-w-3xl">
