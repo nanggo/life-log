@@ -1,12 +1,26 @@
 <script>
   import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   import { afterNavigate } from '$app/navigation'
-  import { website, name } from '$lib/info.js'
+  import { website, name, bio, email, github, linkedin } from '$lib/info.js'
 
   /** @type {import('./$types').PageData} */
   export let data
 
   const url = `${website}/about`
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: name,
+    url: website,
+    sameAs: [
+      `https://github.com/${github}`,
+      `https://linkedin.com/in/${linkedin}`
+    ],
+    jobTitle: 'Software Engineer', // Replace with your actual job title
+    description: bio,
+    email: email
+  }
 </script>
 
 <svelte:head>
@@ -27,6 +41,8 @@
   <meta property="twitter:url" content={url} />
   <meta name="twitter:title" content={data.aboutData.title} />
   <meta name="twitter:description" content="About NANGGO" />
+
+  <script type="application/ld+json">{@html JSON.stringify(jsonLd)}</script>
 </svelte:head>
 <!-- 
 <div class="max-w-2xl mx-auto lg:max-w-3xl">

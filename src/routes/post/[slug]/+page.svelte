@@ -38,6 +38,7 @@
   function handleTagClick(tag) {
     goto(`/posts?tag=${tag}`)
   }
+
 </script>
 
 <svelte:head>
@@ -60,6 +61,8 @@
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.post.preview.text} />
   <meta name="twitter:image" content={ogImage} />
+
+  <script type="application/ld+json">{@html data.jsonLd}</script>
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">
