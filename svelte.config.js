@@ -20,6 +20,9 @@ const config = {
 
   kit: {
     adapter: adapter(),
+    alias: {
+      $lib: 'src/lib'
+    },
 
     // remove this if you don't want prerendering
     prerender: {

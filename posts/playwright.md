@@ -23,7 +23,6 @@ slug: 'playwright'
 큰 문제는 없었지만, 작업하면서 나를 괴롭힌 이슈가 두 가지 있었다.
 
 1. **Telegram Bot 메시지 Fetch 실패 (로컬만 실패, GitHub Actions에서는 성공)**
-
    - 로컬은 Node LTS(현재 v20.18.1)를 사용 중이었고, GitHub Actions 환경은 v18을 썼다.
    - [이 GitHub 이슈](https://github.com/nodejs/undici/issues/1248)에서 18.16.0에서 해결됐다는 댓글을 보고 수정했다.
    - 정상 동작하는 걸 확인한 뒤 `.nvmrc`에 버전을 명시했다.

@@ -12,7 +12,6 @@ export const title = '낭고넷'
 export const description = '순간이 모여 이뤄지는 삶의 궤적'
 export const author = '낭고'
 
-
 // Used for the landing page & footer of posts
 export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
 export const bio = `love to write and code`
