@@ -1,7 +1,7 @@
 // 특정 태그 조합으로는 정적 생성 가능하도록 함
 export const prerender = false
 
-import { posts } from '$lib/data/posts'
+import { allTags, posts } from '$lib/data/posts'
 import { paginate } from '$lib/util'
 import { error } from '@sveltejs/kit'
 
@@ -31,29 +31,6 @@ export async function load({ params, url }) {
 
   // 다음 페이지 존재 여부 계산 (필터링된 포스트 기준)
   const hasNextPage = page * limit < filteredPosts.length
-
-  // 모든 태그 수집 및 빈도 계산 - 한 번의 순회로 처리
-  const tagCounts = {}
-  const tagSet = new Set()
-
-  posts.forEach((post) => {
-    if (post.tags) {
-      post.tags.forEach((tag) => {
-        if (tag) {
-          tagSet.add(tag)
-          tagCounts[tag] = (tagCounts[tag] || 0) + 1
-        }
-      })
-    }
-  })
-
-  // 태그를 빈도순으로 정렬하고, 빈도가 같으면 알파벳순으로 정렬
-  let allTags = Array.from(tagSet).sort((a, b) => {
-    // 빈도 내림차순 정렬
-    const countDiff = tagCounts[b] - tagCounts[a]
-    // 빈도가 같으면 알파벳 오름차순 정렬
-    return countDiff !== 0 ? countDiff : a.localeCompare(b)
-  })
 
   return {
     posts: postsForPage,

@@ -51,15 +51,36 @@ const processPostMetadata = ([filepath, post]) => {
   }
 }
 
+// 모든 태그 수집 및 빈도 계산을 위한 변수 초기화
+const tagCounts = {}
+const tagSet = new Set()
+
 // Get all posts and add metadata
 export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: true }))
   .map(processPostMetadata)
   .filter((post) => dev || !post.draft)
   // sort by date
   .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-  // add references to the next/previous post
-  .map((post, index, allPosts) => ({
-    ...post,
-    next: allPosts[index - 1],
-    previous: allPosts[index + 1]
-  }))
+  // next/previous 참조 추가 및 태그 계산을 한 번의 순회로 처리
+  .map((post, index, allPosts) => {
+    // processPostMetadata에서 post.tags를 항상 배열로 보장하므로 추가 확인 불필요
+    post.tags.forEach((tag) => {
+      if (tag) {
+        // 유니크한 태그와 태그별 개수 집계
+        tagSet.add(tag)
+        tagCounts[tag] = (tagCounts[tag] || 0) + 1
+      }
+    })
+
+    return {
+      ...post,
+      next: allPosts[index - 1],
+      previous: allPosts[index + 1]
+    }
+  })
+
+// 태그를 빈도순으로 정렬하고, 빈도가 같으면 알파벳순으로 정렬
+export const allTags = Array.from(tagSet).sort((a, b) => {
+  const countDiff = tagCounts[b] - tagCounts[a]
+  return countDiff !== 0 ? countDiff : a.localeCompare(b)
+})
