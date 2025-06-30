@@ -49,5 +49,7 @@ Cloudflare에서 허용된 포트는 [여기](https://developers.cloudflare.com/
 ---
 
 [^1]: https://support.google.com/domains/answer/13689670
+
 [^2]: https://developers.cloudflare.com/dns/manage-dns-records/how-to/managing-dynamic-ip-addresses/
+
 [^3]: https://developers.cloudflare.com/api/operations/dns-records-for-a-zone-list-dns-records
