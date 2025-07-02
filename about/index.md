@@ -151,14 +151,14 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## 스마일게이트 스토브
 
-|              |                                                      |
-| -----------: | ---------------------------------------------------- |
-|   **period** | 2020.05 ~ 2021.01                                    |
-| **position** | Frontend Developer (freelance)                       |
-| **projects** | Stove TV, [인디게임 상점](https://indie.onstove.com) |
-|       _tech_ | TypeScript, Nuxt.js(Vue.js), RxJS                    |
+|              |                                                           |
+| -----------: | --------------------------------------------------------- |
+|   **period** | 2020.05 ~ 2021.01                                         |
+| **position** | Frontend Developer (freelance)                            |
+| **projects** | Stove TV, [인디게임 상점](https://page.onstove.com/indie) |
+|       _tech_ | TypeScript, Nuxt.js(Vue.js), RxJS                         |
 
-#### [인디게임 상점](https://store.onstove.com) (2020.08 ~ 2021.01)
+#### [인디게임 상점](https://page.onstove.com/indie) (2020.08 ~ 2021.01)
 
 - 홈, 데모게임, 전체게임, 검색, 게임 빌드 및 검수 기능 개발
 
