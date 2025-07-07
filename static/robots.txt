@@ -2,5 +2,16 @@
 User-agent: *
 Allow: /
 
-# Sitemap 위치 지정
+# Disallow specific paths for better crawling efficiency
+Disallow: /api/
+Disallow: /_app/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /static/fonts/
+Disallow: /favicon.ico
+
+# Crawl-delay for politeness
+Crawl-delay: 1
+
+# Sitemap locations
 Sitemap: https://blog.nanggo.net/sitemap.xml
