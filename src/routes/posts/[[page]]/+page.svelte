@@ -1,7 +1,6 @@
 <script>
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
-  import { goto } from '$app/navigation'
   import { detail, name, topic, website, bio } from '$lib/info.js'
   import PostsList from '$lib/components/PostsList.svelte'
   import Pagination from '$lib/components/Pagination.svelte'
@@ -10,6 +9,7 @@
     postsMetadata, 
     allTags, 
     isLoading, 
+    error,
     selectedTag, 
     currentPage,
     paginatedPosts,
@@ -24,10 +24,14 @@
   /** @type {import('./$types').PageData} */
   export let data
 
-  // 초기 데이터 설정
-  $: if (data.posts) {
+  // 초기화 상태 추적
+  let isInitialized = false
+
+  // 초기 데이터 설정 (한 번만 실행)
+  $: if (data.posts && !isInitialized) {
     postsMetadata.set(data.posts)
     allTags.set(data.allTags)
+    isInitialized = true
     
     // URL 파라미터에서 태그 및 페이지 정보 읽기
     const urlTag = $page.url.searchParams.get('tag')
@@ -50,23 +54,26 @@
     loadPostsMetadata()
   })
 
-  // 태그 클릭 이벤트 핸들러 (즉시 반응)
+  // 태그 클릭 이벤트 핸들러 (즉시 반응, 서버 요청 없이)
   function handleTagClick(tag) {
     if ($selectedTag === tag) {
       clearTagFilter()
-      goto('/posts', { replaceState: false })
+      const newUrl = '/posts'
+      window.history.pushState({}, '', newUrl)
     } else {
       setTagFilter(tag)
-      goto(`/posts?tag=${tag}`, { replaceState: false })
+      const newUrl = `/posts?tag=${tag}`
+      window.history.pushState({}, '', newUrl)
     }
   }
 
-  // 페이지 변경 핸들러
+  // 페이지 변경 핸들러 (서버 요청 없이)
   function handlePageChange(newPage) {
     setPage(newPage)
     const url = newPage > 1 ? `/posts/${newPage}` : '/posts'
     const searchParams = $selectedTag ? `?tag=${$selectedTag}` : ''
-    goto(url + searchParams, { replaceState: false })
+    const newUrl = url + searchParams
+    window.history.pushState({}, '', newUrl)
   }
 
   // 현재 페이지 URL 생성
@@ -123,7 +130,20 @@
     </div>
   {/if}
 
-  {#if $isLoading}
+  {#if $error}
+    <div class="mt-16 sm:mt-20 flex flex-col items-center gap-4">
+      <div class="text-red-500 dark:text-red-400 text-center">
+        <p class="text-lg font-semibold">데이터를 불러오는 중 오류가 발생했습니다.</p>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">{$error}</p>
+      </div>
+      <button 
+        on:click={() => { error.set(null); loadPostsMetadata(); }}
+        class="px-4 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/30 transition-colors"
+      >
+        다시 시도
+      </button>
+    </div>
+  {:else if $isLoading}
     <div class="mt-16 sm:mt-20 flex justify-center">
       <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
     </div>

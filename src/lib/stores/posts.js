@@ -53,12 +53,16 @@ export const hasNextPage = derived(
   ([$currentPage, $totalPages]) => $currentPage < $totalPages
 )
 
+// 로딩 상태 추적 (중복 요청 방지)
+let isLoadingRequest = false
+
 /**
  * 포스트 메타데이터를 서버에서 로드
  */
 export async function loadPostsMetadata() {
-  if (!browser) return
+  if (!browser || isLoadingRequest) return
   
+  isLoadingRequest = true
   isLoading.set(true)
   error.set(null)
   
@@ -77,6 +81,7 @@ export async function loadPostsMetadata() {
     error.set(err.message)
   } finally {
     isLoading.set(false)
+    isLoadingRequest = false
   }
 }
 
