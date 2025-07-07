@@ -1,36 +1,91 @@
 <script>
+  import { onMount } from 'svelte'
+  import { page } from '$app/stores'
   import { detail, name, topic, website, bio } from '$lib/info.js'
   import PostsList from '$lib/components/PostsList.svelte'
   import Pagination from '$lib/components/Pagination.svelte'
   import Tags from '$lib/components/Tags.svelte'
-  import { goto } from '$app/navigation'
+  import { 
+    postsMetadata, 
+    allTags, 
+    isLoading, 
+    error,
+    selectedTag, 
+    currentPage,
+    paginatedPosts,
+    hasNextPage,
+    totalPages,
+    loadPostsMetadata,
+    setTagFilter,
+    clearTagFilter,
+    setPage
+  } from '$lib/stores/posts.js'
 
   /** @type {import('./$types').PageData} */
   export let data
 
-  // 서버에서 계산한 hasNextPage 사용
-  $: hasNextPage = data.hasNextPage
+  // 초기화 상태 추적
+  let isInitialized = false
 
-  // 태그 클릭 이벤트 핸들러
-  function handleTagClick(tag) {
-    // 이미 선택된 태그를 다시 클릭하면 필터 해제
-    if (data.tagFilter === tag) {
-      goto('/posts')
-    } else {
-      goto(`/posts?tag=${tag}`)
+  // 초기 데이터 설정 (한 번만 실행)
+  $: if (data.posts && !isInitialized) {
+    postsMetadata.set(data.posts)
+    allTags.set(data.allTags)
+    isInitialized = true
+    
+    // URL 파라미터에서 태그 및 페이지 정보 읽기
+    const urlTag = $page.url.searchParams.get('tag')
+    const urlPage = parseInt($page.params.page || '1')
+    
+    if (urlTag && urlTag !== $selectedTag) {
+      setTagFilter(urlTag)
+    } else if (!urlTag && $selectedTag) {
+      clearTagFilter()
+    }
+    
+    if (urlPage !== $currentPage) {
+      setPage(urlPage)
     }
   }
 
+  // 클라이언트 사이드에서 메타데이터 로드 (초기 로드 이후 캐싱)
+  onMount(() => {
+    // 브라우저에서 최신 메타데이터 확인
+    loadPostsMetadata()
+  })
+
+  // 태그 클릭 이벤트 핸들러 (즉시 반응, 서버 요청 없이)
+  function handleTagClick(tag) {
+    if ($selectedTag === tag) {
+      clearTagFilter()
+      const newUrl = '/posts'
+      window.history.pushState({}, '', newUrl)
+    } else {
+      setTagFilter(tag)
+      const newUrl = `/posts?tag=${tag}`
+      window.history.pushState({}, '', newUrl)
+    }
+  }
+
+  // 페이지 변경 핸들러 (서버 요청 없이)
+  function handlePageChange(newPage) {
+    setPage(newPage)
+    const url = newPage > 1 ? `/posts/${newPage}` : '/posts'
+    const searchParams = $selectedTag ? `?tag=${$selectedTag}` : ''
+    const newUrl = url + searchParams
+    window.history.pushState({}, '', newUrl)
+  }
+
   // 현재 페이지 URL 생성
-  $: currentUrl = `${website}/posts${data.page > 1 ? '/' + data.page : ''}${data.tagFilter ? '?tag=' + data.tagFilter : ''}`
+  $: currentUrl = `${website}/posts${$currentPage > 1 ? '/' + $currentPage : ''}${$selectedTag ? '?tag=' + $selectedTag : ''}`
 
   // 페이지 타이틀 생성
-  $: pageTitle = data.tagFilter
-    ? `${data.tagFilter} - ${name}'s life log | Posts`
+  $: pageTitle = $selectedTag
+    ? `${$selectedTag} - ${name}'s life log | Posts`
     : `${name}'s life log | Posts`
 
   // 메타 설명 생성
-  $: metaDescription = data.tagFilter ? `${detail} - ${data.tagFilter} 관련 포스트 모음` : detail
+  $: metaDescription = $selectedTag ? `${detail} - ${$selectedTag} 관련 포스트 모음` : detail
 </script>
 
 <svelte:head>
@@ -64,37 +119,44 @@
     <p class="mt-6">{detail}</p>
   </header>
 
-  {#if data.allTags && data.allTags.length > 0}
+  {#if $allTags && $allTags.length > 0}
     <div class="mt-6">
-      <!-- <h2 class="text-lg font-semibold mb-2">태그로 필터링</h2> -->
       <Tags
-        tags={data.allTags}
+        tags={$allTags}
         clickable={true}
-        selectedTag={data.tagFilter}
+        selectedTag={$selectedTag}
         onClick={handleTagClick}
       />
     </div>
   {/if}
 
-  <!-- 
-  {#if data.tagFilter}
-    <div class="mt-4 flex items-center">
-      <span class="text-zinc-700 dark:text-zinc-300"
-        >태그 필터: <span class="font-medium">#{data.tagFilter}</span></span
+  {#if $error}
+    <div class="mt-16 sm:mt-20 flex flex-col items-center gap-4">
+      <div class="text-red-500 dark:text-red-400 text-center">
+        <p class="text-lg font-semibold">데이터를 불러오는 중 오류가 발생했습니다.</p>
+        <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">{$error}</p>
+      </div>
+      <button 
+        on:click={() => { error.set(null); loadPostsMetadata(); }}
+        class="px-4 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/30 transition-colors"
       >
-      <button
-        class="ml-2 text-sm text-teal-500 hover:text-teal-600 dark:hover:text-teal-400"
-        on:click={() => goto('/posts')}
-      >
-        초기화
+        다시 시도
       </button>
     </div>
-  {/if} 
-  -->
+  {:else if $isLoading}
+    <div class="mt-16 sm:mt-20 flex justify-center">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-500"></div>
+    </div>
+  {:else}
+    <div class="mt-16 sm:mt-20">
+      <PostsList posts={$paginatedPosts} />
+    </div>
 
-  <div class="mt-16 sm:mt-20">
-    <PostsList posts={data.posts} />
-  </div>
-
-  <Pagination currentPage={data.page} {hasNextPage} tagFilter={data.tagFilter} />
+    <Pagination 
+      currentPage={$currentPage} 
+      hasNextPage={$hasNextPage} 
+      totalPages={$totalPages}
+      onPageChange={handlePageChange}
+    />
+  {/if}
 </div>
