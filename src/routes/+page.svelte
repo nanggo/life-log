@@ -7,7 +7,7 @@
   export let data
 
   const url = website
-  const title = `${name}'s life log`
+  const title = `${name} - life log`
 </script>
 
 <svelte:head>
