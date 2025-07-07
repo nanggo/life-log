@@ -1,6 +1,19 @@
+# Build outputs
 .cache
+.svelte-kit
+build
+dist
+
+# Package files
 package.json
 package-lock.json
-public
 *.lock.yaml
 pnpm-lock.yaml
+yarn.lock
+
+# Static assets
+public
+static
+
+# Generated files
+*.generated.*
