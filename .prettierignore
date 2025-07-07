@@ -1,6 +1,22 @@
+# Build outputs
 .cache
+.svelte-kit
+build
+dist
+
+# Package files
 package.json
 package-lock.json
+*.lock.yaml
 pnpm-lock.yaml
+yarn.lock
+
+# Static assets
 public
+static
+
+# Generated files
+*.generated.*
+
+# Claude files
 .claude/

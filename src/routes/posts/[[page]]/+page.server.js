@@ -1,43 +1,30 @@
-// 태그 필터링이 있는 경우 SSR 사용 (SEO 친화적)
-export const prerender = false
+// 클라이언트 사이드에서만 태그 필터링 처리
+export const prerender = true
 
 import { allTags, posts } from '$lib/data/posts'
-import { paginate } from '$lib/util'
+import { extractPostMetadata } from '$lib/util'
 import { error } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params, url }) {
+export function load({ params }) {
   let page = params.page ? parseInt(params.page) : 1
   let limit = 10
-  const tagFilter = url.searchParams.get('tag')
+  // 태그 필터링과 페이지네이션 모두 클라이언트 사이드에서 처리
 
-  // 태그 필터링 로직
-  let filteredPosts = posts
-  if (tagFilter) {
-    filteredPosts = posts.filter((post) => post.tags && post.tags.includes(tagFilter))
-  }
+  // 모든 포스트의 메타데이터 제공 (본문 제외)
+  const postsMetadata = extractPostMetadata(posts)
 
-  // 날짜순으로 정렬 (최신순)
-  filteredPosts = filteredPosts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  )
-
-  const postsForPage = paginate(filteredPosts, { limit, page })
-
-  // if page doesn't exist, 404
-  if (postsForPage.length === 0 && page > 1) {
+  // 페이지 유효성 검사를 위한 임시 페이지네이션
+  const totalPages = Math.ceil(posts.length / limit)
+  if (page > totalPages && totalPages > 0) {
     throw error(404, 'Page not found')
   }
 
-  // 다음 페이지 존재 여부 계산 (필터링된 포스트 기준)
-  const hasNextPage = page * limit < filteredPosts.length
-
   return {
-    posts: postsForPage,
+    posts: postsMetadata,
     page,
     limit,
-    tagFilter,
     allTags,
-    hasNextPage
+    totalPosts: posts.length
   }
 }
