@@ -1,4 +1,4 @@
-// 특정 태그 조합으로는 정적 생성 가능하도록 함
+// 태그 필터링이 있는 경우 SSR 사용 (SEO 친화적)
 export const prerender = false
 
 import { allTags, posts } from '$lib/data/posts'
