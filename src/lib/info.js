@@ -14,7 +14,7 @@ export const author = '낭고'
 
 // Used for the landing page & footer of posts
 export const avatar = 'https://avatars.githubusercontent.com/u/16912219'
-export const bio = `낭고 | 개발자 | love to write and code`
+export const bio = `love to write and code`
 
 // Your social usernames, empty strings won't be used.
 // For sake of the live demo, I'm using `username/repo` for github,
