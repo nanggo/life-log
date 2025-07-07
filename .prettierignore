@@ -17,3 +17,6 @@ static
 
 # Generated files
 *.generated.*
+
+# Claude files
+.claude/
