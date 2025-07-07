@@ -10,25 +10,8 @@ Disallow: /.git/
 Disallow: /static/fonts/
 Disallow: /favicon.ico
 
-# Allow important paths
-Allow: /posts/
-Allow: /about/
-Allow: /sitemap.xml
-Allow: /rss.xml
-
-# Specific crawlers
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Slurp
-Allow: /
-
 # Crawl-delay for politeness
 Crawl-delay: 1
 
 # Sitemap locations
 Sitemap: https://blog.nanggo.net/sitemap.xml
-Sitemap: https://blog.nanggo.net/rss.xml

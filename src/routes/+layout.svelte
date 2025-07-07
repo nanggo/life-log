@@ -88,15 +88,7 @@
       url: website,
       description: description,
       inLanguage: "ko-KR",
-      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"],
-      potentialAction: {
-        "@type": "SearchAction",
-        target: {
-          "@type": "EntryPoint",
-          urlTemplate: `${website}/posts?search={search_term_string}`
-        },
-        "query-input": "required name=search_term_string"
-      }
+      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"]
     })}
   </script>
 </svelte:head>

@@ -1,7 +1,8 @@
 import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
-import { website, name, avatar } from '$lib/info.js'
+import { website, name } from '$lib/info.js'
+import { parse } from 'node-html-parser'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -38,6 +39,37 @@ export async function load({ params }) {
     if (!post) {
       console.error(`Post not found: ${decodedSlug}`)
       throw error(404, `Post not found: ${decodedSlug}`)
+    }
+
+    // Load the actual post content for SEO purposes
+    let postContent = ''
+    let wordCount = 0
+
+    try {
+      // Get all markdown files and find the matching one
+      const allPosts = import.meta.glob('/posts/**/*.md', { eager: true })
+      const postKey = Object.keys(allPosts).find((key) => {
+        const fileName = key
+          .replace(/(\/index)?\.md$/, '')
+          .split('/')
+          .pop()
+        return fileName === post.slug
+      })
+
+      if (postKey && allPosts[postKey]?.default?.render) {
+        const rendered = allPosts[postKey].default.render()
+        const html = parse(rendered.html)
+        postContent = html.structuredText || ''
+        wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
+      }
+    } catch (err) {
+      console.warn(`Could not load content for post ${post.slug}:`, err)
+    }
+
+    // Fallback to preview text if full content unavailable
+    if (!postContent) {
+      postContent = post.preview.text || ''
+      wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
     }
 
     const ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
@@ -84,10 +116,10 @@ export async function load({ params }) {
         }
       },
       description: dynamicDescription,
-      articleBody: post.content,
+      articleBody: postContent,
       url: url,
       inLanguage: 'ko-KR',
-      wordCount: post.content ? post.content.split(' ').length : 0
+      wordCount: wordCount
     }
 
     const breadcrumbLd = {

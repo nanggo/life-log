@@ -45,7 +45,7 @@ function videos() {
         // Ensure all images have proper alt tags for SEO
         if (!node.alt || node.alt.trim() === '') {
           console.warn(`Image without alt text found: ${node.url}`)
-          node.alt = 'Image'
+          node.alt = '' // Empty alt for decorative images
         }
       }
     })
