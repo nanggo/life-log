@@ -46,34 +46,80 @@ export async function load({ params }) {
 
     const url = `${website}/${post.slug}`
 
+    // Create a more SEO-friendly description
+    const dynamicDescription =
+      post.preview.text.length > 160
+        ? post.preview.text.substring(0, 157) + '...'
+        : post.preview.text
+
     const jsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'Article',
+      '@type': 'BlogPosting',
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': url
       },
       headline: post.title,
-      image: ogImage,
+      image: {
+        '@type': 'ImageObject',
+        url: ogImage,
+        width: 1200,
+        height: 630
+      },
       datePublished: post.date,
+      dateModified: post.date,
       author: {
         '@type': 'Person',
-        name: name
+        name: name,
+        url: website
       },
       publisher: {
         '@type': 'Organization',
         name: name,
         logo: {
           '@type': 'ImageObject',
-          url: `${website}/favicon.png`
+          url: `${website}/favicon.png`,
+          width: 192,
+          height: 192
         }
       },
-      description: post.preview.text
+      description: dynamicDescription,
+      articleBody: post.content,
+      url: url,
+      inLanguage: 'ko-KR',
+      wordCount: post.content ? post.content.split(' ').length : 0
+    }
+
+    const breadcrumbLd = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'Home',
+          item: website
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: 'Posts',
+          item: `${website}/posts`
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: post.title,
+          item: url
+        }
+      ]
     }
 
     return {
       post,
-      jsonLd: JSON.stringify(jsonLd)
+      dynamicDescription,
+      jsonLd: JSON.stringify(jsonLd),
+      breadcrumbLd: JSON.stringify(breadcrumbLd)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)

@@ -29,6 +29,15 @@
   <meta name="description" content={description} />
   <meta name="author" content={author} />
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
+  
+  <!-- Performance optimization hints -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="dns-prefetch" href="https://og-image-korean.vercel.app" />
+  <link rel="dns-prefetch" href="https://vercel.com" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#14b8a6" />
+  <meta name="color-scheme" content="light dark" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
@@ -43,6 +52,53 @@
   <meta property="twitter:title" content={data.title} />
   <meta property="twitter:description" content={description} />
   <meta property="twitter:image" content={`${website}/favicon.png`} />
+
+  <!-- Organization Schema -->
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      name: name,
+      url: website,
+      logo: {
+        "@type": "ImageObject",
+        url: `${website}/favicon.png`,
+        width: 192,
+        height: 192
+      },
+      description: description,
+      author: {
+        "@type": "Person",
+        name: author,
+        url: website
+      },
+      sameAs: [
+        "https://github.com/nanggo"
+      ]
+    })}
+  </script>
+
+  <!-- WebSite Schema -->
+  <script type="application/ld+json">
+    {JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      name: name,
+      alternateName: ["낭고", "낭고넷", "nanggo", "NANGGO"],
+      url: website,
+      description: description,
+      inLanguage: "ko-KR",
+      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"],
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${website}/posts?search={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    })}
+  </script>
 </svelte:head>
 
 <div class="flex flex-col min-h-screen">

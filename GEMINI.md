@@ -34,5 +34,5 @@ Here are some of the most common commands for this project:
 
 - Use `pnpm` for package management.
 - Follow the existing code style and formatting.
-- New blog posts should be created using the `npm run post` command.
 - Prefer functional programming paradigms where applicable.
+- Committing and pushing code should only be done upon request.

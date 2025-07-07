@@ -37,9 +37,16 @@ function videos() {
               muted
               playsinline
               loop
-              title="${node.alt}"
+              title="${node.alt || 'Video content'}"
+              aria-label="${node.alt || 'Video content'}"
             />
           `
+      } else {
+        // Ensure all images have proper alt tags for SEO
+        if (!node.alt || node.alt.trim() === '') {
+          console.warn(`Image without alt text found: ${node.url}`)
+          node.alt = 'Image'
+        }
       }
     })
   }
