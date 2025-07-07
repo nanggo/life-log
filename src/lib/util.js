@@ -12,3 +12,21 @@ export function paginate(data, { page = 1, limit } = {}) {
 
   return data
 }
+
+/**
+ * Extracts metadata from posts (excluding content).
+ *
+ * @param {any[]} posts
+ * @returns {any[]}
+ */
+export function extractPostMetadata(posts) {
+  return posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    tags: post.tags,
+    preview: post.preview,
+    readingTime: post.readingTime,
+    isIndexFile: post.isIndexFile
+  }))
+}

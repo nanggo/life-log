@@ -1,22 +1,15 @@
 import { json } from '@sveltejs/kit'
 import { posts, allTags } from '$lib/data/posts.js'
+import { extractPostMetadata } from '$lib/util.js'
 
 /**
  * 포스트 메타데이터 API 엔드포인트
  * 클라이언트 사이드 필터링을 위한 경량화된 데이터 제공
  */
-export async function GET() {
+export function GET() {
   try {
     // 메타데이터만 추출 (본문 제외)
-    const metadata = posts.map((post) => ({
-      slug: post.slug,
-      title: post.title,
-      date: post.date,
-      tags: post.tags,
-      preview: post.preview,
-      readingTime: post.readingTime,
-      isIndexFile: post.isIndexFile
-    }))
+    const metadata = extractPostMetadata(posts)
 
     return json({
       posts: metadata,

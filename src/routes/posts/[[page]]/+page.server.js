@@ -2,25 +2,17 @@
 export const prerender = true
 
 import { allTags, posts } from '$lib/data/posts'
-import { paginate } from '$lib/util'
+import { extractPostMetadata } from '$lib/util'
 import { error } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export function load({ params }) {
   let page = params.page ? parseInt(params.page) : 1
   let limit = 10
   // 태그 필터링과 페이지네이션 모두 클라이언트 사이드에서 처리
 
   // 모든 포스트의 메타데이터 제공 (본문 제외)
-  const postsMetadata = posts.map((post) => ({
-    slug: post.slug,
-    title: post.title,
-    date: post.date,
-    tags: post.tags,
-    preview: post.preview,
-    readingTime: post.readingTime,
-    isIndexFile: post.isIndexFile
-  }))
+  const postsMetadata = extractPostMetadata(posts)
 
   // 페이지 유효성 검사를 위한 임시 페이지네이션
   const totalPages = Math.ceil(posts.length / limit)
