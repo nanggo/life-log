@@ -15,7 +15,6 @@
     paginatedPosts,
     hasNextPage,
     totalPages,
-    loadPostsMetadata,
     setTagFilter,
     clearTagFilter,
     setPage
@@ -34,11 +33,8 @@
     isInitialized = true
   }
 
-  // 클라이언트 사이드에서 메타데이터 로드 (초기 로드 이후 캐싱)
+  // 클라이언트 사이드에서 URL 파라미터 처리
   onMount(() => {
-    // 브라우저에서 최신 메타데이터 확인
-    loadPostsMetadata()
-    
     // URL 파라미터에서 태그 및 페이지 정보 읽기 (클라이언트 사이드에서만)
     const urlTag = $page.url.searchParams.get('tag')
     const urlPage = parseInt($page.params.page || '1')
@@ -137,10 +133,10 @@
         <p class="text-sm text-zinc-600 dark:text-zinc-400 mt-2">{$error}</p>
       </div>
       <button 
-        on:click={() => { error.set(null); loadPostsMetadata(); }}
+        on:click={() => { location.reload(); }}
         class="px-4 py-2 text-sm font-medium text-teal-600 bg-teal-50 rounded-lg hover:bg-teal-100 dark:bg-teal-900/20 dark:text-teal-400 dark:hover:bg-teal-900/30 transition-colors"
       >
-        다시 시도
+        페이지 새로고침
       </button>
     </div>
   {:else if $isLoading}

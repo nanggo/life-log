@@ -23,9 +23,7 @@ export const filteredPosts = derived(
     if (!$selectedTag) {
       return $postsMetadata
     }
-    return $postsMetadata.filter(post => 
-      post.tags && post.tags.includes($selectedTag)
-    )
+    return $postsMetadata.filter((post) => post.tags && post.tags.includes($selectedTag))
   }
 )
 
@@ -61,18 +59,18 @@ let isLoadingRequest = false
  */
 export async function loadPostsMetadata() {
   if (!browser || isLoadingRequest) return
-  
+
   isLoadingRequest = true
   isLoading.set(true)
   error.set(null)
-  
+
   try {
     // 서버에서 메타데이터만 가져오기
     const response = await fetch('/api/posts-metadata')
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
-    
+
     const data = await response.json()
     postsMetadata.set(data.posts)
     allTags.set(data.tags)
@@ -112,12 +110,12 @@ export function setPage(page) {
  * 다음 페이지로 이동
  */
 export function nextPage() {
-  currentPage.update(page => page + 1)
+  currentPage.update((page) => page + 1)
 }
 
 /**
  * 이전 페이지로 이동
  */
 export function previousPage() {
-  currentPage.update(page => Math.max(1, page - 1))
+  currentPage.update((page) => Math.max(1, page - 1))
 }

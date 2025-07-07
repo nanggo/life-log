@@ -9,22 +9,30 @@ import { error } from '@sveltejs/kit'
 export async function load({ params }) {
   let page = params.page ? parseInt(params.page) : 1
   let limit = 10
-  // 태그 필터링은 클라이언트 사이드에서만 처리
+  // 태그 필터링과 페이지네이션 모두 클라이언트 사이드에서 처리
 
-  const postsForPage = paginate(posts, { limit, page })
+  // 모든 포스트의 메타데이터 제공 (본문 제외)
+  const postsMetadata = posts.map((post) => ({
+    slug: post.slug,
+    title: post.title,
+    date: post.date,
+    tags: post.tags,
+    preview: post.preview,
+    readingTime: post.readingTime,
+    isIndexFile: post.isIndexFile
+  }))
 
-  // if page doesn't exist, 404
-  if (postsForPage.length === 0 && page > 1) {
+  // 페이지 유효성 검사를 위한 임시 페이지네이션
+  const totalPages = Math.ceil(posts.length / limit)
+  if (page > totalPages && totalPages > 0) {
     throw error(404, 'Page not found')
   }
 
-  const hasNextPage = page * limit < posts.length
-
   return {
-    posts: postsForPage,
+    posts: postsMetadata,
     page,
     limit,
     allTags,
-    hasNextPage
+    totalPosts: posts.length
   }
 }

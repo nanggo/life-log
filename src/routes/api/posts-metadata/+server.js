@@ -8,7 +8,7 @@ import { posts, allTags } from '$lib/data/posts.js'
 export async function GET() {
   try {
     // 메타데이터만 추출 (본문 제외)
-    const metadata = posts.map(post => ({
+    const metadata = posts.map((post) => ({
       slug: post.slug,
       title: post.title,
       date: post.date,
@@ -26,9 +26,6 @@ export async function GET() {
     })
   } catch (error) {
     console.error('Error fetching posts metadata:', error)
-    return json(
-      { error: 'Failed to fetch posts metadata' },
-      { status: 500 }
-    )
+    return json({ error: 'Failed to fetch posts metadata' }, { status: 500 })
   }
 }
