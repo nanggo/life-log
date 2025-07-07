@@ -32,8 +32,14 @@
     postsMetadata.set(data.posts)
     allTags.set(data.allTags)
     isInitialized = true
+  }
+
+  // 클라이언트 사이드에서 메타데이터 로드 (초기 로드 이후 캐싱)
+  onMount(() => {
+    // 브라우저에서 최신 메타데이터 확인
+    loadPostsMetadata()
     
-    // URL 파라미터에서 태그 및 페이지 정보 읽기
+    // URL 파라미터에서 태그 및 페이지 정보 읽기 (클라이언트 사이드에서만)
     const urlTag = $page.url.searchParams.get('tag')
     const urlPage = parseInt($page.params.page || '1')
     
@@ -46,12 +52,6 @@
     if (urlPage !== $currentPage) {
       setPage(urlPage)
     }
-  }
-
-  // 클라이언트 사이드에서 메타데이터 로드 (초기 로드 이후 캐싱)
-  onMount(() => {
-    // 브라우저에서 최신 메타데이터 확인
-    loadPostsMetadata()
   })
 
   // 태그 클릭 이벤트 핸들러 (즉시 반응, 서버 요청 없이)
