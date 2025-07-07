@@ -2,3 +2,5 @@
 package.json
 package-lock.json
 public
+*.lock.yaml
+pnpm-lock.yaml
