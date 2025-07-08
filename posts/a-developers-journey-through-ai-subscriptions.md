@@ -7,7 +7,7 @@ tags:
 draft: false
 ---
 
-![A conceptual image representing AI subscriptions](https://private-user-images.githubusercontent.com/16912219/463460079-69f71474-7f68-4939-bb5b-c9141feae100.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTE5NTIyOTQsIm5iZiI6MTc1MTk1MTk5NCwicGF0aCI6Ii8xNjkxMjIxOS80NjM0NjAwNzktNjlmNzE0NzQtN2Y2OC00OTM5LWJiNWItYzkxNDFmZWFlMTAwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzA4VDA1MTk1NFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPWFiYzBkNzYyYTdjMTY1ODEyOTgwMzgwMzE1NGRhYjE1MmE0YjQ2MzE1MDBhYzI2N2Y2NWQ0N2E5NGQwNmUwMWImWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.42vhlVLAnxF6XKX8MBkMuWZqEB4HwWBOBOB2Sl3s0-Y)
+![A conceptual image representing AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)
 
 얼리어답터 기질 덕에 ChatGPT-4 출시 직후부터 유료 구독을 시작했다. 그 후 Claude, Cursor, Gemini까지 여러 AI 서비스를 거쳐, 현재는 Gemini와 Claude를 구독하고 있다. 처음 LLM을 접했을 때만 해도 '업그레이드된 심심이' 정도로 생각했지만, 간단한 알고리즘은 물론 실제 동작하는 코드를 짜내는 것을 보고 큰 충격을 받았다.
 
