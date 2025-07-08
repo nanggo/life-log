@@ -1,0 +1,26 @@
+---
+title: 'AI 구독 유목민의 기록: 더 나은 도구를 찾아서'
+slug: 'a-developers-journey-through-ai-subscriptions'
+date: '2025-07-08 11:46:55'
+tags:
+  - 생각
+draft: false
+---
+
+![A conceptual image representing AI subscriptions](https://private-user-images.githubusercontent.com/16912219/463460079-69f71474-7f68-4939-bb5b-c9141feae100.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NTE5NDMyMjYsIm5iZiI6MTc1MTk0MjkyNiwicGF0aCI6Ii8xNjkxMjIxOS80NjM0NjAwNzktNjlmNzE0NzQtN2Y2OC00OTM5LWJiNWItYzkxNDFmZWFlMTAwLnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTA3MDglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwNzA4VDAyNDg0NlomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTA3YTA5ODBlNTgxNWI5Zjc2ZWZjMGIxYTQ3ZjJjZjA5MDFhNzljOTVhMTE5YWMzYTM5ZTQ4ZjI4YjFlNzljOTcmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.2KC1t7DsbPC1-znICdLDHmh37zF8PArJ2F5LnZMku_Q)
+
+얼리어답터 기질 덕에 ChatGPT-4 출시 직후부터 유료 구독을 시작했다. 그 후 Claude, Cursor, Gemini까지 여러 AI 서비스를 거쳐, 현재는 Gemini와 Claude를 구독하고 있다. 처음 LLM을 접했을 때만 해도 '업그레이드된 심심이' 정도로 생각했지만, 간단한 알고리즘은 물론 실제 동작하는 코드를 짜내는 것을 보고 큰 충격을 받았다.
+
+한동안 정체되는가 싶던 AI 모델 경쟁은 DeepSeek 같은 후발주자의 등장을 기점으로 다시 불붙었다. 덕분에 사용자 입장에서는 더 나은 모델이 나올 때마다 쉽게 갈아탈 수 있는 '구독 유목민'이 되기에 좋은 환경이 만들어졌다. AI 서비스는 충성 고객에게 특별한 혜택을 주기보다 기술력으로 승부한다. 다시 말해, 뚜렷한 '경제적 해자'가 없는 이 시장에서 최고의 기술력이 곧 최고의 경쟁력인 셈이다.
+
+물론 모델이 발표될 때마다 나오는 벤치마크 점수는 크게 신뢰하지 않는다. 특정 벤치마크에 과하게 최적화된 경우가 많아, 실사용 환경에서의 체감 성능과는 차이가 있기 때문이다. 내가 직접 여러 모델을 써보며 내린 잠정적인 결론은 다음과 같다.
+
+- **범용성 (ChatGPT):** 다양한 기능과 뛰어난 음성 대화 기능 덕분에 일상적인 용도로는 여전히 가장 쓰기 편하다.
+- **코딩 (Claude):** 코딩 능력 자체는 Claude가 가장 뛰어나다고 느낀다. 특히 복잡한 코드베이스를 이해하고 수정하는 능력이 인상적이다. 한때 Cursor IDE를 주력으로 사용했지만, 최근 요금제 개편과 사용량 측정의 투명성 문제로 신뢰를 잃어 현재는 추천하지 않는다.
+- **개인적인 주력 (Gemini):** 현재 나의 주력 모델이다. 100만 토큰이라는 압도적인 컨텍스트 창, 구글 드라이브 2TB 제공, NotebookLM을 통한 효율적인 학습 환경, 그리고 Gemini 2.5 Pro 모델의 준수한 성능까지. 현재 나의 일상 생활에 가장 잘 맞는 균형 잡힌 모델이다.
+
+이런 강력한 AI 에이전트들을 사용하며 처음에는 '개발자라는 직업이 대체될 수 있겠다'는 위기감을 느꼈다. 하지만 지금은 생각이 바뀌었다. **AI는 비약적인 생산성 향상을 돕는 도구일 뿐, 최종 책임의 주체는 결국 사람이다.** 의사가 AI로 최신 의학 정보를 얻더라도 최종 진단과 책임은 의사가 지는 것과 같은 이치다. AI가 생성한 코드를 검토하고, 시스템에 통합하며, 발생할 수 있는 문제에 책임을 지는 역할은 온전히 개발자의 몫이다.
+
+물론 "AI가 있으니 보안 담당자는 필요 없다"며 팀을 해체했다가 큰 어려움을 겪은 일본의 어느 회사처럼, 과도기적인 혼란은 분명히 있을 것이다. 하지만 장기적으로 개발자의 역할은 단순 코더(Coder)에서 **복잡한 도메인을 이해하고, 전체 시스템 아키텍처를 설계하며, AI가 제안한 결과물의 타당성을 검증하는 '아키텍트'이자 '리뷰어'로 진화**할 것이라 믿는다.
+
+그래서 나는 AI의 발전에 두려움보다는 기대감이 훨씬 크다. 앞으로 또 어떤 새로운 도구가 나의 개발 경험을 바꿔놓을지 즐거운 마음으로 기다리고 있다.
