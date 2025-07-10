@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
-  import { detail, name, topic, website, bio } from '$lib/info.js'
+  import { detail, name, topic, website } from '$lib/info.js'
   import PostsList from '$lib/components/PostsList.svelte'
   import Pagination from '$lib/components/Pagination.svelte'
   import Tags from '$lib/components/Tags.svelte'
@@ -51,7 +51,7 @@
   })
 
   // 태그 클릭 이벤트 핸들러 (즉시 반응, 서버 요청 없이)
-  function handleTagClick(tag) {
+  const handleTagClick = (tag) => {
     if ($selectedTag === tag) {
       clearTagFilter()
       const newUrl = '/posts'
@@ -64,7 +64,7 @@
   }
 
   // 페이지 변경 핸들러 (서버 요청 없이)
-  function handlePageChange(newPage) {
+  const handlePageChange = (newPage) => {
     setPage(newPage)
     const url = newPage > 1 ? `/posts/${newPage}` : '/posts'
     const searchParams = $selectedTag ? `?tag=${$selectedTag}` : ''

@@ -11,13 +11,13 @@
   /** @type {function} */
   export let onPageChange = () => {}
 
-  function handlePrevious() {
+  const handlePrevious = () => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1)
     }
   }
 
-  function handleNext() {
+  const handleNext = () => {
     if (hasNextPage) {
       onPageChange(currentPage + 1)
     }

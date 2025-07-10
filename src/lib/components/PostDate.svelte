@@ -9,7 +9,7 @@
   export { _class as class }
 
   // 견고한 날짜 파싱 함수
-  function parseDate(dateString) {
+  const parseDate = (dateString) => {
     if (!dateString) return new Date()
     
     // 먼저 ISO 8601 형식 시도

@@ -28,14 +28,14 @@
     }
   })
 
-  function goBack() {
+  const goBack = () => {
     if (canGoBack) {
       history.back()
     }
   }
 
   // 태그 클릭 핸들러
-  function handleTagClick(tag) {
+  const handleTagClick = (tag) => {
     goto(`/posts?tag=${tag}`)
   }
 

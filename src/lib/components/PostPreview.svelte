@@ -1,7 +1,6 @@
 <script>
   import Card from './Card.svelte'
   import ArrowRightIcon from './ArrowRightIcon.svelte'
-  import Tags from './Tags.svelte'
   import { goto } from '$app/navigation'
   import { createSafeSlug } from '$lib/utils/posts'
 
@@ -10,12 +9,12 @@
   export let maxTagsToShow = 3
 
   // 태그 클릭 시 필터링
-  function handleTagClick(tag) {
+  const handleTagClick = (tag) => {
     goto(`/posts?tag=${encodeURIComponent(tag)}`)
   }
 
   // 더보기 클릭 시 포스트 페이지로 이동
-  function handleMoreTagsClick() {
+  const handleMoreTagsClick = () => {
     goto(getSafeUrl(post.slug))
   }
 
@@ -25,7 +24,7 @@
   $: hasMoreTags = hiddenTagsCount > 0
 
   // 안전한 URL 생성
-  function getSafeUrl(slug) {
+  const getSafeUrl = (slug) => {
     if (!slug) return '/posts'
 
     try {

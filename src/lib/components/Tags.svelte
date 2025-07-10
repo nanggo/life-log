@@ -4,10 +4,10 @@
   export let tags = []
   export let clickable = true
   export let selectedTag = null
-  export let onClick = (tag) => {}
+  export let onClick = () => {}
 
   // 이벤트 전파 방지 함수
-  function handleTagClick(tag, event) {
+  const handleTagClick = (tag, event) => {
     if (clickable) {
       event.preventDefault()
       event.stopPropagation()
@@ -29,9 +29,9 @@
   })
 
   // 태그 요소 바인딩 함수
-  function bindTagElement(tag, el) {
-    tagElements[tag] = el
-  }
+  // const bindTagElement = (tag, el) => {
+  //   tagElements[tag] = el
+  // }
 
   // 원래 태그 클래스로 복원
   const selectedTagClass = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'

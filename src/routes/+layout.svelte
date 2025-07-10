@@ -13,7 +13,7 @@
 
   let isDarkMode = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
 
-  function disableTransitionsTemporarily() {
+  const disableTransitionsTemporarily = () => {
     document.documentElement.classList.add('[&_*]:!transition-none')
     window.setTimeout(() => {
       document.documentElement.classList.remove('[&_*]:!transition-none')

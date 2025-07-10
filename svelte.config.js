@@ -15,34 +15,37 @@ function generatePostRoutes() {
   try {
     // posts 폴더의 모든 .md 파일을 읽어서 경로 생성
     const postsDir = join(__dirname, 'posts')
-    
+
     const getAllMdFiles = (dir) => {
       const files = readdirSync(dir)
       let mdFiles = []
-      
+
       for (const file of files) {
         const fullPath = join(dir, file)
         const stat = statSync(fullPath)
-        
+
         if (stat.isDirectory()) {
           mdFiles = mdFiles.concat(getAllMdFiles(fullPath))
         } else if (file.endsWith('.md')) {
           // 파일 내용을 읽어서 draft 상태 확인
           const content = readFileSync(fullPath, 'utf8')
           const isDraft = content.includes('draft: true')
-          
+
           // draft가 아닌 포스트만 route 생성
           if (!isDraft) {
             const relativePath = relative(postsDir, fullPath)
-            const slug = relativePath.replace(/(\/index)?\.md$/, '').split('/').pop()
+            const slug = relativePath
+              .replace(/(\/index)?\.md$/, '')
+              .split('/')
+              .pop()
             mdFiles.push(`/post/${slug}`)
           }
         }
       }
-      
+
       return mdFiles
     }
-    
+
     return getAllMdFiles(postsDir)
   } catch (error) {
     console.warn('Could not generate post routes:', error)

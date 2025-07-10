@@ -1,23 +1,23 @@
 <script>
-  import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
-  import { afterNavigate } from '$app/navigation'
-  import { website, name, bio, email, github, linkedin } from '$lib/info.js'
+  // import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
+  // import { afterNavigate } from '$app/navigation'
+  import { website, name } from '$lib/info.js'
 
   /** @type {import('./$types').PageData} */
   export let data
 
   const url = `${website}/about`
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: name,
-    url: website,
-    sameAs: [`https://github.com/${github}`, `https://linkedin.com/in/${linkedin}`],
-    jobTitle: 'Frontend Engineer',
-    description: bio,
-    email: email
-  }
+  // const jsonLd = {
+  //   '@context': 'https://schema.org',
+  //   '@type': 'Person',
+  //   name: name,
+  //   url: website,
+  //   sameAs: [`https://github.com/${github}`, `https://linkedin.com/in/${linkedin}`],
+  //   jobTitle: 'Frontend Engineer',
+  //   description: bio,
+  //   email: email
+  // }
 </script>
 
 <svelte:head>

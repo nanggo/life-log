@@ -23,14 +23,14 @@
   let activeHeading = headings[0]
   let scrollY
 
-  function updateHeadings() {
+  const updateHeadings = () => {
     if (browser) {
       elements = headings.map((heading) => {
         return document.getElementById(heading.slug)
       })
     }
   }
-  function setActiveHeading() {
+  const setActiveHeading = () => {
     scrollY = window.scrollY
 
     // 현재 스크롤 위치보다 위에 있는 마지막 요소를 찾음
