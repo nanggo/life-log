@@ -35,10 +35,10 @@ function optimizeImages() {
         if (src && src.startsWith('http')) {
           const encodedUrl = encodeURIComponent(src)
           node.properties.src = `/api/images?url=${encodedUrl}&w=800`
-          node.properties.srcset =
-            `/api/images?url=${encodedUrl}&w=480 480w, ` +
-            `/api/images?url=${encodedUrl}&w=800 800w, ` +
-            `/api/images?url=${encodedUrl}&w=1280 1280w`
+          const widths = [480, 800, 1280]
+          node.properties.srcset = widths
+            .map((w) => `/api/images?url=${encodedUrl}&w=${w} ${w}w`)
+            .join(', ')
           node.properties.loading = 'lazy'
           node.properties.decoding = 'async'
           node.properties.sizes = '(max-width: 800px) 100vw, 800px'

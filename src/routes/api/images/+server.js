@@ -8,6 +8,24 @@ export const GET = async ({ url }) => {
     return new Response('Image URL is required', { status: 400 })
   }
 
+  // Validate URL and check against allowed domains to prevent SSRF
+  try {
+    const { hostname } = new URL(imageUrl)
+    const allowedDomains = [
+      'github.com',
+      'avatars.githubusercontent.com',
+      'camo.githubusercontent.com',
+      'private-user-images.githubusercontent.com',
+      'user-images.githubusercontent.com'
+    ]
+
+    if (!allowedDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))) {
+      return new Response('Image URL from this domain is not allowed', { status: 403 })
+    }
+  } catch (error) {
+    return new Response('Invalid URL format', { status: 400 })
+  }
+
   try {
     const response = await fetch(imageUrl)
     if (!response.ok) {

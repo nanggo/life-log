@@ -56,6 +56,6 @@
     {#each Object.entries(sources) as [format, source]}
       <source type={`image/${format}`} srcset={source} {sizes} />
     {/each}
-    <img src={img.src} {alt} {width} {height} {style} loading="lazy" />
+    <img {...img} {alt} {sizes} {style} loading="lazy" />
   </picture>
 {/if}
