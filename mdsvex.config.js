@@ -4,7 +4,7 @@ import slugPlugin from 'rehype-slug'
 import relativeImages from 'mdsvex-relative-images'
 import remarkHeadings from '@vcarl/remark-headings'
 
-export default {
+const config = {
   extensions: ['.svx', '.md'],
   smartypants: {
     dashes: 'oldschool'
@@ -17,8 +17,35 @@ export default {
       {
         behavior: 'wrap'
       }
-    ]
+    ],
+    optimizeImages
   ]
+}
+
+export default config
+
+/**
+ * Custom rehype plugin to optimize external images
+ */
+function optimizeImages() {
+  return function transformer(tree) {
+    visit(tree, 'element', (node) => {
+      if (node.tagName === 'img') {
+        const src = node.properties.src
+        if (src && src.startsWith('http')) {
+          const encodedUrl = encodeURIComponent(src)
+          node.properties.src = `/api/images?url=${encodedUrl}&w=800`
+          const widths = [480, 800, 1280]
+          node.properties.srcset = widths
+            .map((w) => `/api/images?url=${encodedUrl}&w=${w} ${w}w`)
+            .join(', ')
+          node.properties.loading = 'lazy'
+          node.properties.decoding = 'async'
+          node.properties.sizes = '(max-width: 800px) 100vw, 800px'
+        }
+      }
+    })
+  }
 }
 
 /**

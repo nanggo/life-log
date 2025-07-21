@@ -3,6 +3,59 @@ import { parse } from 'node-html-parser'
 import readingTime from 'reading-time/lib/reading-time.js'
 import { formatDate } from '$lib/utils/date'
 
+/**
+ * GitHub 이미지 URL을 썸네일 크기로 변환합니다.
+ * @param {string} url - 원본 GitHub 이미지 URL
+ * @param {number} size - 썸네일 크기 (기본값: 400px)
+ * @returns {string} 썸네일 URL
+ */
+const convertToGitHubThumbnail = (url, size = 400) => {
+  const GITHUB_THUMBNAIL_SUPPORTED_HOSTS = [
+    'github.com/user-attachments/assets/',
+    'avatars.githubusercontent.com/',
+    'user-images.githubusercontent.com/',
+    'private-user-images.githubusercontent.com/'
+  ]
+
+  // GitHub 이미지 URL 패턴 확인
+  if (GITHUB_THUMBNAIL_SUPPORTED_HOSTS.some((host) => url.includes(host))) {
+    // 이미 크기 파라미터가 있는 경우 제거 후 새로 추가
+    const baseUrl = url.split('?')[0]
+    return `${baseUrl}?s=${size}`
+  }
+  return url
+}
+
+/**
+ * preview HTML에서 이미지 태그들을 썸네일 버전으로 최적화합니다.
+ * @param {Object} previewElement - node-html-parser 엘리먼트
+ * @returns {Object} 최적화된 preview 엘리먼트
+ */
+const optimizePreviewImages = (previewElement) => {
+  if (!previewElement) return previewElement
+
+  // 모든 img 태그 찾기
+  const images = previewElement.querySelectorAll('img')
+
+  images.forEach((img) => {
+    const src = img.getAttribute('src')
+    if (src) {
+      // GitHub 이미지인 경우 썸네일로 변환
+      const optimizedSrc = convertToGitHubThumbnail(src)
+      img.setAttribute('src', optimizedSrc)
+
+      // preview용 스타일 추가 (최대 높이 제한)
+      const existingStyle = img.getAttribute('style') || ''
+      img.setAttribute(
+        'style',
+        `${existingStyle}; max-height: 200px; width: auto; object-fit: cover;`
+      )
+    }
+  })
+
+  return previewElement
+}
+
 // we require some server-side APIs to parse all metadata
 if (browser) {
   throw new Error(`posts can only be imported server-side`)
@@ -16,7 +69,8 @@ if (browser) {
  */
 const processPostMetadata = ([filepath, post]) => {
   const html = parse(post.default.render().html)
-  const preview = post.metadata.preview ? parse(post.metadata.preview) : html.querySelector('p')
+  const rawPreview = post.metadata.preview ? parse(post.metadata.preview) : html.querySelector('p')
+  const preview = optimizePreviewImages(rawPreview)
 
   // 태그 처리 로직 수정 - 배열과 문자열 모두 지원
   let tags = []
