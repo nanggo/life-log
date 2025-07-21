@@ -74,4 +74,26 @@
     margin-top: 0;
     margin-bottom: 0;
   }
+  
+  /* Preview 이미지 크기 개선 */
+  .prose > :global(p img) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 1rem 0;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 768px) {
+    .prose > :global(p img) {
+      max-width: 85%;
+      margin: 1.5rem auto;
+    }
+  }
+
+  /* 다크모드에서 그림자 조정 */
+  :global(.dark) .prose > :global(p img) {
+    box-shadow: 0 10px 25px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  }
 </style>
