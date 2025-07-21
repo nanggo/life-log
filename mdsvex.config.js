@@ -49,13 +49,13 @@ function optimizeImages() {
 }
 
 /**
- * Adds support to video files in markdown image links
+ * Enhanced media processing for videos and images with lazy loading and modal support
  */
 function videos() {
-  const extensions = ['mp4', 'webm']
+  const videoExtensions = ['mp4', 'webm']
   return function transformer(tree) {
     visit(tree, 'image', (node) => {
-      if (extensions.some((ext) => node.url.endsWith(ext))) {
+      if (videoExtensions.some((ext) => node.url.endsWith(ext))) {
         node.type = 'html'
         node.value = `
             <video 
@@ -69,11 +69,21 @@ function videos() {
             />
           `
       } else {
-        // Ensure all images have proper alt tags for SEO
+        // Enhanced image processing while maintaining compatibility
         if (!node.alt || node.alt.trim() === '') {
           console.warn(`Image without alt text found: ${node.url}`)
-          node.alt = '' // Empty alt for decorative images
+          node.alt = ''
         }
+
+        // Enhanced image with lazy loading and modal support
+        node.type = 'html'
+        node.value = `<img 
+            src="${node.url}" 
+            alt="${node.alt || ''}"
+            loading="lazy"
+            class="enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8"
+            onclick="openImageModal('${node.url}', '${(node.alt || '').replace(/'/g, '&#39;')}')"
+          />`
       }
     })
   }

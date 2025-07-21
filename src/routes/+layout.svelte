@@ -22,6 +22,36 @@
 
   inject({ mode: dev ? 'development' : 'production' })
   injectSpeedInsights()
+  
+  // Image modal functionality
+  if (browser) {
+    window.openImageModal = function(src, alt) {
+      const modal = document.createElement('div')
+      modal.className = 'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4'
+      modal.style.backdropFilter = 'blur(4px)'
+      modal.innerHTML = `
+        <div class="relative max-w-full max-h-full">
+          <img src="${src}" alt="${alt}" class="max-w-full max-h-full object-contain rounded-lg" />
+          <button class="absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl font-bold" onclick="this.parentElement.parentElement.remove()">
+            ×
+          </button>
+        </div>
+      `
+      
+      modal.onclick = function(e) {
+        if (e.target === modal) modal.remove()
+      }
+      
+      document.addEventListener('keydown', function escHandler(e) {
+        if (e.key === 'Escape') {
+          modal.remove()
+          document.removeEventListener('keydown', escHandler)
+        }
+      })
+      
+      document.body.appendChild(modal)
+    }
+  }
 </script>
 
 <svelte:head>
