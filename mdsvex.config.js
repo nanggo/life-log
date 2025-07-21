@@ -47,7 +47,7 @@ function optimizeExternalImages() {
           // Add modal functionality
           node.properties.class =
             'enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8'
-          node.properties.onclick = `openImageModal('${src}', '${node.properties.alt || ''}')`
+          node.properties.onclick = `openImageModal('${src}', '${(node.properties.alt || "").replace(/'/g, "\\'").replace(/"/g, "&quot;")}')`
         }
       }
     })
@@ -89,7 +89,7 @@ function videos() {
             alt="${node.alt || ''}"
             loading="lazy"
             class="enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8"
-            onclick="openImageModal('${node.url}', '${(node.alt || '').replace(/'/g, '&#39;')}')"
+            onclick="openImageModal('${node.url}', '${(node.alt || "").replace(/'/g, "\\'").replace(/"/g, "&quot;")}')"
           />`
         }
       }
