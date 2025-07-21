@@ -44,16 +44,57 @@ const optimizePreviewImages = (previewElement) => {
       const optimizedSrc = convertToGitHubThumbnail(src)
       img.setAttribute('src', optimizedSrc)
 
-      // preview용 스타일 추가 (최대 높이 제한)
+      // preview용 스타일 추가 (적절한 크기로 조정)
       const existingStyle = img.getAttribute('style') || ''
       img.setAttribute(
         'style',
-        `${existingStyle}; max-height: 200px; width: auto; object-fit: cover;`
+        `${existingStyle}; max-height: 300px; width: auto; min-width: 250px; max-width: 100%; object-fit: cover;`
       )
     }
   })
 
   return previewElement
+}
+
+/**
+ * 개선된 프리뷰 생성: 이미지 + 텍스트 결합
+ * @param {Object} html - 파싱된 HTML 전체
+ * @returns {Object} 프리뷰 엘리먼트
+ */
+const createEnhancedPreview = (html) => {
+  const allParagraphs = html.querySelectorAll('p')
+  if (!allParagraphs.length) return null
+
+  let previewHtml = ''
+  let hasImage = false
+  let textParagraphsAdded = 0
+  const maxTextParagraphs = 1 // 최대 1개의 텍스트 문단
+
+  for (const p of allParagraphs) {
+    const hasImageInParagraph = p.querySelector('img')
+    
+    if (hasImageInParagraph && !hasImage) {
+      // 첫 번째 이미지가 있는 문단을 추가
+      previewHtml += p.toString()
+      hasImage = true
+    } else if (!hasImageInParagraph && p.text.trim().length > 0 && textParagraphsAdded < maxTextParagraphs) {
+      // 텍스트가 있는 문단을 추가 (최대 2개)
+      previewHtml += p.toString()
+      textParagraphsAdded++
+    }
+    
+    // 이미지 + 1개 텍스트 문단이 모두 채워지면 중단
+    if (hasImage && textParagraphsAdded >= maxTextParagraphs) {
+      break
+    }
+  }
+
+  // 이미지가 없고 텍스트만 있는 경우, 첫 번째 문단만 반환
+  if (!hasImage && textParagraphsAdded === 0 && allParagraphs[0]) {
+    previewHtml = allParagraphs[0].toString()
+  }
+
+  return previewHtml ? parse(`<div>${previewHtml}</div>`).querySelector('div') : allParagraphs[0]
 }
 
 // we require some server-side APIs to parse all metadata
@@ -69,7 +110,9 @@ if (browser) {
  */
 const processPostMetadata = ([filepath, post]) => {
   const html = parse(post.default.render().html)
-  const rawPreview = post.metadata.preview ? parse(post.metadata.preview) : html.querySelector('p')
+  const rawPreview = post.metadata.preview 
+    ? parse(post.metadata.preview) 
+    : createEnhancedPreview(html)
   const preview = optimizePreviewImages(rawPreview)
 
   // 태그 처리 로직 수정 - 배열과 문자열 모두 지원

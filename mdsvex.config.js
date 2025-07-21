@@ -46,7 +46,7 @@ function optimizeExternalImages() {
 
           // Add modal functionality
           node.properties.class =
-            'enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8'
+            'enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto'
           node.properties.onclick = `openImageModal('${src}', '${(node.properties.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')`
         }
       }
@@ -88,7 +88,7 @@ function videos() {
             src="${node.url}" 
             alt="${node.alt || ''}"
             loading="lazy"
-            class="enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8"
+            class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto"
             onclick="openImageModal('${node.url}', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
           />`
         }
