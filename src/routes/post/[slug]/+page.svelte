@@ -3,6 +3,7 @@
   import ToC from '$lib/components/ToC.svelte'
   import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
+  import Image from '$lib/components/Image.svelte'
   import { afterNavigate } from '$app/navigation'
   import PostDate from '$lib/components/PostDate.svelte'
   import Tags from '$lib/components/Tags.svelte'
@@ -113,9 +114,11 @@
         </div>
         <div class="flex justify-center order-2 md:order-1 col-span-2">
           <a href="/about" class="inline-block rounded-full">
-            <img
+            <Image
               src={avatar}
               alt={name}
+              width="96"
+              height="96"
               class="w-24 h-24 mx-auto rounded-full md:w-28 md:h-28 ring-2 ring-zinc-200 dark:ring-zinc-700"
             />
           </a>
