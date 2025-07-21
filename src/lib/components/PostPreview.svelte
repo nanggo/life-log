@@ -87,7 +87,7 @@
 
   @media (min-width: 768px) {
     .prose > :global(p img) {
-      max-width: 85%;
+      max-width: 92%;
       margin: 1.5rem auto;
     }
   }

@@ -50,12 +50,12 @@
 </script>
 
 {#if dev || isExternal}
-  <img {src} {alt} {width} {height} {sizes} {style} loading="lazy" />
+  <img {src} {alt} {width} {height} {sizes} {style} loading="lazy" {...$$restProps} />
 {:else}
   <picture>
     {#each Object.entries(sources) as [format, source]}
       <source type={`image/${format}`} srcset={source} {sizes} />
     {/each}
-    <img {...img} {alt} {sizes} {style} loading="lazy" />
+    <img {...img} {alt} {sizes} {style} loading="lazy" {...$$restProps} />
   </picture>
 {/if}
