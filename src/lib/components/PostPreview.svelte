@@ -75,6 +75,28 @@
     margin-bottom: 0;
   }
   
+  /* Preview 이미지 크기 및 간격 설정 */
+  .prose > :global(p img) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin: 0.5rem 0;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.1);
+  }
+
+  @media (min-width: 768px) {
+    .prose > :global(p img) {
+      max-width: 85%;
+      margin: 0.75rem auto;
+    }
+  }
+
+  /* 다크모드에서 그림자 조정 */
+  :global(.dark) .prose > :global(p img) {
+    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+  }
+  
   /* Override prose image constraints for enhanced images */
   .prose > :global(p img.enhanced-image) {
     max-width: 100% !important;
