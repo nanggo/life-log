@@ -10,11 +10,15 @@ import { formatDate } from '$lib/utils/date'
  * @returns {string} 썸네일 URL
  */
 const convertToGitHubThumbnail = (url, size = 400) => {
+  const GITHUB_THUMBNAIL_SUPPORTED_HOSTS = [
+    'github.com/user-attachments/assets/',
+    'avatars.githubusercontent.com/',
+    'user-images.githubusercontent.com/',
+    'private-user-images.githubusercontent.com/'
+  ]
+
   // GitHub 이미지 URL 패턴 확인
-  if (
-    url.includes('github.com/user-attachments/assets/') ||
-    url.includes('githubusercontent.com/')
-  ) {
+  if (GITHUB_THUMBNAIL_SUPPORTED_HOSTS.some((host) => url.includes(host))) {
     // 이미 크기 파라미터가 있는 경우 제거 후 새로 추가
     const baseUrl = url.split('?')[0]
     return `${baseUrl}?s=${size}`

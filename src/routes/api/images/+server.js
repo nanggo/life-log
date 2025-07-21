@@ -2,10 +2,15 @@ import sharp from 'sharp'
 
 export const GET = async ({ url }) => {
   const imageUrl = url.searchParams.get('url')
-  const width = parseInt(url.searchParams.get('w') || '800', 10)
+  const widthParam = url.searchParams.get('w') || '800'
+  const width = parseInt(widthParam, 10)
 
   if (!imageUrl) {
     return new Response('Image URL is required', { status: 400 })
+  }
+
+  if (isNaN(width) || width <= 0) {
+    return new Response('Width parameter "w" must be a positive integer', { status: 400 })
   }
 
   // Validate URL and check against allowed domains to prevent SSRF
