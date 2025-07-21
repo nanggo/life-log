@@ -18,22 +18,23 @@ const config = {
         behavior: 'wrap'
       }
     ],
-    optimizeImages
+    optimizeExternalImages
   ]
 }
 
 export default config
 
 /**
- * Custom rehype plugin to optimize external images
+ * Rehype plugin to optimize external images
  */
-function optimizeImages() {
+function optimizeExternalImages() {
   return function transformer(tree) {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'img') {
         const src = node.properties.src
         if (src && src.startsWith('http')) {
           const encodedUrl = encodeURIComponent(src)
+          // Update image properties for optimization
           node.properties.src = `/api/images?url=${encodedUrl}&w=800`
           const widths = [480, 800, 1280]
           node.properties.srcset = widths
@@ -42,6 +43,11 @@ function optimizeImages() {
           node.properties.loading = 'lazy'
           node.properties.decoding = 'async'
           node.properties.sizes = '(max-width: 800px) 100vw, 800px'
+
+          // Add modal functionality
+          node.properties.class =
+            'enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8'
+          node.properties.onclick = `openImageModal('${src}', '${node.properties.alt || ''}')`
         }
       }
     })
@@ -49,13 +55,13 @@ function optimizeImages() {
 }
 
 /**
- * Adds support to video files in markdown image links
+ * Enhanced media processing for videos and images with lazy loading and modal support
  */
 function videos() {
-  const extensions = ['mp4', 'webm']
+  const videoExtensions = ['mp4', 'webm']
   return function transformer(tree) {
     visit(tree, 'image', (node) => {
-      if (extensions.some((ext) => node.url.endsWith(ext))) {
+      if (videoExtensions.some((ext) => node.url.endsWith(ext))) {
         node.type = 'html'
         node.value = `
             <video 
@@ -69,10 +75,22 @@ function videos() {
             />
           `
       } else {
-        // Ensure all images have proper alt tags for SEO
+        // Enhanced image processing for non-external images
         if (!node.alt || node.alt.trim() === '') {
           console.warn(`Image without alt text found: ${node.url}`)
-          node.alt = '' // Empty alt for decorative images
+          node.alt = ''
+        }
+
+        // For local images, just add modal functionality
+        if (!node.url.startsWith('http')) {
+          node.type = 'html'
+          node.value = `<img 
+            src="${node.url}" 
+            alt="${node.alt || ''}"
+            loading="lazy"
+            class="enhanced-image w-full rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8"
+            onclick="openImageModal('${node.url}', '${(node.alt || '').replace(/'/g, '&#39;')}')"
+          />`
         }
       }
     })
