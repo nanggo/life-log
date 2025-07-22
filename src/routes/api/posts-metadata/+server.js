@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit'
-import { posts, allTags } from '$lib/data/posts.js'
+import { posts, allTags } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util.js'
 
 /**
