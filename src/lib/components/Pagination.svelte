@@ -5,8 +5,7 @@
   export let currentPage: number
   export let hasNextPage: boolean
   export let totalPages: number = 1
-  // eslint-disable-next-line no-unused-vars
-  export let onPageChange: (pageNumber: number) => void = () => {}
+  export let onPageChange: (_pageNumber: number) => void = (_pageNumber: number) => {}
 
   const handlePrevious = (): void => {
     if (currentPage > 1) {

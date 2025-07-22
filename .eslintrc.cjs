@@ -1,6 +1,9 @@
 module.exports = {
   root: true,
   extends: ['eslint:recommended'],
+  rules: {
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_' }]
+  },
   parserOptions: {
     sourceType: 'module',
     ecmaVersion: 2021

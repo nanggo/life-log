@@ -4,8 +4,7 @@
   export let tags: string[] = []
   export let clickable: boolean = true
   export let selectedTag: string | null = null
-  // eslint-disable-next-line no-unused-vars
-  export let onClick: (tagName: string) => void = () => {}
+  export let onClick: (_tagName: string) => void = (_tagName: string) => {}
 
   // 이벤트 전파 방지 함수
   const handleTagClick = (tag: string, event: Event): void => {
