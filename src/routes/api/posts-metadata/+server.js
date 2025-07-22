@@ -1,6 +1,6 @@
 import { json } from '@sveltejs/kit'
 import { posts, allTags } from '$lib/data/posts'
-import { extractPostMetadata } from '$lib/util.js'
+import { extractPostMetadata } from '$lib/util'
 
 /**
  * 포스트 메타데이터 API 엔드포인트

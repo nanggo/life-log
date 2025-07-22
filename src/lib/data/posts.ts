@@ -1,5 +1,6 @@
 import { browser, dev } from '$app/environment'
 import { parse } from 'node-html-parser'
+// @ts-ignore
 import readingTime from 'reading-time/lib/reading-time.js'
 import { formatDate } from '$lib/utils/date'
 import type { Post, PostMetadata, PostPreview, LinkedPost } from '$lib/types'
@@ -29,16 +30,14 @@ const convertToGitHubThumbnail = (url: string, size: number = 400): string => {
 
 /**
  * preview HTML에서 이미지 태그들을 썸네일 버전으로 최적화합니다.
- * @param {Object} previewElement - node-html-parser 엘리먼트
- * @returns {Object} 최적화된 preview 엘리먼트
  */
-const optimizePreviewImages = (previewElement) => {
+const optimizePreviewImages = (previewElement: any) => {
   if (!previewElement) return previewElement
 
   // 모든 img 태그 찾기
   const images = previewElement.querySelectorAll('img')
 
-  images.forEach((img) => {
+  images.forEach((img: any) => {
     const src = img.getAttribute('src')
     if (src) {
       // GitHub 이미지인 경우 썸네일로 변환
@@ -59,10 +58,8 @@ const optimizePreviewImages = (previewElement) => {
 
 /**
  * 개선된 프리뷰 생성: 이미지 + 텍스트를 하나의 p 태그 안에 결합
- * @param {Object} html - 파싱된 HTML 전체
- * @returns {Object} 프리뷰 엘리먼트
  */
-const createEnhancedPreview = (html) => {
+const createEnhancedPreview = (html: any) => {
   const allParagraphs = html.querySelectorAll('p')
   if (!allParagraphs.length) return null
 
@@ -113,11 +110,8 @@ if (browser) {
 
 /**
  * 포스트 메타데이터를 파싱하고 가공합니다.
- * @param {string} filepath - 파일 경로
- * @param {Object} post - 포스트 데이터
- * @returns {Object} 가공된 포스트 메타데이터
  */
-const processPostMetadata = ([filepath, post]) => {
+const processPostMetadata = ([filepath, post]: [string, any]) => {
   const html = parse(post.default.render().html)
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
@@ -135,8 +129,8 @@ const processPostMetadata = ([filepath, post]) => {
     else if (typeof post.metadata.tags === 'string') {
       tags = post.metadata.tags
         .split('#')
-        .filter((tag) => tag.trim().length > 0)
-        .map((tag) => tag.trim())
+        .filter((tag: string) => tag.trim().length > 0)
+        .map((tag: string) => tag.trim())
     }
   }
 
@@ -158,8 +152,8 @@ const processPostMetadata = ([filepath, post]) => {
 }
 
 // 모든 태그 수집 및 빈도 계산을 위한 변수 초기화
-const tagCounts = {}
-const tagSet = new Set()
+const tagCounts: Record<string, number> = {}
+const tagSet = new Set<string>()
 
 // Get all posts and add metadata
 export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: true }))
@@ -170,7 +164,7 @@ export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: 
   // next/previous 참조 추가 및 태그 계산을 한 번의 순회로 처리
   .map((post, index, allPosts) => {
     // processPostMetadata에서 post.tags를 항상 배열로 보장하므로 추가 확인 불필요
-    post.tags.forEach((tag) => {
+    post.tags.forEach((tag: string) => {
       if (tag) {
         // 유니크한 태그와 태그별 개수 집계
         tagSet.add(tag)
@@ -196,7 +190,7 @@ export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: 
   })
 
 // 태그를 빈도순으로 정렬하고, 빈도가 같으면 알파벳순으로 정렬
-export const allTags = Array.from(tagSet).sort((a, b) => {
+export const allTags = Array.from(tagSet).sort((a: string, b: string) => {
   const countDiff = tagCounts[b] - tagCounts[a]
   return countDiff !== 0 ? countDiff : a.localeCompare(b)
 })

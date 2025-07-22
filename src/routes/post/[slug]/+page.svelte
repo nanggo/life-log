@@ -1,5 +1,5 @@
 <script>
-  import { website, name, bio, avatar } from '$lib/info.js'
+  import { website, name, bio, avatar } from '$lib/info'
   import ToC from '$lib/components/ToC.svelte'
   import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'

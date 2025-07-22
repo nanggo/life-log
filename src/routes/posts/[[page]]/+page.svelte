@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
-  import { detail, name, topic, website } from '$lib/info.js'
+  import { detail, name, topic, website } from '$lib/info'
   import PostsList from '$lib/components/PostsList.svelte'
   import Pagination from '$lib/components/Pagination.svelte'
   import Tags from '$lib/components/Tags.svelte'

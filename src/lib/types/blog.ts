@@ -32,7 +32,7 @@ export interface PostMetadata {
   /** 초안 여부 */
   draft?: boolean
   /** 커스텀 미리보기 (선택사항) */
-  preview?: string
+  preview?: PostPreview
   /** 커버 이미지 (선택사항) */
   image?: string
   /** 작성자 정보 (선택사항) */

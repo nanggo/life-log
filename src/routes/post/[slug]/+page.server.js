@@ -1,7 +1,7 @@
 import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
-import { website, name } from '$lib/info.js'
+import { website, name } from '$lib/info'
 import { parse } from 'node-html-parser'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화

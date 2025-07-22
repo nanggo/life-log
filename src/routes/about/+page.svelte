@@ -1,7 +1,7 @@
 <script>
   // import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   // import { afterNavigate } from '$app/navigation'
-  import { website, name } from '$lib/info.js'
+  import { website, name } from '$lib/info'
 
   /** @type {import('./$types').PageData} */
   export let data
