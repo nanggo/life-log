@@ -61,4 +61,4 @@ This is a SvelteKit-based blog using:
 ## Task Master AI Instructions
 
 **Import Task Master's development workflow commands and guidelines, treat as if import is in the main CLAUDE.md file.**
-@.taskmaster/CLAUDE.md
+See .taskmaster/CLAUDE.md for detailed Task Master AI integration instructions.
