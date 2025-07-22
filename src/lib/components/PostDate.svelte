@@ -1,15 +1,16 @@
-<script>
+<script lang="ts">
   import { format, parseISO, isValid } from 'date-fns'
+  import type { Post } from '$lib/types'
 
-  export let decorate
-  export let post
-  export let collapsed = false
+  export let decorate: boolean
+  export let post: Post
+  export let collapsed: boolean = false
 
-  let _class
+  let _class: string
   export { _class as class }
 
   // 견고한 날짜 파싱 함수
-  const parseDate = (dateString) => {
+  const parseDate = (dateString: string): Date => {
     if (!dateString) return new Date()
     
     // 먼저 ISO 8601 형식 시도

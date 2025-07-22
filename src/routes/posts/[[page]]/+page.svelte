@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from 'svelte'
   import { page } from '$app/stores'
   import { detail, name, topic, website } from '$lib/info'
@@ -19,12 +19,12 @@
     clearTagFilter,
     setPage
   } from '$lib/stores/posts'
+  import type { PageData } from './$types'
 
-  /** @type {import('./$types').PageData} */
-  export let data
+  export let data: PageData
 
   // 초기화 상태 추적
-  let isInitialized = false
+  let isInitialized: boolean = false
 
   // 초기 데이터 설정 (한 번만 실행)
   $: if (data.posts && !isInitialized) {
@@ -51,7 +51,7 @@
   })
 
   // 태그 클릭 이벤트 핸들러 (즉시 반응, 서버 요청 없이)
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag: string): void => {
     if ($selectedTag === tag) {
       clearTagFilter()
       const newUrl = '/posts'
@@ -64,7 +64,7 @@
   }
 
   // 페이지 변경 핸들러 (서버 요청 없이)
-  const handlePageChange = (newPage) => {
+  const handlePageChange = (newPage: number): void => {
     setPage(newPage)
     const url = newPage > 1 ? `/posts/${newPage}` : '/posts'
     const searchParams = $selectedTag ? `?tag=${$selectedTag}` : ''
@@ -73,14 +73,17 @@
   }
 
   // 현재 페이지 URL 생성
+  let currentUrl: string
   $: currentUrl = `${website}/posts${$currentPage > 1 ? '/' + $currentPage : ''}${$selectedTag ? '?tag=' + $selectedTag : ''}`
 
   // 페이지 타이틀 생성
+  let pageTitle: string
   $: pageTitle = $selectedTag
     ? `${$selectedTag} - ${name}'s life log | Posts`
     : `${name}'s life log | Posts`
 
   // 메타 설명 생성
+  let metaDescription: string
   $: metaDescription = $selectedTag ? `${detail} - ${$selectedTag} 관련 포스트 모음` : detail
 </script>
 

@@ -1,23 +1,20 @@
-<script>
+<script lang="ts">
   import ArrowLeftIcon from './ArrowLeftIcon.svelte'
   import ArrowRightIcon from './ArrowRightIcon.svelte'
 
-  /** @type {number} */
-  export let currentPage
-  /** @type {boolean} */
-  export let hasNextPage
-  /** @type {number} */
-  export let totalPages = 1
-  /** @type {function} */
-  export let onPageChange = () => {}
+  export let currentPage: number
+  export let hasNextPage: boolean
+  export let totalPages: number = 1
+  // eslint-disable-next-line no-unused-vars
+  export let onPageChange: (pageNumber: number) => void = () => {}
 
-  const handlePrevious = () => {
+  const handlePrevious = (): void => {
     if (currentPage > 1) {
       onPageChange(currentPage - 1)
     }
   }
 
-  const handleNext = () => {
+  const handleNext = (): void => {
     if (hasNextPage) {
       onPageChange(currentPage + 1)
     }

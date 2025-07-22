@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { website, name, bio, avatar } from '$lib/info'
   import ToC from '$lib/components/ToC.svelte'
   import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
@@ -8,35 +8,36 @@
   import PostDate from '$lib/components/PostDate.svelte'
   import Tags from '$lib/components/Tags.svelte'
   import { goto } from '$app/navigation'
+  import type { PageData } from './$types'
+  import type { Navigation } from '@sveltejs/kit'
 
-  /** @type {import('./$types').PageData} */
-  export let data
+  export let data: PageData
 
   // generated open-graph image for sharing on social media.
   // see https://og-image.vercel.app/ for more options.
-  const ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+  const ogImage: string = `https://og-image-korean.vercel.app/**${encodeURIComponent(
     data.post.title
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 
-  const url = `${website}/${data.post.slug}`
+  const url: string = `${website}/${data.post.slug}`
 
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination
-  let canGoBack = false
-  afterNavigate(({ from }) => {
+  let canGoBack: boolean = false
+  afterNavigate(({ from }: Navigation) => {
     if (from && from.url.pathname.startsWith('/posts')) {
       canGoBack = true
     }
   })
 
-  const goBack = () => {
+  const goBack = (): void => {
     if (canGoBack) {
       history.back()
     }
   }
 
   // 태그 클릭 핸들러
-  const handleTagClick = (tag) => {
+  const handleTagClick = (tag: string): void => {
     goto(`/posts?tag=${tag}`)
   }
 

@@ -1,12 +1,12 @@
-<script>
+<script lang="ts">
   // import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   // import { afterNavigate } from '$app/navigation'
   import { website, name } from '$lib/info'
+  import type { PageData } from './$types'
 
-  /** @type {import('./$types').PageData} */
-  export let data
+  export let data: PageData
 
-  const url = `${website}/about`
+  const url: string = `${website}/about`
 
   // const jsonLd = {
   //   '@context': 'https://schema.org',

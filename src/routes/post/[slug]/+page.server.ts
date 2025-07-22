@@ -3,12 +3,12 @@ import { error } from '@sveltejs/kit'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 import { website, name } from '$lib/info'
 import { parse } from 'node-html-parser'
+import type { PageServerLoad } from './$types'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
 
-/** @type {import('./$types').PageServerLoad} */
-export async function load({ params }) {
+export const load: PageServerLoad = async ({ params }) => {
   const { slug } = params
 
   try {

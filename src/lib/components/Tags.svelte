@@ -1,13 +1,14 @@
-<script>
+<script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
-  export let tags = []
-  export let clickable = true
-  export let selectedTag = null
-  export let onClick = () => {}
+  export let tags: string[] = []
+  export let clickable: boolean = true
+  export let selectedTag: string | null = null
+  // eslint-disable-next-line no-unused-vars
+  export let onClick: (tagName: string) => void = () => {}
 
   // 이벤트 전파 방지 함수
-  const handleTagClick = (tag, event) => {
+  const handleTagClick = (tag: string, event: Event): void => {
     if (clickable) {
       event.preventDefault()
       event.stopPropagation()
@@ -16,13 +17,13 @@
   }
 
   // 스크롤 컨테이너 참조 변수
-  let scrollContainer
+  let scrollContainer: HTMLDivElement
 
   // 선택된 태그 버튼 참조 - 객체로 참조 저장
-  let tagElements = {}
+  let tagElements: Record<string, HTMLButtonElement> = {}
 
   // 마우스 휠 이벤트 핸들러
-  const handleWheel = (event) => {
+  const handleWheel = (event: WheelEvent): void => {
     if (!scrollContainer) return
     
     // 마우스 휠 이벤트가 있고, deltaY가 0이 아닌 경우에만 처리
@@ -59,8 +60,8 @@
   // }
 
   // 원래 태그 클래스로 복원
-  const selectedTagClass = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
-  const unselectedTagClass =
+  const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
+  const unselectedTagClass: string =
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
 </script>
 
