@@ -9,9 +9,13 @@ type PostModule = {
   default: {
     render: () => { html: string }
   }
-  metadata: Omit<PostMetadata, 'tags' | 'preview' | 'slug' | 'readingTime'> & { 
+  metadata: {
+    title?: string
+    date?: string | Date
     tags?: string[] | string
     preview?: string
+    draft?: boolean
+    [key: string]: any
   }
 }
 
@@ -145,7 +149,9 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
   }
 
   return {
-    ...post.metadata,
+    title: post.metadata.title || 'Untitled',
+    description: post.metadata.description || '',
+    draft: post.metadata.draft || false,
     slug:
       filepath
         .replace(/(\/index)?\.md/, '')
@@ -158,7 +164,8 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       text: (preview?.structuredText ?? preview?.toString()) || ''
     },
     readingTime: readingTime(html.structuredText).text,
-    tags
+    tags,
+    ...post.metadata // 나머지 메타데이터 추가
   }
 }
 
