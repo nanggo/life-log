@@ -19,6 +19,8 @@ export interface PostPreview {
  * 포스트 메타데이터 (frontmatter)
  */
 export interface PostMetadata {
+  /** URL 슬러그 */
+  slug: string
   /** 포스트 제목 */
   title: string
   /** 포스트 설명 */
@@ -31,12 +33,14 @@ export interface PostMetadata {
   tags: string[]
   /** 초안 여부 */
   draft?: boolean
-  /** 커스텀 미리보기 (선택사항) */
-  preview?: string
+  /** 미리보기 정보 */
+  preview: PostPreview
   /** 커버 이미지 (선택사항) */
   image?: string
   /** 작성자 정보 (선택사항) */
   author?: string
+  /** 읽기 시간 */
+  readingTime: string
 }
 
 /**

@@ -21,6 +21,7 @@ export function paginate<T>(data: T[], { page = 1, limit }: PaginateOptions): T[
  */
 export function extractPostMetadata(posts: Post[]): PostMetadata[] {
   return posts.map((post) => ({
+    slug: post.slug,
     title: post.title,
     description: post.description,
     date: post.date,
@@ -29,6 +30,7 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     draft: post.draft,
     preview: post.preview,
     image: post.image,
-    author: post.author
+    author: post.author,
+    readingTime: post.readingTime
   }))
 }
