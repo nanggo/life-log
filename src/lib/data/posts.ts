@@ -2,7 +2,7 @@ import { browser, dev } from '$app/environment'
 import { parse } from 'node-html-parser'
 import readingTime from 'reading-time/lib/reading-time.js'
 import { formatDate } from '$lib/utils/date'
-import type { Post, PostMetadata, PostPreview } from '$lib/types'
+import type { Post, PostMetadata, PostPreview, LinkedPost } from '$lib/types'
 
 /**
  * GitHub 이미지 URL을 썸네일 크기로 변환합니다.
@@ -180,8 +180,18 @@ export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: 
 
     return {
       ...post,
-      next: allPosts[index - 1],
+      next: allPosts[index - 1]
+        ? {
+            slug: allPosts[index - 1].slug,
+            title: allPosts[index - 1].title
+          }
+        : undefined,
       previous: allPosts[index + 1]
+        ? {
+            slug: allPosts[index + 1].slug,
+            title: allPosts[index + 1].title
+          }
+        : undefined
     }
   })
 

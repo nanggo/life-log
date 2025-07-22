@@ -40,6 +40,24 @@ export interface PostMetadata {
 }
 
 /**
+ * 연결된 포스트 정보 (이전/다음 포스트용)
+ */
+export interface LinkedPost {
+  /** URL 슬러그 */
+  slug: string
+  /** 포스트 제목 */
+  title: string
+}
+
+/**
+ * 포스트 요약 정보 (관련 포스트용)
+ */
+export interface PostSummary extends PostMetadata {
+  /** URL 슬러그 */
+  slug: string
+}
+
+/**
  * 완전한 포스트 정보
  */
 export interface Post extends PostMetadata {
@@ -52,9 +70,9 @@ export interface Post extends PostMetadata {
   /** 읽기 시간 */
   readingTime: string
   /** 이전 포스트 */
-  previous?: Post
+  previous?: LinkedPost
   /** 다음 포스트 */
-  next?: Post
+  next?: LinkedPost
 }
 
 /**
@@ -159,7 +177,7 @@ export interface PostDetailResponse {
   /** 포스트 정보 */
   post: Post
   /** 관련 포스트들 (선택사항) */
-  relatedPosts?: Post[]
+  relatedPosts?: PostSummary[]
 }
 
 /**

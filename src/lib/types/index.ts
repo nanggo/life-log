@@ -10,6 +10,8 @@ export type {
   Post,
   PostMetadata,
   PostPreview,
+  LinkedPost,
+  PostSummary,
   Author,
   Tag,
   Pagination,
