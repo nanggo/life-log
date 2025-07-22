@@ -134,7 +134,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     }
     // 문자열인 경우 (하위 호환성)
     else if (typeof post.metadata.tags === 'string') {
-      tags = (post.metadata.tags as string)
+      tags = post.metadata.tags
         .split('#')
         .filter((tag: string) => tag.trim().length > 0)
         .map((tag: string) => tag.trim())
@@ -149,7 +149,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
         .split('/')
         .pop() || '',
     isIndexFile: filepath.endsWith('/index.md'),
-    date: formatDate(post.metadata.date) as string,
+    date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
     preview: {
       html: preview?.toString() || '',
       text: (preview?.structuredText ?? preview?.toString()) || ''
