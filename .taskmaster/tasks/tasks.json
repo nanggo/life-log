@@ -74,9 +74,7 @@
         "details": "1. src/lib/types/ 디렉토리 생성\n2. Post 인터페이스 정의 (title, slug, date, content, tags, readingTime 등)\n3. Author 인터페이스 정의\n4. Tag 인터페이스 정의\n5. API 응답 타입 정의 (PostListResponse, PostDetailResponse 등)\n6. Frontmatter 타입 정의\n7. 페이지네이션 관련 타입 정의\n8. SEO 메타데이터 타입 정의\n9. 각 타입에 JSDoc 코멘트로 상세 설명 추가",
         "testStrategy": "모든 타입이 올바르게 export되는지 확인, 타입 정의가 실제 데이터 구조와 일치하는지 검증, TypeScript 컴파일 에러 없음 확인",
         "priority": "high",
-        "dependencies": [
-          1
-        ],
+        "dependencies": [1],
         "status": "done",
         "subtasks": []
       },
@@ -87,10 +85,7 @@
         "details": "1. src/lib/utils/ 내 모든 .js 파일을 .ts로 변환\n2. 각 유틸리티 함수에 타입 annotation 추가\n3. Svelte 컴포넌트의 <script> 블록을 <script lang=\"ts\">로 변경\n4. 컴포넌트 props 타입 정의 (export let prop: Type)\n5. 이벤트 핸들러 타입 정의\n6. stores.js를 stores.ts로 변환하고 Writable<Type> 타입 적용\n7. app.d.ts 파일에서 글로벌 타입 정의\n8. 함수 매개변수와 반환값에 명시적 타입 지정",
         "testStrategy": "모든 파일이 TypeScript로 변환되었는지 확인, 타입 체크 통과, 기존 기능 정상 작동 검증, ESLint 에러 없음 확인",
         "priority": "high",
-        "dependencies": [
-          1,
-          2
-        ],
+        "dependencies": [1, 2],
         "status": "pending",
         "subtasks": [
           {
@@ -106,9 +101,7 @@
             "id": 2,
             "title": "Svelte 컴포넌트 스크립트 블록을 TypeScript로 변환",
             "description": "모든 Svelte 컴포넌트의 <script> 태그를 <script lang=\"ts\">로 변경하고 컴포넌트 props에 타입을 정의합니다.",
-            "dependencies": [
-              "3.1"
-            ],
+            "dependencies": ["3.1"],
             "details": "1. src/lib/components/ 내 모든 .svelte 파일의 script 태그 변경\n2. src/routes/ 내 모든 페이지 컴포넌트 script 태그 변경\n3. export let prop 구문을 export let prop: Type 형태로 변환\n4. 컴포넌트 간 props 전달 시 타입 안전성 확보",
             "status": "pending",
             "testStrategy": "모든 컴포넌트가 TypeScript 모드로 정상 작동하는지 확인, props 타입 검증이 올바르게 작동하는지 테스트"
@@ -117,9 +110,7 @@
             "id": 3,
             "title": "이벤트 핸들러 및 반응형 변수 타입 정의",
             "description": "Svelte 컴포넌트 내 이벤트 핸들러 함수와 반응형 변수들에 명시적 타입을 정의합니다.",
-            "dependencies": [
-              "3.2"
-            ],
+            "dependencies": ["3.2"],
             "details": "1. 클릭, 입력 등 이벤트 핸들러 함수 매개변수 타입 정의\n2. $: 반응형 구문에서 사용되는 변수 타입 명시\n3. on:click, on:input 등 이벤트 바인딩 타입 정의\n4. dispatch 함수에서 커스텀 이벤트 타입 정의",
             "status": "pending",
             "testStrategy": "이벤트 핸들러가 올바른 타입으로 호출되는지 확인, 반응형 변수의 타입 안전성 검증"
@@ -128,9 +119,7 @@
             "id": 4,
             "title": "stores.js를 TypeScript로 변환 및 Writable 타입 적용",
             "description": "Svelte stores 파일을 TypeScript로 변환하고 각 store에 적절한 Writable<Type> 타입을 적용합니다.",
-            "dependencies": [
-              "3.1"
-            ],
+            "dependencies": ["3.1"],
             "details": "1. src/lib/stores.js를 src/lib/stores.ts로 변환\n2. 각 store 변수에 Writable<Type> 또는 Readable<Type> 타입 적용\n3. store에서 파생되는 derived store들의 타입 정의\n4. store 구독 및 업데이트 함수에 타입 안전성 적용",
             "status": "done",
             "testStrategy": "store의 타입이 올바르게 추론되는지 확인, store 사용 시 타입 체크 통과 검증"
@@ -139,12 +128,7 @@
             "id": 5,
             "title": "app.d.ts 글로벌 타입 정의 및 최종 검증",
             "description": "app.d.ts 파일에 글로벌 타입 정의를 추가하고 전체 마이그레이션 결과를 검증합니다.",
-            "dependencies": [
-              "3.1",
-              "3.2",
-              "3.3",
-              "3.4"
-            ],
+            "dependencies": ["3.1", "3.2", "3.3", "3.4"],
             "details": "1. app.d.ts에 앱 전역에서 사용할 타입 선언 추가\n2. SvelteKit 관련 타입 확장 및 커스터마이징\n3. 환경 변수 타입 정의 추가\n4. 전체 프로젝트에서 남은 any 타입 제거\n5. pnpm build, pnpm check, pnpm lint 명령어로 최종 검증",
             "status": "pending",
             "testStrategy": "모든 TypeScript 에러가 해결되었는지 확인, 빌드 성공 및 타입 체크 통과, ESLint 에러 0개 달성"
@@ -158,9 +142,7 @@
         "details": "1. @typescript-eslint/recommended 규칙 적용\n2. eslint-plugin-svelte 최신 버전으로 업데이트\n3. Import 순서 정리를 위한 eslint-plugin-import 설정\n4. no-unused-vars, no-undef 등 TypeScript 전용 규칙 적용\n5. Prettier와 ESLint 충돌 방지 설정\n6. Pre-commit 훅 설정 (husky + lint-staged)\n7. .vscode/settings.json에 자동 포맷팅 설정\n8. 네이밍 컨벤션 규칙 정의 (@typescript-eslint/naming-convention)",
         "testStrategy": "npm run lint 명령어로 ESLint 에러 0개 확인, Pre-commit 훅 정상 작동 검증, 코드 포맷팅 자동 적용 확인",
         "priority": "medium",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -171,9 +153,7 @@
         "details": "1. src/lib/components/ 하위에 ui/, layout/, post/, common/ 디렉토리 생성\n2. 기존 컴포넌트들을 역할에 따라 적절한 디렉토리로 이동\n3. 큰 컴포넌트를 작은 단위로 분리 (PostCard, PostMeta, TagList 등)\n4. 재사용 가능한 UI 컴포넌트 추출 (Button, Icon, Loading 등)\n5. 각 컴포넌트에 Props 인터페이스 정의\n6. 컴포넌트별 index.ts 파일로 export 정리\n7. 슬롯과 이벤트에 타입 정의 추가",
         "testStrategy": "컴포넌트 import 경로 정상 작동 확인, 기존 기능 유지 검증, 컴포넌트 재사용성 테스트, TypeScript 타입 체크 통과",
         "priority": "medium",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -184,9 +164,7 @@
         "details": "1. Sharp 라이브러리 최신 버전으로 업데이트\n2. WebP 포맷 자동 변환 로직 구현\n3. 반응형 이미지 처리를 위한 srcset 생성\n4. 이미지 지연 로딩 (lazy loading) 구현\n5. 이미지 압축 최적화 설정\n6. 이미지 캐싱 전략 구현\n7. 이미지 처리 관련 타입 정의\n8. Vite의 asset 처리 최적화 설정",
         "testStrategy": "이미지 로딩 속도 측정, WebP 포맷 변환 확인, Lighthouse 성능 점수 90점 이상 유지 검증, 다양한 디바이스에서 반응형 이미지 테스트",
         "priority": "low",
-        "dependencies": [
-          3
-        ],
+        "dependencies": [3],
         "status": "pending",
         "subtasks": []
       },
@@ -197,10 +175,7 @@
         "details": "1. Vitest 및 @testing-library/svelte 설치\n2. vitest.config.ts 파일 생성 및 설정\n3. 테스트 환경을 위한 TypeScript 설정 추가\n4. 유틸리티 함수들에 대한 단위 테스트 작성\n5. 주요 컴포넌트에 대한 렌더링 테스트 작성\n6. 테스트 커버리지 설정 및 리포트 생성\n7. CI/CD 파이프라인에 테스트 실행 추가\n8. 테스트 스크립트 package.json에 추가",
         "testStrategy": "모든 테스트 케이스 통과 확인, 테스트 커버리지 70% 이상 달성, CI/CD에서 테스트 자동 실행 검증",
         "priority": "low",
-        "dependencies": [
-          4,
-          5
-        ],
+        "dependencies": [4, 5],
         "status": "pending",
         "subtasks": []
       },
@@ -211,10 +186,7 @@
         "details": "1. vite.config.ts 최적화 (code splitting, tree shaking)\n2. 번들 크기 분석도구 설치 및 실행 (vite-bundle-analyzer)\n3. 불필요한 의존성 제거 및 정리\n4. 프로덕션 빌드 최적화 설정\n5. RSS/Sitemap 생성 캐싱 구현\n6. Static 리소스 캐싱 최적화\n7. GitHub Actions 워크플로우 TypeScript 지원 업데이트\n8. 최종 성능 검증 및 문서화",
         "testStrategy": "빌드 시간 현재 대비 동일하거나 개선 확인, 번들 크기 증가 없음 검증, Lighthouse 성능 점수 90점 이상 유지, 모든 기존 기능 정상 작동 최종 확인",
         "priority": "medium",
-        "dependencies": [
-          6,
-          7
-        ],
+        "dependencies": [6, 7],
         "status": "pending",
         "subtasks": []
       }
