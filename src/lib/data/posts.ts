@@ -2,6 +2,7 @@ import { browser, dev } from '$app/environment'
 import { parse } from 'node-html-parser'
 import readingTime from 'reading-time/lib/reading-time.js'
 import { formatDate } from '$lib/utils/date'
+import type { Post, PostMetadata, PostPreview } from '$lib/types'
 
 /**
  * GitHub 이미지 URL을 썸네일 크기로 변환합니다.
@@ -9,7 +10,7 @@ import { formatDate } from '$lib/utils/date'
  * @param {number} size - 썸네일 크기 (기본값: 400px)
  * @returns {string} 썸네일 URL
  */
-const convertToGitHubThumbnail = (url, size = 400) => {
+const convertToGitHubThumbnail = (url: string, size: number = 400): string => {
   const GITHUB_THUMBNAIL_SUPPORTED_HOSTS = [
     'github.com/user-attachments/assets/',
     'avatars.githubusercontent.com/',

@@ -18,7 +18,7 @@
     setTagFilter,
     clearTagFilter,
     setPage
-  } from '$lib/stores/posts.js'
+  } from '$lib/stores/posts'
 
   /** @type {import('./$types').PageData} */
   export let data

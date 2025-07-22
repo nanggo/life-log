@@ -5,7 +5,7 @@
  * @param {string} slug - 정규화할 slug 문자열
  * @returns {string} 정규화된 slug 문자열
  */
-export function normalizeSlug(slug) {
+export function normalizeSlug(slug: string): string {
   if (!slug) return ''
 
   return slug
@@ -22,7 +22,7 @@ export function normalizeSlug(slug) {
  * @param {string} slug - 원본 slug 문자열
  * @returns {string} URL에 안전한 slug 문자열
  */
-export function createSafeSlug(slug) {
+export function createSafeSlug(slug: string): string {
   if (!slug) return ''
 
   return encodeURIComponent(slug.trim().toLowerCase().replace(/\s+/g, '-'))
@@ -36,6 +36,6 @@ export function createSafeSlug(slug) {
  * @param {string} slug2 - 두 번째 slug
  * @returns {boolean} 두 slug가 일치하는지 여부
  */
-export function compareSlug(slug1, slug2) {
+export function compareSlug(slug1: string, slug2: string): boolean {
   return normalizeSlug(slug1) === normalizeSlug(slug2)
 }
