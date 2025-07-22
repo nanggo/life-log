@@ -32,7 +32,7 @@ export interface PostMetadata {
   /** 초안 여부 */
   draft?: boolean
   /** 커스텀 미리보기 (선택사항) */
-  preview?: PostPreview
+  preview?: string
   /** 커버 이미지 (선택사항) */
   image?: string
   /** 작성자 정보 (선택사항) */
@@ -60,7 +60,7 @@ export interface PostSummary extends PostMetadata {
 /**
  * 완전한 포스트 정보
  */
-export interface Post extends PostMetadata {
+export interface Post extends Omit<PostMetadata, 'preview'> {
   /** URL 슬러그 */
   slug: string
   /** 인덱스 파일 여부 */
@@ -166,8 +166,6 @@ export interface PostListResponse {
   posts: Post[]
   /** 페이지네이션 정보 */
   pagination: Pagination
-  /** 총 포스트 수 */
-  total: number
 }
 
 /**
@@ -198,8 +196,6 @@ export interface SearchResponse {
   posts: Post[]
   /** 검색 쿼리 */
   query: string
-  /** 검색 결과 수 */
-  total: number
   /** 페이지네이션 정보 */
   pagination: Pagination
 }

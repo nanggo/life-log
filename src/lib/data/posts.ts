@@ -1,9 +1,16 @@
 import { browser, dev } from '$app/environment'
-import { parse } from 'node-html-parser'
-// @ts-ignore
-import readingTime from 'reading-time/lib/reading-time.js'
+import { parse, type HTMLElement } from 'node-html-parser'
+import readingTime from 'reading-time'
 import { formatDate } from '$lib/utils/date'
-import type { Post, PostMetadata, PostPreview, LinkedPost } from '$lib/types'
+import type { Post, PostMetadata } from '$lib/types'
+
+// import.meta.glob의 타입 정의
+type PostModule = {
+  default: {
+    render: () => { html: string }
+  }
+  metadata: PostMetadata
+}
 
 /**
  * GitHub 이미지 URL을 썸네일 크기로 변환합니다.
@@ -31,13 +38,13 @@ const convertToGitHubThumbnail = (url: string, size: number = 400): string => {
 /**
  * preview HTML에서 이미지 태그들을 썸네일 버전으로 최적화합니다.
  */
-const optimizePreviewImages = (previewElement: any) => {
+const optimizePreviewImages = (previewElement: HTMLElement | null) => {
   if (!previewElement) return previewElement
 
   // 모든 img 태그 찾기
   const images = previewElement.querySelectorAll('img')
 
-  images.forEach((img: any) => {
+  images.forEach((img: HTMLElement) => {
     const src = img.getAttribute('src')
     if (src) {
       // GitHub 이미지인 경우 썸네일로 변환
@@ -59,7 +66,7 @@ const optimizePreviewImages = (previewElement: any) => {
 /**
  * 개선된 프리뷰 생성: 이미지 + 텍스트를 하나의 p 태그 안에 결합
  */
-const createEnhancedPreview = (html: any) => {
+const createEnhancedPreview = (html: HTMLElement) => {
   const allParagraphs = html.querySelectorAll('p')
   if (!allParagraphs.length) return null
 
@@ -111,7 +118,7 @@ if (browser) {
 /**
  * 포스트 메타데이터를 파싱하고 가공합니다.
  */
-const processPostMetadata = ([filepath, post]: [string, any]) => {
+const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
   const html = parse(post.default.render().html)
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
@@ -119,7 +126,7 @@ const processPostMetadata = ([filepath, post]: [string, any]) => {
   const preview = optimizePreviewImages(rawPreview)
 
   // 태그 처리 로직 수정 - 배열과 문자열 모두 지원
-  let tags = []
+  let tags: string[] = []
   if (post.metadata.tags) {
     // 이미 배열인 경우
     if (Array.isArray(post.metadata.tags)) {
@@ -127,7 +134,7 @@ const processPostMetadata = ([filepath, post]: [string, any]) => {
     }
     // 문자열인 경우 (하위 호환성)
     else if (typeof post.metadata.tags === 'string') {
-      tags = post.metadata.tags
+      tags = (post.metadata.tags as string)
         .split('#')
         .filter((tag: string) => tag.trim().length > 0)
         .map((tag: string) => tag.trim())
@@ -136,15 +143,16 @@ const processPostMetadata = ([filepath, post]: [string, any]) => {
 
   return {
     ...post.metadata,
-    slug: filepath
-      .replace(/(\/index)?\.md/, '')
-      .split('/')
-      .pop(),
+    slug:
+      filepath
+        .replace(/(\/index)?\.md/, '')
+        .split('/')
+        .pop() || '',
     isIndexFile: filepath.endsWith('/index.md'),
-    date: formatDate(post.metadata.date),
+    date: formatDate(post.metadata.date) as string,
     preview: {
-      html: preview?.toString(),
-      text: preview?.structuredText ?? preview?.toString()
+      html: preview?.toString() || '',
+      text: (preview?.structuredText ?? preview?.toString()) || ''
     },
     readingTime: readingTime(html.structuredText).text,
     tags
@@ -156,7 +164,9 @@ const tagCounts: Record<string, number> = {}
 const tagSet = new Set<string>()
 
 // Get all posts and add metadata
-export const posts = Object.entries(import.meta.glob('/posts/**/*.md', { eager: true }))
+export const posts = Object.entries(
+  import.meta.glob('/posts/**/*.md', { eager: true }) as Record<string, PostModule>
+)
   .map(processPostMetadata)
   .filter((post) => dev || !post.draft)
   // sort by date
