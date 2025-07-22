@@ -73,17 +73,14 @@
   }
 
   // 현재 페이지 URL 생성
-  let currentUrl: string
   $: currentUrl = `${website}/posts${$currentPage > 1 ? '/' + $currentPage : ''}${$selectedTag ? '?tag=' + $selectedTag : ''}`
 
   // 페이지 타이틀 생성
-  let pageTitle: string
   $: pageTitle = $selectedTag
     ? `${$selectedTag} - ${name}'s life log | Posts`
     : `${name}'s life log | Posts`
 
   // 메타 설명 생성
-  let metaDescription: string
   $: metaDescription = $selectedTag ? `${detail} - ${$selectedTag} 관련 포스트 모음` : detail
 </script>
 

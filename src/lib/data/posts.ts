@@ -9,7 +9,7 @@ type PostModule = {
   default: {
     render: () => { html: string }
   }
-  metadata: PostMetadata
+  metadata: Omit<PostMetadata, 'tags'> & { tags?: string[] | string }
 }
 
 /**
