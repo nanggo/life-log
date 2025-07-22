@@ -32,11 +32,29 @@ export interface PostMetadata {
   /** 초안 여부 */
   draft?: boolean
   /** 커스텀 미리보기 (선택사항) */
-  preview?: string
+  preview?: PostPreview
   /** 커버 이미지 (선택사항) */
   image?: string
   /** 작성자 정보 (선택사항) */
   author?: string
+}
+
+/**
+ * 연결된 포스트 정보 (이전/다음 포스트용)
+ */
+export interface LinkedPost {
+  /** URL 슬러그 */
+  slug: string
+  /** 포스트 제목 */
+  title: string
+}
+
+/**
+ * 포스트 요약 정보 (관련 포스트용)
+ */
+export interface PostSummary extends PostMetadata {
+  /** URL 슬러그 */
+  slug: string
 }
 
 /**
@@ -52,9 +70,9 @@ export interface Post extends PostMetadata {
   /** 읽기 시간 */
   readingTime: string
   /** 이전 포스트 */
-  previous?: Post
+  previous?: LinkedPost
   /** 다음 포스트 */
-  next?: Post
+  next?: LinkedPost
 }
 
 /**
@@ -159,7 +177,7 @@ export interface PostDetailResponse {
   /** 포스트 정보 */
   post: Post
   /** 관련 포스트들 (선택사항) */
-  relatedPosts?: Post[]
+  relatedPosts?: PostSummary[]
 }
 
 /**

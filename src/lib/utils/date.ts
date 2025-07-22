@@ -2,20 +2,16 @@ import { format } from 'date-fns'
 
 /**
  * 주어진 날짜에 타임존 오프셋을 추가합니다.
- * @param {Date} date - 변환할 날짜
- * @returns {Date} 타임존이 조정된 날짜
  */
-export const addTimezoneOffset = (date) => {
+export const addTimezoneOffset = (date: Date): Date => {
   const offsetInMinutes = date.getTimezoneOffset()
   return new Date(date.getTime() + offsetInMinutes * 60 * 1000)
 }
 
 /**
  * 날짜가 유효한지 검사합니다.
- * @param {Date | string} date - 검사할 날짜
- * @returns {boolean} 날짜가 유효하면 true, 그렇지 않으면 false
  */
-export const isValidDate = (date) => {
+export const isValidDate = (date: Date | string | null | undefined): date is Date | string => {
   if (!date) return false
 
   const dateObj = typeof date === 'string' ? new Date(date) : date
@@ -24,10 +20,8 @@ export const isValidDate = (date) => {
 
 /**
  * 날짜를 yyyy-MM-dd 형식의 문자열로 포맷팅합니다.
- * @param {Date | string} date - 포맷팅할 날짜
- * @returns {string} 포맷팅된 날짜 문자열
  */
-export const formatDate = (date) => {
+export const formatDate = (date: Date | string | null | undefined): string | undefined => {
   if (!date) return undefined
 
   try {
