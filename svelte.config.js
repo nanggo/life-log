@@ -75,7 +75,22 @@ const config = {
     // remove this if you don't want prerendering
     prerender: {
       entries: ['*', '/sitemap.xml', '/rss.xml', ...generatePostRoutes()],
-      handleMissingId: 'warn'
+      handleMissingId: 'warn',
+      handleHttpError: ({ status, path, referrer, message }) => {
+        // Ignore 404 errors for asset files during prerendering
+        if (
+          status === 404 &&
+          (path.includes('.png') ||
+            path.includes('.jpg') ||
+            path.includes('.jpeg') ||
+            path.includes('.webp') ||
+            path.includes('.avif'))
+        ) {
+          console.warn(`Ignoring missing image during prerender: ${path}`)
+          return
+        }
+        throw new Error(`${status} ${path} (referenced from ${referrer}): ${message}`)
+      }
     }
   }
 }

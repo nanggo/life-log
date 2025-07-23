@@ -2,14 +2,14 @@ import { visit } from 'unist-util-visit'
 import autolinkHeadings from 'rehype-autolink-headings'
 import slugPlugin from 'rehype-slug'
 import remarkHeadings from '@vcarl/remark-headings'
-import remarkLocalImages from './scripts/remark-local-images.js'
+import remarkViteImages from './scripts/remark-vite-images.js'
 
 const config = {
   extensions: ['.svx', '.md'],
   smartypants: {
     dashes: 'oldschool'
   },
-  remarkPlugins: [videos, remarkLocalImages, headings],
+  remarkPlugins: [videos, remarkViteImages, headings],
   rehypePlugins: [
     slugPlugin,
     [
@@ -44,7 +44,7 @@ function optimizeExternalImages() {
           node.properties.decoding = 'async'
           node.properties.sizes = '(max-width: 800px) 100vw, 800px'
 
-          // Add modal functionality
+          // Add modal functionality - show original image in modal
           node.properties.class =
             'enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto'
           node.properties.onclick = `openImageModal('${src}', '${(node.properties.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')`

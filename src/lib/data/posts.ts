@@ -3,11 +3,6 @@ import { parse, type HTMLElement } from 'node-html-parser'
 import readingTime from 'reading-time'
 import { formatDate } from '$lib/utils/date'
 import type { Post, PostMetadata } from '$lib/types'
-import path from 'path'
-import fs from 'fs-extra'
-
-const CWD = process.cwd()
-const ASSETS_PATH = path.join(CWD, 'static/assets/posts')
 
 // import.meta.glob의 타입 정의
 type PostModule = {
@@ -133,25 +128,6 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       .replace(/(\/index)?\.md/, '')
       .split('/')
       .pop() || ''
-
-  // Process thumbnail if it's a local path
-  if (post.metadata.thumbnail && post.metadata.thumbnail.startsWith('.')) {
-    const markdownFileAbsPath = path.join(CWD, filepath)
-    const markdownDir = path.dirname(markdownFileAbsPath)
-    const sourceImagePath = path.resolve(markdownDir, post.metadata.thumbnail)
-
-    if (fs.existsSync(sourceImagePath)) {
-      const imageName = path.basename(post.metadata.thumbnail)
-      const destDir = path.join(ASSETS_PATH, slug)
-      const destPath = path.join(destDir, imageName)
-      const publicPath = path.join('/assets/posts', slug, imageName).replace(/\\/g, '/')
-
-      fs.ensureDirSync(destDir)
-      fs.copyFileSync(sourceImagePath, destPath)
-
-      post.metadata.thumbnail = publicPath
-    }
-  }
 
   const html = parse(post.default.render().html)
   const rawPreview = post.metadata.preview
