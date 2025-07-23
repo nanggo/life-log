@@ -12,6 +12,12 @@ declare global {
   interface Window {
     openImageModal: (src: string, alt: string) => void
   }
+
+  namespace NodeJS {
+    interface ProcessEnv {
+      NODE_ENV: 'development' | 'production' | 'test'
+    }
+  }
 }
 
 declare module '*.svelte' {

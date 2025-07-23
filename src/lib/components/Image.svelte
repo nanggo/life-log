@@ -1,5 +1,6 @@
 <script lang="ts">
   import { dev } from '$app/environment'
+  import type { ImageSource } from '$lib/types/image'
 
   export let src: string
   export let alt: string
@@ -28,7 +29,7 @@
   }
 
   // Get all possible images that could be used
-  const modules: Record<string, any> = import.meta.glob(
+  const modules: Record<string, ImageSource> = import.meta.glob(
     '/posts/**/*.{jpeg,jpg,png,gif,webp}',
     {
       eager: true,
@@ -42,7 +43,7 @@
   )
 
   // Find the image that matches the src
-  const image: { sources: Record<string, string>; img: Record<string, any> } | undefined = modules[src]
+  const image: ImageSource | undefined = modules[src]
 
   // vite-imagetools gives us an object with src, sources, and img
   // attributes. We can spread these into the picture and img tags.
