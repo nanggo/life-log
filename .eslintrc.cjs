@@ -44,7 +44,6 @@ module.exports = {
     // General code quality rules
     'no-console': 'warn',
     'no-debugger': 'error',
-    'no-unused-vars': 'off', // Use TypeScript version instead
     'prefer-const': 'error',
     'no-var': 'error',
     'object-shorthand': 'error',
@@ -75,8 +74,6 @@ module.exports = {
     },
     {
       files: ['*.ts', '*.tsx'],
-      parser: '@typescript-eslint/parser',
-      plugins: ['@typescript-eslint'],
       rules: {
         '@typescript-eslint/no-explicit-any': 'warn',
         '@typescript-eslint/explicit-function-return-type': 'off',
