@@ -8,88 +8,79 @@
 
   const url: string = `${website}/about`
 
-  // const jsonLd = {
-  //   '@context': 'https://schema.org',
-  //   '@type': 'Person',
-  //   name: name,
-  //   url: website,
-  //   sameAs: [`https://github.com/${github}`, `https://linkedin.com/in/${linkedin}`],
-  //   jobTitle: 'Frontend Engineer',
-  //   description: bio,
-  //   email: email
-  // }
+  // eslint-disable-next-line no-unused-vars
+  // @ts-ignore - Used in JSON-LD script tag
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: '유지성 (Jisung Yoo)',
+    alternateName: 'NANGGO',
+    url: website,
+    sameAs: [
+      'https://github.com/nanggo',
+      'https://linkedin.com/in/jisung-yoo',
+      'https://blog.nanggo.net'
+    ],
+    jobTitle: 'Frontend Engineer',
+    description: '도전을 좋아하고, 효율적으로 일하며, 커뮤니케이션을 좋아하는 엔지니어입니다.',
+    email: 'yamsiri@gmail.com',
+    knowsAbout: ['Frontend Development', 'React', 'Vue.js', 'TypeScript', 'Next.js'],
+    workLocation: {
+      '@type': 'Place',
+      name: 'South Korea'
+    }
+  }
 </script>
 
 <svelte:head>
   <title>{data.aboutData.title}</title>
-  <meta name="description" content="About NANGGO" />
+  <meta name="description" content={data.aboutData.description} />
   <meta name="author" content={name} />
+  <meta name="keywords" content="NANGGO, 유지성, Frontend Engineer, React, Vue.js, TypeScript, 프론트엔드 개발자" />
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="profile" />
   <meta property="og:title" content={data.aboutData.title} />
-  <meta property="og:description" content="About NANGGO" />
+  <meta property="og:description" content={data.aboutData.description} />
   <meta property="og:site_name" content={name} />
-
+  
   <!-- Twitter Meta Tags -->
-  <meta name="twitter:card" content="summary" />
-  <meta property="twitter:domain" content={website} />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content={website.replace('https://', '')} />
   <meta property="twitter:url" content={url} />
   <meta name="twitter:title" content={data.aboutData.title} />
-  <meta name="twitter:description" content="About NANGGO" />
+  <meta name="twitter:description" content={data.aboutData.description} />
+  <meta name="twitter:creator" content="@nanggo" />
+
+  <!-- Additional SEO Meta Tags -->
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="googlebot" content="index, follow" />
+  <link rel="canonical" href={url} />
 
   <script type="application/ld+json">
 {@html JSON.stringify(jsonLd)}
   </script>
 </svelte:head>
-<!-- 
-<div class="max-w-2xl mx-auto lg:max-w-3xl">
-  <article>
-    <header class="flex flex-col">
-      <h1
-        class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-      >
-        About NANGGO
-      </h1>
-      <time class="flex items-center text-base text-zinc-400 dark:text-zinc-500">
-        <span class="h-4 w-0.5 rounded-full bg-zinc-200 dark:bg-zinc-500" />
-        <span class="ml-3">Last updated: {data.aboutData.lastUpdated}</span>
-      </time>
-    </header>
 
-    <div class="mt-8 prose dark:prose-invert">
-      <svelte:component this={data.component} />
-    </div>
-  </article>
-</div> 
--->
-
-<div class="about max-w-2xl mx-auto lg:max-w-none">
+<main class="about max-w-2xl mx-auto lg:max-w-none">
   <div class="hidden lg:block pt-8">
     <div class="sticky top-0 w-full flex justify-end pt-11 pr-8"></div>
   </div>
 
   <div class="w-full mx-auto overflow-x-hidden">
-    <!-- <article> -->
-    <header class="flex flex-col">
-      <!--        
-        <h1
-          class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-        >
-          {data.aboutData.title}
-        </h1>
-        -->
-      <!-- <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed /> -->
-    </header>
+    <article>
+      <header class="flex flex-col">
+        <h1 class="sr-only">{data.aboutData.title}</h1>
+        <p class="sr-only">Last updated: {data.aboutData.lastUpdated}</p>
+      </header>
 
-    <!-- render the post -->
-    <div class="prose dark:prose-invert">
-      <svelte:component this={data.component} />
-    </div>
-    <!-- </article> -->
+      <section class="prose dark:prose-invert" aria-label="About content">
+        <svelte:component this={data.component} />
+      </section>
+    </article>
   </div>
-</div>
+</main>
 
 <style lang="postcss">
   :global(.about p) {
