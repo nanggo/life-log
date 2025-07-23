@@ -1,5 +1,6 @@
 <script lang="ts">
   import { dev } from '$app/environment'
+  import type { ImageSource } from '$lib/types/image'
 
   export let src: string
   export let alt: string
@@ -24,17 +25,6 @@
         width = match[1]
         height = match[2]
       }
-    }
-  }
-
-  // Image processing types for vite-imagetools
-  interface ImageSource {
-    sources: Record<string, string>
-    img: {
-      src: string
-      width?: number
-      height?: number
-      [key: string]: unknown
     }
   }
 
