@@ -1,13 +1,20 @@
-<script>
+<script lang="ts">
   import { browser } from '$app/environment'
   import { onMount } from 'svelte'
   import Card from './Card.svelte'
   import GithubSlugger from 'github-slugger'
+  import type { Post } from '$lib/types'
 
-  export let post
+  export let post: Post
 
-  let elements = []
-  let headings = post.headings.map((heading) => {
+  interface ProcessedHeading {
+    depth: number
+    value: string
+    slug: string
+  }
+
+  let elements: (HTMLElement | null)[] = []
+  let headings: ProcessedHeading[] = post.headings.map((heading) => {
     const slugger = new GithubSlugger()
     return {
       ...heading,
@@ -20,21 +27,22 @@
     setActiveHeading()
   })
 
-  let activeHeading = headings[0]
-  let scrollY
+  let activeHeading: ProcessedHeading = headings[0]
+  let scrollY: number
 
-  const updateHeadings = () => {
+  const updateHeadings = (): void => {
     if (browser) {
       elements = headings.map((heading) => {
         return document.getElementById(heading.slug)
       })
     }
   }
-  const setActiveHeading = () => {
+  
+  const setActiveHeading = (): void => {
     scrollY = window.scrollY
 
     // 현재 스크롤 위치보다 위에 있는 마지막 요소를 찾음
-    const visibleIndex = elements.reduce((lastVisible, element, index) => {
+    const visibleIndex: number = elements.reduce((lastVisible: number, element: HTMLElement | null, index: number) => {
       if (element && element.offsetTop <= scrollY) {
         return index
       }
@@ -43,8 +51,8 @@
 
     activeHeading = headings[visibleIndex]
 
-    const pageHeight = document.body.scrollHeight
-    const scrollProgress = (scrollY + window.innerHeight) / pageHeight
+    const pageHeight: number = document.body.scrollHeight
+    const scrollProgress: number = (scrollY + window.innerHeight) / pageHeight
 
     if (!activeHeading) {
       if (scrollProgress > 0.5) {

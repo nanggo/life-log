@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import { inject } from '@vercel/analytics'
   import '../app.css'
@@ -8,12 +8,13 @@
   import { browser, dev } from '$app/environment'
   import { name, description, author, website } from '$lib/info'
   import { page } from '$app/stores'
+  import type { LayoutData } from './$types'
 
-  export let data
+  export let data: LayoutData
 
-  let isDarkMode = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
+  let isDarkMode: boolean = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
 
-  const disableTransitionsTemporarily = () => {
+  const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
     window.setTimeout(() => {
       document.documentElement.classList.remove('[&_*]:!transition-none')
@@ -25,20 +26,20 @@
   
   // Image modal functionality
   if (browser) {
-    window.openImageModal = function(src, alt) {
-      const modal = document.createElement('div');
+    window.openImageModal = function(src: string, alt: string): void {
+      const modal: HTMLDivElement = document.createElement('div');
       modal.className = 'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
       modal.style.backdropFilter = 'blur(4px)';
 
-      const modalContent = document.createElement('div');
+      const modalContent: HTMLDivElement = document.createElement('div');
       modalContent.className = 'relative max-w-full max-h-full';
 
-      const image = document.createElement('img');
+      const image: HTMLImageElement = document.createElement('img');
       image.src = src;
       image.alt = alt;
       image.className = 'max-w-full max-h-full object-contain rounded-lg';
 
-      const closeButton = document.createElement('button');
+      const closeButton: HTMLButtonElement = document.createElement('button');
       closeButton.className = 'absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl font-bold';
       closeButton.textContent = '×';
 
@@ -46,19 +47,19 @@
       modalContent.appendChild(closeButton);
       modal.appendChild(modalContent);
 
-      const escHandler = (e) => {
+      const escHandler = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
           closeModal();
         }
       };
 
-      const closeModal = () => {
+      const closeModal = (): void => {
         modal.remove();
         document.removeEventListener('keydown', escHandler);
       };
 
       closeButton.onclick = closeModal;
-      modal.onclick = (e) => {
+      modal.onclick = (e: MouseEvent): void => {
         if (e.target === modal) {
           closeModal();
         }
@@ -78,7 +79,7 @@
   
   <!-- Performance optimization hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
   <link rel="dns-prefetch" href="https://og-image-korean.vercel.app" />
   <link rel="dns-prefetch" href="https://vercel.com" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -162,9 +163,9 @@
           disableTransitionsTemporarily()
 
           if (isDarkMode) {
-            document.querySelector('html').classList.add('dark')
+            document.querySelector('html')?.classList.add('dark')
           } else {
-            document.querySelector('html').classList.remove('dark')
+            document.querySelector('html')?.classList.remove('dark')
           }
         }}
       >

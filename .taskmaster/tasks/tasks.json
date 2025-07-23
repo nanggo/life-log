@@ -103,7 +103,7 @@
             "description": "모든 Svelte 컴포넌트의 <script> 태그를 <script lang=\"ts\">로 변경하고 컴포넌트 props에 타입을 정의합니다.",
             "dependencies": ["3.1"],
             "details": "1. src/lib/components/ 내 모든 .svelte 파일의 script 태그 변경\n2. src/routes/ 내 모든 페이지 컴포넌트 script 태그 변경\n3. export let prop 구문을 export let prop: Type 형태로 변환\n4. 컴포넌트 간 props 전달 시 타입 안전성 확보",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "모든 컴포넌트가 TypeScript 모드로 정상 작동하는지 확인, props 타입 검증이 올바르게 작동하는지 테스트"
           },
           {
@@ -193,7 +193,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-22T14:06:44.557Z",
+      "updated": "2025-07-23T13:16:04.013Z",
       "description": "Tasks for master context"
     }
   }
