@@ -1,12 +1,12 @@
-import { mdsvex } from 'mdsvex'
-import mdsvexConfig from './mdsvex.config.js'
-
-import adapter from '@sveltejs/adapter-vercel'
-
-import preprocess from 'svelte-preprocess'
 import { readdirSync, statSync, readFileSync } from 'fs'
 import { join, relative } from 'path'
 import { fileURLToPath } from 'url'
+
+import adapter from '@sveltejs/adapter-vercel'
+import { mdsvex } from 'mdsvex'
+import preprocess from 'svelte-preprocess'
+
+import mdsvexConfig from './mdsvex.config.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 

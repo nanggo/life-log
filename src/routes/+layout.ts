@@ -1,5 +1,6 @@
-import { name } from '$lib/info'
 import type { LayoutLoad } from './$types'
+
+import { name } from '$lib/info'
 
 export const prerender = true
 

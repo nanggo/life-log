@@ -1,9 +1,10 @@
 <script lang="ts">
+  import type { PageData } from './$types'
+
   import ArrowRightIcon from '$lib/components/ArrowRightIcon.svelte'
   import PostsList from '$lib/components/PostsList.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
   import { avatar, bio, name, website } from '$lib/info'
-  import type { PageData } from './$types'
 
   export let data: PageData
 

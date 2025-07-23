@@ -1,8 +1,9 @@
 <script lang="ts">
   // import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
   // import { afterNavigate } from '$app/navigation'
-  import { website, name } from '$lib/info'
   import type { PageData } from './$types'
+
+  import { website, name } from '$lib/info'
 
   export let data: PageData
 
@@ -11,7 +12,7 @@
   // Used in template JSON-LD script tag below
   // @ts-ignore: Used in Svelte template
   // eslint-disable-next-line no-unused-vars
-  const jsonLd = {
+  const _jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
     name: '유지성 (Jisung Yoo)',
@@ -37,7 +38,10 @@
   <title>{data.aboutData.title}</title>
   <meta name="description" content={data.aboutData.description} />
   <meta name="author" content={name} />
-  <meta name="keywords" content="NANGGO, 유지성, Frontend Engineer, React, Vue.js, TypeScript, 프론트엔드 개발자" />
+  <meta
+    name="keywords"
+    content="NANGGO, 유지성, Frontend Engineer, React, Vue.js, TypeScript, 프론트엔드 개발자"
+  />
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
@@ -45,7 +49,7 @@
   <meta property="og:title" content={data.aboutData.title} />
   <meta property="og:description" content={data.aboutData.description} />
   <meta property="og:site_name" content={name} />
-  
+
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta property="twitter:domain" content={website.replace('https://', '')} />
@@ -60,7 +64,7 @@
   <link rel="canonical" href={url} />
 
   <script type="application/ld+json">
-{@html JSON.stringify(jsonLd)}
+{@html JSON.stringify(_jsonLd)}
   </script>
 </svelte:head>
 

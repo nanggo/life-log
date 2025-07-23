@@ -1,6 +1,7 @@
-import { error } from '@sveltejs/kit'
 import { readFileSync } from 'fs'
 import { join } from 'path'
+
+import { error } from '@sveltejs/kit'
 
 /** @type {import('./$types').PageServerLoad} */
 export async function load() {
@@ -38,7 +39,7 @@ export async function load() {
     return {
       aboutData
     }
-  } catch (e) {
+  } catch (_e) {
     throw error(404, 'About page not found')
   }
 }

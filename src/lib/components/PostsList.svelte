@@ -1,6 +1,6 @@
 <script lang="ts">
-  import PostPreview from '$lib/components/PostPreview.svelte'
   import PostDate from '$lib/components/PostDate.svelte'
+  import PostPreview from '$lib/components/PostPreview.svelte'
   import type { Post } from '$lib/types'
 
   export let posts: Post[]

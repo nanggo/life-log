@@ -1,5 +1,6 @@
-import { visit } from 'unist-util-visit'
 import path from 'path'
+
+import { visit } from 'unist-util-visit'
 
 /**
  * A remark plugin that processes local images with optimization and modal support

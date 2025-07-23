@@ -1,8 +1,9 @@
-import { browser, dev } from '$app/environment'
 import { parse, type HTMLElement } from 'node-html-parser'
 import readingTime from 'reading-time'
-import { formatDate } from '$lib/utils/date'
+
+import { browser, dev } from '$app/environment'
 import type { Post, PostMetadata } from '$lib/types'
+import { formatDate } from '$lib/utils/date'
 
 // import.meta.glob의 타입 정의
 type PostModule = {

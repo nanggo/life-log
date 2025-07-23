@@ -1,7 +1,8 @@
-import { visit } from 'unist-util-visit'
+import remarkHeadings from '@vcarl/remark-headings'
 import autolinkHeadings from 'rehype-autolink-headings'
 import slugPlugin from 'rehype-slug'
-import remarkHeadings from '@vcarl/remark-headings'
+import { visit } from 'unist-util-visit'
+
 import remarkOptimizedImages from './scripts/remark-optimized-images.js'
 
 const config = {

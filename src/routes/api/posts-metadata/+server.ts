@@ -1,7 +1,9 @@
 import { json } from '@sveltejs/kit'
+
+import type { RequestHandler } from './$types'
+
 import { posts, allTags } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
-import type { RequestHandler } from './$types'
 
 /**
  * 포스트 메타데이터 API 엔드포인트

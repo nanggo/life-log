@@ -1,19 +1,21 @@
 <script lang="ts">
-  import { website, name, bio, avatar } from '$lib/info'
-  import ToC from '$lib/components/ToC.svelte'
-  import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
-  import SocialLinks from '$lib/components/SocialLinks.svelte'
-  import Image from '$lib/components/Image.svelte'
-  import { afterNavigate } from '$app/navigation'
-  import PostDate from '$lib/components/PostDate.svelte'
-  import Tags from '$lib/components/Tags.svelte'
-  import type { PageData as BasePageData } from './$types'
   import type { AfterNavigate } from '@sveltejs/kit'
 
+  import type { PageData as BasePageData } from './$types'
+
+  import { afterNavigate } from '$app/navigation'
+  import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
+  import Image from '$lib/components/Image.svelte'
+  import PostDate from '$lib/components/PostDate.svelte'
+  import SocialLinks from '$lib/components/SocialLinks.svelte'
+  import Tags from '$lib/components/Tags.svelte'
+  import ToC from '$lib/components/ToC.svelte'
+  import { website, name, bio, avatar } from '$lib/info'
+
   interface PageData extends BasePageData {
-    dynamicDescription: string;
-    jsonLd: string;
-    breadcrumbLd: string;
+    dynamicDescription: string
+    jsonLd: string
+    breadcrumbLd: string
   }
 
   export let data: PageData
@@ -67,8 +69,12 @@
   <meta name="twitter:description" content={data.dynamicDescription} />
   <meta name="twitter:image" content={ogImage} />
 
-  <script type="application/ld+json">{@html data.jsonLd}</script>
-  <script type="application/ld+json">{@html data.breadcrumbLd}</script>
+  <script type="application/ld+json">
+{@html data.jsonLd}
+  </script>
+  <script type="application/ld+json">
+{@html data.breadcrumbLd}
+  </script>
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">
@@ -100,7 +106,7 @@
           {data.post.title}
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
-        <Tags tags={data.post.tags ?? []} clickable={true} getTagUrl={getTagUrl} />
+        <Tags tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
       </header>
 
       <!-- render the post -->

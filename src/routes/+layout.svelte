@@ -1,18 +1,22 @@
 <script lang="ts">
-  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import { inject } from '@vercel/analytics'
+  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import '../app.css'
   import '../prism.css'
   import MoonIcon from 'heroicons-svelte/solid/MoonIcon.svelte'
   import SunIcon from 'heroicons-svelte/solid/SunIcon.svelte'
-  import { browser, dev } from '$app/environment'
-  import { name, description, author, website } from '$lib/info'
-  import { page } from '$app/stores'
+
   import type { LayoutData } from './$types'
+
+  import { browser, dev } from '$app/environment'
+  import { page } from '$app/stores'
+  import { name, description, author, website } from '$lib/info'
 
   export let data: LayoutData
 
-  let isDarkMode: boolean = browser ? Boolean(document.documentElement.classList.contains('dark')) : true
+  let isDarkMode: boolean = browser
+    ? Boolean(document.documentElement.classList.contains('dark'))
+    : true
 
   const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
@@ -23,50 +27,52 @@
 
   inject({ mode: dev ? 'development' : 'production' })
   injectSpeedInsights()
-  
+
   // Image modal functionality
   if (browser) {
-    window.openImageModal = function(src: string, alt: string): void {
-      const modal: HTMLDivElement = document.createElement('div');
-      modal.className = 'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
-      modal.style.backdropFilter = 'blur(4px)';
+    window.openImageModal = function (src: string, alt: string): void {
+      const modal: HTMLDivElement = document.createElement('div')
+      modal.className =
+        'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4'
+      modal.style.backdropFilter = 'blur(4px)'
 
-      const modalContent: HTMLDivElement = document.createElement('div');
-      modalContent.className = 'relative max-w-full max-h-full';
+      const modalContent: HTMLDivElement = document.createElement('div')
+      modalContent.className = 'relative max-w-full max-h-full'
 
-      const image: HTMLImageElement = document.createElement('img');
-      image.src = src;
-      image.alt = alt;
-      image.className = 'max-w-full max-h-full object-contain rounded-lg';
+      const image: HTMLImageElement = document.createElement('img')
+      image.src = src
+      image.alt = alt
+      image.className = 'max-w-full max-h-full object-contain rounded-lg'
 
-      const closeButton: HTMLButtonElement = document.createElement('button');
-      closeButton.className = 'absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl font-bold';
-      closeButton.textContent = '×';
+      const closeButton: HTMLButtonElement = document.createElement('button')
+      closeButton.className =
+        'absolute top-4 right-4 text-white bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-opacity-75 text-xl font-bold'
+      closeButton.textContent = '×'
 
-      modalContent.appendChild(image);
-      modalContent.appendChild(closeButton);
-      modal.appendChild(modalContent);
+      modalContent.appendChild(image)
+      modalContent.appendChild(closeButton)
+      modal.appendChild(modalContent)
 
       const escHandler = (e: KeyboardEvent): void => {
         if (e.key === 'Escape') {
-          closeModal();
+          closeModal()
         }
-      };
+      }
 
       const closeModal = (): void => {
-        modal.remove();
-        document.removeEventListener('keydown', escHandler);
-      };
+        modal.remove()
+        document.removeEventListener('keydown', escHandler)
+      }
 
-      closeButton.onclick = closeModal;
+      closeButton.onclick = closeModal
       modal.onclick = (e: MouseEvent): void => {
         if (e.target === modal) {
-          closeModal();
+          closeModal()
         }
-      };
-      
-      document.addEventListener('keydown', escHandler);
-      document.body.appendChild(modal);
+      }
+
+      document.addEventListener('keydown', escHandler)
+      document.body.appendChild(modal)
     }
   }
 </script>
@@ -76,7 +82,7 @@
   <meta name="description" content={description} />
   <meta name="author" content={author} />
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
-  
+
   <!-- Performance optimization hints -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />

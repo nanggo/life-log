@@ -21,7 +21,7 @@ const safeToISOString = (dateValue) => {
     const date = new Date(dateValue)
     // Date 객체의 valueOf()가 NaN이면 유효하지 않은 날짜
     return !isNaN(date.valueOf()) ? date.toISOString() : new Date().toISOString() // 유효하지 않은 경우 현재 날짜 사용
-  } catch (e) {
+  } catch (_e) {
     return new Date().toISOString() // 예외 발생 시 현재 날짜 사용
   }
 }

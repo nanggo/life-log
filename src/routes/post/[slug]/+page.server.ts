@@ -1,9 +1,11 @@
-import { posts } from '$lib/data/posts'
 import { error } from '@sveltejs/kit'
-import { normalizeSlug, compareSlug } from '$lib/utils/posts'
-import { website, name } from '$lib/info'
 import { parse } from 'node-html-parser'
+
 import type { PageServerLoad } from './$types'
+
+import { posts } from '$lib/data/posts'
+import { website, name } from '$lib/info'
+import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -103,12 +105,12 @@ export const load: PageServerLoad = async ({ params }) => {
       dateModified: post.date,
       author: {
         '@type': 'Person',
-        name: name,
+        name,
         url: website
       },
       publisher: {
         '@type': 'Organization',
-        name: name,
+        name,
         logo: {
           '@type': 'ImageObject',
           url: `${website}/favicon.png`,
@@ -118,9 +120,9 @@ export const load: PageServerLoad = async ({ params }) => {
       },
       description: dynamicDescription,
       articleBody: postContent,
-      url: url,
+      url,
       inLanguage: 'ko-KR',
-      wordCount: wordCount
+      wordCount
     }
 
     const breadcrumbLd = {

@@ -1,6 +1,7 @@
+import { error } from '@sveltejs/kit'
+
 import { allTags, posts as allPosts, postsByTag } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
-import { error } from '@sveltejs/kit'
 
 export const prerender = false
 
