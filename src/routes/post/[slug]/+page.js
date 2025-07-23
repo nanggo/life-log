@@ -6,13 +6,21 @@
  */
 export const prerender = true
 
+// Pre-load all posts using import.meta.glob
+const allPosts = import.meta.glob('/posts/**/*.md')
+
 export async function load({ data }) {
-  // load the markdown file based on slug
-  const component = data.post.isIndexFile
-    ? // vite requires relative paths and explicit file extensions for dynamic imports
-      // see https://github.com/rollup/plugins/tree/master/packages/dynamic-import-vars#limitations
-      await import(`../../../../posts/${data.post.slug}/index.md`)
-    : await import(`../../../../posts/${data.post.slug}.md`)
+  // Find the correct post file
+  const postKey = data.post.isIndexFile
+    ? `/posts/${data.post.slug}/index.md`
+    : `/posts/${data.post.slug}.md`
+  
+  const postLoader = allPosts[postKey]
+  if (!postLoader) {
+    throw new Error(`Post not found: ${postKey}`)
+  }
+  
+  const component = await postLoader()
 
   return {
     post: data.post,
