@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { detail, name, topic, website } from '$lib/info'
-  import PostsList from '$lib/components/PostsList.svelte'
-  import Pagination from '$lib/components/Pagination.svelte'
-  import Tags from '$lib/components/Tags.svelte'
   import type { PageData } from './$types'
+
+  import Pagination from '$lib/components/Pagination.svelte'
+  import PostsList from '$lib/components/PostsList.svelte'
+  import Tags from '$lib/components/Tags.svelte'
+  import { detail, name, topic, website } from '$lib/info'
 
   export let data: PageData
 
@@ -24,9 +25,7 @@
   $: currentUrl = `${website}${getPageUrl(page)}`
 
   // 페이지 타이틀 생성
-  $: pageTitle = tag
-    ? `${tag} - ${name}'s life log | Posts`
-    : `${name}'s life log | Posts`
+  $: pageTitle = tag ? `${tag} - ${name}'s life log | Posts` : `${name}'s life log | Posts`
 
   // 메타 설명 생성
   $: metaDescription = tag ? `${detail} - ${tag} 관련 포스트 모음` : detail
@@ -65,12 +64,7 @@
 
   {#if allTags && allTags.length > 0}
     <div class="mt-6">
-      <Tags
-        tags={allTags}
-        clickable={true}
-        selectedTag={tag}
-        getTagUrl={getTagUrl}
-      />
+      <Tags tags={allTags} clickable={true} selectedTag={tag} {getTagUrl} />
     </div>
   {/if}
 
@@ -83,10 +77,6 @@
       <PostsList {posts} />
     </div>
 
-    <Pagination 
-      currentPage={page} 
-      totalPages={totalPages}
-      getPageUrl={getPageUrl}
-    />
+    <Pagination currentPage={page} {totalPages} {getPageUrl} />
   {/if}
 </div>

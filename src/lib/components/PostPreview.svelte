@@ -1,9 +1,10 @@
 <script lang="ts">
-  import Card from './Card.svelte'
   import ArrowRightIcon from './ArrowRightIcon.svelte'
+  import Card from './Card.svelte'
+
   import { goto } from '$app/navigation'
-  import { createSafeSlug } from '$lib/utils/posts'
   import type { Post } from '$lib/types'
+  import { createSafeSlug } from '$lib/utils/posts'
 
   export let post: Post
   // 프리뷰에서 최대로 표시할 태그 개수 (기본값: 3개)
@@ -75,7 +76,7 @@
     margin-top: 0;
     margin-bottom: 0;
   }
-  
+
   /* Preview 이미지 크기 및 간격 설정 */
   .prose > :global(p img) {
     width: 100%;
@@ -97,12 +98,12 @@
   :global(.dark) .prose > :global(p img) {
     box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
   }
-  
+
   /* Override prose image constraints for enhanced images */
   .prose > :global(p img.enhanced-image) {
     max-width: 100% !important;
   }
-  
+
   /* On desktop, limit to 4/5 width with auto margins for centering */
   @media (min-width: 768px) {
     .prose > :global(p img.enhanced-image) {

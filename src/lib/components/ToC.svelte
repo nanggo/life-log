@@ -1,8 +1,10 @@
 <script lang="ts">
-  import { browser } from '$app/environment'
-  import { onMount } from 'svelte'
-  import Card from './Card.svelte'
   import GithubSlugger from 'github-slugger'
+  import { onMount } from 'svelte'
+
+  import Card from './Card.svelte'
+
+  import { browser } from '$app/environment'
   import type { Post } from '$lib/types'
 
   export let post: Post
@@ -14,7 +16,7 @@
   }
 
   let elements: (HTMLElement | null)[] = []
-  let headings: ProcessedHeading[] = post.headings.map((heading) => {
+  const headings: ProcessedHeading[] = post.headings.map((heading) => {
     const slugger = new GithubSlugger()
     return {
       ...heading,
@@ -37,17 +39,20 @@
       })
     }
   }
-  
+
   const setActiveHeading = (): void => {
     scrollY = window.scrollY
 
     // 현재 스크롤 위치보다 위에 있는 마지막 요소를 찾음
-    const visibleIndex: number = elements.reduce((lastVisible: number, element: HTMLElement | null, index: number) => {
-      if (element && element.offsetTop <= scrollY) {
-        return index
-      }
-      return lastVisible
-    }, 0)
+    const visibleIndex: number = elements.reduce(
+      (lastVisible: number, element: HTMLElement | null, index: number) => {
+        if (element && element.offsetTop <= scrollY) {
+          return index
+        }
+        return lastVisible
+      },
+      0
+    )
 
     activeHeading = headings[visibleIndex]
 

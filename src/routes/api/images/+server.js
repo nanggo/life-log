@@ -27,7 +27,7 @@ export const GET = async ({ url }) => {
     if (!allowedDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))) {
       return new Response('Image URL from this domain is not allowed', { status: 403 })
     }
-  } catch (error) {
+  } catch (_error) {
     return new Response('Invalid URL format', { status: 400 })
   }
 

@@ -143,7 +143,7 @@
         "testStrategy": "npm run lint 명령어로 ESLint 에러 0개 확인, Pre-commit 훅 정상 작동 검증, 코드 포맷팅 자동 적용 확인",
         "priority": "medium",
         "dependencies": [3],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -193,7 +193,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-23T15:41:55.459Z",
+      "updated": "2025-07-23T15:58:36.540Z",
       "description": "Tasks for master context"
     }
   }

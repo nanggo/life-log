@@ -1,5 +1,6 @@
 <script lang="ts">
   import { format, parseISO, isValid } from 'date-fns'
+
   import type { Post } from '$lib/types'
 
   export let decorate: boolean
@@ -12,17 +13,17 @@
   // 견고한 날짜 파싱 함수
   const parseDate = (dateString: string): Date => {
     if (!dateString) return new Date()
-    
+
     // 먼저 ISO 8601 형식 시도
     try {
       const isoDate = parseISO(dateString)
       if (isValid(isoDate)) {
         return isoDate
       }
-    } catch (error) {
+    } catch (_error) {
       // ISO 파싱 실패시 무시하고 계속
     }
-    
+
     // 일반 Date 생성자 사용
     const date = new Date(dateString)
     return isValid(date) ? date : new Date()

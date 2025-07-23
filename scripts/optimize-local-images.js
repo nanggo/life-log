@@ -1,7 +1,8 @@
-import fs from 'fs-extra'
 import path from 'path'
-import sharp from 'sharp'
 import { fileURLToPath } from 'url'
+
+import fs from 'fs-extra'
+import sharp from 'sharp'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const CWD = path.resolve(__dirname, '..')
