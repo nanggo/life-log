@@ -47,7 +47,8 @@ export const load: PageServerLoad = async ({ params }) => {
 
     try {
       // Get all markdown files and find the matching one
-      const allPosts: Record<string, { default: { render: () => { html: string } } }> = import.meta.glob('/posts/**/*.md', { eager: true })
+      const allPosts: Record<string, { default: { render: () => { html: string } } }> =
+        import.meta.glob('/posts/**/*.md', { eager: true })
       const postKey = Object.keys(allPosts).find((key) => {
         const fileName = key
           .replace(/(\/index)?\.md$/, '')

@@ -1,15 +1,15 @@
 import { visit } from 'unist-util-visit'
 import autolinkHeadings from 'rehype-autolink-headings'
 import slugPlugin from 'rehype-slug'
-import relativeImages from 'mdsvex-relative-images'
 import remarkHeadings from '@vcarl/remark-headings'
+import remarkLocalImages from './scripts/remark-local-images.js'
 
 const config = {
   extensions: ['.svx', '.md'],
   smartypants: {
     dashes: 'oldschool'
   },
-  remarkPlugins: [videos, relativeImages, headings],
+  remarkPlugins: [videos, remarkLocalImages, headings],
   rehypePlugins: [
     slugPlugin,
     [
@@ -74,24 +74,6 @@ function videos() {
               aria-label="${node.alt || 'Video content'}"
             />
           `
-      } else {
-        // Enhanced image processing for non-external images
-        if (!node.alt || node.alt.trim() === '') {
-          console.warn(`Image without alt text found: ${node.url}`)
-          node.alt = ''
-        }
-
-        // For local images, just add modal functionality
-        if (!node.url.startsWith('http')) {
-          node.type = 'html'
-          node.value = `<img 
-            src="${node.url}" 
-            alt="${node.alt || ''}"
-            loading="lazy"
-            class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto"
-            onclick="openImageModal('${node.url}', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
-          />`
-        }
       }
     })
   }
