@@ -4,7 +4,7 @@ date: 2023-11-28T23:11:04.000Z
 tags:
   - 리뷰
 thumbnail: ''
-draft: true
+draft: false
 slug: "street-coder"
 ---
 
