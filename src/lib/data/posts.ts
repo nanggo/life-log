@@ -210,3 +210,15 @@ export const allTags = Array.from(tagSet).sort((a: string, b: string) => {
   const countDiff = tagCounts[b] - tagCounts[a]
   return countDiff !== 0 ? countDiff : a.localeCompare(b)
 })
+
+// 태그별 포스트 사전 계산 (런타임 필터링 최적화)
+export const postsByTag = posts.reduce(
+  (acc, post) => {
+    post.tags.forEach((tag) => {
+      if (!acc[tag]) acc[tag] = []
+      acc[tag].push(post)
+    })
+    return acc
+  },
+  {} as Record<string, Post[]>
+)
