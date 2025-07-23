@@ -3,32 +3,19 @@
   import ArrowRightIcon from './ArrowRightIcon.svelte'
 
   export let currentPage: number
-  export let hasNextPage: boolean
-  export let totalPages: number = 1
-  export let onPageChange: (_pageNumber: number) => void = (_pageNumber: number) => {}
-
-  const handlePrevious = (): void => {
-    if (currentPage > 1) {
-      onPageChange(currentPage - 1)
-    }
-  }
-
-  const handleNext = (): void => {
-    if (hasNextPage) {
-      onPageChange(currentPage + 1)
-    }
-  }
+  export let totalPages: number
+  export let getPageUrl: (_page: number) => string
 </script>
 
 <div class="flex items-center justify-between pt-16 pb-8">
   {#if currentPage > 1}
-    <button
-      on:click={handlePrevious}
+    <a
+      href={getPageUrl(currentPage - 1)}
       class="flex items-center gap-1 text-sm font-medium text-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
     >
       <ArrowLeftIcon class="w-4 h-4" />
       Previous
-    </button>
+    </a>
   {:else}
     <div></div>
   {/if}
@@ -38,14 +25,14 @@
     <span>Page {currentPage} of {totalPages}</span>
   </div>
 
-  {#if hasNextPage}
-    <button
-      on:click={handleNext}
+  {#if currentPage < totalPages}
+    <a
+      href={getPageUrl(currentPage + 1)}
       class="flex items-center gap-1 text-sm font-medium text-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
     >
       Next
       <ArrowRightIcon class="w-4 h-4" />
-    </button>
+    </a>
   {:else}
     <div></div>
   {/if}

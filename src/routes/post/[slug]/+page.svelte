@@ -7,9 +7,14 @@
   import { afterNavigate } from '$app/navigation'
   import PostDate from '$lib/components/PostDate.svelte'
   import Tags from '$lib/components/Tags.svelte'
-  import { goto } from '$app/navigation'
-  import type { PageData } from './$types'
-  import type { Navigation } from '@sveltejs/kit'
+  import type { PageData as BasePageData } from './$types'
+  import type { AfterNavigate } from '@sveltejs/kit'
+
+  interface PageData extends BasePageData {
+    dynamicDescription: string;
+    jsonLd: string;
+    breadcrumbLd: string;
+  }
 
   export let data: PageData
 
@@ -24,7 +29,7 @@
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination
   let canGoBack: boolean = false
-  afterNavigate(({ from }: Navigation) => {
+  afterNavigate(({ from }: AfterNavigate) => {
     if (from && from.url.pathname.startsWith('/posts')) {
       canGoBack = true
     }
@@ -36,11 +41,9 @@
     }
   }
 
-  // 태그 클릭 핸들러
-  const handleTagClick = (tag: string): void => {
-    goto(`/posts?tag=${tag}`)
+  const getTagUrl = (tag: string) => {
+    return `/posts?tag=${tag}`
   }
-
 </script>
 
 <svelte:head>
@@ -97,7 +100,7 @@
           {data.post.title}
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
-        <Tags tags={data.post.tags ?? []} clickable={true} onClick={handleTagClick} />
+        <Tags tags={data.post.tags ?? []} clickable={true} getTagUrl={getTagUrl} />
       </header>
 
       <!-- render the post -->

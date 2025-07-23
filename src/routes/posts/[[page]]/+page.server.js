@@ -1,30 +1,37 @@
-// 클라이언트 사이드에서만 태그 필터링 처리
-export const prerender = true
-
-import { allTags, posts } from '$lib/data/posts'
+import { allTags, posts as allPosts } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
 import { error } from '@sveltejs/kit'
 
+export const prerender = false
+
 /** @type {import('./$types').PageServerLoad} */
-export function load({ params }) {
-  let page = params.page ? parseInt(params.page) : 1
-  let limit = 10
-  // 태그 필터링과 페이지네이션 모두 클라이언트 사이드에서 처리
+export function load({ params, url }) {
+  const page = params.page ? parseInt(params.page) : 1
+  const limit = 10
+  const tag = url.searchParams.get('tag')
 
-  // 모든 포스트의 메타데이터 제공 (본문 제외)
-  const postsMetadata = extractPostMetadata(posts)
+  // 태그가 있으면 포스트 필터링
+  const filteredPosts = tag ? allPosts.filter((post) => post.tags.includes(tag)) : allPosts
 
-  // 페이지 유효성 검사를 위한 임시 페이지네이션
-  const totalPages = Math.ceil(posts.length / limit)
+  const postsMetadata = extractPostMetadata(filteredPosts)
+
+  const totalPosts = postsMetadata.length
+  const totalPages = Math.ceil(totalPosts / limit)
+
   if (page > totalPages && totalPages > 0) {
     throw error(404, 'Page not found')
   }
 
+  // 페이지네이션 적용
+  const paginatedPosts = postsMetadata.slice((page - 1) * limit, page * limit)
+
   return {
-    posts: postsMetadata,
+    posts: paginatedPosts,
     page,
     limit,
     allTags,
-    totalPosts: posts.length
+    totalPosts,
+    totalPages,
+    tag
   }
 }
