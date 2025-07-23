@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "vite build",
+		"build": "node scripts/optimize-local-images.js && vite build",
 		"post": "node scripts/create-post.js",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",

@@ -2,41 +2,38 @@ import { visit } from 'unist-util-visit'
 import path from 'path'
 
 /**
- * A remark plugin that processes local images using Vite's asset system
- * Leverages vite-imagetools for automatic optimization and format conversion
+ * A remark plugin that processes local images with optimization and modal support
+ * Converts relative paths to responsive picture elements with multiple formats
  */
-export default function remarkViteImages() {
+export default function remarkOptimizedImages() {
   return function transformer(tree, file) {
     visit(tree, 'image', (node) => {
       const src = node.url
 
-      // Process relative paths (local images)
+      // Process relative paths (local images only)
       if (src && !src.startsWith('http') && !src.startsWith('/') && src.startsWith('./')) {
         const filePath = file.path || file.filename
 
         if (filePath) {
-          // Get relative path from posts directory to the image
+          // Get the post slug from the file path
           const markdownDir = path.dirname(filePath)
-          const absoluteImagePath = path.resolve(markdownDir, src)
+          const postSlug = path.basename(markdownDir)
 
-          // Convert to path relative to project root that Vite can understand
-          const projectRoot = process.cwd()
-          const relativeToRoot = path.relative(projectRoot, absoluteImagePath).replace(/\\/g, '/')
+          // Extract filename without extension for optimized versions
+          const imageName = path.basename(src)
+          const { name: baseName } = path.parse(imageName)
 
-          // Create Vite asset URLs with imagetools transformations
-          const baseAssetUrl = `/${relativeToRoot}`
-
-          // Generate optimized versions for different scenarios
-          const webpSrc = `${baseAssetUrl}?format=webp&w=800&quality=85`
-          const originalSrc = baseAssetUrl // For modal (highest quality)
+          // Create optimized image paths
+          const originalSrc = `/posts/${postSlug}/${imageName}` // For modal
+          const webpSrc = `/posts/${postSlug}/${baseName}-800w.webp` // Default fallback
 
           // Generate responsive srcsets
           const avifSrcset = [400, 800, 1200]
-            .map((w) => `${baseAssetUrl}?format=avif&w=${w}&quality=80 ${w}w`)
+            .map((w) => `/posts/${postSlug}/${baseName}-${w}w.avif ${w}w`)
             .join(', ')
 
           const webpSrcset = [400, 800, 1200]
-            .map((w) => `${baseAssetUrl}?format=webp&w=${w}&quality=85 ${w}w`)
+            .map((w) => `/posts/${postSlug}/${baseName}-${w}w.webp ${w}w`)
             .join(', ')
 
           // Create responsive picture element with modal support
@@ -67,7 +64,7 @@ export default function remarkViteImages() {
           node.type = 'html'
           node.value = pictureHtml
 
-          console.log(`Processed Vite image: ${src} -> ${baseAssetUrl}`)
+          console.log(`Processed optimized image: ${src} -> ${originalSrc}`)
         } else {
           // Fallback for cases where file path is not available
           console.warn(`File path not available for image: ${src}`)

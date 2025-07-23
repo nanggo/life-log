@@ -2,14 +2,14 @@ import { visit } from 'unist-util-visit'
 import autolinkHeadings from 'rehype-autolink-headings'
 import slugPlugin from 'rehype-slug'
 import remarkHeadings from '@vcarl/remark-headings'
-import remarkViteImages from './scripts/remark-vite-images.js'
+import remarkOptimizedImages from './scripts/remark-optimized-images.js'
 
 const config = {
   extensions: ['.svx', '.md'],
   smartypants: {
     dashes: 'oldschool'
   },
-  remarkPlugins: [videos, remarkViteImages, headings],
+  remarkPlugins: [videos, remarkOptimizedImages, headings],
   rehypePlugins: [
     slugPlugin,
     [
