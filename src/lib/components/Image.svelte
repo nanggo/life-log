@@ -42,7 +42,7 @@
   )
 
   // Find the image that matches the src
-  const image: any = modules[src]
+  const image: { sources: Record<string, string>; img: Record<string, any> } | undefined = modules[src]
 
   // vite-imagetools gives us an object with src, sources, and img
   // attributes. We can spread these into the picture and img tags.

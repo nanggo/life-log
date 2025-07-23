@@ -8,6 +8,8 @@
 
   const url: string = `${website}/about`
 
+  // Used in template JSON-LD script tag below
+  // @ts-ignore: Used in Svelte template
   // eslint-disable-next-line no-unused-vars
   const jsonLd = {
     '@context': 'https://schema.org',

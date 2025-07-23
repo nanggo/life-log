@@ -8,6 +8,10 @@ declare global {
     // interface PageState {}
     // interface Platform {}
   }
+
+  interface Window {
+    openImageModal: (src: string, alt: string) => void
+  }
 }
 
 declare module '*.svelte' {

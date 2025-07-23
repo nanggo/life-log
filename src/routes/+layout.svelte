@@ -26,7 +26,7 @@
   
   // Image modal functionality
   if (browser) {
-    (window as any).openImageModal = function(src: string, alt: string): void {
+    window.openImageModal = function(src: string, alt: string): void {
       const modal: HTMLDivElement = document.createElement('div');
       modal.className = 'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4';
       modal.style.backdropFilter = 'blur(4px)';

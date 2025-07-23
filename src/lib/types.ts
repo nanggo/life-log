@@ -8,7 +8,7 @@ export interface PostMetadata {
   draft?: boolean
   tags: string[]
   thumbnail?: string
-  preview?: {
+  preview: {
     html: string
     text: string
   }
@@ -27,15 +27,7 @@ export interface PostReference {
 }
 
 export interface Post extends PostMetadata {
-  slug: string
   isIndexFile: boolean
-  date: string
-  preview: {
-    html: string
-    text: string
-  }
-  readingTime: string
-  tags: string[]
   next?: PostReference
   previous?: PostReference
   headings: PostHeading[]
