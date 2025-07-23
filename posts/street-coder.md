@@ -1,5 +1,5 @@
 ---
-title: "소프트웨어 개발을 위한 실전 가이드 "Street Coder"
+title: '소프트웨어 개발을 위한 실전 가이드 "Street Coder"'
 date: 2023-11-28T23:11:04.000Z
 tags:
   - 리뷰

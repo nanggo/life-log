@@ -5,7 +5,7 @@ tags:
   - 회고
 draft: false
 thumbnail: ./radish.png
-slug: 'index'
+slug: 'goodbye-radish-fiction'
 ---
 
 ![radish](./radish.png)
