@@ -151,6 +151,12 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     }
   }
 
+  // Extract headings from HTML
+  const headings = html.querySelectorAll('h1, h2, h3, h4, h5, h6').map((heading) => ({
+    depth: parseInt(heading.tagName.substring(1)),
+    value: heading.text.trim()
+  }))
+
   return {
     ...post.metadata,
     slug,
@@ -161,7 +167,8 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       text: (preview?.structuredText ?? preview?.toString()) || ''
     },
     readingTime: readingTime(html.structuredText).text,
-    tags
+    tags,
+    headings
   }
 }
 

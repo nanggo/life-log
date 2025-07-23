@@ -14,12 +14,12 @@ export async function load({ data }) {
   const postKey = data.post.isIndexFile
     ? `/posts/${data.post.slug}/index.md`
     : `/posts/${data.post.slug}.md`
-  
+
   const postLoader = allPosts[postKey]
   if (!postLoader) {
     throw new Error(`Post not found: ${postKey}`)
   }
-  
+
   const component = await postLoader()
 
   return {

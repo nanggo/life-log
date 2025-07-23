@@ -9,7 +9,6 @@
   const url: string = `${website}/about`
 
   // eslint-disable-next-line no-unused-vars
-  // @ts-ignore - Used in JSON-LD script tag
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',

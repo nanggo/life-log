@@ -1,12 +1,12 @@
-<script>
-  export let as = 'div'
-  export let href = undefined
+<script lang="ts">
+  export let as: string = 'div'
+  export let href: string | undefined = undefined
 
-  let _class = undefined
+  let _class: string | undefined = undefined
   export { _class as class }
 </script>
 
-<svelte:element this={as} class={['relative flex flex-col items-start group', _class].join(' ')}>
+<svelte:element this={as} class={['relative flex flex-col items-start group', _class].join(' ')} {...$$restProps}>
   <slot name="eyebrow" />
 
   {#if $$slots.title}

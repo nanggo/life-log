@@ -25,12 +25,11 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     title: post.title,
     description: post.description,
     date: post.date,
-    updated: post.updated,
     tags: post.tags,
     draft: post.draft,
     preview: post.preview,
-    image: post.image,
     author: post.author,
-    readingTime: post.readingTime
+    readingTime: post.readingTime,
+    thumbnail: post.thumbnail
   }))
 }

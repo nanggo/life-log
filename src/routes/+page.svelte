@@ -1,13 +1,14 @@
-<script>
+<script lang="ts">
   import ArrowRightIcon from '$lib/components/ArrowRightIcon.svelte'
   import PostsList from '$lib/components/PostsList.svelte'
   import SocialLinks from '$lib/components/SocialLinks.svelte'
   import { avatar, bio, name, website } from '$lib/info'
-  /** @type {import('./$types').PageData} */
-  export let data
+  import type { PageData } from './$types'
 
-  const url = website
-  const title = `${name} - life log`
+  export let data: PageData
+
+  const url: string = website
+  const title: string = `${name} - life log`
 </script>
 
 <svelte:head>
