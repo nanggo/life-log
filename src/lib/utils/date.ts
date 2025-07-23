@@ -25,23 +25,15 @@ export const formatDate = (date: Date | string | null | undefined): string | und
   if (!date) return undefined
 
   try {
-    let dateObj: Date
-
-    if (typeof date === 'string') {
-      // ISO 8601 형식의 날짜 문자열 처리
-      dateObj = new Date(date)
-    } else {
-      dateObj = date
-    }
+    const dateObj = typeof date === 'string' ? new Date(date) : date
 
     // 유효한 날짜인지 확인
-    if (isNaN(dateObj.getTime())) {
+    if (!isValidDate(dateObj)) {
       console.warn(`Invalid date detected: ${date}`)
       return format(new Date(), 'yyyy-MM-dd') // 현재 날짜로 대체
     }
 
-    // 단순하게 포맷팅 (타임존 처리 제거)
-    return format(dateObj, 'yyyy-MM-dd')
+    return format(addTimezoneOffset(dateObj), 'yyyy-MM-dd')
   } catch (error) {
     console.error(`Error formatting date: ${date}`, error)
     return format(new Date(), 'yyyy-MM-dd') // 에러 발생시 현재 날짜 반환
