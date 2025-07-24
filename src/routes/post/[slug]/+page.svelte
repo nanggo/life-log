@@ -25,7 +25,7 @@
   // Use the social media image determined by the server (post image or generated OG image)
   const ogImage: string = data.socialMediaImage
 
-  const url: string = `${website}/${data.post.slug}`
+  const url: string = `${website}/post/${data.post.slug}`
 
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination

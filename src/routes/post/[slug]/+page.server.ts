@@ -10,6 +10,21 @@ import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
 
+/**
+ * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
+ * @param {string|Date} dateValue - 변환할 날짜 값
+ * @returns {string} - ISO 형식의 날짜 문자열
+ */
+const safeToISOString = (dateValue: string | Date): string => {
+  try {
+    const date = new Date(dateValue)
+    // Date 객체의 valueOf()가 NaN이면 유효하지 않은 날짜
+    return !isNaN(date.valueOf()) ? date.toISOString() : new Date().toISOString()
+  } catch (_e) {
+    return new Date().toISOString() // 예외 발생 시 현재 날짜 사용
+  }
+}
+
 export const load: PageServerLoad = async ({ params }) => {
   const { slug } = params
 
@@ -72,8 +87,8 @@ export const load: PageServerLoad = async ({ params }) => {
           const src = imgElement.getAttribute('src')
           if (src) {
             try {
-              // Handle relative URLs by converting to absolute
-              firstImageUrl = new URL(src, website).href
+              // Handle relative URLs by converting to absolute using post's static file path
+              firstImageUrl = new URL(src, `${website}/posts/${post.slug}/`).href
             } catch (_e) {
               // The URL constructor can throw for invalid formats (e.g., data URIs).
               // Catching this prevents a server crash for the page.
@@ -183,8 +198,8 @@ export const load: PageServerLoad = async ({ params }) => {
       breadcrumbLd: JSON.stringify(breadcrumbLd),
       socialMediaImage: ogImage,
       isPostImage: !!firstImageUrl,
-      publishedDate: new Date(post.date).toISOString(),
-      modifiedDate: (post.updated ? new Date(post.updated) : new Date(post.date)).toISOString()
+      publishedDate: safeToISOString(post.date),
+      modifiedDate: safeToISOString(post.updated || post.date)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)
