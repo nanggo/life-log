@@ -70,7 +70,7 @@ const optimizePreviewImages = (previewElement: HTMLElement | null) => {
 
 /**
  * HTML에서 깨끗한 평문 텍스트를 추출합니다.
- * structuredText가 없을 때 HTML 태그를 제거하고 평문만 반환합니다.
+ * node-html-parser의 .text 속성을 활용하여 효율적으로 처리합니다.
  */
 const extractPlainText = (element: HTMLElement | null): string => {
   if (!element) return ''
@@ -80,21 +80,8 @@ const extractPlainText = (element: HTMLElement | null): string => {
     return element.structuredText.trim()
   }
 
-  // structuredText가 없으면 HTML 태그를 제거하고 평문 추출
-  const htmlString = element.toString()
-  if (!htmlString) return ''
-
-  // HTML 태그 제거 및 특수 문자 디코딩
-  return htmlString
-    .replace(/<[^>]*>/g, '') // HTML 태그 제거
-    .replace(/&nbsp;/g, ' ') // &nbsp; 를 공백으로
-    .replace(/&amp;/g, '&') // &amp; 를 &로
-    .replace(/&lt;/g, '<') // &lt; 를 <로
-    .replace(/&gt;/g, '>') // &gt; 를 >로
-    .replace(/&quot;/g, '"') // &quot; 를 "로
-    .replace(/&#39;/g, "'") // &#39; 를 '로
-    .replace(/\s+/g, ' ') // 연속된 공백을 하나로
-    .trim()
+  // node-html-parser의 .text 속성 사용하여 평문 추출
+  return element.text.replace(/\s+/g, ' ').trim()
 }
 
 /**
