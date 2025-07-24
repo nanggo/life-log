@@ -8,7 +8,7 @@
   import { SocialLinks } from '$lib/components/layout'
   import { PostDate, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
-  import { website, name, bio, avatar } from '$lib/info'
+  import { website, name, bio, avatar, twitterHandle } from '$lib/info'
 
   interface PageData extends BasePageData {
     dynamicDescription: string
@@ -74,8 +74,8 @@
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content="@nanggo" />
-  <meta name="twitter:creator" content="@nanggo" />
+  <meta name="twitter:site" content={twitterHandle} />
+  <meta name="twitter:creator" content={twitterHandle} />
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="twitter:image" content={ogImage} />

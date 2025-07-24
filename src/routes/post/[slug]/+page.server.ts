@@ -72,9 +72,7 @@ export const load: PageServerLoad = async ({ params }) => {
           const src = imgElement.getAttribute('src')
           if (src) {
             // Handle relative URLs by converting to absolute
-            firstImageUrl = src.startsWith('http')
-              ? src
-              : `${website}${src.startsWith('/') ? '' : '/'}${src}`
+            firstImageUrl = new URL(src, website).href
           }
         }
       }

@@ -10,7 +10,7 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
-  import { name, description, author, website } from '$lib/info'
+  import { name, description, author, website, twitterHandle } from '$lib/info'
 
   export let data: LayoutData
 
@@ -124,8 +124,8 @@
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@nanggo" />
-    <meta name="twitter:creator" content="@nanggo" />
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:creator" content={twitterHandle} />
     <meta name="twitter:title" content={data.title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={`${website}/favicon.png`} />
