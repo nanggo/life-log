@@ -4,7 +4,7 @@ import { visit } from 'unist-util-visit'
 
 /**
  * A remark plugin that processes local images with optimization and modal support
- * Converts relative paths to responsive picture elements with multiple formats
+ * Falls back to original image if optimized versions don't exist
  */
 export default function remarkOptimizedImages() {
   return function transformer(tree, file) {
@@ -20,52 +20,30 @@ export default function remarkOptimizedImages() {
           const markdownDir = path.dirname(filePath)
           const postSlug = path.basename(markdownDir)
 
-          // Extract filename without extension for optimized versions
+          // Extract filename
           const imageName = path.basename(src)
-          const { name: baseName } = path.parse(imageName)
 
-          // Create optimized image paths
-          const originalSrc = `/posts/${postSlug}/${imageName}` // For modal
-          const webpSrc = `/posts/${postSlug}/${baseName}-800w.webp` // Default fallback
+          // Create image path - use original image as fallback
+          const originalSrc = `/posts/${postSlug}/${imageName}`
 
-          // Generate responsive srcsets
-          const avifSrcset = [400, 800, 1200]
-            .map((w) => `/posts/${postSlug}/${baseName}-${w}w.avif ${w}w`)
-            .join(', ')
-
-          const webpSrcset = [400, 800, 1200]
-            .map((w) => `/posts/${postSlug}/${baseName}-${w}w.webp ${w}w`)
-            .join(', ')
-
-          // Create responsive picture element with modal support
-          const pictureHtml = `
-            <picture class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto block">
-              <source 
-                srcset="${avifSrcset}" 
-                type="image/avif" 
-                sizes="(max-width: 800px) 100vw, 800px"
-              />
-              <source 
-                srcset="${webpSrcset}" 
-                type="image/webp" 
-                sizes="(max-width: 800px) 100vw, 800px"
-              />
-              <img 
-                src="${webpSrc}" 
-                alt="${node.alt || ''}"
-                loading="lazy"
-                decoding="async"
-                onclick="openImageModal('${originalSrc}', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
-                style="width: 100%; height: auto;"
-              />
-            </picture>
+          // Create simple img element with modal support and fallback to original
+          const imgHtml = `
+            <img 
+              src="${originalSrc}" 
+              alt="${node.alt || ''}"
+              loading="lazy"
+              decoding="async"
+              onclick="openImageModal('${originalSrc}', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+              class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto block"
+              style="width: 100%; height: auto;"
+            />
           `.trim()
 
           // Convert to HTML node
           node.type = 'html'
-          node.value = pictureHtml
+          node.value = imgHtml
 
-          console.log(`Processed optimized image: ${src} -> ${originalSrc}`)
+          console.log(`Processed image: ${src} -> ${originalSrc}`)
         } else {
           // Fallback for cases where file path is not available
           console.warn(`File path not available for image: ${src}`)

@@ -34,7 +34,13 @@
 {/if}
 
 {#if github}
-  <a href={`https://github.com/${github}`} class="group" aria-label="Follow on GitHub" target="_blank" rel="noopener noreferrer">
+  <a
+    href={`https://github.com/${github}`}
+    class="group"
+    aria-label="Follow on GitHub"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
@@ -50,7 +56,13 @@
 {/if}
 
 {#if linkedin}
-  <a href={`https://linkedin.com/in/${linkedin}`} class="group" aria-label="Follow on LinkedIn" target="_blank" rel="noopener noreferrer">
+  <a
+    href={`https://linkedin.com/in/${linkedin}`}
+    class="group"
+    aria-label="Follow on LinkedIn"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
     <svg
       viewBox="0 0 24 24"
       class="w-6 h-6 transition fill-zinc-500 group-hover:fill-zinc-600 dark:fill-zinc-400 dark:group-hover:fill-zinc-300"

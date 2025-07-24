@@ -1,9 +1,8 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
-  import Pagination from '$lib/components/Pagination.svelte'
-  import PostsList from '$lib/components/PostsList.svelte'
-  import Tags from '$lib/components/Tags.svelte'
+  import { Pagination } from '$lib/components/layout'
+  import { PostsList, TagList } from '$lib/components/post'
   import { detail, name, topic, website } from '$lib/info'
 
   export let data: PageData
@@ -64,7 +63,7 @@
 
   {#if allTags && allTags.length > 0}
     <div class="mt-6">
-      <Tags tags={allTags} clickable={true} selectedTag={tag} {getTagUrl} />
+      <TagList tags={allTags} clickable={true} selectedTag={tag} {getTagUrl} />
     </div>
   {/if}
 

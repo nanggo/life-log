@@ -4,7 +4,7 @@
   export let tags: string[] = []
   export let clickable: boolean = true
   export let selectedTag: string | null = null
-  export let getTagUrl: (_tagName: string) => string = (_tagName: string) => `/posts?tag=${_tagName}`
+  export let getTagUrl: (tagName: string) => string = (tagName: string) => `/posts?tag=${tagName}`
 
   // 스크롤 컨테이너 참조 변수
   let scrollContainer: HTMLDivElement
@@ -12,7 +12,7 @@
   // 마우스 휠 이벤트 핸들러
   const handleWheel = (event: WheelEvent): void => {
     if (!scrollContainer) return
-    
+
     if (Math.abs(event.deltaY) > 0) {
       event.preventDefault()
       const scrollAmount = event.deltaY * 0.5
