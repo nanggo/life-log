@@ -86,14 +86,12 @@ export const load: PageServerLoad = async ({ params }) => {
       wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
     }
 
-    // Choose social media image with priority: post image > generated OG image > site favicon
-    const socialMediaImage =
+    // Choose social media image with priority: post image > generated OG image
+    const ogImage =
       firstImageUrl ||
       `https://og-image-korean.vercel.app/**${encodeURIComponent(
         post.title
       )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
-
-    const ogImage = socialMediaImage
 
     const url = `${website}/${post.slug}`
 
@@ -175,7 +173,7 @@ export const load: PageServerLoad = async ({ params }) => {
       dynamicDescription,
       jsonLd: JSON.stringify(jsonLd),
       breadcrumbLd: JSON.stringify(breadcrumbLd),
-      socialMediaImage,
+      socialMediaImage: ogImage,
       isPostImage: !!firstImageUrl
     }
   } catch (err) {
