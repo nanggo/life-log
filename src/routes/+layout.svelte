@@ -138,22 +138,59 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       name: name,
+      alternateName: ["낭고", "낭고넷", "nanggo", "NANGGO"],
       url: website,
       logo: {
         "@type": "ImageObject",
         url: `${website}/favicon.png`,
         width: 192,
-        height: 192
+        height: 192,
+        caption: `${name} 로고`,
+        description: `${name} 공식 로고`
       },
       description: description,
-      author: {
+      slogan: "순간이 모여 이뤄지는 삶의 궤적",
+      foundingDate: "2023",
+      founder: {
         "@type": "Person",
         name: author,
-        url: website
+        url: website,
+        image: {
+          "@type": "ImageObject",
+          url: "https://avatars.githubusercontent.com/u/16912219",
+          width: 460,
+          height: 460
+        },
+        jobTitle: "개발자",
+        description: "love to write and code",
+        sameAs: [
+          "https://github.com/nanggo",
+          "https://www.linkedin.com/in/jisung-yoo"
+        ]
       },
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer service",
+          email: "yamsiri@gmail.com",
+          availableLanguage: ["Korean", "English"]
+        }
+      ],
       sameAs: [
-        "https://github.com/nanggo"
-      ]
+        "https://github.com/nanggo",
+        "https://www.linkedin.com/in/jisung-yoo"
+      ],
+      knowsAbout: [
+        "웹 개발",
+        "프로그래밍",
+        "JavaScript",
+        "TypeScript",
+        "Svelte",
+        "블로그 운영",
+        "기술 글쓰기"
+      ],
+      areaServed: "KR",
+      inLanguage: "ko-KR"
     })}
   </script>
 
@@ -167,7 +204,73 @@
       url: website,
       description: description,
       inLanguage: "ko-KR",
-      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"]
+      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"],
+      author: {
+        "@type": "Person",
+        name: author,
+        url: website
+      },
+      publisher: {
+        "@type": "Organization",
+        name: name,
+        url: website
+      },
+      copyrightHolder: {
+        "@type": "Person",
+        name: author
+      },
+      copyrightYear: new Date().getFullYear(),
+      license: "https://creativecommons.org/licenses/by/4.0/",
+      isAccessibleForFree: true,
+      mainEntity: {
+        "@type": "Blog",
+        name: `${name} 블로그`,
+        description: description,
+        url: website,
+        author: {
+          "@type": "Person",
+          name: author
+        },
+        inLanguage: "ko-KR"
+      },
+      potentialAction: [
+        {
+          "@type": "SearchAction",
+          target: {
+            "@type": "EntryPoint",
+            urlTemplate: `${website}/posts?search={search_term_string}`
+          },
+          "query-input": "required name=search_term_string"
+        }
+      ],
+      hasPart: [
+        {
+          "@type": "WebPage",
+          name: "홈",
+          url: website,
+          description: "낭고넷 메인 페이지"
+        },
+        {
+          "@type": "WebPage",
+          name: "포스트",
+          url: `${website}/posts`,
+          description: "블로그 포스트 목록"
+        },
+        {
+          "@type": "WebPage",
+          name: "소개",
+          url: `${website}/about`,
+          description: "낭고 소개 페이지"
+        }
+      ],
+      audience: {
+        "@type": "Audience",
+        audienceType: "개발자, 기술 블로그 독자",
+        geographicArea: {
+          "@type": "Country",
+          name: "대한민국"
+        }
+      }
     })}
   </script>
 </svelte:head>

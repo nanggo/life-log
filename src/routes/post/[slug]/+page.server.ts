@@ -128,42 +128,124 @@ export const load: PageServerLoad = async ({ params }) => {
     const dynamicDescription =
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
+    // Determine if this is a technical article based on tags
+    const techTags = [
+      '개발',
+      '프로그래밍',
+      'javascript',
+      'typescript',
+      'svelte',
+      'node',
+      'react',
+      'vue',
+      'css',
+      'html',
+      'web',
+      'frontend',
+      'backend',
+      'database',
+      'api',
+      'code',
+      'coding',
+      'tech',
+      '기술'
+    ]
+    const isTechArticle =
+      post.tags?.some((tag) =>
+        techTags.some((techTag) => tag.toLowerCase().includes(techTag.toLowerCase()))
+      ) || false
+
     const jsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': isTechArticle ? ['BlogPosting', 'TechArticle'] : 'BlogPosting',
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': url
       },
       headline: post.title,
+      alternativeHeadline: post.title,
       image: {
         '@type': 'ImageObject',
         url: ogImage,
         width: firstImageUrl ? undefined : 1200,
-        height: firstImageUrl ? undefined : 630
+        height: firstImageUrl ? undefined : 630,
+        caption: post.title,
+        description: `${post.title}에 관련된 이미지`
       },
-      datePublished: post.date,
-      dateModified: post.date,
+      datePublished: safeToISOString(post.date),
+      dateModified: safeToISOString(post.date),
       author: {
         '@type': 'Person',
         name,
-        url: website
+        url: website,
+        image: {
+          '@type': 'ImageObject',
+          url: 'https://avatars.githubusercontent.com/u/16912219',
+          width: 460,
+          height: 460
+        },
+        jobTitle: '개발자',
+        description: 'love to write and code',
+        sameAs: [
+          'https://github.com/nanggo',
+          'https://www.linkedin.com/in/jisung-yoo',
+          `mailto:yamsiri@gmail.com`
+        ]
       },
       publisher: {
         '@type': 'Organization',
         name,
+        url: website,
         logo: {
           '@type': 'ImageObject',
           url: `${website}/favicon.png`,
           width: 192,
           height: 192
+        },
+        founder: {
+          '@type': 'Person',
+          name,
+          url: website
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'customer service',
+          email: 'yamsiri@gmail.com',
+          availableLanguage: ['Korean', 'English']
         }
       },
       description: dynamicDescription,
+      abstract: dynamicDescription,
       articleBody: postContent,
+      articleSection: isTechArticle ? '기술' : '일상',
+      keywords: post.tags ? post.tags.join(', ') : '',
       url,
       inLanguage: 'ko-KR',
-      wordCount
+      wordCount,
+      genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
+      about: post.tags
+        ? post.tags.map((tag) => ({
+            '@type': 'Thing',
+            name: tag
+          }))
+        : undefined,
+      mentions: post.tags
+        ? post.tags.map((tag) => ({
+            '@type': 'Thing',
+            name: tag
+          }))
+        : undefined,
+      isAccessibleForFree: true,
+      copyrightYear: new Date(post.date).getFullYear(),
+      copyrightHolder: {
+        '@type': 'Person',
+        name
+      },
+      license: 'https://creativecommons.org/licenses/by/4.0/',
+      ...(isTechArticle && {
+        proficiencyLevel: 'Beginner',
+        dependencies: '기본적인 웹 개발 지식'
+      })
     }
 
     const breadcrumbLd = {
@@ -199,7 +281,7 @@ export const load: PageServerLoad = async ({ params }) => {
       socialMediaImage: ogImage,
       isPostImage: !!firstImageUrl,
       publishedDate: safeToISOString(post.date),
-      modifiedDate: safeToISOString(post.updated || post.date)
+      modifiedDate: safeToISOString(post.date)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)
