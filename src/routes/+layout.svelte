@@ -31,8 +31,9 @@
   } from '$lib/info'
 
   // Ensure TypeScript recognizes these variables as used
+  // @ts-ignore - Used in JSON.stringify expressions below
   // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const __orgSchema = {
+  const _orgSchema = {
     organizationAlternateNames,
     jobTitle,
     slogan,
