@@ -14,15 +14,14 @@
     dynamicDescription: string
     jsonLd: string
     breadcrumbLd: string
+    socialMediaImage: string
+    isPostImage: boolean
   }
 
   export let data: PageData
 
-  // generated open-graph image for sharing on social media.
-  // see https://og-image.vercel.app/ for more options.
-  const ogImage: string = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.post.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  // Use the social media image determined by the server (post image or generated OG image)
+  const ogImage: string = data.socialMediaImage
 
   const url: string = `${website}/${data.post.slug}`
 
@@ -50,22 +49,40 @@
   <title>{data.post.title} - {name}</title>
   <meta name="description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="author" content={name} />
+  <link rel="canonical" href={url} />
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content="article" />
   <meta property="og:title" content={data.post.title} />
   <meta property="og:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta property="og:image" content={ogImage} />
+  {#if !data.isPostImage}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/png" />
+  {/if}
   <meta property="og:site_name" content={name} />
+  <meta property="og:locale" content="ko_KR" />
+  <meta property="article:author" content={name} />
+  <meta property="article:published_time" content={data.post.date} />
+  {#if data.post.tags && data.post.tags.length > 0}
+    {#each data.post.tags as tag}
+      <meta property="article:tag" content={tag} />
+    {/each}
+  {/if}
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta property="twitter:domain" content={website} />
-  <meta property="twitter:url" content={url} />
+  <meta name="twitter:site" content="@nanggo" />
+  <meta name="twitter:creator" content="@nanggo" />
   <meta name="twitter:title" content={data.post.title} />
   <meta name="twitter:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="twitter:image" content={ogImage} />
+  <meta
+    name="twitter:image:alt"
+    content={data.isPostImage ? `${data.post.title}의 관련 이미지` : `${data.post.title} - ${name}`}
+  />
 
   <script type="application/ld+json">
 {@html data.jsonLd}

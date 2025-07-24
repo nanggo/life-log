@@ -46,6 +46,7 @@ export const load: PageServerLoad = async ({ params }) => {
     // Load the actual post content for SEO purposes
     let postContent = ''
     let wordCount = 0
+    let firstImageUrl = ''
 
     try {
       // Get all markdown files and find the matching one
@@ -64,6 +65,18 @@ export const load: PageServerLoad = async ({ params }) => {
         const html = parse(rendered.html)
         postContent = html.structuredText || ''
         wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
+
+        // Extract first image from content for social media preview
+        const imgElement = html.querySelector('img')
+        if (imgElement) {
+          const src = imgElement.getAttribute('src')
+          if (src) {
+            // Handle relative URLs by converting to absolute
+            firstImageUrl = src.startsWith('http')
+              ? src
+              : `${website}${src.startsWith('/') ? '' : '/'}${src}`
+          }
+        }
       }
     } catch (err) {
       console.warn(`Could not load content for post ${post.slug}:`, err)
@@ -75,9 +88,14 @@ export const load: PageServerLoad = async ({ params }) => {
       wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
     }
 
-    const ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-      post.title
-    )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+    // Choose social media image with priority: post image > generated OG image > site favicon
+    const socialMediaImage =
+      firstImageUrl ||
+      `https://og-image-korean.vercel.app/**${encodeURIComponent(
+        post.title
+      )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+
+    const ogImage = socialMediaImage
 
     const url = `${website}/${post.slug}`
 
@@ -102,8 +120,8 @@ export const load: PageServerLoad = async ({ params }) => {
       image: {
         '@type': 'ImageObject',
         url: ogImage,
-        width: 1200,
-        height: 630
+        width: firstImageUrl ? undefined : 1200,
+        height: firstImageUrl ? undefined : 630
       },
       datePublished: post.date,
       dateModified: post.date,
@@ -158,7 +176,9 @@ export const load: PageServerLoad = async ({ params }) => {
       post,
       dynamicDescription,
       jsonLd: JSON.stringify(jsonLd),
-      breadcrumbLd: JSON.stringify(breadcrumbLd)
+      breadcrumbLd: JSON.stringify(breadcrumbLd),
+      socialMediaImage,
+      isPostImage: !!firstImageUrl
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)
