@@ -182,7 +182,9 @@ export const load: PageServerLoad = async ({ params }) => {
       jsonLd: JSON.stringify(jsonLd),
       breadcrumbLd: JSON.stringify(breadcrumbLd),
       socialMediaImage: ogImage,
-      isPostImage: !!firstImageUrl
+      isPostImage: !!firstImageUrl,
+      publishedDate: new Date(post.date).toISOString(),
+      modifiedDate: (post.updated ? new Date(post.updated) : new Date(post.date)).toISOString()
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)

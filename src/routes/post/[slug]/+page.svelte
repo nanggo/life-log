@@ -16,6 +16,8 @@
     breadcrumbLd: string
     socialMediaImage: string
     isPostImage: boolean
+    publishedDate: string
+    modifiedDate: string
   }
 
   export let data: PageData
@@ -65,7 +67,8 @@
   <meta property="og:site_name" content={name} />
   <meta property="og:locale" content="ko_KR" />
   <meta property="article:author" content={name} />
-  <meta property="article:published_time" content={data.post.date} />
+  <meta property="article:published_time" content={data.publishedDate} />
+  <meta property="article:modified_time" content={data.modifiedDate} />
   {#if data.post.tags && data.post.tags.length > 0}
     {#each data.post.tags as tag}
       <meta property="article:tag" content={tag} />
