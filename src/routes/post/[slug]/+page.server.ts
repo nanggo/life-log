@@ -71,8 +71,16 @@ export const load: PageServerLoad = async ({ params }) => {
         if (imgElement) {
           const src = imgElement.getAttribute('src')
           if (src) {
-            // Handle relative URLs by converting to absolute
-            firstImageUrl = new URL(src, website).href
+            try {
+              // Handle relative URLs by converting to absolute
+              firstImageUrl = new URL(src, website).href
+            } catch (_e) {
+              // The URL constructor can throw for invalid formats (e.g., data URIs).
+              // Catching this prevents a server crash for the page.
+              console.warn(
+                `Could not resolve image URL "${src}" in post "${post.slug}". It will be skipped.`
+              )
+            }
           }
         }
       }
