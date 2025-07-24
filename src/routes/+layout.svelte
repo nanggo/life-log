@@ -28,9 +28,9 @@
   inject({ mode: dev ? 'development' : 'production' })
   injectSpeedInsights()
 
-  // Image modal functionality
+  // Image modal functionality with event delegation (prevents XSS)
   if (browser) {
-    window.openImageModal = function (src: string, alt: string): void {
+    const openImageModal = function (src: string, alt: string): void {
       const modal: HTMLDivElement = document.createElement('div')
       modal.className =
         'image-modal fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4'
@@ -74,6 +74,21 @@
       document.addEventListener('keydown', escHandler)
       document.body.appendChild(modal)
     }
+
+    // Use event delegation to handle clicks on enhanced images
+    document.addEventListener('click', (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (target.classList.contains('enhanced-image') && target.tagName === 'IMG') {
+        const src = target.getAttribute('data-modal-src')
+        const alt = target.getAttribute('data-modal-alt') || ''
+        if (src) {
+          openImageModal(src, alt)
+        }
+      }
+    })
+
+    // Maintain backward compatibility for any remaining inline calls
+    window.openImageModal = openImageModal
   }
 </script>
 

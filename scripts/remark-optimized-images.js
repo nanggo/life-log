@@ -27,13 +27,15 @@ export default function remarkOptimizedImages() {
           const originalSrc = `/posts/${postSlug}/${imageName}`
 
           // Create simple img element with modal support and fallback to original
+          // Use data attributes instead of inline onclick to prevent XSS
           const imgHtml = `
             <img 
               src="${originalSrc}" 
               alt="${node.alt || ''}"
               loading="lazy"
               decoding="async"
-              onclick="openImageModal('${originalSrc}', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+              data-modal-src="${originalSrc}"
+              data-modal-alt="${node.alt || ''}"
               class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto block"
               style="width: 100%; height: auto;"
             />

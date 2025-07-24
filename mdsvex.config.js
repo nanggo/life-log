@@ -48,7 +48,8 @@ function optimizeExternalImages() {
           // Add modal functionality - show original image in modal
           node.properties.class =
             'enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto'
-          node.properties.onclick = `openImageModal('${src}', '${(node.properties.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')`
+          node.properties['data-modal-src'] = src
+          node.properties['data-modal-alt'] = node.properties.alt || ''
         }
       }
     })

@@ -33,7 +33,8 @@ export default function remarkResponsiveImages() {
                 alt="${node.alt || ''}"
                 loading="lazy"
                 decoding="async"
-                onclick="openImageModal('${basePath}.webp', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+                data-modal-src="${basePath}.webp"
+                data-modal-alt="${node.alt || ''}"
               />
             </picture>
           `.trim()
@@ -56,7 +57,8 @@ export default function remarkResponsiveImages() {
                   alt="${node.alt || ''}"
                   loading="lazy"
                   decoding="async"
-                  onclick="openImageModal('${basePath}.webp', '${(node.alt || '').replace(/'/g, "\\'").replace(/"/g, '&quot;')}')"
+                  data-modal-src="${basePath}.webp"
+                  data-modal-alt="${node.alt || ''}"
                 />
               </picture>
             `.trim()

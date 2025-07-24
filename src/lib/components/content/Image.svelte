@@ -6,14 +6,13 @@
   export let sizes: string | undefined = undefined
   export let style: string | undefined = undefined
 
-  // To prevent layout shift, we need to know the dimensions of the image.
-  // For local images, try to get dimensions from the path if specified in format `image@<width>x<height>.jpg`
-  const isExternal: boolean = src.startsWith('http')
-  if (width === undefined && height === undefined && !isExternal) {
-    const match: RegExpMatchArray | null = src.match(/@(\d+)x(\d+)\./)
-    if (match) {
-      width = match[1]
-      height = match[2]
+  // Extract dimensions from filename to prevent layout shift
+  // Supports format: image@<width>x<height>.jpg for local images only
+  if (width === undefined && height === undefined && !src.startsWith('http')) {
+    const dimensionMatch = src.match(/@(\d+)x(\d+)\./)
+    if (dimensionMatch) {
+      width = dimensionMatch[1]
+      height = dimensionMatch[2]
     }
   }
 </script>
