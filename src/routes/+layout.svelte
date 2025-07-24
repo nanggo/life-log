@@ -10,12 +10,12 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
-  import { 
-    name, 
-    description, 
-    author, 
-    website, 
-    twitterHandle, 
+  import {
+    name,
+    description,
+    author,
+    website,
+    twitterHandle,
     organizationAlternateNames,
     jobTitle,
     slogan,
@@ -29,6 +29,23 @@
     linkedin,
     email
   } from '$lib/info'
+
+  // Ensure TypeScript recognizes these variables as used
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
+  const __orgSchema = {
+    organizationAlternateNames,
+    jobTitle,
+    slogan,
+    foundingDate,
+    contactLanguages,
+    expertiseAreas,
+    areaServed,
+    licenseUrl,
+    avatar,
+    github,
+    linkedin,
+    email
+  }
 
   export let data: LayoutData
 
@@ -152,12 +169,11 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
-    <!-- eslint-disable-next-line no-unused-vars -->
     {JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
       name: name,
-      alternateName: organizationAlternateNames,
+      alternateName: _orgSchema.organizationAlternateNames,
       url: website,
       logo: {
         "@type": "ImageObject",
@@ -168,39 +184,39 @@
         description: `${name} 공식 로고`
       },
       description: description,
-      slogan: slogan,
-      foundingDate: foundingDate,
+      slogan: _orgSchema.slogan,
+      foundingDate: _orgSchema.foundingDate,
       founder: {
         "@type": "Person",
         name: author,
         url: website,
         image: {
           "@type": "ImageObject",
-          url: avatar,
+          url: _orgSchema.avatar,
           width: 460,
           height: 460
         },
-        jobTitle: jobTitle,
+        jobTitle: _orgSchema.jobTitle,
         description: "love to write and code",
         sameAs: [
-          `https://github.com/${github}`,
-          `https://www.linkedin.com/in/${linkedin}`
+          `https://github.com/${_orgSchema.github}`,
+          `https://www.linkedin.com/in/${_orgSchema.linkedin}`
         ]
       },
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer service",
-          email: email,
-          availableLanguage: contactLanguages
+          email: _orgSchema.email,
+          availableLanguage: _orgSchema.contactLanguages
         }
       ],
       sameAs: [
-        `https://github.com/${github}`,
-        `https://www.linkedin.com/in/${linkedin}`
+        `https://github.com/${_orgSchema.github}`,
+        `https://www.linkedin.com/in/${_orgSchema.linkedin}`
       ],
-      knowsAbout: expertiseAreas,
-      areaServed: areaServed,
+      knowsAbout: _orgSchema.expertiseAreas,
+      areaServed: _orgSchema.areaServed,
       inLanguage: "ko-KR"
     })}
   </script>
@@ -211,7 +227,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: name,
-      alternateName: organizationAlternateNames,
+      alternateName: _orgSchema.organizationAlternateNames,
       url: website,
       description: description,
       inLanguage: "ko-KR",
@@ -231,7 +247,7 @@
         name: author
       },
       copyrightYear: new Date().getFullYear(),
-      license: licenseUrl,
+      license: _orgSchema.licenseUrl,
       isAccessibleForFree: true,
       mainEntity: {
         "@type": "Blog",

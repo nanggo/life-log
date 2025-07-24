@@ -164,7 +164,7 @@ export const load: PageServerLoad = async ({ params }) => {
         description: `${post.title}에 관련된 이미지`
       },
       datePublished: safeToISOString(post.date),
-      dateModified: safeToISOString(post.date),
+      dateModified: safeToISOString((post as any).updated || post.date),
       author: {
         '@type': 'Person',
         name,
@@ -234,8 +234,8 @@ export const load: PageServerLoad = async ({ params }) => {
       },
       license: licenseUrl,
       ...(isTechArticle && {
-        proficiencyLevel: 'Beginner',
-        dependencies: '기본적인 웹 개발 지식'
+        proficiencyLevel: (post as any).proficiencyLevel || 'Beginner',
+        dependencies: (post as any).dependencies || '기본적인 웹 개발 지식'
       })
     }
 
@@ -272,7 +272,7 @@ export const load: PageServerLoad = async ({ params }) => {
       socialMediaImage: ogImage,
       isPostImage: !!firstImageUrl,
       publishedDate: safeToISOString(post.date),
-      modifiedDate: safeToISOString(post.date)
+      modifiedDate: safeToISOString((post as any).updated || post.date)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)
