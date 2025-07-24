@@ -10,6 +10,21 @@ import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
 
+/**
+ * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
+ * @param {string|Date} dateValue - 변환할 날짜 값
+ * @returns {string} - ISO 형식의 날짜 문자열
+ */
+const safeToISOString = (dateValue: string | Date): string => {
+  try {
+    const date = new Date(dateValue)
+    // Date 객체의 valueOf()가 NaN이면 유효하지 않은 날짜
+    return !isNaN(date.valueOf()) ? date.toISOString() : new Date().toISOString()
+  } catch (_e) {
+    return new Date().toISOString() // 예외 발생 시 현재 날짜 사용
+  }
+}
+
 export const load: PageServerLoad = async ({ params }) => {
   const { slug } = params
 
@@ -46,6 +61,7 @@ export const load: PageServerLoad = async ({ params }) => {
     // Load the actual post content for SEO purposes
     let postContent = ''
     let wordCount = 0
+    let firstImageUrl = ''
 
     try {
       // Get all markdown files and find the matching one
@@ -64,6 +80,24 @@ export const load: PageServerLoad = async ({ params }) => {
         const html = parse(rendered.html)
         postContent = html.structuredText || ''
         wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
+
+        // Extract first image from content for social media preview
+        const imgElement = html.querySelector('img')
+        if (imgElement) {
+          const src = imgElement.getAttribute('src')
+          if (src) {
+            try {
+              // Handle relative URLs by converting to absolute using post's static file path
+              firstImageUrl = new URL(src, `${website}/posts/${post.slug}/`).href
+            } catch (_e) {
+              // The URL constructor can throw for invalid formats (e.g., data URIs).
+              // Catching this prevents a server crash for the page.
+              console.warn(
+                `Could not resolve image URL "${src}" in post "${post.slug}". It will be skipped.`
+              )
+            }
+          }
+        }
       }
     } catch (err) {
       console.warn(`Could not load content for post ${post.slug}:`, err)
@@ -75,9 +109,12 @@ export const load: PageServerLoad = async ({ params }) => {
       wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
     }
 
-    const ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-      post.title
-    )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+    // Choose social media image with priority: post image > generated OG image
+    const ogImage =
+      firstImageUrl ||
+      `https://og-image-korean.vercel.app/**${encodeURIComponent(
+        post.title
+      )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 
     const url = `${website}/${post.slug}`
 
@@ -102,8 +139,8 @@ export const load: PageServerLoad = async ({ params }) => {
       image: {
         '@type': 'ImageObject',
         url: ogImage,
-        width: 1200,
-        height: 630
+        width: firstImageUrl ? undefined : 1200,
+        height: firstImageUrl ? undefined : 630
       },
       datePublished: post.date,
       dateModified: post.date,
@@ -158,7 +195,11 @@ export const load: PageServerLoad = async ({ params }) => {
       post,
       dynamicDescription,
       jsonLd: JSON.stringify(jsonLd),
-      breadcrumbLd: JSON.stringify(breadcrumbLd)
+      breadcrumbLd: JSON.stringify(breadcrumbLd),
+      socialMediaImage: ogImage,
+      isPostImage: !!firstImageUrl,
+      publishedDate: safeToISOString(post.date),
+      modifiedDate: safeToISOString(post.updated || post.date)
     }
   } catch (err) {
     console.error(`Error loading post ${slug}:`, err)

@@ -10,7 +10,7 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
-  import { name, description, author, website } from '$lib/info'
+  import { name, description, author, website, twitterHandle } from '$lib/info'
 
   export let data: LayoutData
 
@@ -116,13 +116,20 @@
     <meta property="og:title" content={data.title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={`${website}/favicon.png`} />
+    <meta property="og:image:width" content="192" />
+    <meta property="og:image:height" content="192" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:site_name" content={name} />
+    <meta property="og:locale" content="ko_KR" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={new URL($page.url.pathname, website).href} />
-    <meta property="twitter:title" content={data.title} />
-    <meta property="twitter:description" content={description} />
-    <meta property="twitter:image" content={`${website}/favicon.png`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:creator" content={twitterHandle} />
+    <meta name="twitter:title" content={data.title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${website}/favicon.png`} />
+    <meta name="twitter:image:alt" content={`${name} 로고`} />
   {/if}
 
   <!-- Organization Schema -->

@@ -206,7 +206,7 @@
             "description": "app.html과 +layout.svelte에서 발생하는 메타 태그 중복 지점을 분석하고, 개별 포스트 페이지에서 고유 description 메타 태그가 우선적으로 표시되도록 설정합니다.",
             "dependencies": [],
             "details": "1. app.html의 기본 메타 태그 구조 분석\n2. +layout.svelte의 메타 태그 설정 현황 파악\n3. 개별 포스트 페이지의 메타 태그 처리 방식 검토\n4. 메타 태그 우선순위 규칙 정의 (page > layout > app)\n5. svelte:head 블록을 통한 동적 메타 태그 관리 구현\n6. 중복 제거를 위한 조건부 렌더링 로직 추가",
-            "status": "in-progress",
+            "status": "done",
             "testStrategy": "각 레벨별 메타 태그 렌더링 확인, Chrome DevTools로 실제 DOM 메타 태그 검증, 중복 태그 없음 확인"
           },
           {
@@ -214,8 +214,8 @@
             "title": "Open Graph 및 Twitter Card 메타 태그 구현",
             "description": "소셜 미디어 공유를 위한 Open Graph 및 Twitter Card 메타 태그를 각 포스트별로 동적 생성하여 추가합니다.",
             "dependencies": ["9.1"],
-            "details": "1. Open Graph 메타 태그 구조 설계 (og:title, og:description, og:image, og:url)\n2. Twitter Card 메타 태그 구조 설계 (twitter:card, twitter:title, twitter:description, twitter:image)\n3. 포스트별 대표 이미지 추출 로직 구현\n4. 기본 이미지 fallback 설정\n5. URL canonical 설정과 연동\n6. 다국어 지원을 위한 og:locale 설정",
-            "status": "pending",
+            "details": "1. Open Graph 메타 태그 구조 설계 (og:title, og:description, og:image, og:url)\n2. Twitter Card 메타 태그 구조 설계 (twitter:card, twitter:title, twitter:description, twitter:image)\n3. 포스트별 대표 이미지 추출 로직 구현\n4. 기본 이미지 fallback 설정\n5. URL canonical 설정과 연동\n6. 다국어 지원을 위한 og:locale 설정\n<info added on 2025-07-24T10:48:33.620Z>\n구현 완료됨. 레이아웃과 포스트 페이지에서 포괄적인 Open Graph 및 Twitter Card 메타 태그를 성공적으로 구현했습니다.\n\n레이아웃 레벨에서는 og:image:width, og:image:height, og:image:type, og:site_name, og:locale 등의 추가 Open Graph 속성과 twitter:site, twitter:creator, twitter:image:alt 등의 강화된 Twitter Card 메타 태그를 추가했습니다.\n\n포스트 레벨에서는 의미적 정확성을 위해 og:type을 \"website\"에서 \"article\"로 변경하고, article:author, article:published_time, article:tag 등 아티클 전용 메타 태그를 추가했습니다. 이미지 유형에 따른 조건부 dimensions와 동적 콘텐츠가 포함된 Twitter 이미지 alt 텍스트도 구현했습니다.\n\n서버 측에서는 포스트 콘텐츠 HTML에서 첫 번째 이미지를 추출하는 로직을 구현하고, 포스트 이미지 → 생성된 OG 이미지 → 사이트 파비콘으로 이어지는 스마트 폴백 전략을 수립했습니다. 상대 경로 이미지에 대한 절대 URL 처리와 적절한 dimensions를 가진 JSON-LD 스키마 강화도 완료했습니다.\n\n기술적으로는 사용하지 않는 `updated` 필드 참조를 제거하여 TypeScript 컴파일 오류를 수정하고, 한국어 로케일(ko_KR) 지원을 추가했습니다. 모든 빌드, 린트, 타입 체크가 통과하며, 포스트별 이미지가 있을 때 향상된 소셜 미디어 링크 미리보기와 개선된 SEO가 제공됩니다.\n</info added on 2025-07-24T10:48:33.620Z>",
+            "status": "done",
             "testStrategy": "Facebook Debugger 및 Twitter Card Validator로 메타 태그 검증, 다양한 소셜 플랫폼에서 링크 미리보기 테스트"
           },
           {
@@ -250,7 +250,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-24T04:31:13.354Z",
+      "updated": "2025-07-24T10:48:36.407Z",
       "description": "Tasks for master context"
     }
   }

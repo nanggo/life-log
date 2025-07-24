@@ -21,6 +21,7 @@ export const bio: string = `love to write and code`
 // but you can replace with just your username.
 export const github: string = 'nanggo'
 export const twitter: string = ''
+export const twitterHandle: string = '@nanggo'
 export const linkedin: string = 'jisung-yoo'
 export const instagram: string = ''
 export const email: string = 'yamsiri@gmail.com'
