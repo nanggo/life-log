@@ -1,6 +1,5 @@
 <script lang="ts">
-  import ArrowLeftIcon from './ArrowLeftIcon.svelte'
-  import ArrowRightIcon from './ArrowRightIcon.svelte'
+  import { ArrowLeftIcon, ArrowRightIcon } from '../ui/Icon'
 
   export let currentPage: number
   export let totalPages: number

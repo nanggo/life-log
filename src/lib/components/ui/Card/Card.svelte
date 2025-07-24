@@ -6,7 +6,11 @@
   export { _class as class }
 </script>
 
-<svelte:element this={as} class={['relative flex flex-col items-start group', _class].join(' ')} {...$$restProps}>
+<svelte:element
+  this={as}
+  class={['relative flex flex-col items-start group', _class].join(' ')}
+  {...$$restProps}
+>
   <slot name="eyebrow" />
 
   {#if $$slots.title}

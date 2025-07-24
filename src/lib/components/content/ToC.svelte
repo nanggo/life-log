@@ -2,7 +2,7 @@
   import GithubSlugger from 'github-slugger'
   import { onMount } from 'svelte'
 
-  import Card from './Card.svelte'
+  import { Card } from '../ui/Card'
 
   import { browser } from '$app/environment'
   import type { Post } from '$lib/types'

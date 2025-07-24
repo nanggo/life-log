@@ -154,7 +154,7 @@
         "testStrategy": "컴포넌트 import 경로 정상 작동 확인, 기존 기능 유지 검증, 컴포넌트 재사용성 테스트, TypeScript 타입 체크 통과",
         "priority": "medium",
         "dependencies": [3],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -193,7 +193,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-23T15:58:36.540Z",
+      "updated": "2025-07-24T00:03:42.831Z",
       "description": "Tasks for master context"
     }
   }

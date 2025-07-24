@@ -4,12 +4,10 @@
   import type { PageData as BasePageData } from './$types'
 
   import { afterNavigate } from '$app/navigation'
-  import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
-  import Image from '$lib/components/Image.svelte'
-  import PostDate from '$lib/components/PostDate.svelte'
-  import SocialLinks from '$lib/components/SocialLinks.svelte'
-  import Tags from '$lib/components/Tags.svelte'
-  import ToC from '$lib/components/ToC.svelte'
+  import { Image, ToC } from '$lib/components/content'
+  import { SocialLinks } from '$lib/components/layout'
+  import { PostDate, TagList } from '$lib/components/post'
+  import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar } from '$lib/info'
 
   interface PageData extends BasePageData {
@@ -106,7 +104,7 @@
           {data.post.title}
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
-        <Tags tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
+        <TagList tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
       </header>
 
       <!-- render the post -->

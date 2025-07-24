@@ -1,6 +1,6 @@
 <script lang="ts">
-  import ArrowRightIcon from './ArrowRightIcon.svelte'
-  import Card from './Card.svelte'
+  import { Card } from '../ui/Card'
+  import { ArrowRightIcon } from '../ui/Icon'
 
   import { goto } from '$app/navigation'
   import type { Post } from '$lib/types'
