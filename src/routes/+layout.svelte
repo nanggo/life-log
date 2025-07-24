@@ -10,7 +10,25 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
-  import { name, description, author, website, twitterHandle } from '$lib/info'
+  import { 
+    name, 
+    description, 
+    author, 
+    website, 
+    twitterHandle, 
+    organizationAlternateNames,
+    jobTitle,
+    slogan,
+    foundingDate,
+    contactLanguages,
+    expertiseAreas,
+    areaServed,
+    licenseUrl,
+    avatar,
+    github,
+    linkedin,
+    email
+  } from '$lib/info'
 
   export let data: LayoutData
 
@@ -134,11 +152,12 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
+    <!-- eslint-disable-next-line no-unused-vars -->
     {JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
       name: name,
-      alternateName: ["낭고", "낭고넷", "nanggo", "NANGGO"],
+      alternateName: organizationAlternateNames,
       url: website,
       logo: {
         "@type": "ImageObject",
@@ -149,47 +168,39 @@
         description: `${name} 공식 로고`
       },
       description: description,
-      slogan: "순간이 모여 이뤄지는 삶의 궤적",
-      foundingDate: "2023",
+      slogan: slogan,
+      foundingDate: foundingDate,
       founder: {
         "@type": "Person",
         name: author,
         url: website,
         image: {
           "@type": "ImageObject",
-          url: "https://avatars.githubusercontent.com/u/16912219",
+          url: avatar,
           width: 460,
           height: 460
         },
-        jobTitle: "개발자",
+        jobTitle: jobTitle,
         description: "love to write and code",
         sameAs: [
-          "https://github.com/nanggo",
-          "https://www.linkedin.com/in/jisung-yoo"
+          `https://github.com/${github}`,
+          `https://www.linkedin.com/in/${linkedin}`
         ]
       },
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer service",
-          email: "yamsiri@gmail.com",
-          availableLanguage: ["Korean", "English"]
+          email: email,
+          availableLanguage: contactLanguages
         }
       ],
       sameAs: [
-        "https://github.com/nanggo",
-        "https://www.linkedin.com/in/jisung-yoo"
+        `https://github.com/${github}`,
+        `https://www.linkedin.com/in/${linkedin}`
       ],
-      knowsAbout: [
-        "웹 개발",
-        "프로그래밍",
-        "JavaScript",
-        "TypeScript",
-        "Svelte",
-        "블로그 운영",
-        "기술 글쓰기"
-      ],
-      areaServed: "KR",
+      knowsAbout: expertiseAreas,
+      areaServed: areaServed,
       inLanguage: "ko-KR"
     })}
   </script>
@@ -200,7 +211,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: name,
-      alternateName: ["낭고", "낭고넷", "nanggo", "NANGGO"],
+      alternateName: organizationAlternateNames,
       url: website,
       description: description,
       inLanguage: "ko-KR",
@@ -220,7 +231,7 @@
         name: author
       },
       copyrightYear: new Date().getFullYear(),
-      license: "https://creativecommons.org/licenses/by/4.0/",
+      license: licenseUrl,
       isAccessibleForFree: true,
       mainEntity: {
         "@type": "Blog",

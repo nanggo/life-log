@@ -4,7 +4,19 @@ import { parse } from 'node-html-parser'
 import type { PageServerLoad } from './$types'
 
 import { posts } from '$lib/data/posts'
-import { website, name } from '$lib/info'
+import {
+  website,
+  name,
+  techTags,
+  techArticleSection,
+  generalArticleSection,
+  jobTitle,
+  licenseUrl,
+  avatar,
+  github,
+  linkedin,
+  email
+} from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
@@ -129,27 +141,6 @@ export const load: PageServerLoad = async ({ params }) => {
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     // Determine if this is a technical article based on tags
-    const techTags = [
-      '개발',
-      '프로그래밍',
-      'javascript',
-      'typescript',
-      'svelte',
-      'node',
-      'react',
-      'vue',
-      'css',
-      'html',
-      'web',
-      'frontend',
-      'backend',
-      'database',
-      'api',
-      'code',
-      'coding',
-      'tech',
-      '기술'
-    ]
     const isTechArticle =
       post.tags?.some((tag) =>
         techTags.some((techTag) => tag.toLowerCase().includes(techTag.toLowerCase()))
@@ -180,16 +171,16 @@ export const load: PageServerLoad = async ({ params }) => {
         url: website,
         image: {
           '@type': 'ImageObject',
-          url: 'https://avatars.githubusercontent.com/u/16912219',
+          url: avatar,
           width: 460,
           height: 460
         },
-        jobTitle: '개발자',
+        jobTitle,
         description: 'love to write and code',
         sameAs: [
-          'https://github.com/nanggo',
-          'https://www.linkedin.com/in/jisung-yoo',
-          `mailto:yamsiri@gmail.com`
+          `https://github.com/${github}`,
+          `https://www.linkedin.com/in/${linkedin}`,
+          `mailto:${email}`
         ]
       },
       publisher: {
@@ -210,14 +201,14 @@ export const load: PageServerLoad = async ({ params }) => {
         contactPoint: {
           '@type': 'ContactPoint',
           contactType: 'customer service',
-          email: 'yamsiri@gmail.com',
+          email,
           availableLanguage: ['Korean', 'English']
         }
       },
       description: dynamicDescription,
       abstract: dynamicDescription,
       articleBody: postContent,
-      articleSection: isTechArticle ? '기술' : '일상',
+      articleSection: isTechArticle ? techArticleSection : generalArticleSection,
       keywords: post.tags ? post.tags.join(', ') : '',
       url,
       inLanguage: 'ko-KR',
@@ -241,7 +232,7 @@ export const load: PageServerLoad = async ({ params }) => {
         '@type': 'Person',
         name
       },
-      license: 'https://creativecommons.org/licenses/by/4.0/',
+      license: licenseUrl,
       ...(isTechArticle && {
         proficiencyLevel: 'Beginner',
         dependencies: '기본적인 웹 개발 지식'

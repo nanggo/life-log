@@ -29,3 +29,48 @@ export const email: string = 'yamsiri@gmail.com'
 // posts page 소개글
 export const topic: string = 'daily snapshot'
 export const detail: string = '순간이 모여 이뤄지는 삶의 궤적'
+
+// JSON-LD and SEO constants
+export const organizationAlternateNames: string[] = ['낭고', '낭고넷', 'nanggo', 'NANGGO']
+export const jobTitle: string = '개발자'
+export const slogan: string = '순간이 모여 이뤄지는 삶의 궤적'
+export const foundingDate: string = '2023'
+export const contactLanguages: string[] = ['Korean', 'English']
+export const expertiseAreas: string[] = [
+  '웹 개발',
+  '프로그래밍',
+  'JavaScript',
+  'TypeScript',
+  'Svelte',
+  '블로그 운영',
+  '기술 글쓰기'
+]
+export const areaServed: string = 'KR'
+export const licenseUrl: string = 'https://creativecommons.org/licenses/by/4.0/'
+
+// Tech article detection tags
+export const techTags: string[] = [
+  '개발',
+  '프로그래밍',
+  'javascript',
+  'typescript',
+  'svelte',
+  'node',
+  'react',
+  'vue',
+  'css',
+  'html',
+  'web',
+  'frontend',
+  'backend',
+  'database',
+  'api',
+  'code',
+  'coding',
+  'tech',
+  '기술'
+]
+
+// Article sections
+export const techArticleSection: string = '기술'
+export const generalArticleSection: string = '일상'
