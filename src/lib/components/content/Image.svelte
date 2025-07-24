@@ -16,16 +16,6 @@
       height = match[2]
     }
   }
-
-  // Disable vite-imagetools for now to prevent dev mode errors
-  // Use simple fallback for all images
-  const sources = {}
-  const img = { src }
 </script>
 
-<picture>
-  {#each Object.entries(sources) as [format, source]}
-    <source type={`image/${format}`} srcset={String(source)} {sizes} />
-  {/each}
-  <img {...img} {alt} {width} {height} {sizes} {style} loading="lazy" {...$$restProps} />
-</picture>
+<img {src} {alt} {width} {height} {sizes} {style} loading="lazy" {...$$restProps} />
