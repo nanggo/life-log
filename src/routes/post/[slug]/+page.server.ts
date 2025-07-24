@@ -81,11 +81,31 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const url = `${website}/${post.slug}`
 
-    // Create a more SEO-friendly description
+    // Create a more SEO-friendly description with multiple fallbacks
+    let previewText = ''
+
+    // 1차: post.preview.text 사용
+    if (post.preview?.text && post.preview.text.trim().length > 0) {
+      previewText = post.preview.text.trim()
+    }
+    // 2차: postContent에서 첫 번째 문단 추출 시도
+    else if (postContent && postContent.trim().length > 0) {
+      // 첫 번째 문단 또는 첫 200자 추출
+      const firstSentence = postContent.trim().split('\n')[0] || postContent.substring(0, 200)
+      previewText = firstSentence.trim()
+    }
+    // 3차: 포스트 제목 사용
+    else {
+      previewText = post.title || '낭고넷 블로그 포스트'
+    }
+
+    // Ensure we always have a non-empty description
     const dynamicDescription =
-      post.preview.text.length > 160
-        ? post.preview.text.substring(0, 157) + '...'
-        : post.preview.text
+      previewText && previewText.trim().length > 0
+        ? previewText.length > 160
+          ? previewText.substring(0, 157) + '...'
+          : previewText
+        : post.title || '낭고넷 블로그 포스트'
 
     const jsonLd = {
       '@context': 'https://schema.org',
