@@ -94,7 +94,9 @@
 
 <svelte:head>
   <title>{data.title}</title>
-  <meta name="description" content={description} />
+  {#if !$page.data.post}
+    <meta name="description" content={description} />
+  {/if}
   <meta name="author" content={author} />
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
 
@@ -108,18 +110,20 @@
   <meta name="color-scheme" content="light dark" />
 
   <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={new URL($page.url.pathname, website).href} />
-  <meta property="og:title" content={data.title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:image" content={`${website}/favicon.png`} />
+  {#if !$page.data.post}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={new URL($page.url.pathname, website).href} />
+    <meta property="og:title" content={data.title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={`${website}/favicon.png`} />
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content={new URL($page.url.pathname, website).href} />
-  <meta property="twitter:title" content={data.title} />
-  <meta property="twitter:description" content={description} />
-  <meta property="twitter:image" content={`${website}/favicon.png`} />
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={new URL($page.url.pathname, website).href} />
+    <meta property="twitter:title" content={data.title} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={`${website}/favicon.png`} />
+  {/if}
 
   <!-- Organization Schema -->
   <script type="application/ld+json">

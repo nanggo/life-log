@@ -48,14 +48,14 @@
 
 <svelte:head>
   <title>{data.post.title} - {name}</title>
-  <meta name="description" content={data.dynamicDescription} />
+  <meta name="description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="author" content={name} />
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
   <meta property="og:type" content="website" />
   <meta property="og:title" content={data.post.title} />
-  <meta property="og:description" content={data.dynamicDescription} />
+  <meta property="og:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta property="og:image" content={ogImage} />
   <meta property="og:site_name" content={name} />
 
@@ -64,7 +64,7 @@
   <meta property="twitter:domain" content={website} />
   <meta property="twitter:url" content={url} />
   <meta name="twitter:title" content={data.post.title} />
-  <meta name="twitter:description" content={data.dynamicDescription} />
+  <meta name="twitter:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="twitter:image" content={ogImage} />
 
   <script type="application/ld+json">

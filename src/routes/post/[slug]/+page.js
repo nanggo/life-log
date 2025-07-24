@@ -25,6 +25,9 @@ export async function load({ data }) {
   return {
     post: data.post,
     component: component.default,
+    dynamicDescription: data.dynamicDescription,
+    jsonLd: data.jsonLd,
+    breadcrumbLd: data.breadcrumbLd,
     layout: {
       fullWidth: true
     }

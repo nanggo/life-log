@@ -81,11 +81,15 @@ export const load: PageServerLoad = async ({ params }) => {
 
     const url = `${website}/${post.slug}`
 
-    // Create a more SEO-friendly description
+    // Create a more SEO-friendly description with simplified fallback logic
+    const previewText =
+      post.preview?.text?.trim() ||
+      postContent?.trim().split('\n')[0]?.trim() ||
+      post.title?.trim() ||
+      '낭고넷 블로그 포스트'
+
     const dynamicDescription =
-      post.preview.text.length > 160
-        ? post.preview.text.substring(0, 157) + '...'
-        : post.preview.text
+      previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     const jsonLd = {
       '@context': 'https://schema.org',

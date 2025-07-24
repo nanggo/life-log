@@ -69,6 +69,22 @@ const optimizePreviewImages = (previewElement: HTMLElement | null) => {
 }
 
 /**
+ * HTML에서 깨끗한 평문 텍스트를 추출합니다.
+ * node-html-parser의 .text 속성을 활용하여 효율적으로 처리합니다.
+ */
+const extractPlainText = (element: HTMLElement | null): string => {
+  if (!element) return ''
+
+  // structuredText가 있으면 우선 사용
+  if (element.structuredText) {
+    return element.structuredText.trim()
+  }
+
+  // node-html-parser의 .text 속성 사용하여 평문 추출
+  return element.text.replace(/\s+/g, ' ').trim()
+}
+
+/**
  * 개선된 프리뷰 생성: 이미지 + 텍스트를 하나의 p 태그 안에 결합
  */
 const createEnhancedPreview = (html: HTMLElement) => {
@@ -165,7 +181,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
     preview: {
       html: preview?.toString() || '',
-      text: (preview?.structuredText ?? preview?.toString()) || ''
+      text: extractPlainText(preview)
     },
     readingTime: readingTime(html.structuredText).text,
     tags,
