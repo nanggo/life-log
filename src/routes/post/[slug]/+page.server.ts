@@ -141,10 +141,8 @@ export const load: PageServerLoad = async ({ params }) => {
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     // Determine if this is a technical article based on tags
-    const isTechArticle =
-      post.tags?.some((tag) =>
-        techTags.some((techTag) => tag.toLowerCase().includes(techTag.toLowerCase()))
-      ) || false
+    const techRegex = new RegExp(techTags.map((t) => t.toLowerCase()).join('|'))
+    const isTechArticle = post.tags?.some((tag) => techRegex.test(tag.toLowerCase())) || false
 
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -215,12 +213,6 @@ export const load: PageServerLoad = async ({ params }) => {
       wordCount,
       genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
       about: post.tags
-        ? post.tags.map((tag) => ({
-            '@type': 'Thing',
-            name: tag
-          }))
-        : undefined,
-      mentions: post.tags
         ? post.tags.map((tag) => ({
             '@type': 'Thing',
             name: tag

@@ -30,10 +30,8 @@
     email
   } from '$lib/info'
 
-  // Ensure TypeScript recognizes these variables as used
-  // @ts-ignore - Used in JSON.stringify expressions below
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
-  const _orgSchema = {
+  // Create schema object to ensure all variables are properly used
+  const orgSchemaData = {
     organizationAlternateNames,
     jobTitle,
     slogan,
@@ -47,6 +45,9 @@
     linkedin,
     email
   }
+
+  // This ensures TypeScript recognizes orgSchemaData as used
+  void orgSchemaData
 
   export let data: LayoutData
 
@@ -174,7 +175,7 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       name: name,
-      alternateName: _orgSchema.organizationAlternateNames,
+      alternateName: orgSchemaData.organizationAlternateNames,
       url: website,
       logo: {
         "@type": "ImageObject",
@@ -185,39 +186,39 @@
         description: `${name} 공식 로고`
       },
       description: description,
-      slogan: _orgSchema.slogan,
-      foundingDate: _orgSchema.foundingDate,
+      orgSchemaData.slogan: orgSchemaData.slogan,
+      orgSchemaData.foundingDate: orgSchemaData.foundingDate,
       founder: {
         "@type": "Person",
         name: author,
         url: website,
         image: {
           "@type": "ImageObject",
-          url: _orgSchema.avatar,
+          url: orgSchemaData.avatar,
           width: 460,
           height: 460
         },
-        jobTitle: _orgSchema.jobTitle,
+        orgSchemaData.jobTitle: orgSchemaData.jobTitle,
         description: "love to write and code",
         sameAs: [
-          `https://github.com/${_orgSchema.github}`,
-          `https://www.linkedin.com/in/${_orgSchema.linkedin}`
+          `https://orgSchemaData.github.com/${orgSchemaData.github}`,
+          `https://www.orgSchemaData.linkedin.com/in/${orgSchemaData.linkedin}`
         ]
       },
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer service",
-          email: _orgSchema.email,
-          availableLanguage: _orgSchema.contactLanguages
+          orgSchemaData.email: orgSchemaData.email,
+          availableLanguage: orgSchemaData.contactLanguages
         }
       ],
       sameAs: [
-        `https://github.com/${_orgSchema.github}`,
-        `https://www.linkedin.com/in/${_orgSchema.linkedin}`
+        `https://orgSchemaData.github.com/${orgSchemaData.github}`,
+        `https://www.orgSchemaData.linkedin.com/in/${orgSchemaData.linkedin}`
       ],
-      knowsAbout: _orgSchema.expertiseAreas,
-      areaServed: _orgSchema.areaServed,
+      knowsAbout: orgSchemaData.expertiseAreas,
+      orgSchemaData.areaServed: orgSchemaData.areaServed,
       inLanguage: "ko-KR"
     })}
   </script>
@@ -228,7 +229,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: name,
-      alternateName: _orgSchema.organizationAlternateNames,
+      alternateName: orgSchemaData.organizationAlternateNames,
       url: website,
       description: description,
       inLanguage: "ko-KR",
@@ -248,7 +249,7 @@
         name: author
       },
       copyrightYear: new Date().getFullYear(),
-      license: _orgSchema.licenseUrl,
+      license: orgSchemaData.licenseUrl,
       isAccessibleForFree: true,
       mainEntity: {
         "@type": "Blog",
