@@ -1,0 +1,249 @@
+name: SEO Validation
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'posts/**'           # Blog posts
+      - 'about/**'           # About page content
+      - 'src/routes/**'      # Route changes that affect SEO
+      - 'src/lib/**'         # Library changes that might affect meta tags
+      - 'src/app.html'       # App template changes
+      - 'static/robots.txt'  # SEO files
+      - 'scripts/seo-validation.js' # SEO script changes
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'posts/**'
+      - 'about/**'
+      - 'src/routes/**'
+      - 'src/lib/**'
+      - 'src/app.html'
+      - 'static/robots.txt'
+      - 'scripts/seo-validation.js'
+  workflow_dispatch: # Allow manual triggering
+    inputs:
+      validate_all:
+        description: 'Force validate all pages (even if no content changes)'
+        required: false
+        default: false
+        type: boolean
+      environment:
+        description: 'Environment to validate'
+        required: false
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - development
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  seo-validation:
+    name: SEO Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build Project
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          
+      - name: Run SEO Validation
+        id: seo-validation
+        run: |
+          set +e  # Don't exit on failure, we want to capture the result
+          pnpm seo:validate
+          SEO_EXIT_CODE=$?
+          echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Always continue to upload artifacts even if validation fails
+          exit 0
+        
+      - name: Upload SEO Reports
+        uses: actions/upload-artifact@v4
+        if: always() # Upload reports even if validation fails
+        with:
+          name: seo-reports-${{ github.run_number }}
+          path: .seo-reports/
+          retention-days: 30
+          
+      - name: Generate SEO Summary
+        if: always()
+        run: |
+          # Check if this was a manual trigger
+          TRIGGER_INFO=""
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TRIGGER_INFO="🔧 **Manual Trigger** - Environment: ${{ github.event.inputs.environment || 'production' }}"
+            if [ "${{ github.event.inputs.validate_all }}" = "true" ]; then
+              TRIGGER_INFO="$TRIGGER_INFO, Force validate all pages"
+            fi
+            TRIGGER_INFO="$TRIGGER_INFO\n\n"
+          fi
+          
+          if [ -f .seo-reports/seo-report-*.json ]; then
+            # Get the latest JSON report
+            LATEST_REPORT=$(ls -t .seo-reports/seo-report-*.json | head -n1)
+            
+            # Extract summary data using Node.js
+            cat << 'EOF' > extract-summary.js
+          const fs = require('fs');
+          const path = process.argv[2];
+          const triggerInfo = process.argv[3] || '';
+          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
+          const summary = data.summary;
+          
+          console.log(`${triggerInfo}## 📊 SEO Validation Results
+          
+          | Metric | Value |
+          |--------|-------|
+          | Total Pages | ${summary.totalPages} |
+          | Valid Pages | ${summary.validPages} |
+          | Total Errors | ${summary.totalErrors} |
+          | Total Warnings | ${summary.totalWarnings} |
+          | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
+          | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
+          
+          ### 🎯 Validation Status
+          ${summary.totalErrors === 0 ? '✅ **SEO validation passed!**' : '❌ **SEO validation failed** - ' + summary.totalErrors + ' errors found'}
+          
+          ### 📁 Artifacts
+          - SEO reports have been uploaded as artifacts and are available for download
+          - Reports include detailed HTML and JSON formats
+          `);
+          EOF
+          
+            node extract-summary.js "$LATEST_REPORT" "$TRIGGER_INFO" > seo-summary.md
+            cat seo-summary.md >> $GITHUB_STEP_SUMMARY
+          else
+            echo "${TRIGGER_INFO}❌ No SEO reports found" >> $GITHUB_STEP_SUMMARY
+          fi
+          
+      - name: Comment PR with SEO Results
+        if: github.event_name == 'pull_request' && always()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              // Find the latest JSON report using built-in fs
+              const reportsDir = '.seo-reports';
+              if (!fs.existsSync(reportsDir)) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '❌ **SEO Validation Failed** - No reports directory found. Check the workflow logs for details.'
+                });
+                return;
+              }
+              
+              const files = fs.readdirSync(reportsDir)
+                .filter(file => file.startsWith('seo-report-') && file.endsWith('.json'))
+                .map(file => path.join(reportsDir, file));
+              
+              if (files.length === 0) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '❌ **SEO Validation Failed** - No reports generated. Check the workflow logs for details.'
+                });
+                return;
+              }
+              
+              // Sort files by modification time (newest first)
+              files.sort((a, b) => {
+                const statA = fs.statSync(a);
+                const statB = fs.statSync(b);
+                return statB.mtime - statA.mtime;
+              });
+              
+              const latestReport = files[0];
+              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'));
+              const summary = data.summary;
+              
+              // Create detailed comment
+              const statusIcon = summary.totalErrors === 0 ? '✅' : '❌';
+              const statusText = summary.totalErrors === 0 ? 'PASSED' : 'FAILED';
+              
+              let issueDetails = '';
+              if (summary.totalErrors > 0 || summary.totalWarnings > 0) {
+                issueDetails = '\n\n### 🔍 Issues Found\n';
+                data.pageResults.forEach(page => {
+                  if (page.issues.length > 0) {
+                    issueDetails += `\n**${page.pageName}:**\n`;
+                    const errors = page.issues.filter(i => i.severity === 'error');
+                    const warnings = page.issues.filter(i => i.severity === 'warning');
+                    
+                    if (errors.length > 0) {
+                      issueDetails += `- ❌ ${errors.length} error(s)\n`;
+                    }
+                    if (warnings.length > 0) {
+                      issueDetails += `- ⚠️ ${warnings.length} warning(s)\n`;
+                    }
+                  }
+                });
+              }
+              
+              const comment = `## ${statusIcon} SEO Validation ${statusText}
+              
+              | Metric | Value |
+              |--------|-------|
+              | Total Pages | ${summary.totalPages} |
+              | Valid Pages | ${summary.validPages} |
+              | Total Errors | ${summary.totalErrors} |
+              | Total Warnings | ${summary.totalWarnings} |
+              | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
+              | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
+              ${issueDetails}
+              
+              📁 **Detailed reports** are available in the workflow artifacts.
+              
+              <sub>Generated by SEO Validation workflow - Run #${{ github.run_number }}</sub>`;
+              
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              });
+              
+            } catch (error) {
+              console.error('Error creating PR comment:', error);
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '❌ **SEO Validation Error** - Failed to process results. Check the workflow logs for details.'
+              });
+            }
+            
+      - name: Fail Workflow if SEO Validation Failed
+        if: steps.seo-validation.outputs.exit_code != '0'
+        run: |
+          echo "❌ SEO validation failed with exit code ${{ steps.seo-validation.outputs.exit_code }}"
+          echo "Check the SEO reports and fix the identified issues."
+          exit 1

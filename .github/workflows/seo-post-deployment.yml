@@ -1,0 +1,270 @@
+name: SEO Post-Deployment Validation
+
+on:
+  # Trigger after successful deployments
+  deployment_status:
+  # Also allow manual triggering for production health checks
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to validate'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - production
+          - preview
+
+jobs:
+  post-deployment-seo:
+    name: Post-Deployment SEO Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.deployment_status.state == 'success'
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8
+          
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Build Project
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          
+      - name: Run SEO Validation
+        id: seo-validation
+        run: |
+          set +e  # Don't exit on failure
+          pnpm seo:validate
+          SEO_EXIT_CODE=$?
+          echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Always continue to process results
+          exit 0
+        
+      - name: Upload SEO Reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: post-deployment-seo-reports-${{ github.run_number }}
+          path: .seo-reports/
+          retention-days: 60
+          
+      - name: Create Issue on SEO Failure
+        if: steps.seo-validation.outputs.exit_code != '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            
+            try {
+              // Find the latest JSON report using built-in fs
+              const reportsDir = '.seo-reports';
+              if (!fs.existsSync(reportsDir)) {
+                console.log('No SEO reports directory found');
+                return;
+              }
+              
+              const files = fs.readdirSync(reportsDir)
+                .filter(file => file.startsWith('seo-report-') && file.endsWith('.json'))
+                .map(file => path.join(reportsDir, file));
+              
+              if (files.length === 0) {
+                console.log('No SEO reports found');
+                return;
+              }
+              
+              // Get the latest report
+              files.sort((a, b) => {
+                const statA = fs.statSync(a);
+                const statB = fs.statSync(b);
+                return statB.mtime - statA.mtime;
+              });
+              
+              const latestReport = files[0];
+              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'));
+              const summary = data.summary;
+              
+              // Get deployment info
+              const environment = context.eventName === 'workflow_dispatch' 
+                ? '${{ github.event.inputs.environment }}' 
+                : context.payload.deployment_status?.environment || 'production';
+              
+              const deploymentUrl = context.payload.deployment_status?.target_url || 'https://blog.nanggo.net';
+              
+              // Check if there's already an open SEO issue
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'seo,post-deployment',
+                per_page: 1
+              });
+              
+              // If there's already an open issue, update it
+              if (issues.length > 0) {
+                const existingIssue = issues[0];
+                
+                const updateComment = `## 🔄 Post-Deployment SEO Update - ${new Date().toISOString().split('T')[0]}
+                
+                **Environment**: ${environment}  
+                **Deployment**: ${deploymentUrl}
+                
+                | Metric | Value |
+                |--------|-------|
+                | Total Pages | ${summary.totalPages} |
+                | Valid Pages | ${summary.validPages} |
+                | Total Errors | ${summary.totalErrors} |
+                | Total Warnings | ${summary.totalWarnings} |
+                | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
+                | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
+                
+                📁 **Latest reports**: Available in workflow artifacts [here](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+                
+                <sub>Auto-generated by Post-Deployment SEO Validation</sub>`;
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: updateComment
+                });
+                
+                return;
+              }
+              
+              // Create new issue
+              let issueBody = `## 🚨 Post-Deployment SEO Issues Detected
+              
+              SEO validation found issues after deployment to **${environment}**.
+              
+              **Deployment URL**: ${deploymentUrl}
+              
+              ### 📊 Summary
+              
+              | Metric | Value |
+              |--------|-------|
+              | Total Pages | ${summary.totalPages} |
+              | Valid Pages | ${summary.validPages} |
+              | Total Errors | **${summary.totalErrors}** |
+              | Total Warnings | ${summary.totalWarnings} |
+              | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
+              | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
+              
+              ### 🔍 Issues by Page
+              `;
+              
+              data.pageResults.forEach(page => {
+                if (page.issues.length > 0) {
+                  issueBody += `\n**${page.pageName}:**\n`;
+                  const errors = page.issues.filter(i => i.severity === 'error');
+                  const warnings = page.issues.filter(i => i.severity === 'warning');
+                  
+                  errors.forEach(error => {
+                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}\n`;
+                  });
+                  
+                  warnings.forEach(warning => {
+                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}\n`;
+                  });
+                }
+              });
+              
+              issueBody += `
+              
+              ### 🛠 Action Required
+              
+              1. Review the detailed SEO reports in the [workflow artifacts](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})
+              2. Fix the identified SEO issues in the source code
+              3. Test locally using \`pnpm seo:validate\`
+              4. Deploy the fixes to resolve these issues
+              
+              ### 📁 Reports
+              
+              Detailed HTML and JSON reports are available in the workflow artifacts.
+              
+              ---
+              
+              <sub>This issue was automatically created by Post-Deployment SEO validation on ${new Date().toISOString()}</sub>`;
+              
+              // Create the issue
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 Post-Deployment SEO Issues - ${summary.totalErrors} errors found`,
+                body: issueBody,
+                labels: ['seo', 'post-deployment', 'bug']
+              });
+              
+              console.log(`Created post-deployment SEO issue: ${issue.data.html_url}`);
+              
+            } catch (error) {
+              console.error('Error creating SEO issue:', error);
+            }
+            
+      - name: Close SEO Issue on Success
+        if: steps.seo-validation.outputs.exit_code == '0'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            try {
+              // Find open post-deployment SEO issues
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'seo,post-deployment'
+              });
+              
+              if (issues.length > 0) {
+                for (const issue of issues) {
+                  // Add success comment and close
+                  await github.rest.issues.createComment({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    body: `## ✅ SEO Issues Resolved
+                    
+                    Post-deployment SEO validation now passes! All identified issues have been resolved.
+                    
+                    🎉 All pages are now passing SEO validation.
+                    
+                    Automatically closing this issue.
+                    
+                    <sub>Auto-resolved by Post-Deployment SEO validation on ${new Date().toISOString()}</sub>`
+                  });
+                  
+                  await github.rest.issues.update({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: issue.number,
+                    state: 'closed'
+                  });
+                  
+                  console.log(`Closed post-deployment SEO issue #${issue.number}`);
+                }
+              }
+            } catch (error) {
+              console.error('Error closing SEO issues:', error);
+            }
+            
+      - name: Post Success Summary
+        if: steps.seo-validation.outputs.exit_code == '0'
+        run: |
+          echo "## ✅ Post-Deployment SEO Validation Passed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All SEO validations passed after deployment. The site is SEO-compliant!" >> $GITHUB_STEP_SUMMARY
