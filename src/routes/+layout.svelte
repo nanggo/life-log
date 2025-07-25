@@ -14,6 +14,7 @@
     name,
     description,
     author,
+    bio,
     website,
     twitterHandle,
     organizationAlternateNames,
@@ -43,7 +44,8 @@
     avatar,
     github,
     linkedin,
-    email
+    email,
+    bio
   }
 
   // This ensures TypeScript recognizes orgSchemaData as used
@@ -199,7 +201,7 @@
           height: 460
         },
         jobTitle: orgSchemaData.jobTitle,
-        description: "love to write and code",
+        description: orgSchemaData.bio,
         sameAs: [
           `https://github.com/${orgSchemaData.github}`,
           `https://www.linkedin.com/in/${orgSchemaData.linkedin}`

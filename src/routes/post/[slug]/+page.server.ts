@@ -7,6 +7,8 @@ import { posts } from '$lib/data/posts'
 import {
   website,
   name,
+  author,
+  bio,
   techTags,
   techArticleSection,
   generalArticleSection,
@@ -168,7 +170,7 @@ export const load: PageServerLoad = async ({ params }) => {
       dateModified: safeToISOString(post.updated || post.date),
       author: {
         '@type': 'Person',
-        name,
+        name: author,
         url: website,
         image: {
           '@type': 'ImageObject',
@@ -177,7 +179,7 @@ export const load: PageServerLoad = async ({ params }) => {
           height: 460
         },
         jobTitle,
-        description: 'love to write and code',
+        description: bio,
         email,
         sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
@@ -193,7 +195,7 @@ export const load: PageServerLoad = async ({ params }) => {
         },
         founder: {
           '@type': 'Person',
-          name,
+          name: author,
           url: website
         },
         contactPoint: {
@@ -222,7 +224,7 @@ export const load: PageServerLoad = async ({ params }) => {
       copyrightYear: new Date(post.date).getFullYear(),
       copyrightHolder: {
         '@type': 'Person',
-        name
+        name: author
       },
       license: licenseUrl,
       ...(isTechArticle && {
