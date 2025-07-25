@@ -38,7 +38,8 @@
     : true
 
   // JSON-LD schemas
-  // eslint-disable-next-line no-unused-vars
+  // @ts-ignore - used in JSON-LD script tags below
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const _organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -84,7 +85,8 @@
     inLanguage: 'ko-KR'
   }
 
-  // eslint-disable-next-line no-unused-vars
+  // @ts-ignore - used in JSON-LD script tags below
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const _websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
