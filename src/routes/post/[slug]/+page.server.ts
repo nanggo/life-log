@@ -186,17 +186,18 @@ export const load: PageServerLoad = async ({ params }) => {
       description: dynamicDescription,
       articleBody: postContent,
       articleSection: isTechArticle ? techArticleSection : generalArticleSection,
-      keywords: post.tags ? post.tags.join(', ') : '',
+      keywords: post.tags.join(', '),
       url,
       inLanguage: 'ko-KR',
       wordCount,
       genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
-      about: post.tags
-        ? post.tags.map((tag) => ({
-            '@type': 'Thing',
-            name: tag
-          }))
-        : undefined,
+      about:
+        post.tags.length > 0
+          ? post.tags.map((tag) => ({
+              '@type': 'Thing',
+              name: tag
+            }))
+          : undefined,
       isAccessibleForFree: true,
       copyrightYear: new Date(safeToISOString(post.date)).getFullYear(),
       copyrightHolder: {

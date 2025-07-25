@@ -1,5 +1,4 @@
 <script lang="ts">
-  /* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
   import { inject } from '@vercel/analytics'
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import '../app.css'
@@ -39,7 +38,8 @@
     : true
 
   // JSON-LD schemas
-  $: _organizationSchema = {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': website,
@@ -84,7 +84,8 @@
     inLanguage: 'ko-KR'
   }
 
-  $: _websiteSchema = {
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name,
@@ -151,11 +152,9 @@
     }
   }
 
-  // Ensure schemas are "used" to avoid TypeScript warnings
-  $: {
-    // This ensures the schemas are considered "used" by TypeScript
-    _organizationSchema && _websiteSchema
-  }
+  // Ensure TypeScript recognizes schemas as used
+  // @ts-ignore: These are used in the JSON-LD scripts below
+  organizationSchema && websiteSchema
 
   const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
@@ -273,12 +272,12 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
-    {JSON.stringify(_organizationSchema)}
+    {JSON.stringify(organizationSchema)}
   </script>
 
   <!-- WebSite Schema -->
   <script type="application/ld+json">
-    {JSON.stringify(_websiteSchema)}
+    {JSON.stringify(websiteSchema)}
   </script>
 </svelte:head>
 
