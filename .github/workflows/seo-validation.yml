@@ -4,23 +4,28 @@ on:
   push:
     branches: [main, develop]
     paths:
-      - 'posts/**'           # Blog posts
-      - 'about/**'           # About page content
-      - 'src/routes/**'      # Route changes that affect SEO
-      - 'src/lib/**'         # Library changes that might affect meta tags
-      - 'src/app.html'       # App template changes
-      - 'static/robots.txt'  # SEO files
-      - 'scripts/seo-validation.js' # SEO script changes
+      # 포스트 직접 푸시 시 검증
+      - 'posts/**'           # 새 블로그 포스트 작성
+      - 'about/**'           # About 페이지 내용 변경
+      # 구조/기능 변경 시에도 검증
+      - 'src/routes/**'      # 라우팅 변경
+      - 'src/lib/**'         # 공통 라이브러리 변경
+      - 'src/app.html'       # 앱 템플릿 변경
+      - 'static/robots.txt'  # SEO 설정 파일
+      - 'scripts/seo-validation.js' # SEO 검증 스크립트
   pull_request:
     branches: [main, develop]
     paths:
-      - 'posts/**'
-      - 'about/**'
-      - 'src/routes/**'
-      - 'src/lib/**'
-      - 'src/app.html'
-      - 'static/robots.txt'
-      - 'scripts/seo-validation.js'
+      # 구조/기능 변경만 트리거 (포스트는 제외)
+      - 'src/routes/**'       # 라우팅 변경
+      - 'src/lib/**'          # 공통 라이브러리 변경
+      - 'src/app.html'        # 앱 템플릿 변경
+      - 'static/robots.txt'   # SEO 설정 파일
+      - 'scripts/seo-validation.js'  # SEO 검증 스크립트
+      - 'svelte.config.js'    # SvelteKit 설정
+      - 'vite.config.js'      # Vite 설정
+      - 'tailwind.config.js'  # 스타일 설정
+      # 포스트와 About은 main 푸시에서만 검증
   workflow_dispatch: # Allow manual triggering
     inputs:
       validate_all:

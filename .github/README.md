@@ -16,13 +16,21 @@ This directory contains automated workflows for maintaining the quality and SEO 
 
 **Monitored Paths**:
 
-- `posts/**` - Blog post content
+**For Push to Main (Posts):**
+
+- `posts/**` - Blog post content (direct push workflow)
 - `about/**` - About page content
+- `src/routes/**`, `src/lib/**`, `src/app.html` - Structure changes
+- `static/robots.txt`, `scripts/seo-validation.js` - SEO files
+
+**For Pull Requests (Structure only):**
+
 - `src/routes/**` - Route changes affecting SEO
 - `src/lib/**` - Library changes affecting meta tags
 - `src/app.html` - App template changes
 - `static/robots.txt` - SEO configuration files
 - `scripts/seo-validation.js` - SEO validation script updates
+- `svelte.config.js`, `vite.config.js` - Build configuration
 
 **Features**:
 
@@ -55,12 +63,19 @@ This directory contains automated workflows for maintaining the quality and SEO 
 
 ### Content-Driven SEO Validation
 
-**When you write a post or update content:**
+**When you write a post (direct push to main):**
 
-1. **Automatic Trigger**: Workflow runs only when content/SEO files change
+1. **Automatic Trigger**: Workflow runs when posts are added/modified
 2. **Build & Validate**: Project builds and SEO script analyzes HTML
+3. **Direct Feedback**: Get immediate feedback in workflow summary
+4. **Quality Check**: Ensures new posts meet SEO standards
+
+**When you change structure/features (via PR):**
+
+1. **Smart Trigger**: Only runs for structure-related changes (not posts)
+2. **Build & Validate**: Validates that SEO functionality still works
 3. **PR Feedback**: Get immediate feedback on PR with validation results
-4. **Fail Fast**: Prevents merging if SEO issues are detected
+4. **Fail Fast**: Prevents merging if SEO functionality is broken
 
 ### Post-Deployment Health Check
 
