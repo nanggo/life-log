@@ -37,7 +37,7 @@
 <svelte:head>
   <title>{data.aboutData.title}</title>
   <meta name="description" content={data.aboutData.description} />
-  <meta name="author" content={name} />
+  <!-- author는 +layout.svelte에서 관리됨 -->
   <meta
     name="keywords"
     content="NANGGO, 유지성, Frontend Engineer, React, Vue.js, TypeScript, 프론트엔드 개발자"

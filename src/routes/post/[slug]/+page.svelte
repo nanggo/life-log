@@ -50,7 +50,7 @@
 <svelte:head>
   <title>{data.post.title} - {name}</title>
   <meta name="description" content={data.dynamicDescription?.trim() || data.post.title} />
-  <meta name="author" content={name} />
+  <!-- author는 +layout.svelte에서 관리됨 -->
   <link rel="canonical" href={url} />
 
   <!-- Facebook Meta Tags -->

@@ -26,31 +26,17 @@
   // 페이지 타이틀 생성
   $: pageTitle = tag ? `${tag} - ${name}'s life log | Posts` : `${name}'s life log | Posts`
 
-  // 메타 설명 생성
-  $: metaDescription = tag ? `${detail} - ${tag} 관련 포스트 모음` : detail
+  // 메타 설명은 +layout.svelte에서 기본 description 사용
 </script>
 
 <svelte:head>
   <title>{pageTitle}</title>
-  <meta name="description" content={metaDescription} />
-  <meta name="author" content={name} />
+  <!-- description과 author는 +layout.svelte에서 관리됨 -->
 
   <!-- 표준 메타 태그 -->
   <link rel="canonical" href={currentUrl} />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={currentUrl} />
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={metaDescription} />
-  <meta property="og:site_name" content={name} />
-
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary" />
-  <meta property="twitter:domain" content={website} />
-  <meta property="twitter:url" content={currentUrl} />
-  <meta name="twitter:title" content={pageTitle} />
-  <meta name="twitter:description" content={metaDescription} />
+  <!-- Open Graph과 Twitter 메타태그는 +layout.svelte에서 처리됨 -->
 </svelte:head>
 
 <div class="flex flex-col flex-grow">
