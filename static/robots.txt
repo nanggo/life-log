@@ -2,16 +2,31 @@
 User-agent: *
 Allow: /
 
+# Allow important content explicitly
+Allow: /post/
+Allow: /posts/
+Allow: /about/
+Allow: /rss.xml
+Allow: /sitemap.xml
+
 # Disallow specific paths for better crawling efficiency
 Disallow: /api/
 Disallow: /_app/
 Disallow: /node_modules/
 Disallow: /.git/
 Disallow: /static/fonts/
+Disallow: /static/posts/
 Disallow: /favicon.ico
+Disallow: /favicon.png
 
-# Crawl-delay for politeness
-Crawl-delay: 1
+# Prevent indexing of paginated duplicate content beyond reasonable depth
+Disallow: /posts/1*
+Disallow: /posts/2*
+Disallow: /posts/3*
 
-# Sitemap locations
+# Crawl-delay for politeness (reduced for better indexing)
+Crawl-delay: 0.5
+
+# Sitemap and RSS feed locations
 Sitemap: https://blog.nanggo.net/sitemap.xml
+Sitemap: https://blog.nanggo.net/rss.xml

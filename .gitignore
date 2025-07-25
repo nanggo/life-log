@@ -40,3 +40,6 @@ static/posts/
 
 # SEO Analysis Report
 google-search-analysis.md
+
+# SEO Validation Reports (auto-generated)
+.seo-reports/

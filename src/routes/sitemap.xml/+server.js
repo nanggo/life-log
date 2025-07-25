@@ -2,6 +2,8 @@
 // It's helpful for SEO but does require you to keep it updated to reflect the routes of your website.
 // It is OK to delete this file if you'd rather not bother with it.
 
+import { parse } from 'node-html-parser'
+
 import { posts } from '$lib/data/posts'
 import { website } from '$lib/info'
 import { createSafeSlug } from '$lib/utils/posts'
@@ -27,6 +29,39 @@ const safeToISOString = (dateValue) => {
 }
 
 /**
+ * 포스트에서 첫 번째 이미지 정보를 추출하는 함수
+ * @param {Object} post - 포스트 객체
+ * @returns {Object|null} - 이미지 정보 또는 null
+ */
+const extractFirstImage = (post) => {
+  try {
+    // 포스트의 preview HTML에서 이미지 찾기
+    if (post.preview?.html) {
+      const previewHtml = parse(post.preview.html)
+      const img = previewHtml.querySelector('img')
+      if (img) {
+        const src = img.getAttribute('src')
+        const alt = img.getAttribute('alt') || post.title
+        if (src) {
+          // 상대 경로를 절대 URL로 변환
+          const imageUrl = src.startsWith('http') ? src : `${website}${src}`
+          return {
+            url: imageUrl,
+            title: alt,
+            alt
+          }
+        }
+      }
+    }
+  } catch (error) {
+    // Silently fail - image extraction is optional for sitemap
+    // This prevents console spam while maintaining functionality
+    void error
+  }
+  return null
+}
+
+/**
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
@@ -49,24 +84,42 @@ export async function GET({ setHeaders }) {
     >
       <url>
         <loc>${website}</loc>
+        <lastmod>${safeToISOString(new Date())}</lastmod>
+        <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>
       <url>
         <loc>${website}/about</loc>
+        <lastmod>${safeToISOString(new Date())}</lastmod>
+        <changefreq>monthly</changefreq>
         <priority>0.8</priority>
+      </url>
+      <url>
+        <loc>${website}/posts</loc>
+        <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
+        <changefreq>daily</changefreq>
+        <priority>0.9</priority>
       </url>
 
       ${posts
-        .map(
-          (post) => `<url>
+        .map((post) => {
+          const image = extractFirstImage(post)
+          const imageXml = image
+            ? `
+            <image:image>
+              <image:loc>${image.url}</image:loc>
+              <image:title>${image.title}</image:title>
+              <image:caption>${image.alt}</image:caption>
+            </image:image>`
+            : ''
+
+          return `<url>
             <loc>${getPostUrl(post.slug)}</loc>
-            <lastmod
-              >${safeToISOString(post.updated || post.date)}</lastmod
-            >
-            <changefreq>daily</changefreq>
-            <priority>1.0</priority>
+            <lastmod>${safeToISOString(post.updated || post.date)}</lastmod>
+            <changefreq>weekly</changefreq>
+            <priority>0.7</priority>${imageXml}
           </url>`
-        )
+        })
         .join('')}
     </urlset>`
 
