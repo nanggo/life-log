@@ -179,11 +179,7 @@ export const load: PageServerLoad = async ({ params }) => {
         },
         jobTitle,
         description: bio,
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'author',
-          email
-        },
+        email,
         sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
       publisher: {
@@ -211,7 +207,6 @@ export const load: PageServerLoad = async ({ params }) => {
         ]
       },
       description: dynamicDescription,
-      abstract: dynamicDescription,
       articleBody: postContent,
       articleSection: isTechArticle ? techArticleSection : generalArticleSection,
       keywords: post.tags ? post.tags.join(', ') : '',
