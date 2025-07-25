@@ -110,9 +110,9 @@ jobs:
             # Get the latest JSON report
             LATEST_REPORT=$(ls -t .seo-reports/seo-report-*.json | head -n1)
             
-            # Extract summary data using Node.js
-            cat << 'EOF' > extract-summary.js
-          const fs = require('fs');
+            # Extract summary data using Node.js (ES module)
+            cat << 'EOF' > extract-summary.mjs
+          import fs from 'fs';
           const path = process.argv[2];
           const triggerInfo = process.argv[3] || '';
           const data = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -138,7 +138,7 @@ jobs:
           `);
           EOF
           
-            node extract-summary.js "$LATEST_REPORT" "$TRIGGER_INFO" > seo-summary.md
+            node extract-summary.mjs "$LATEST_REPORT" "$TRIGGER_INFO" > seo-summary.md
             cat seo-summary.md >> $GITHUB_STEP_SUMMARY
           else
             echo "${TRIGGER_INFO}❌ No SEO reports found" >> $GITHUB_STEP_SUMMARY
