@@ -81,11 +81,21 @@ jobs:
         
       - name: Upload SEO Reports
         uses: actions/upload-artifact@v4
-        if: always()
+        if: always() && hashFiles('.seo-reports/*') != '' # Only upload if reports exist
         with:
           name: post-deployment-seo-reports-${{ github.run_number }}
           path: .seo-reports/
           retention-days: 60
+          
+      - name: Check SEO Reports Status
+        if: always()
+        run: |
+          if [ -d ".seo-reports" ] && [ "$(ls -A .seo-reports)" ]; then
+            echo "✅ SEO reports generated successfully"
+            ls -la .seo-reports/
+          else
+            echo "⚠️ No SEO reports found - check if validation script ran successfully"
+          fi
           
       - name: Create Issue on SEO Failure
         if: steps.seo-validation.outputs.exit_code != '0'
