@@ -4,6 +4,7 @@ export interface PostMetadata {
   title: string
   description: string
   date: string
+  updated?: string
   author?: string
   draft?: boolean
   tags: string[]
@@ -14,6 +15,9 @@ export interface PostMetadata {
   }
   slug: string
   readingTime: string
+  // TechArticle properties (optional, for technical posts)
+  proficiencyLevel?: string
+  dependencies?: string
 }
 
 export interface PostHeading {

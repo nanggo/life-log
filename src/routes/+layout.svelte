@@ -10,13 +10,149 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
-  import { name, description, author, website, twitterHandle } from '$lib/info'
+  import {
+    name,
+    description,
+    author,
+    bio,
+    website,
+    twitterHandle,
+    organizationAlternateNames,
+    jobTitle,
+    slogan,
+    foundingDate,
+    contactLanguages,
+    expertiseAreas,
+    areaServed,
+    licenseUrl,
+    avatar,
+    github,
+    linkedin,
+    email
+  } from '$lib/info'
 
   export let data: LayoutData
 
   let isDarkMode: boolean = browser
     ? Boolean(document.documentElement.classList.contains('dark'))
     : true
+
+  // JSON-LD schemas
+  // @ts-ignore - used in JSON-LD script tags below
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const _organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': website,
+    name,
+    alternateName: organizationAlternateNames,
+    url: website,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${website}/favicon.png`,
+      width: 192,
+      height: 192,
+      caption: `${name} 로고`,
+      description: `${name} 공식 로고`
+    },
+    description,
+    slogan,
+    foundingDate,
+    founder: {
+      '@type': 'Person',
+      name: author,
+      url: website,
+      image: {
+        '@type': 'ImageObject',
+        url: avatar,
+        width: 460,
+        height: 460
+      },
+      jobTitle,
+      description: bio,
+      sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
+    },
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email,
+        availableLanguage: contactLanguages
+      }
+    ],
+    knowsAbout: expertiseAreas,
+    areaServed,
+    inLanguage: 'ko-KR'
+  }
+
+  // @ts-ignore - used in JSON-LD script tags below
+  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
+  const _websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name,
+    alternateName: organizationAlternateNames,
+    url: website,
+    description,
+    inLanguage: 'ko-KR',
+    keywords: ['낭고', '개발자', '블로그', '개발 일기', '프로그래밍', '기술 블로그'],
+    author: {
+      '@type': 'Person',
+      name: author,
+      url: website
+    },
+    publisher: {
+      '@type': 'Organization',
+      name,
+      url: website
+    },
+    copyrightHolder: {
+      '@type': 'Person',
+      name: author
+    },
+    copyrightYear: new Date().getFullYear(),
+    license: licenseUrl,
+    isAccessibleForFree: true,
+    mainEntity: {
+      '@type': 'Blog',
+      name: `${name} 블로그`,
+      description,
+      url: website,
+      author: {
+        '@type': 'Person',
+        name: author
+      },
+      inLanguage: 'ko-KR'
+    },
+    hasPart: [
+      {
+        '@type': 'WebPage',
+        name: '홈',
+        url: website,
+        description: '낭고넷 메인 페이지'
+      },
+      {
+        '@type': 'WebPage',
+        name: '포스트',
+        url: `${website}/posts`,
+        description: '블로그 포스트 목록'
+      },
+      {
+        '@type': 'WebPage',
+        name: '소개',
+        url: `${website}/about`,
+        description: '낭고 소개 페이지'
+      }
+    ],
+    audience: {
+      '@type': 'Audience',
+      audienceType: '개발자, 기술 블로그 독자',
+      geographicArea: {
+        '@type': 'Country',
+        name: '대한민국'
+      }
+    }
+  }
 
   const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
@@ -134,41 +270,12 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: name,
-      url: website,
-      logo: {
-        "@type": "ImageObject",
-        url: `${website}/favicon.png`,
-        width: 192,
-        height: 192
-      },
-      description: description,
-      author: {
-        "@type": "Person",
-        name: author,
-        url: website
-      },
-      sameAs: [
-        "https://github.com/nanggo"
-      ]
-    })}
+    {JSON.stringify(_organizationSchema)}
   </script>
 
   <!-- WebSite Schema -->
   <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: name,
-      alternateName: ["낭고", "낭고넷", "nanggo", "NANGGO"],
-      url: website,
-      description: description,
-      inLanguage: "ko-KR",
-      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"]
-    })}
+    {JSON.stringify(_websiteSchema)}
   </script>
 </svelte:head>
 

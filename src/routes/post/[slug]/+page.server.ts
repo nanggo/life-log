@@ -4,11 +4,27 @@ import { parse } from 'node-html-parser'
 import type { PageServerLoad } from './$types'
 
 import { posts } from '$lib/data/posts'
-import { website, name } from '$lib/info'
+import {
+  website,
+  author,
+  bio,
+  techTags,
+  techArticleSection,
+  generalArticleSection,
+  jobTitle,
+  licenseUrl,
+  avatar,
+  github,
+  linkedin,
+  email
+} from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
+
+// 성능 최적화를 위해 techRegex를 모듈 레벨에서 한 번만 생성
+const techRegex = new RegExp(techTags.map((t) => t.toLowerCase()).join('|'))
 
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
@@ -128,9 +144,12 @@ export const load: PageServerLoad = async ({ params }) => {
     const dynamicDescription =
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
+    // Determine if this is a technical article based on tags
+    const isTechArticle = post.tags.some((tag) => techRegex.test(tag.toLowerCase()))
+
     const jsonLd = {
       '@context': 'https://schema.org',
-      '@type': 'BlogPosting',
+      '@type': isTechArticle ? ['BlogPosting', 'TechArticle'] : 'BlogPosting',
       mainEntityOfPage: {
         '@type': 'WebPage',
         '@id': url
@@ -140,30 +159,56 @@ export const load: PageServerLoad = async ({ params }) => {
         '@type': 'ImageObject',
         url: ogImage,
         width: firstImageUrl ? undefined : 1200,
-        height: firstImageUrl ? undefined : 630
+        height: firstImageUrl ? undefined : 630,
+        caption: post.title,
+        description: `${post.title}에 관련된 이미지`
       },
-      datePublished: post.date,
-      dateModified: post.date,
+      datePublished: safeToISOString(post.date),
+      dateModified: safeToISOString(post.updated || post.date),
       author: {
         '@type': 'Person',
-        name,
-        url: website
+        name: author,
+        url: website,
+        image: {
+          '@type': 'ImageObject',
+          url: avatar,
+          width: 460,
+          height: 460
+        },
+        jobTitle,
+        description: bio,
+        email,
+        sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
       publisher: {
-        '@type': 'Organization',
-        name,
-        logo: {
-          '@type': 'ImageObject',
-          url: `${website}/favicon.png`,
-          width: 192,
-          height: 192
-        }
+        '@id': website
       },
       description: dynamicDescription,
       articleBody: postContent,
+      articleSection: isTechArticle ? techArticleSection : generalArticleSection,
+      keywords: post.tags.join(', '),
       url,
       inLanguage: 'ko-KR',
-      wordCount
+      wordCount,
+      genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
+      about:
+        post.tags.length > 0
+          ? post.tags.map((tag) => ({
+              '@type': 'Thing',
+              name: tag
+            }))
+          : undefined,
+      isAccessibleForFree: true,
+      copyrightYear: new Date(safeToISOString(post.date)).getFullYear(),
+      copyrightHolder: {
+        '@type': 'Person',
+        name: author
+      },
+      license: licenseUrl,
+      ...(isTechArticle && {
+        proficiencyLevel: post.proficiencyLevel || 'Beginner',
+        dependencies: post.dependencies || '기본적인 웹 개발 지식'
+      })
     }
 
     const breadcrumbLd = {
