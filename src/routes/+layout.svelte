@@ -186,8 +186,8 @@
         description: `${name} 공식 로고`
       },
       description: description,
-      orgSchemaData.slogan: orgSchemaData.slogan,
-      orgSchemaData.foundingDate: orgSchemaData.foundingDate,
+      slogan: orgSchemaData.slogan,
+      foundingDate: orgSchemaData.foundingDate,
       founder: {
         "@type": "Person",
         name: author,
@@ -198,27 +198,27 @@
           width: 460,
           height: 460
         },
-        orgSchemaData.jobTitle: orgSchemaData.jobTitle,
+        jobTitle: orgSchemaData.jobTitle,
         description: "love to write and code",
         sameAs: [
-          `https://orgSchemaData.github.com/${orgSchemaData.github}`,
-          `https://www.orgSchemaData.linkedin.com/in/${orgSchemaData.linkedin}`
+          `https://github.com/${orgSchemaData.github}`,
+          `https://www.linkedin.com/in/${orgSchemaData.linkedin}`
         ]
       },
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer service",
-          orgSchemaData.email: orgSchemaData.email,
+          email: orgSchemaData.email,
           availableLanguage: orgSchemaData.contactLanguages
         }
       ],
       sameAs: [
-        `https://orgSchemaData.github.com/${orgSchemaData.github}`,
-        `https://www.orgSchemaData.linkedin.com/in/${orgSchemaData.linkedin}`
+        `https://github.com/${orgSchemaData.github}`,
+        `https://www.linkedin.com/in/${orgSchemaData.linkedin}`
       ],
       knowsAbout: orgSchemaData.expertiseAreas,
-      orgSchemaData.areaServed: orgSchemaData.areaServed,
+      areaServed: orgSchemaData.areaServed,
       inLanguage: "ko-KR"
     })}
   </script>
