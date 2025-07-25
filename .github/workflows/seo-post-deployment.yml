@@ -43,6 +43,26 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         
+      - name: Cache TypeScript and ESLint
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            .eslintcache
+          key: lint-${{ runner.os }}-${{ hashFiles('**/*.ts', '**/*.js', '**/*.svelte', '.eslintrc*', 'tsconfig.json') }}
+          restore-keys: |
+            lint-${{ runner.os }}-
+        
+      - name: Cache Build Output
+        uses: actions/cache@v4
+        with:
+          path: |
+            .svelte-kit
+            build
+          key: build-${{ runner.os }}-${{ hashFiles('src/**/*', 'posts/**/*', 'static/**/*', 'package.json', 'svelte.config.js', 'vite.config.js', 'tailwind.config.js') }}
+          restore-keys: |
+            build-${{ runner.os }}-
+        
       - name: Build Project
         run: pnpm build
         env:

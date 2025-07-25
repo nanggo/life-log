@@ -69,7 +69,45 @@ jobs:
       - name: Install Dependencies
         run: pnpm install --frozen-lockfile
         
+      - name: Cache TypeScript and ESLint
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules/.cache
+            .eslintcache
+          key: lint-${{ runner.os }}-${{ hashFiles('**/*.ts', '**/*.js', '**/*.svelte', '.eslintrc*', 'tsconfig.json') }}
+          restore-keys: |
+            lint-${{ runner.os }}-
+        
+      - name: Cache Build Output
+        uses: actions/cache@v4
+        with:
+          path: |
+            .svelte-kit
+            build
+          key: build-${{ runner.os }}-${{ hashFiles('src/**/*', 'posts/**/*', 'static/**/*', 'package.json', 'svelte.config.js', 'vite.config.js', 'tailwind.config.js') }}
+          restore-keys: |
+            build-${{ runner.os }}-
+        
+      - name: Check if build is needed
+        id: build-check
+        run: |
+          if [ ! -d ".svelte-kit/output" ] || [ ! -f ".svelte-kit/output/prerendered/pages/index.html" ]; then
+            echo "needs_build=true" >> $GITHUB_OUTPUT
+            echo "🔨 Build is required - no previous build found"
+          else
+            echo "needs_build=false" >> $GITHUB_OUTPUT
+            echo "✅ Using cached build output"
+          fi
+          
       - name: Build Project
+        if: steps.build-check.outputs.needs_build == 'true'
+        run: pnpm build
+        env:
+          NODE_ENV: production
+          
+      - name: Build Project (Force)
+        if: github.event.inputs.validate_all == 'true'
         run: pnpm build
         env:
           NODE_ENV: production
