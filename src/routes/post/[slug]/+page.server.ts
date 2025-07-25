@@ -221,7 +221,7 @@ export const load: PageServerLoad = async ({ params }) => {
           }))
         : undefined,
       isAccessibleForFree: true,
-      copyrightYear: new Date(post.date).getFullYear(),
+      copyrightYear: new Date(safeToISOString(post.date)).getFullYear(),
       copyrightHolder: {
         '@type': 'Person',
         name: author

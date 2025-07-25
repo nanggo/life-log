@@ -31,25 +31,6 @@
     email
   } from '$lib/info'
 
-  // Create schema object to ensure all variables are properly used
-  const orgSchemaData = {
-    organizationAlternateNames,
-    jobTitle,
-    slogan,
-    foundingDate,
-    contactLanguages,
-    expertiseAreas,
-    areaServed,
-    licenseUrl,
-    avatar,
-    github,
-    linkedin,
-    email,
-    bio
-  }
-
-  // This ensures TypeScript recognizes orgSchemaData as used
-  void orgSchemaData
 
   export let data: LayoutData
 
@@ -177,7 +158,7 @@
       "@context": "https://schema.org",
       "@type": "Organization",
       name: name,
-      alternateName: orgSchemaData.organizationAlternateNames,
+      alternateName: organizationAlternateNames,
       url: website,
       logo: {
         "@type": "ImageObject",
@@ -188,35 +169,35 @@
         description: `${name} 공식 로고`
       },
       description: description,
-      slogan: orgSchemaData.slogan,
-      foundingDate: orgSchemaData.foundingDate,
+      slogan: slogan,
+      foundingDate: foundingDate,
       founder: {
         "@type": "Person",
         name: author,
         url: website,
         image: {
           "@type": "ImageObject",
-          url: orgSchemaData.avatar,
+          url: avatar,
           width: 460,
           height: 460
         },
-        jobTitle: orgSchemaData.jobTitle,
-        description: orgSchemaData.bio,
+        jobTitle: jobTitle,
+        description: bio,
         sameAs: [
-          `https://github.com/${orgSchemaData.github}`,
-          `https://www.linkedin.com/in/${orgSchemaData.linkedin}`
+          `https://github.com/${github}`,
+          `https://www.linkedin.com/in/${linkedin}`
         ]
       },
       contactPoint: [
         {
           "@type": "ContactPoint",
           contactType: "customer service",
-          email: orgSchemaData.email,
-          availableLanguage: orgSchemaData.contactLanguages
+          email: email,
+          availableLanguage: contactLanguages
         }
       ],
-      knowsAbout: orgSchemaData.expertiseAreas,
-      areaServed: orgSchemaData.areaServed,
+      knowsAbout: expertiseAreas,
+      areaServed: areaServed,
       inLanguage: "ko-KR"
     })}
   </script>
@@ -227,7 +208,7 @@
       "@context": "https://schema.org",
       "@type": "WebSite",
       name: name,
-      alternateName: orgSchemaData.organizationAlternateNames,
+      alternateName: organizationAlternateNames,
       url: website,
       description: description,
       inLanguage: "ko-KR",
@@ -247,7 +228,7 @@
         name: author
       },
       copyrightYear: new Date().getFullYear(),
-      license: orgSchemaData.licenseUrl,
+      license: licenseUrl,
       isAccessibleForFree: true,
       mainEntity: {
         "@type": "Blog",
