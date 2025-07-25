@@ -6,7 +6,6 @@ import type { PageServerLoad } from './$types'
 import { posts } from '$lib/data/posts'
 import {
   website,
-  name,
   author,
   bio,
   techTags,
@@ -17,8 +16,7 @@ import {
   avatar,
   github,
   linkedin,
-  email,
-  contactLanguages
+  email
 } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
@@ -183,28 +181,7 @@ export const load: PageServerLoad = async ({ params }) => {
         sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
       publisher: {
-        '@type': 'Organization',
-        name,
-        url: website,
-        logo: {
-          '@type': 'ImageObject',
-          url: `${website}/favicon.png`,
-          width: 192,
-          height: 192
-        },
-        founder: {
-          '@type': 'Person',
-          name: author,
-          url: website
-        },
-        contactPoint: [
-          {
-            '@type': 'ContactPoint',
-            contactType: 'customer service',
-            email,
-            availableLanguage: contactLanguages
-          }
-        ]
+        '@id': website
       },
       description: dynamicDescription,
       articleBody: postContent,

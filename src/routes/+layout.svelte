@@ -1,4 +1,5 @@
 <script lang="ts">
+  /* eslint-disable no-unused-vars, @typescript-eslint/no-unused-vars */
   import { inject } from '@vercel/analytics'
   import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import '../app.css'
@@ -31,12 +32,130 @@
     email
   } from '$lib/info'
 
-
   export let data: LayoutData
 
   let isDarkMode: boolean = browser
     ? Boolean(document.documentElement.classList.contains('dark'))
     : true
+
+  // JSON-LD schemas
+  $: _organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': website,
+    name,
+    alternateName: organizationAlternateNames,
+    url: website,
+    logo: {
+      '@type': 'ImageObject',
+      url: `${website}/favicon.png`,
+      width: 192,
+      height: 192,
+      caption: `${name} 로고`,
+      description: `${name} 공식 로고`
+    },
+    description,
+    slogan,
+    foundingDate,
+    founder: {
+      '@type': 'Person',
+      name: author,
+      url: website,
+      image: {
+        '@type': 'ImageObject',
+        url: avatar,
+        width: 460,
+        height: 460
+      },
+      jobTitle,
+      description: bio,
+      sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
+    },
+    contactPoint: [
+      {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        email,
+        availableLanguage: contactLanguages
+      }
+    ],
+    knowsAbout: expertiseAreas,
+    areaServed,
+    inLanguage: 'ko-KR'
+  }
+
+  $: _websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name,
+    alternateName: organizationAlternateNames,
+    url: website,
+    description,
+    inLanguage: 'ko-KR',
+    keywords: ['낭고', '개발자', '블로그', '개발 일기', '프로그래밍', '기술 블로그'],
+    author: {
+      '@type': 'Person',
+      name: author,
+      url: website
+    },
+    publisher: {
+      '@type': 'Organization',
+      name,
+      url: website
+    },
+    copyrightHolder: {
+      '@type': 'Person',
+      name: author
+    },
+    copyrightYear: new Date().getFullYear(),
+    license: licenseUrl,
+    isAccessibleForFree: true,
+    mainEntity: {
+      '@type': 'Blog',
+      name: `${name} 블로그`,
+      description,
+      url: website,
+      author: {
+        '@type': 'Person',
+        name: author
+      },
+      inLanguage: 'ko-KR'
+    },
+    hasPart: [
+      {
+        '@type': 'WebPage',
+        name: '홈',
+        url: website,
+        description: '낭고넷 메인 페이지'
+      },
+      {
+        '@type': 'WebPage',
+        name: '포스트',
+        url: `${website}/posts`,
+        description: '블로그 포스트 목록'
+      },
+      {
+        '@type': 'WebPage',
+        name: '소개',
+        url: `${website}/about`,
+        description: '낭고 소개 페이지'
+      }
+    ],
+    audience: {
+      '@type': 'Audience',
+      audienceType: '개발자, 기술 블로그 독자',
+      geographicArea: {
+        '@type': 'Country',
+        name: '대한민국'
+      }
+    }
+  }
+
+  // Ensure schemas are "used" to avoid TypeScript warnings
+  $: {
+    // This ensures the schemas are considered "used" by TypeScript
+    _organizationSchema && _websiteSchema
+  }
 
   const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
@@ -154,132 +273,12 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      name: name,
-      alternateName: organizationAlternateNames,
-      url: website,
-      logo: {
-        "@type": "ImageObject",
-        url: `${website}/favicon.png`,
-        width: 192,
-        height: 192,
-        caption: `${name} 로고`,
-        description: `${name} 공식 로고`
-      },
-      description: description,
-      slogan: slogan,
-      foundingDate: foundingDate,
-      founder: {
-        "@type": "Person",
-        name: author,
-        url: website,
-        image: {
-          "@type": "ImageObject",
-          url: avatar,
-          width: 460,
-          height: 460
-        },
-        jobTitle: jobTitle,
-        description: bio,
-        sameAs: [
-          `https://github.com/${github}`,
-          `https://www.linkedin.com/in/${linkedin}`
-        ]
-      },
-      contactPoint: [
-        {
-          "@type": "ContactPoint",
-          contactType: "customer service",
-          email: email,
-          availableLanguage: contactLanguages
-        }
-      ],
-      knowsAbout: expertiseAreas,
-      areaServed: areaServed,
-      inLanguage: "ko-KR"
-    })}
+    {JSON.stringify(_organizationSchema)}
   </script>
 
   <!-- WebSite Schema -->
   <script type="application/ld+json">
-    {JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      name: name,
-      alternateName: organizationAlternateNames,
-      url: website,
-      description: description,
-      inLanguage: "ko-KR",
-      keywords: ["낭고", "개발자", "블로그", "개발 일기", "프로그래밍", "기술 블로그"],
-      author: {
-        "@type": "Person",
-        name: author,
-        url: website
-      },
-      publisher: {
-        "@type": "Organization",
-        name: name,
-        url: website
-      },
-      copyrightHolder: {
-        "@type": "Person",
-        name: author
-      },
-      copyrightYear: new Date().getFullYear(),
-      license: licenseUrl,
-      isAccessibleForFree: true,
-      mainEntity: {
-        "@type": "Blog",
-        name: `${name} 블로그`,
-        description: description,
-        url: website,
-        author: {
-          "@type": "Person",
-          name: author
-        },
-        inLanguage: "ko-KR"
-      },
-      potentialAction: [
-        {
-          "@type": "SearchAction",
-          target: {
-            "@type": "EntryPoint",
-            urlTemplate: `${website}/posts?search={search_term_string}`
-          },
-          "query-input": "required name=search_term_string"
-        }
-      ],
-      hasPart: [
-        {
-          "@type": "WebPage",
-          name: "홈",
-          url: website,
-          description: "낭고넷 메인 페이지"
-        },
-        {
-          "@type": "WebPage",
-          name: "포스트",
-          url: `${website}/posts`,
-          description: "블로그 포스트 목록"
-        },
-        {
-          "@type": "WebPage",
-          name: "소개",
-          url: `${website}/about`,
-          description: "낭고 소개 페이지"
-        }
-      ],
-      audience: {
-        "@type": "Audience",
-        audienceType: "개발자, 기술 블로그 독자",
-        geographicArea: {
-          "@type": "Country",
-          name: "대한민국"
-        }
-      }
-    })}
+    {JSON.stringify(_websiteSchema)}
   </script>
 </svelte:head>
 
