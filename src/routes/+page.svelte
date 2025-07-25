@@ -14,27 +14,14 @@
 
 <svelte:head>
   <title>{title}</title>
-  <meta name="description" content={bio} />
-  <meta name="author" content={name} />
+  <!-- description과 author는 +layout.svelte에서 관리됨 -->
 
   <!-- 표준 메타 태그 -->
   <link rel="canonical" href={url} />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content={url} />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={bio} />
-  <meta property="og:image" content={avatar} />
-  <meta property="og:site_name" content={name} />
+  <!-- Open Graph은 +layout.svelte에서 처리됨 -->
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary" />
-  <meta property="twitter:domain" content={website} />
-  <meta property="twitter:url" content={url} />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={bio} />
-  <meta name="twitter:image" content={avatar} />
+  <!-- Twitter 메타태그는 +layout.svelte에서 처리됨 -->
 </svelte:head>
 
 <div class="flex flex-col flex-grow gap-8 pb-16">
