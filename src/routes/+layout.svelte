@@ -38,8 +38,8 @@
     : true
 
   // JSON-LD schemas
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  const organizationSchema = {
+  // eslint-disable-next-line no-unused-vars
+  const _organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     '@id': website,
@@ -84,8 +84,8 @@
     inLanguage: 'ko-KR'
   }
 
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
-  const websiteSchema = {
+  // eslint-disable-next-line no-unused-vars
+  const _websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name,
@@ -151,10 +151,6 @@
       }
     }
   }
-
-  // Ensure TypeScript recognizes schemas as used
-  // @ts-ignore: These are used in the JSON-LD scripts below
-  organizationSchema && websiteSchema
 
   const disableTransitionsTemporarily = (): void => {
     document.documentElement.classList.add('[&_*]:!transition-none')
@@ -272,12 +268,12 @@
 
   <!-- Organization Schema -->
   <script type="application/ld+json">
-    {JSON.stringify(organizationSchema)}
+    {JSON.stringify(_organizationSchema)}
   </script>
 
   <!-- WebSite Schema -->
   <script type="application/ld+json">
-    {JSON.stringify(websiteSchema)}
+    {JSON.stringify(_websiteSchema)}
   </script>
 </svelte:head>
 

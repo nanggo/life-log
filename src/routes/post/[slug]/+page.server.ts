@@ -145,7 +145,7 @@ export const load: PageServerLoad = async ({ params }) => {
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     // Determine if this is a technical article based on tags
-    const isTechArticle = post.tags?.some((tag) => techRegex.test(tag.toLowerCase())) || false
+    const isTechArticle = post.tags.some((tag) => techRegex.test(tag.toLowerCase()))
 
     const jsonLd = {
       '@context': 'https://schema.org',
