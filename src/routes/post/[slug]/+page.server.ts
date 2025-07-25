@@ -15,12 +15,16 @@ import {
   avatar,
   github,
   linkedin,
-  email
+  email,
+  contactLanguages
 } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
+
+// 성능 최적화를 위해 techRegex를 모듈 레벨에서 한 번만 생성
+const techRegex = new RegExp(techTags.map((t) => t.toLowerCase()).join('|'))
 
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
@@ -141,7 +145,6 @@ export const load: PageServerLoad = async ({ params }) => {
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     // Determine if this is a technical article based on tags
-    const techRegex = new RegExp(techTags.map((t) => t.toLowerCase()).join('|'))
     const isTechArticle = post.tags?.some((tag) => techRegex.test(tag.toLowerCase())) || false
 
     const jsonLd = {
@@ -175,11 +178,8 @@ export const load: PageServerLoad = async ({ params }) => {
         },
         jobTitle,
         description: 'love to write and code',
-        sameAs: [
-          `https://github.com/${github}`,
-          `https://www.linkedin.com/in/${linkedin}`,
-          `mailto:${email}`
-        ]
+        email,
+        sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
       publisher: {
         '@type': 'Organization',
@@ -200,7 +200,7 @@ export const load: PageServerLoad = async ({ params }) => {
           '@type': 'ContactPoint',
           contactType: 'customer service',
           email,
-          availableLanguage: ['Korean', 'English']
+          availableLanguage: contactLanguages
         }
       },
       description: dynamicDescription,
