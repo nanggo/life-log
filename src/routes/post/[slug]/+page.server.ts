@@ -157,7 +157,6 @@ export const load: PageServerLoad = async ({ params }) => {
         '@id': url
       },
       headline: post.title,
-      alternativeHeadline: post.title,
       image: {
         '@type': 'ImageObject',
         url: ogImage,
@@ -180,7 +179,11 @@ export const load: PageServerLoad = async ({ params }) => {
         },
         jobTitle,
         description: bio,
-        email,
+        contactPoint: {
+          '@type': 'ContactPoint',
+          contactType: 'author',
+          email
+        },
         sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
       },
       publisher: {
@@ -198,12 +201,14 @@ export const load: PageServerLoad = async ({ params }) => {
           name: author,
           url: website
         },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          contactType: 'customer service',
-          email,
-          availableLanguage: contactLanguages
-        }
+        contactPoint: [
+          {
+            '@type': 'ContactPoint',
+            contactType: 'customer service',
+            email,
+            availableLanguage: contactLanguages
+          }
+        ]
       },
       description: dynamicDescription,
       abstract: dynamicDescription,

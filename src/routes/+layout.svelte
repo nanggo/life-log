@@ -215,10 +215,6 @@
           availableLanguage: orgSchemaData.contactLanguages
         }
       ],
-      sameAs: [
-        `https://github.com/${orgSchemaData.github}`,
-        `https://www.linkedin.com/in/${orgSchemaData.linkedin}`
-      ],
       knowsAbout: orgSchemaData.expertiseAreas,
       areaServed: orgSchemaData.areaServed,
       inLanguage: "ko-KR"
