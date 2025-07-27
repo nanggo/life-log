@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Cache Build Output
-        uses: actions/cache@v4.0.2
+        uses: actions/cache@v4.1.5
         with:
           path: |
             .svelte-kit
@@ -56,10 +56,20 @@ jobs:
           echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
           exit 0
 
+      - name: Check SEO Reports Directory
+        run: |
+          echo "Checking .seo-reports directory..."
+          ls -la .seo-reports/ || echo "No .seo-reports directory found"
+          if [ -d ".seo-reports" ]; then
+            echo "Directory exists, listing contents:"
+            ls -la .seo-reports/
+          fi
+
       - name: Upload SEO Reports
-        uses: actions/upload-artifact@v4.3.4
-        if: always() && hashFiles('.seo-reports/*') != ''
+        uses: actions/upload-artifact@v4.4.5
+        if: always()
         with:
           name: seo-reports-${{ github.run_id }}
           path: .seo-reports/
           retention-days: 30
+          if-no-files-found: warn
