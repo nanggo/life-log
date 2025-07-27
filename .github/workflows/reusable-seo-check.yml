@@ -338,16 +338,20 @@ ${issueDetails}
 
               data.pageResults.forEach((page) => {
                 if (page.issues.length > 0) {
-                  issueBody += `\n**${page.pageName}:**\n`
+                  issueBody += `
+**${page.pageName}:**
+`
                   const errors = page.issues.filter((i) => i.severity === 'error')
                   const warnings = page.issues.filter((i) => i.severity === 'warning')
 
                   errors.forEach((error) => {
-                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}\n`
+                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}
+`
                   })
 
                   warnings.forEach((warning) => {
-                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}\n`
+                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}
+`
                   })
                 }
               })
@@ -358,7 +362,7 @@ ${issueDetails}
               
               1. [워크플로우](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})에서 상세 SEO 리포트를 검토하세요
               2. 소스 코드에서 확인된 SEO 문제를 수정하세요
-              3. \`pnpm seo:validate\`를 사용하여 로컬에서 테스트하세요
+              3. `pnpm seo:validate`를 사용하여 로컬에서 테스트하세요
               4. 수정 사항을 배포하여 문제를 해결하세요
               
               ---
