@@ -60,7 +60,7 @@
 
   <!-- Additional SEO Meta Tags -->
   <!-- robots and googlebot are handled globally in src/app.html -->
-  <link rel="canonical" href={url} />
+  <!-- canonical is handled globally in +layout.svelte -->
 
   <script type="application/ld+json">
 {@html JSON.stringify(_jsonLd)}
