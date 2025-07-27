@@ -246,7 +246,7 @@
   <meta name="color-scheme" content="light dark" />
 
   <!-- Open Graph / Facebook -->
-  {#if !$page.data.post}
+  {#if !$page.data.post && !$page.route.id?.includes('/about')}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={new URL($page.url.pathname, website).href} />
     <meta property="og:title" content={data.title} />

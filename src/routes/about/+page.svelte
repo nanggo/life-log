@@ -59,8 +59,7 @@
   <meta name="twitter:creator" content="@nanggo" />
 
   <!-- Additional SEO Meta Tags -->
-  <meta name="robots" content="index, follow, max-image-preview:large" />
-  <meta name="googlebot" content="index, follow" />
+  <!-- robots and googlebot are handled globally in src/app.html -->
   <link rel="canonical" href={url} />
 
   <script type="application/ld+json">

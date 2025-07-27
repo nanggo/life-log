@@ -1,32 +1,29 @@
+# .github/workflows/seo-validation.yml
 name: SEO Validation
 
 on:
   push:
     branches: [main, develop]
     paths:
-      # 포스트 직접 푸시 시 검증
-      - 'posts/**'           # 새 블로그 포스트 작성
-      - 'about/**'           # About 페이지 내용 변경
-      # 구조/기능 변경 시에도 검증
-      - 'src/routes/**'      # 라우팅 변경
-      - 'src/lib/**'         # 공통 라이브러리 변경
-      - 'src/app.html'       # 앱 템플릿 변경
-      - 'static/robots.txt'  # SEO 설정 파일
-      - 'scripts/seo-validation.js' # SEO 검증 스크립트
+      - 'posts/**'
+      - 'about/**'
+      - 'src/routes/**'
+      - 'src/lib/**'
+      - 'src/app.html'
+      - 'static/robots.txt'
+      - 'scripts/seo-validation.js'
   pull_request:
     branches: [main, develop]
     paths:
-      # 구조/기능 변경만 트리거 (포스트는 제외)
-      - 'src/routes/**'       # 라우팅 변경
-      - 'src/lib/**'          # 공통 라이브러리 변경
-      - 'src/app.html'        # 앱 템플릿 변경
-      - 'static/robots.txt'   # SEO 설정 파일
-      - 'scripts/seo-validation.js'  # SEO 검증 스크립트
-      - 'svelte.config.js'    # SvelteKit 설정
-      - 'vite.config.js'      # Vite 설정
-      - 'tailwind.config.js'  # 스타일 설정
-      # 포스트와 About은 main 푸시에서만 검증
-  workflow_dispatch: # Allow manual triggering
+      - 'src/routes/**'
+      - 'src/lib/**'
+      - 'src/app.html'
+      - 'static/robots.txt'
+      - 'scripts/seo-validation.js'
+      - 'svelte.config.js'
+      - 'vite.config.js'
+      - 'tailwind.config.js'
+  workflow_dispatch:
     inputs:
       validate_all:
         description: 'Force validate all pages (even if no content changes)'
@@ -48,268 +45,44 @@ concurrency:
 
 permissions:
   contents: read
-  issues: write
-  pull-requests: write
+  pull-requests: write # For commenting on PRs
+  issues: write # Fallback for github-script if needed
 
 jobs:
-  seo-validation:
-    name: SEO Validation
+  run-reusable-seo-check:
+    name: Run Reusable SEO Check
+    uses: ./.github/workflows/reusable-seo-check.yml
+
+  handle-results:
+    name: Handle SEO Results
+    needs: run-reusable-seo-check
     runs-on: ubuntu-latest
-    
+    if: always()
+
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-          
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
+      - name: Download SEO reports
+        uses: actions/download-artifact@v4.1.8
         with:
-          version: 10
-        
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'pnpm'
-          
-      - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
-        
-      - name: Cache TypeScript and ESLint
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules/.cache
-            .eslintcache
-          key: lint-${{ runner.os }}-${{ hashFiles('**/*.ts', '**/*.js', '**/*.svelte', '.eslintrc*', 'tsconfig.json') }}
-          restore-keys: |
-            lint-${{ runner.os }}-
-        
-      - name: Cache Build Output
-        uses: actions/cache@v4
-        with:
-          path: |
-            .svelte-kit
-            build
-          key: build-${{ runner.os }}-${{ hashFiles('src/**/*', 'posts/**/*', 'static/**/*', 'package.json', 'svelte.config.js', 'vite.config.js', 'tailwind.config.js') }}
-          restore-keys: |
-            build-${{ runner.os }}-
-        
-      - name: Check if build is needed
-        id: build-check
-        run: |
-          # Always build in GitHub Actions for reliable results
-          echo "needs_build=true" >> $GITHUB_OUTPUT
-          echo "🔨 Build is required for reliable SEO validation"
-          
-      - name: Build Project
-        if: steps.build-check.outputs.needs_build == 'true'
-        run: pnpm build
-        env:
-          NODE_ENV: production
-          
-      - name: Build Project (Force)
-        if: github.event.inputs.validate_all == 'true'
-        run: pnpm build
-        env:
-          NODE_ENV: production
-          
-      - name: Run SEO Validation
-        id: seo-validation
-        run: |
-          set +e  # Don't exit on failure, we want to capture the result
-          pnpm seo:validate
-          SEO_EXIT_CODE=$?
-          echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
-          
-          # Always continue to upload artifacts even if validation fails
-          exit 0
-        
-      - name: Upload SEO Reports
-        uses: actions/upload-artifact@v4
-        if: always() && hashFiles('.seo-reports/*') != '' # Only upload if reports exist
-        with:
-          name: seo-reports-${{ github.run_number }}
-          path: .seo-reports/
-          retention-days: 30
-          
-      - name: Check SEO Reports Status
-        if: always()
-        run: |
-          if [ -d ".seo-reports" ] && [ "$(ls -A .seo-reports)" ]; then
-            echo "✅ SEO reports generated successfully"
-            ls -la .seo-reports/
-          else
-            echo "⚠️ No SEO reports found - check if validation script ran successfully"
-          fi
-          
+          name: seo-reports-${{ github.run_id }}
+          path: .seo-reports
+
       - name: Generate SEO Summary
-        if: always()
-        run: |
-          # Ensure reports directory exists for reliable file checking
-          mkdir -p .seo-reports
-          
-          # Check if this was a manual trigger
-          TRIGGER_INFO=""
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TRIGGER_INFO="🔧 **Manual Trigger** - Environment: ${{ github.event.inputs.environment || 'production' }}"
-            if [ "${{ github.event.inputs.validate_all }}" = "true" ]; then
-              TRIGGER_INFO="$TRIGGER_INFO, Force validate all pages"
-            fi
-            TRIGGER_INFO="$TRIGGER_INFO\n\n"
-          fi
-          
-          if ls .seo-reports/seo-report-*.json 1> /dev/null 2>&1; then
-            # Get the latest JSON report
-            LATEST_REPORT=$(ls -t .seo-reports/seo-report-*.json | head -n1)
-            
-            # Extract summary data using Node.js (ES module)
-            cat << 'EOF' > extract-summary.mjs
-          import fs from 'fs';
-          const path = process.argv[2];
-          const triggerInfo = process.argv[3] || '';
-          const data = JSON.parse(fs.readFileSync(path, 'utf8'));
-          const summary = data.summary;
-          
-          console.log(`${triggerInfo}## 📊 SEO Validation Results
-          
-          | Metric | Value |
-          |--------|-------|
-          | Total Pages | ${summary.totalPages} |
-          | Valid Pages | ${summary.validPages} |
-          | Total Errors | ${summary.totalErrors} |
-          | Total Warnings | ${summary.totalWarnings} |
-          | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
-          | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
-          
-          ### 🎯 Validation Status
-          ${summary.totalErrors === 0 ? '✅ **SEO validation passed!**' : '❌ **SEO validation failed** - ' + summary.totalErrors + ' errors found'}
-          
-          ### 📁 Artifacts
-          - SEO reports have been uploaded as artifacts and are available for download
-          - Reports include detailed HTML and JSON formats
-          `);
-          EOF
-          
-            node extract-summary.mjs "$LATEST_REPORT" "$TRIGGER_INFO" > seo-summary.md
-            cat seo-summary.md >> $GITHUB_STEP_SUMMARY
-          else
-            echo "${TRIGGER_INFO}❌ No SEO reports found" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-      - name: Comment PR with SEO Results
-        if: github.event_name == 'pull_request' && always()
-        uses: actions/github-script@v7
+        uses: actions/github-script@v7.0.1
         with:
           script: |
-            const fs = require('fs');
-            const path = require('path');
-            
-            try {
-              // Find the latest JSON report using built-in fs
-              const reportsDir = '.seo-reports';
-              if (!fs.existsSync(reportsDir)) {
-                await github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: '❌ **SEO Validation Failed** - No reports directory found. Check the workflow logs for details.'
-                });
-                return;
-              }
-              
-              const files = fs.readdirSync(reportsDir)
-                .filter(file => file.startsWith('seo-report-') && file.endsWith('.json'))
-                .map(file => path.join(reportsDir, file));
-              
-              if (files.length === 0) {
-                await github.rest.issues.createComment({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  body: '❌ **SEO Validation Failed** - No reports generated. Check the workflow logs for details.'
-                });
-                return;
-              }
-              
-              // Sort files by modification time (newest first)
-              files.sort((a, b) => {
-                const statA = fs.statSync(a);
-                const statB = fs.statSync(b);
-                return statB.mtime - statA.mtime;
-              });
-              
-              const latestReport = files[0];
-              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'));
-              const summary = data.summary;
-              
-              // Create detailed comment
-              const statusIcon = summary.totalErrors === 0 ? '✅' : '❌';
-              const statusText = summary.totalErrors === 0 ? 'PASSED' : 'FAILED';
-              
-              let issueDetails = '';
-              if (summary.totalErrors > 0 || summary.totalWarnings > 0) {
-                issueDetails = '\n\n### 🔍 Issues Found\n';
-                data.pageResults.forEach(page => {
-                  if (page.issues.length > 0) {
-                    issueDetails += `\n**${page.pageName}:**\n`;
-                    const errors = page.issues.filter(i => i.severity === 'error');
-                    const warnings = page.issues.filter(i => i.severity === 'warning');
-                    
-                    if (errors.length > 0) {
-                      issueDetails += `- ❌ ${errors.length} error(s)\n`;
-                    }
-                    if (warnings.length > 0) {
-                      issueDetails += `- ⚠️ ${warnings.length} warning(s)\n`;
-                    }
-                  }
-                });
-              }
-              
-              const comment = `## ${statusIcon} SEO Validation ${statusText}
-              
-              | Metric | Value |
-              |--------|-------|
-              | Total Pages | ${summary.totalPages} |
-              | Valid Pages | ${summary.validPages} |
-              | Total Errors | ${summary.totalErrors} |
-              | Total Warnings | ${summary.totalWarnings} |
-              | robots.txt | ${summary.robotsTxtValid ? '✅ Valid' : '❌ Invalid'} |
-              | sitemap.xml | ${summary.sitemapXmlValid ? '✅ Valid' : '❌ Invalid'} |
-              ${issueDetails}
-              
-              📁 **Detailed reports** are available in the workflow artifacts.
-              
-              <sub>Generated by SEO Validation workflow - Run #${{ github.run_number }}</sub>`;
-              
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: comment
-              });
-              
-            } catch (error) {
-              console.error('Error creating PR comment:', error);
-              await github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                body: '❌ **SEO Validation Error** - Failed to process results. Check the workflow logs for details.'
-              });
-            }
-            
-      - name: SEO Validation Results Summary
-        if: always()
-        run: |
-          EXIT_CODE="${{ steps.seo-validation.outputs.exit_code }}"
-          if [ "$EXIT_CODE" = "0" ]; then
-            echo "✅ SEO validation passed! All pages are SEO-compliant."
-          else
-            echo "⚠️ SEO validation found issues (exit code: $EXIT_CODE)"
-            echo "📊 Check the reports and PR comments for details"
-            echo "🔧 This is informational - workflow continues for development flexibility"
-          fi
-          
-          # For now, don't fail the workflow to allow development iteration
-          # TODO: Enable strict mode once initial SEO issues are resolved
-          echo "ℹ️ SEO validation completed - check reports for improvements"
+            const script = require('./.github/scripts/generate-seo-summary.js');
+            await script({core});
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          ENVIRONMENT_INPUT: ${{ github.event.inputs.environment }}
+          VALIDATE_ALL_INPUT: ${{ github.event.inputs.validate_all }}
+
+      - name: Comment PR with SEO Results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const script = require('./.github/scripts/comment-pr-with-seo-results.js');
+            await script({github, context});
+        env:
+          RUN_NUMBER: ${{ needs.run-reusable-seo-check.outputs.run_number }}

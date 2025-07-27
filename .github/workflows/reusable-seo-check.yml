@@ -1,0 +1,65 @@
+# .github/workflows/reusable-seo-check.yml
+name: Reusable SEO Check
+
+on:
+  workflow_call:
+    outputs:
+      exit_code:
+        description: "The exit code of the SEO validation script."
+        value: ${{ jobs.check.outputs.exit_code }}
+
+jobs:
+  check:
+    name: Run SEO Check
+    runs-on: ubuntu-latest
+    outputs:
+      exit_code: ${{ steps.seo-validation.outputs.exit_code }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4.2.2
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4.0.0
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.0.3
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Cache Build Output
+        uses: actions/cache@v4.0.2
+        with:
+          path: |
+            .svelte-kit
+            build
+          key: build-${{ runner.os }}-${{ hashFiles('src/**/*', 'posts/**/*', 'static/**/*', 'package.json', 'svelte.config.js', 'vite.config.js', 'tailwind.config.js') }}
+          restore-keys: |
+            build-${{ runner.os }}-
+
+      - name: Build Project
+        run: pnpm build
+        env:
+          NODE_ENV: production
+
+      - name: Run SEO Validation
+        id: seo-validation
+        run: |
+          set +e
+          pnpm seo:validate
+          SEO_EXIT_CODE=$?
+          echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
+          exit 0
+
+      - name: Upload SEO Reports
+        uses: actions/upload-artifact@v4.3.4
+        if: always() && hashFiles('.seo-reports/*') != ''
+        with:
+          name: seo-reports-${{ github.run_id }}
+          path: .seo-reports/
+          retention-days: 30
