@@ -5,8 +5,11 @@ on:
   workflow_call:
     outputs:
       exit_code:
-        description: "The exit code of the SEO validation script."
+        description: 'The exit code of the SEO validation script.'
         value: ${{ jobs.check.outputs.exit_code }}
+      artifact_name:
+        description: 'The name of the uploaded artifact containing SEO reports.'
+        value: ${{ jobs.check.outputs.artifact_name }}
 
 jobs:
   check:
@@ -14,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       exit_code: ${{ steps.seo-validation.outputs.exit_code }}
+      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
@@ -51,20 +55,27 @@ jobs:
         id: seo-validation
         run: |
           set +e
-          
+
           # Ensure .seo-reports directory exists
           mkdir -p .seo-reports
-          
+
           # Run SEO validation
           pnpm seo:validate
           SEO_EXIT_CODE=$?
           echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
-          
+
           # Create a status file for debugging
           echo "SEO validation completed with exit code: $SEO_EXIT_CODE" > .seo-reports/validation-status.txt
           echo "Timestamp: $(date)" >> .seo-reports/validation-status.txt
-          
+
           exit 0
+
+      - name: Set Artifact Name
+        id: set-artifact-name
+        run: |
+          ARTIFACT_NAME="seo-reports-${{ github.run_id }}-${{ github.run_attempt }}"
+          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
+          echo "Artifact name will be: $ARTIFACT_NAME"
 
       - name: Check SEO Reports Directory
         run: |
@@ -73,13 +84,22 @@ jobs:
           if [ -d ".seo-reports" ]; then
             echo "Directory exists, listing contents:"
             ls -la .seo-reports/
+            # Ensure there's at least one file to upload
+            if [ -z "$(ls -A .seo-reports/)" ]; then
+              echo "Directory is empty, creating placeholder file"
+              echo "SEO validation completed but no reports generated" > .seo-reports/no-reports.txt
+            fi
+          else
+            echo "Creating .seo-reports directory with placeholder"
+            mkdir -p .seo-reports
+            echo "SEO validation failed - no directory created" > .seo-reports/validation-failed.txt
           fi
 
       - name: Upload SEO Reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: seo-reports-${{ github.run_id }}
+          name: ${{ steps.set-artifact-name.outputs.artifact_name }}
           path: .seo-reports/
           retention-days: 30
           if-no-files-found: warn
