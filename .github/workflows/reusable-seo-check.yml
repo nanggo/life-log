@@ -399,11 +399,7 @@ ${issueDetails}
               if (issues.length > 0) {
                 const issue = issues[0]
                 
-                await github.rest.issues.createComment({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  issue_number: issue.number,
-                  body: `## ✅ 배포 후 SEO 검증 성공!
+                const commentBody = `## ✅ 배포 후 SEO 검증 성공!
                   
 모든 SEO 검증이 통과했습니다. 이 이슈를 닫습니다.
 
@@ -411,6 +407,12 @@ ${issueDetails}
 **워크플로우**: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }}
 
 <sub>배포 후 SEO 검증에 의해 자동으로 닫힘</sub>`
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: commentBody
                 })
 
                 await github.rest.issues.update({
