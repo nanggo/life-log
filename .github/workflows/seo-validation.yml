@@ -61,7 +61,7 @@ jobs:
 
     steps:
       - name: Download SEO reports
-        uses: actions/download-artifact@v4.1.8
+        uses: actions/download-artifact@v4
         with:
           name: seo-reports-${{ github.run_id }}
           path: .seo-reports

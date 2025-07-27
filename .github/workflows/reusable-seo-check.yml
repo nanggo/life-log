@@ -33,7 +33,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Cache Build Output
-        uses: actions/cache@v4.1.5
+        uses: actions/cache@v4
         with:
           path: |
             .svelte-kit
@@ -51,9 +51,19 @@ jobs:
         id: seo-validation
         run: |
           set +e
+          
+          # Ensure .seo-reports directory exists
+          mkdir -p .seo-reports
+          
+          # Run SEO validation
           pnpm seo:validate
           SEO_EXIT_CODE=$?
           echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
+          
+          # Create a status file for debugging
+          echo "SEO validation completed with exit code: $SEO_EXIT_CODE" > .seo-reports/validation-status.txt
+          echo "Timestamp: $(date)" >> .seo-reports/validation-status.txt
+          
           exit 0
 
       - name: Check SEO Reports Directory
@@ -66,7 +76,7 @@ jobs:
           fi
 
       - name: Upload SEO Reports
-        uses: actions/upload-artifact@v4.4.5
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: seo-reports-${{ github.run_id }}
