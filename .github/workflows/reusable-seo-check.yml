@@ -70,36 +70,91 @@ jobs:
 
           exit 0
 
-      - name: Set Artifact Name
+      - name: Set Artifact Name and Debug Context
         id: set-artifact-name
         run: |
-          ARTIFACT_NAME="seo-reports-${{ github.run_id }}-${{ github.run_attempt }}"
+          # Use deterministic naming based on SHA and run number (not run_id which can conflict)
+          ARTIFACT_NAME="seo-reports-${{ github.sha }}-${{ github.run_number }}"
           echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-          echo "Artifact name will be: $ARTIFACT_NAME"
 
-      - name: Check SEO Reports Directory
+          # Comprehensive debugging
+          echo "=== WORKFLOW CONTEXT DEBUG ==="
+          echo "Repository: ${{ github.repository }}"
+          echo "SHA: ${{ github.sha }}"
+          echo "Run ID: ${{ github.run_id }}"
+          echo "Run Number: ${{ github.run_number }}"
+          echo "Run Attempt: ${{ github.run_attempt }}"
+          echo "Event Name: ${{ github.event_name }}"
+          echo "Ref: ${{ github.ref }}"
+          echo "Branch: ${{ github.ref_name }}"
+          echo "Workflow: ${{ github.workflow }}"
+          echo "Job: ${{ github.job }}"
+          echo "Actor: ${{ github.actor }}"
+          echo ""
+          echo "=== ARTIFACT NAMING DEBUG ==="
+          echo "Deterministic artifact name: $ARTIFACT_NAME"
+          echo "This name should be predictable by download workflows"
+          echo "========================="
+
+      - name: Check SEO Reports Directory and Ensure Files Exist
         run: |
+          echo "=== SEO REPORTS DIRECTORY DEBUG ==="
           echo "Checking .seo-reports directory..."
-          ls -la .seo-reports/ || echo "No .seo-reports directory found"
+
           if [ -d ".seo-reports" ]; then
-            echo "Directory exists, listing contents:"
-            ls -la .seo-reports/
+            echo "✓ Directory exists, listing contents:"
+            ls -la .seo-reports/ || echo "Failed to list directory contents"
+            
+            # Count files in directory
+            FILE_COUNT=$(find .seo-reports -type f | wc -l)
+            echo "Found $FILE_COUNT files in .seo-reports directory"
+            
             # Ensure there's at least one file to upload
-            if [ -z "$(ls -A .seo-reports/)" ]; then
-              echo "Directory is empty, creating placeholder file"
+            if [ "$FILE_COUNT" -eq 0 ]; then
+              echo "⚠ Directory is empty, creating placeholder files"
               echo "SEO validation completed but no reports generated" > .seo-reports/no-reports.txt
+              echo "Run ID: ${{ github.run_id }}" >> .seo-reports/run-info.txt
+              echo "SHA: ${{ github.sha }}" >> .seo-reports/run-info.txt
+              echo "Timestamp: $(date)" >> .seo-reports/run-info.txt
+            else
+              echo "✓ Directory has $FILE_COUNT files, ready for upload"
             fi
           else
-            echo "Creating .seo-reports directory with placeholder"
+            echo "❌ .seo-reports directory does not exist, creating with placeholder"
             mkdir -p .seo-reports
-            echo "SEO validation failed - no directory created" > .seo-reports/validation-failed.txt
+            echo "SEO validation failed - no directory created by validation script" > .seo-reports/validation-failed.txt
+            echo "This indicates the SEO validation script failed before generating reports" >> .seo-reports/validation-failed.txt
+            echo "Run ID: ${{ github.run_id }}" >> .seo-reports/validation-failed.txt
+            echo "SHA: ${{ github.sha }}" >> .seo-reports/validation-failed.txt
+            echo "Timestamp: $(date)" >> .seo-reports/validation-failed.txt
           fi
 
-      - name: Upload SEO Reports
+          # Final verification
+          echo ""
+          echo "=== FINAL ARTIFACT PREPARATION ==="
+          echo "Final directory contents before upload:"
+          ls -la .seo-reports/
+          echo "Total files to upload: $(find .seo-reports -type f | wc -l)"
+          echo "========================="
+
+      - name: Upload SEO Reports with Debugging
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ${{ steps.set-artifact-name.outputs.artifact_name }}
           path: .seo-reports/
           retention-days: 30
-          if-no-files-found: warn
+          if-no-files-found: error
+
+      - name: Verify Upload Success
+        if: always()
+        run: |
+          echo "=== UPLOAD VERIFICATION ==="
+          echo "✓ Artifact upload step completed"
+          echo "Artifact name used: ${{ steps.set-artifact-name.outputs.artifact_name }}"
+          echo "Expected download name for consuming workflows: ${{ steps.set-artifact-name.outputs.artifact_name }}"
+          echo ""
+          echo "For manual debugging, the artifact should be visible in:"
+          echo "  - GitHub Actions UI under Artifacts section"
+          echo "  - Available for download by name: ${{ steps.set-artifact-name.outputs.artifact_name }}"
+          echo "========================="
