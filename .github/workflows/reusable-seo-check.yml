@@ -214,21 +214,18 @@ jobs:
                 })
               }
 
-              const comment = `## ${statusIcon} SEO 검증 ${statusText}
-              
-| 항목 | 값 |
-|--------|-------|
-| 전체 페이지 | ${summary.totalPages} |
-| 유효한 페이지 | ${summary.validPages} |
-| 총 오류 | ${summary.totalErrors} |
-| 총 경고 | ${summary.totalWarnings} |
-| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
-| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
-${issueDetails}
-
-📁 **상세 리포트**는 워크플로우 로그에서 확인할 수 있습니다.
-
-<sub>SEO 검증 워크플로우에 의해 생성됨 - 실행 #${{ github.run_number }}</sub>`
+              let comment = `## ${statusIcon} SEO 검증 ${statusText}\n\n`
+              comment += '| 항목 | 값 |\n'
+              comment += '|--------|-------|\n'
+              comment += `| 전체 페이지 | ${summary.totalPages} |\n`
+              comment += `| 유효한 페이지 | ${summary.validPages} |\n`
+              comment += `| 총 오류 | ${summary.totalErrors} |\n`
+              comment += `| 총 경고 | ${summary.totalWarnings} |\n`
+              comment += `| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |\n`
+              comment += `| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |\n`
+              comment += `${issueDetails}\n\n`
+              comment += '📁 **상세 리포트**는 워크플로우 로그에서 확인할 수 있습니다.\n\n'
+              comment += `<sub>SEO 검증 워크플로우에 의해 생성됨 - 실행 #${{ github.run_number }}</sub>`
 
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
@@ -289,23 +286,19 @@ ${issueDetails}
 
               if (issues.length > 0) {
                 const existingIssue = issues[0]
-                const updateComment = `## 🔄 배포 후 SEO 상태 업데이트 - ${new Date().toISOString().split('T')[0]}
-                
-                **환경**: ${environment}  
-                **배포 URL**: ${deploymentUrl}
-                
-                | 항목 | 값 |
-                |--------|-------|
-                | 전체 페이지 | ${summary.totalPages} |
-                | 유효한 페이지 | ${summary.validPages} |
-                | 총 오류 | ${summary.totalErrors} |
-                | 총 경고 | ${summary.totalWarnings} |
-                | robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
-                | sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
-                
-                📁 **최신 리포트**: 워크플로우 [여기](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})를 확인하세요
-                
-                <sub>배포 후 SEO 검증에 의해 자동 생성됨</sub>`
+                let updateComment = `## 🔄 배포 후 SEO 상태 업데이트 - ${new Date().toISOString().split('T')[0]}\n\n`
+                updateComment += `**환경**: ${environment}\n`
+                updateComment += `**배포 URL**: ${deploymentUrl}\n\n`
+                updateComment += '| 항목 | 값 |\n'
+                updateComment += '|--------|-------|\n'
+                updateComment += `| 전체 페이지 | ${summary.totalPages} |\n`
+                updateComment += `| 유효한 페이지 | ${summary.validPages} |\n`
+                updateComment += `| 총 오류 | ${summary.totalErrors} |\n`
+                updateComment += `| 총 경고 | ${summary.totalWarnings} |\n`
+                updateComment += `| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |\n`
+                updateComment += `| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |\n\n`
+                updateComment += `📁 **최신 리포트**: 워크플로우 [여기](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})를 확인하세요\n\n`
+                updateComment += `<sub>배포 후 SEO 검증에 의해 자동 생성됨</sub>`
 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
@@ -316,58 +309,43 @@ ${issueDetails}
                 return
               }
 
-              let issueBody = `## 🚨 배포 후 SEO 문제 발견
-              
-              **${environment}** 환경 배포 후 SEO 검증에서 문제가 발견되었습니다.
-              
-              **배포 URL**: ${deploymentUrl}
-              
-              ### 📊 요약
-              
-              | 항목 | 값 |
-              |--------|-------|
-              | 전체 페이지 | ${summary.totalPages} |
-              | 유효한 페이지 | ${summary.validPages} |
-              | 총 오류 | **${summary.totalErrors}** |
-              | 총 경고 | ${summary.totalWarnings} |
-              | robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
-              | sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
-              
-              ### 🔍 페이지별 문제
-              `
+              let issueBody = `## 🚨 배포 후 SEO 문제 발견\n\n`
+              issueBody += `**${environment}** 환경 배포 후 SEO 검증에서 문제가 발견되었습니다.\n\n`
+              issueBody += `**배포 URL**: ${deploymentUrl}\n\n`
+              issueBody += '### 📊 요약\n\n'
+              issueBody += '| 항목 | 값 |\n'
+              issueBody += '|--------|-------|\n'
+              issueBody += `| 전체 페이지 | ${summary.totalPages} |\n`
+              issueBody += `| 유효한 페이지 | ${summary.validPages} |\n`
+              issueBody += `| 총 오류 | **${summary.totalErrors}** |\n`
+              issueBody += `| 총 경고 | ${summary.totalWarnings} |\n`
+              issueBody += `| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |\n`
+              issueBody += `| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |\n\n`
+              issueBody += '### 🔍 페이지별 문제\n'
 
               data.pageResults.forEach((page) => {
                 if (page.issues.length > 0) {
-                  issueBody += `
-**${page.pageName}:**
-`
+                  issueBody += `\n**${page.pageName}:**\n`
                   const errors = page.issues.filter((i) => i.severity === 'error')
                   const warnings = page.issues.filter((i) => i.severity === 'warning')
 
                   errors.forEach((error) => {
-                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}
-`
+                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}\n`
                   })
 
                   warnings.forEach((warning) => {
-                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}
-`
+                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}\n`
                   })
                 }
               })
 
-              issueBody += `
-              
-              ### 🛠 조치 필요
-              
-              1. [워크플로우](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})에서 상세 SEO 리포트를 검토하세요
-              2. 소스 코드에서 확인된 SEO 문제를 수정하세요
-              3. \`pnpm seo:validate\`를 사용하여 로컬에서 테스트하세요
-              4. 수정 사항을 배포하여 문제를 해결하세요
-              
-              ---
-              
-              <sub>이 이슈는 ${new Date().toISOString()}에 배포 후 SEO 검증에 의해 자동으로 생성되었습니다</sub>`
+              issueBody += `\n\n### 🛠 조치 필요\n\n`
+              issueBody += `1. [워크플로우](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})에서 상세 SEO 리포트를 검토하세요\n`
+              issueBody += '2. 소스 코드에서 확인된 SEO 문제를 수정하세요\n'
+              issueBody += '3. `pnpm seo:validate`를 사용하여 로컬에서 테스트하세요\n'
+              issueBody += '4. 수정 사항을 배포하여 문제를 해결하세요\n\n'
+              issueBody += '---\n\n'
+              issueBody += `<sub>이 이슈는 ${new Date().toISOString()}에 배포 후 SEO 검증에 의해 자동으로 생성되었습니다</sub>`
 
               const issue = await github.rest.issues.create({
                 owner: context.repo.owner,
@@ -399,14 +377,11 @@ ${issueDetails}
               if (issues.length > 0) {
                 const issue = issues[0]
                 
-                const commentBody = `## ✅ 배포 후 SEO 검증 성공!
-                  
-모든 SEO 검증이 통과했습니다. 이 이슈를 닫습니다.
-
-**검증 시간**: ${new Date().toISOString()}
-**워크플로우**: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }}
-
-<sub>배포 후 SEO 검증에 의해 자동으로 닫힘</sub>`
+                const commentBody = `## ✅ 배포 후 SEO 검증 성공!\n\n` +
+                  `모든 SEO 검증이 통과했습니다. 이 이슈를 닫습니다.\n\n` +
+                  `**검증 시간**: ${new Date().toISOString()}\n` +
+                  `**워크플로우**: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }}\n\n` +
+                  `<sub>배포 후 SEO 검증에 의해 자동으로 닫힘</sub>`
 
                 await github.rest.issues.createComment({
                   owner: context.repo.owner,
