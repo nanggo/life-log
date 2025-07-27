@@ -3,21 +3,32 @@ name: Reusable SEO Check
 
 on:
   workflow_call:
+    inputs:
+      event_name:
+        description: 'The event that triggered this workflow (pull_request, deployment_status, workflow_dispatch)'
+        required: true
+        type: string
+      environment:
+        description: 'Environment being validated (production, preview, etc.)'
+        required: false
+        type: string
+        default: 'production'
+      validate_all:
+        description: 'Force validate all pages'
+        required: false
+        type: boolean
+        default: false
     outputs:
       exit_code:
         description: 'The exit code of the SEO validation script.'
         value: ${{ jobs.check.outputs.exit_code }}
-      artifact_name:
-        description: 'The name of the uploaded artifact containing SEO reports.'
-        value: ${{ jobs.check.outputs.artifact_name }}
 
 jobs:
   check:
-    name: Run SEO Check
+    name: Run SEO Check and Handle Results
     runs-on: ubuntu-latest
     outputs:
       exit_code: ${{ steps.seo-validation.outputs.exit_code }}
-      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
@@ -70,91 +81,343 @@ jobs:
 
           exit 0
 
-      - name: Set Artifact Name and Debug Context
-        id: set-artifact-name
-        run: |
-          # Use deterministic naming based on SHA and run number (not run_id which can conflict)
-          ARTIFACT_NAME="seo-reports-${{ github.sha }}-${{ github.run_number }}"
-          echo "artifact_name=$ARTIFACT_NAME" >> $GITHUB_OUTPUT
-
-          # Comprehensive debugging
-          echo "=== WORKFLOW CONTEXT DEBUG ==="
-          echo "Repository: ${{ github.repository }}"
-          echo "SHA: ${{ github.sha }}"
-          echo "Run ID: ${{ github.run_id }}"
-          echo "Run Number: ${{ github.run_number }}"
-          echo "Run Attempt: ${{ github.run_attempt }}"
-          echo "Event Name: ${{ github.event_name }}"
-          echo "Ref: ${{ github.ref }}"
-          echo "Branch: ${{ github.ref_name }}"
-          echo "Workflow: ${{ github.workflow }}"
-          echo "Job: ${{ github.job }}"
-          echo "Actor: ${{ github.actor }}"
-          echo ""
-          echo "=== ARTIFACT NAMING DEBUG ==="
-          echo "Deterministic artifact name: $ARTIFACT_NAME"
-          echo "This name should be predictable by download workflows"
-          echo "========================="
-
-      - name: Check SEO Reports Directory and Ensure Files Exist
-        run: |
-          echo "=== SEO REPORTS DIRECTORY DEBUG ==="
-          echo "Checking .seo-reports directory..."
-
-          if [ -d ".seo-reports" ]; then
-            echo "✓ Directory exists, listing contents:"
-            ls -la .seo-reports/ || echo "Failed to list directory contents"
-            
-            # Count files in directory
-            FILE_COUNT=$(find .seo-reports -type f | wc -l)
-            echo "Found $FILE_COUNT files in .seo-reports directory"
-            
-            # Ensure there's at least one file to upload
-            if [ "$FILE_COUNT" -eq 0 ]; then
-              echo "⚠ Directory is empty, creating placeholder files"
-              echo "SEO validation completed but no reports generated" > .seo-reports/no-reports.txt
-              echo "Run ID: ${{ github.run_id }}" >> .seo-reports/run-info.txt
-              echo "SHA: ${{ github.sha }}" >> .seo-reports/run-info.txt
-              echo "Timestamp: $(date)" >> .seo-reports/run-info.txt
-            else
-              echo "✓ Directory has $FILE_COUNT files, ready for upload"
-            fi
-          else
-            echo "❌ .seo-reports directory does not exist, creating with placeholder"
-            mkdir -p .seo-reports
-            echo "SEO validation failed - no directory created by validation script" > .seo-reports/validation-failed.txt
-            echo "This indicates the SEO validation script failed before generating reports" >> .seo-reports/validation-failed.txt
-            echo "Run ID: ${{ github.run_id }}" >> .seo-reports/validation-failed.txt
-            echo "SHA: ${{ github.sha }}" >> .seo-reports/validation-failed.txt
-            echo "Timestamp: $(date)" >> .seo-reports/validation-failed.txt
-          fi
-
-          # Final verification
-          echo ""
-          echo "=== FINAL ARTIFACT PREPARATION ==="
-          echo "Final directory contents before upload:"
-          ls -la .seo-reports/
-          echo "Total files to upload: $(find .seo-reports -type f | wc -l)"
-          echo "========================="
-
-      - name: Upload SEO Reports with Debugging
-        uses: actions/upload-artifact@v4
+      - name: Generate SEO Summary
         if: always()
+        uses: actions/github-script@v7.0.1
         with:
-          name: ${{ steps.set-artifact-name.outputs.artifact_name }}
-          path: .seo-reports/
-          retention-days: 30
-          if-no-files-found: error
+          script: |
+            const fs = require('fs')
+            const path = require('path')
 
-      - name: Verify Upload Success
-        if: always()
-        run: |
-          echo "=== UPLOAD VERIFICATION ==="
-          echo "✓ Artifact upload step completed"
-          echo "Artifact name used: ${{ steps.set-artifact-name.outputs.artifact_name }}"
-          echo "Expected download name for consuming workflows: ${{ steps.set-artifact-name.outputs.artifact_name }}"
-          echo ""
-          echo "For manual debugging, the artifact should be visible in:"
-          echo "  - GitHub Actions UI under Artifacts section"
-          echo "  - Available for download by name: ${{ steps.set-artifact-name.outputs.artifact_name }}"
-          echo "========================="
+            try {
+              const reportsDir = '.seo-reports'
+              let triggerInfo = ''
+              
+              if ('${{ inputs.event_name }}' === 'workflow_dispatch') {
+                triggerInfo = `🔧 **수동 실행** - 환경: ${{ inputs.environment }}`
+                if ('${{ inputs.validate_all }}' === 'true') {
+                  triggerInfo += ', 모든 페이지 강제 검증'
+                }
+                triggerInfo += '\n\n'
+              }
+
+              if (!fs.existsSync(reportsDir) || fs.readdirSync(reportsDir).length === 0) {
+                core.summary.addRaw(`${triggerInfo}❌ SEO 리포트를 찾을 수 없습니다.`)
+                await core.summary.write()
+                return
+              }
+
+              const files = fs
+                .readdirSync(reportsDir)
+                .filter((file) => file.startsWith('seo-report-') && file.endsWith('.json'))
+                .map((file) => path.join(reportsDir, file))
+
+              if (files.length === 0) {
+                core.summary.addRaw(`${triggerInfo}❌ SEO 리포트를 찾을 수 없습니다.`)
+                await core.summary.write()
+                return
+              }
+
+              files.sort((a, b) => fs.statSync(b).mtime - fs.statSync(a).mtime)
+              const latestReport = files[0]
+              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'))
+              const { summary } = data
+
+              const statusText =
+                summary.totalErrors === 0
+                  ? '✅ **SEO 검증 통과!**'
+                  : `❌ **SEO 검증 실패** - ${summary.totalErrors}개의 오류 발견`
+
+              core.summary
+                .addRaw(triggerInfo)
+                .addHeading('📊 SEO 검증 결과', 2)
+                .addTable([
+                  [
+                    { data: '항목', header: true },
+                    { data: '값', header: true }
+                  ],
+                  ['전체 페이지', summary.totalPages.toString()],
+                  ['유효한 페이지', summary.validPages.toString()],
+                  ['총 오류', summary.totalErrors.toString()],
+                  ['총 경고', summary.totalWarnings.toString()],
+                  ['robots.txt', summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'],
+                  ['sitemap.xml', summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효']
+                ])
+                .addHeading('🎯 검증 상태', 3)
+                .addRaw(statusText)
+
+              await core.summary.write()
+            } catch (error) {
+              console.error('SEO 요약 생성 중 오류 발생:', error)
+              core.summary.addRaw('❌ SEO 요약 생성 중 오류가 발생했습니다. 로그를 확인하세요.')
+              await core.summary.write()
+            }
+
+      - name: Comment PR with SEO Results
+        if: inputs.event_name == 'pull_request'
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const fs = require('fs')
+            const path = require('path')
+
+            try {
+              const reportsDir = '.seo-reports'
+              if (!fs.existsSync(reportsDir)) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '❌ **SEO 검증 실패** - 리포트 디렉토리를 찾을 수 없습니다. 워크플로우 로그를 확인하세요.'
+                })
+                return
+              }
+
+              const files = fs
+                .readdirSync(reportsDir)
+                .filter((file) => file.startsWith('seo-report-') && file.endsWith('.json'))
+                .map((file) => path.join(reportsDir, file))
+
+              if (files.length === 0) {
+                await github.rest.issues.createComment({
+                  issue_number: context.issue.number,
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  body: '❌ **SEO 검증 실패** - 리포트가 생성되지 않았습니다. 워크플로우 로그를 확인하세요.'
+                })
+                return
+              }
+
+              files.sort((a, b) => fs.statSync(b).mtime - fs.statSync(a).mtime)
+              const latestReport = files[0]
+              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'))
+              const { summary } = data
+
+              const statusIcon = summary.totalErrors === 0 ? '✅' : '❌'
+              const statusText = summary.totalErrors === 0 ? '통과' : '실패'
+
+              let issueDetails = ''
+              if (summary.totalErrors > 0 || summary.totalWarnings > 0) {
+                issueDetails = '\n\n### 🔍 발견된 문제\n'
+                data.pageResults.forEach((page) => {
+                  if (page.issues.length > 0) {
+                    issueDetails += `\n**${page.pageName}:**\n`
+                    const errors = page.issues.filter((i) => i.severity === 'error')
+                    const warnings = page.issues.filter((i) => i.severity === 'warning')
+                    if (errors.length > 0) {
+                      issueDetails += `- ❌ ${errors.length}개의 오류\n`
+                    }
+                    if (warnings.length > 0) {
+                      issueDetails += `- ⚠️ ${warnings.length}개의 경고\n`
+                    }
+                  }
+                })
+              }
+
+              const comment = `## ${statusIcon} SEO 검증 ${statusText}
+              
+| 항목 | 값 |
+|--------|-------|
+| 전체 페이지 | ${summary.totalPages} |
+| 유효한 페이지 | ${summary.validPages} |
+| 총 오류 | ${summary.totalErrors} |
+| 총 경고 | ${summary.totalWarnings} |
+| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
+| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
+${issueDetails}
+
+📁 **상세 리포트**는 워크플로우 로그에서 확인할 수 있습니다.
+
+<sub>SEO 검증 워크플로우에 의해 생성됨 - 실행 #${{ github.run_number }}</sub>`
+
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: comment
+              })
+            } catch (error) {
+              console.error('PR 코멘트 생성 중 오류 발생:', error)
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: '❌ **SEO 검증 오류** - 결과 처리 실패. 워크플로우 로그를 확인하세요.'
+              })
+            }
+
+      - name: Create Issue on SEO Failure (Post-Deployment)
+        if: inputs.event_name == 'deployment_status' && steps.seo-validation.outputs.exit_code != '0'
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            const fs = require('fs')
+            const path = require('path')
+
+            try {
+              const reportsDir = '.seo-reports'
+              if (!fs.existsSync(reportsDir)) {
+                console.log('SEO 리포트 디렉토리를 찾을 수 없습니다.')
+                return
+              }
+
+              const files = fs
+                .readdirSync(reportsDir)
+                .filter((file) => file.startsWith('seo-report-') && file.endsWith('.json'))
+                .map((file) => path.join(reportsDir, file))
+
+              if (files.length === 0) {
+                console.log('SEO 리포트를 찾을 수 없습니다.')
+                return
+              }
+
+              files.sort((a, b) => fs.statSync(b).mtime - fs.statSync(a).mtime)
+              const latestReport = files[0]
+              const data = JSON.parse(fs.readFileSync(latestReport, 'utf8'))
+              const { summary } = data
+
+              const environment = '${{ inputs.environment }}'
+              const deploymentUrl = 'https://blog.nanggo.net'
+
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'seo,post-deployment',
+                per_page: 1
+              })
+
+              if (issues.length > 0) {
+                const existingIssue = issues[0]
+                const updateComment = `## 🔄 배포 후 SEO 상태 업데이트 - ${new Date().toISOString().split('T')[0]}
+                
+                **환경**: ${environment}  
+                **배포 URL**: ${deploymentUrl}
+                
+                | 항목 | 값 |
+                |--------|-------|
+                | 전체 페이지 | ${summary.totalPages} |
+                | 유효한 페이지 | ${summary.validPages} |
+                | 총 오류 | ${summary.totalErrors} |
+                | 총 경고 | ${summary.totalWarnings} |
+                | robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
+                | sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
+                
+                📁 **최신 리포트**: 워크플로우 [여기](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})를 확인하세요
+                
+                <sub>배포 후 SEO 검증에 의해 자동 생성됨</sub>`
+
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: updateComment
+                })
+                return
+              }
+
+              let issueBody = `## 🚨 배포 후 SEO 문제 발견
+              
+              **${environment}** 환경 배포 후 SEO 검증에서 문제가 발견되었습니다.
+              
+              **배포 URL**: ${deploymentUrl}
+              
+              ### 📊 요약
+              
+              | 항목 | 값 |
+              |--------|-------|
+              | 전체 페이지 | ${summary.totalPages} |
+              | 유효한 페이지 | ${summary.validPages} |
+              | 총 오류 | **${summary.totalErrors}** |
+              | 총 경고 | ${summary.totalWarnings} |
+              | robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |
+              | sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |
+              
+              ### 🔍 페이지별 문제
+              `
+
+              data.pageResults.forEach((page) => {
+                if (page.issues.length > 0) {
+                  issueBody += `\n**${page.pageName}:**\n`
+                  const errors = page.issues.filter((i) => i.severity === 'error')
+                  const warnings = page.issues.filter((i) => i.severity === 'warning')
+
+                  errors.forEach((error) => {
+                    issueBody += `- ❌ **${error.type.replace(/_/g, ' ').toUpperCase()}**: ${error.tag} - ${error.message}\n`
+                  })
+
+                  warnings.forEach((warning) => {
+                    issueBody += `- ⚠️ **${warning.type.replace(/_/g, ' ').toUpperCase()}**: ${warning.tag} - ${warning.message}\n`
+                  })
+                }
+              })
+
+              issueBody += `
+              
+              ### 🛠 조치 필요
+              
+              1. [워크플로우](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }})에서 상세 SEO 리포트를 검토하세요
+              2. 소스 코드에서 확인된 SEO 문제를 수정하세요
+              3. \`pnpm seo:validate\`를 사용하여 로컬에서 테스트하세요
+              4. 수정 사항을 배포하여 문제를 해결하세요
+              
+              ---
+              
+              <sub>이 이슈는 ${new Date().toISOString()}에 배포 후 SEO 검증에 의해 자동으로 생성되었습니다</sub>`
+
+              const issue = await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🚨 배포 후 SEO 문제 - ${summary.totalErrors}개의 오류 발견`,
+                body: issueBody,
+                labels: ['seo', 'post-deployment', 'bug']
+              })
+
+              console.log(`배포 후 SEO 이슈 생성됨: ${issue.data.html_url}`)
+            } catch (error) {
+              console.error('SEO 이슈 생성 중 오류 발생:', error)
+            }
+
+      - name: Close SEO Issue on Success (Post-Deployment)
+        if: inputs.event_name == 'deployment_status' && steps.seo-validation.outputs.exit_code == '0'
+        uses: actions/github-script@v7.0.1
+        with:
+          script: |
+            try {
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'seo,post-deployment',
+                per_page: 1
+              })
+
+              if (issues.length > 0) {
+                const issue = issues[0]
+                
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  body: `## ✅ 배포 후 SEO 검증 성공!
+                  
+모든 SEO 검증이 통과했습니다. 이 이슈를 닫습니다.
+
+**검증 시간**: ${new Date().toISOString()}
+**워크플로우**: https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${{ github.run_id }}
+
+<sub>배포 후 SEO 검증에 의해 자동으로 닫힘</sub>`
+                })
+
+                await github.rest.issues.update({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: issue.number,
+                  state: 'closed'
+                })
+
+                console.log(`SEO 이슈 해결됨: ${issue.html_url}`)
+              }
+            } catch (error) {
+              console.error('SEO 이슈 닫기 중 오류 발생:', error)
+            }

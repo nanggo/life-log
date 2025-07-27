@@ -20,3 +20,6 @@ static
 
 # Claude files
 .claude/
+
+# GitHub workflows (temporary - YAML parser issue)
+.github/workflows/
