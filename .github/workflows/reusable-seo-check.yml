@@ -18,6 +18,11 @@ on:
         required: false
         type: boolean
         default: false
+      deployment_url:
+        description: 'Deployment URL for post-deployment validation'
+        required: false
+        type: string
+        default: 'https://blog.nanggo.net'
     outputs:
       exit_code:
         description: 'The exit code of the SEO validation script.'
@@ -28,7 +33,7 @@ jobs:
     name: Run SEO Check and Handle Results
     runs-on: ubuntu-latest
     outputs:
-      exit_code: ${{ steps.seo-validation.outputs.exit_code }}
+      exit_code: ${{ steps.set-exit-code.outputs.exit_code }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4.2.2
@@ -48,7 +53,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Cache Build Output
-        uses: actions/cache@v4
+        uses: actions/cache@v4.1.2
         with:
           path: |
             .svelte-kit
@@ -64,22 +69,28 @@ jobs:
 
       - name: Run SEO Validation
         id: seo-validation
+        continue-on-error: true
         run: |
-          set +e
-
           # Ensure .seo-reports directory exists
           mkdir -p .seo-reports
-
+          
           # Run SEO validation
           pnpm seo:validate
-          SEO_EXIT_CODE=$?
-          echo "exit_code=$SEO_EXIT_CODE" >> $GITHUB_OUTPUT
 
+      - name: Set validation exit code
+        id: set-exit-code
+        if: always()
+        run: |
+          # Set exit code based on previous step outcome
+          if [ "${{ steps.seo-validation.outcome }}" = "success" ]; then
+            echo "exit_code=0" >> $GITHUB_OUTPUT
+          else
+            echo "exit_code=1" >> $GITHUB_OUTPUT
+          fi
+          
           # Create a status file for debugging
-          echo "SEO validation completed with exit code: $SEO_EXIT_CODE" > .seo-reports/validation-status.txt
+          echo "SEO validation completed with outcome: ${{ steps.seo-validation.outcome }}" > .seo-reports/validation-status.txt
           echo "Timestamp: $(date)" >> .seo-reports/validation-status.txt
-
-          exit 0
 
       - name: Generate SEO Summary
         if: always()
@@ -244,7 +255,7 @@ jobs:
             }
 
       - name: Create Issue on SEO Failure (Post-Deployment)
-        if: inputs.event_name == 'deployment_status' && steps.seo-validation.outputs.exit_code != '0'
+        if: inputs.event_name == 'deployment_status' && steps.set-exit-code.outputs.exit_code != '0'
         uses: actions/github-script@v7.0.1
         with:
           script: |
@@ -274,7 +285,7 @@ jobs:
               const { summary } = data
 
               const environment = '${{ inputs.environment }}'
-              const deploymentUrl = 'https://blog.nanggo.net'
+              const deploymentUrl = '${{ inputs.deployment_url }}'
 
               const { data: issues } = await github.rest.issues.listForRepo({
                 owner: context.repo.owner,
@@ -361,7 +372,7 @@ jobs:
             }
 
       - name: Close SEO Issue on Success (Post-Deployment)
-        if: inputs.event_name == 'deployment_status' && steps.seo-validation.outputs.exit_code == '0'
+        if: inputs.event_name == 'deployment_status' && steps.set-exit-code.outputs.exit_code == '0'
         uses: actions/github-script@v7.0.1
         with:
           script: |

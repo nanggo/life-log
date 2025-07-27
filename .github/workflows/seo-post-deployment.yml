@@ -26,3 +26,4 @@ jobs:
     with:
       event_name: ${{ github.event_name }}
       environment: ${{ github.event.inputs.environment || 'production' }}
+      deployment_url: ${{ github.event.deployment_status.environment_url || github.event.inputs.environment == 'production' && 'https://blog.nanggo.net' || 'https://preview.blog.nanggo.net' }}
