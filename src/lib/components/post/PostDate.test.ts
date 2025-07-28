@@ -78,7 +78,7 @@ describe('PostDate 컴포넌트', () => {
   it('collapsed가 false일 때 세로 레이아웃으로 표시된다', () => {
     render(PostDate, { post: mockPost, decorate: false, collapsed: false, class: '' })
 
-    const innerFlexContainer = document.querySelectorAll('.flex')[1] // 두 번째 .flex 요소 (내부 flex 컨테이너)
+    const innerFlexContainer = screen.getByText(mockPost.readingTime).parentElement // 두 번째 .flex 요소 (내부 flex 컨테이너)
     expect(innerFlexContainer).toHaveClass('flex-col')
 
     // 구분자(•)가 표시되지 않아야 함

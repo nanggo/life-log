@@ -20,7 +20,7 @@ vi.mock('$app/stores', () => ({
 }))
 
 vi.mock('$app/environment', () => ({
-  browser: false,
+  browser: true,
   dev: true
 }))
 
@@ -64,14 +64,30 @@ Object.defineProperty(window, 'localStorage', {
 })
 
 // Mock document methods
+const mockClassList = {
+  contains: vi.fn(),
+  add: vi.fn(),
+  remove: vi.fn()
+}
+
 Object.defineProperty(document, 'documentElement', {
   value: {
-    classList: {
-      contains: vi.fn(),
-      add: vi.fn(),
-      remove: vi.fn()
-    }
+    classList: mockClassList
   },
+  writable: true
+})
+
+// Mock document.querySelector to return the same element for 'html' but preserve original for others
+const originalQuerySelector = document.querySelector.bind(document)
+Object.defineProperty(document, 'querySelector', {
+  value: vi.fn((selector: string) => {
+    if (selector === 'html') {
+      return {
+        classList: mockClassList
+      }
+    }
+    return originalQuerySelector(selector)
+  }),
   writable: true
 })
 
@@ -108,16 +124,18 @@ describe('Layout 컴포넌트', () => {
     expect(darkModeToggle).toBeInTheDocument()
   })
 
-  it('다크모드 토글 클릭 시 localStorage가 호출된다', async () => {
+  it('다크모드 토글 클릭 시 localStorage와 html 클래스가 올바르게 변경된다', async () => {
+    // With browser: true and contains() returning false by default, isDarkMode starts as false.
     render(Layout, { data: mockData })
-
     const darkModeToggle = screen.getByRole('switch', { name: 'Toggle Dark Mode' })
 
-    // 다크모드 토글 클릭
+    // Act: switch to dark mode
     await fireEvent.click(darkModeToggle)
 
-    // localStorage.setItem이 어떤 값으로든 호출되었는지 확인
-    expect(localStorageMock.setItem).toHaveBeenCalledWith('isDarkMode', expect.any(String))
+    // Assert
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('isDarkMode', 'true')
+    expect(mockClassList.add).toHaveBeenCalledWith('[&_*]:!transition-none')
+    expect(mockClassList.add).toHaveBeenCalledWith('dark')
   })
 
   it('메인 콘텐츠 영역이 렌더링된다', () => {
