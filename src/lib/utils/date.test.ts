@@ -7,10 +7,14 @@ describe('날짜 유틸리티 함수', () => {
   beforeEach(() => {
     vi.spyOn(console, 'warn').mockImplementation(() => {})
     vi.spyOn(console, 'error').mockImplementation(() => {})
+    // 결정적 테스트를 위한 시간 고정
+    vi.useFakeTimers()
+    vi.setSystemTime(new Date('2023-06-15T12:00:00.000Z'))
   })
 
   afterEach(() => {
     vi.restoreAllMocks()
+    vi.useRealTimers()
   })
 
   describe('addTimezoneOffset', () => {
@@ -29,8 +33,8 @@ describe('날짜 유틸리티 함수', () => {
       const timezoneOffset = date.getTimezoneOffset() * 60 * 1000
 
       expect(result).toBeInstanceOf(Date)
-      // UTC 환경(CI)에서는 오프셋이 0일 수 있으므로 절대값 차이로 검증
-      expect(Math.abs(result.getTime() - date.getTime())).toBe(Math.abs(timezoneOffset))
+      // 고정된 시간에서 결정적 테스트
+      expect(result.getTime() - date.getTime()).toBe(timezoneOffset)
     })
   })
 
@@ -77,31 +81,33 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(date)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      expect(['2023-01-14', '2023-01-15', '2023-01-16']).toContain(result)
+      // 고정된 시간에서 예측 가능한 결과
+      expect(result).toBe('2023-01-15')
     })
 
     it('유효한 날짜 문자열을 포맷팅해야 함', () => {
       const result = formatDate('2023-01-15')
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      expect(['2023-01-14', '2023-01-15', '2023-01-16']).toContain(result)
+      // 고정된 시간에서 예측 가능한 결과
+      expect(result).toBe('2023-01-15')
     })
 
     it('유효하지 않은 날짜를 gracefully 처리해야 함', () => {
       const result = formatDate('invalid date')
 
-      // yyyy-MM-dd 형식의 현재 날짜를 반환해야 함
-      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      // 고정된 시간에서 예측 가능한 fallback 날짜
+      expect(result).toBe('2023-06-15')
       expect(console.warn).toHaveBeenCalled()
     })
 
     it('Date 생성자 에러를 처리해야 함', () => {
       // 날짜 포맷팅에서 에러를 발생시킬 수 있는 시나리오 생성
-      const invalidDate = new Date('2023-02-30') // 유효하지 않은 날짜
+      const invalidDate = new Date('2023-02-30') // JavaScript에서 자동으로 2023-03-02로 변환됨
       const result = formatDate(invalidDate)
 
-      // 현재 날짜로 fallback 해야 함
-      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      // 자동 변환된 날짜가 정상적으로 포맷팅됨
+      expect(result).toBe('2023-03-02')
     })
 
     it('타임존 오프셋을 올바르게 추가해야 함', () => {
@@ -110,8 +116,8 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(utcDate)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // 결과는 유효한 날짜 문자열이어야 함
-      expect(new Date(result!)).toBeInstanceOf(Date)
+      // 고정된 시간에서 예측 가능한 결과
+      expect(result).toBe('2023-01-01')
     })
 
     it('다양한 날짜 문자열 형식을 처리해야 함', () => {

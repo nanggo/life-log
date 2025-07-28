@@ -23,7 +23,7 @@ describe('포스트 유틸리티 함수', () => {
     it('공백을 언더스코어로 변환해야 함', () => {
       expect(normalizeSlug('hello world')).toBe('hello_world')
       expect(normalizeSlug('multiple   spaces')).toBe('multiple_spaces')
-      expect(normalizeSlug('  leading and trailing  ')).toBe('_leading_and_trailing_')
+      expect(normalizeSlug('  leading and trailing  ')).toBe('leading_and_trailing') // trim() 추가로 앞뒤 공백 제거
     })
 
     it('유니코드를 정규화하고 발음기호를 제거해야 함', () => {
@@ -38,7 +38,7 @@ describe('포스트 유틸리티 함수', () => {
 
     it('복잡한 케이스를 올바르게 처리해야 함', () => {
       expect(normalizeSlug('Hello-World Café')).toBe('hello_world_cafe')
-      expect(normalizeSlug('My Awesome Post - Part 1')).toBe('my_awesome_post___part_1')
+      expect(normalizeSlug('My Awesome Post - Part 1')).toBe('my_awesome_post_part_1') // 개선된 정규식으로 연속된 구분자가 하나로 처리됨
     })
   })
 
