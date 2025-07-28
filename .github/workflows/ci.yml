@@ -42,6 +42,9 @@ jobs:
             pnpm install --no-frozen-lockfile
           }
 
+      - name: SvelteKit 초기화
+        run: pnpm exec svelte-kit sync
+
       - name: TypeScript 타입 검사
         run: pnpm check
 
