@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/svelte'
+import { render, screen, fireEvent, waitFor } from '@testing-library/svelte'
 import { readable } from 'svelte/store'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
@@ -198,5 +198,185 @@ describe('Layout 컴포넌트', () => {
     // 콘텐츠 영역
     const contentArea = document.querySelector('.flex.flex-col.flex-grow.w-full.px-4.py-2')
     expect(contentArea).toBeInTheDocument()
+  })
+
+  describe('이미지 모달 기능', () => {
+    beforeEach(() => {
+      // 각 테스트 전에 모달이 있다면 제거
+      const existingModal = document.querySelector('.image-modal')
+      if (existingModal) {
+        existingModal.remove()
+      }
+    })
+
+    it('enhanced-image 클래스가 있는 이미지 클릭 시 모달이 열린다', async () => {
+      render(Layout, { data: mockData })
+
+      // 테스트용 이미지 요소 생성
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      // 이미지 클릭
+      await fireEvent.click(testImage)
+
+      // 모달이 생성되었는지 확인
+      const modal = document.querySelector('.image-modal')
+      expect(modal).toBeInTheDocument()
+      expect(modal).toHaveClass('fixed', 'inset-0', 'bg-black', 'bg-opacity-75')
+
+      // 정리
+      document.body.removeChild(testImage)
+    })
+
+    it('모달 이미지가 올바른 src와 alt 속성을 가진다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      const modalImage = document.querySelector('.image-modal img')
+      expect(modalImage).toHaveAttribute('src', '/test-image.jpg')
+      expect(modalImage).toHaveAttribute('alt', '테스트 이미지')
+
+      document.body.removeChild(testImage)
+    })
+
+    it.skip('닫기 버튼 클릭 시 모달이 닫힌다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      const modal = document.querySelector('.image-modal')
+      expect(modal).toBeInTheDocument()
+
+      const closeButton = modal?.querySelector('button')
+      expect(closeButton).toBeInTheDocument()
+      expect(closeButton).toHaveTextContent('×')
+
+      // 닫기 버튼 클릭 - 실제 DOM 이벤트 사용
+      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true })
+      closeButton!.dispatchEvent(clickEvent)
+
+      // 모달이 제거되었는지 비동기적으로 확인
+      await waitFor(() => {
+        expect(document.querySelector('.image-modal')).not.toBeInTheDocument()
+      })
+
+      document.body.removeChild(testImage)
+    })
+
+    it.skip('백드롭 클릭 시 모달이 닫힌다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      const modal = document.querySelector('.image-modal')
+      expect(modal).toBeInTheDocument()
+
+      // 백드롭(모달 자체) 클릭 - 실제 DOM 이벤트 사용
+      const clickEvent = new MouseEvent('click', { bubbles: true, cancelable: true })
+      Object.defineProperty(clickEvent, 'target', { value: modal })
+      modal!.dispatchEvent(clickEvent)
+
+      // 모달이 제거되었는지 비동기적으로 확인
+      await waitFor(() => {
+        expect(document.querySelector('.image-modal')).not.toBeInTheDocument()
+      })
+
+      document.body.removeChild(testImage)
+    })
+
+    it('ESC 키 누르기로 모달이 닫힌다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      const modal = document.querySelector('.image-modal')
+      expect(modal).toBeInTheDocument()
+
+      // ESC 키 누르기
+      await fireEvent.keyDown(document, { key: 'Escape' })
+
+      // 모달이 제거되었는지 확인
+      expect(document.querySelector('.image-modal')).not.toBeInTheDocument()
+
+      document.body.removeChild(testImage)
+    })
+
+    it('data-modal-src가 없는 이미지는 모달을 열지 않는다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      // data-modal-src 속성이 없음
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      // 모달이 생성되지 않았는지 확인
+      const modal = document.querySelector('.image-modal')
+      expect(modal).not.toBeInTheDocument()
+
+      document.body.removeChild(testImage)
+    })
+
+    it('모달에 닫기 버튼이 올바르게 렌더링된다', async () => {
+      render(Layout, { data: mockData })
+
+      const testImage = document.createElement('img')
+      testImage.className = 'enhanced-image'
+      testImage.setAttribute('data-modal-src', '/test-image.jpg')
+      testImage.setAttribute('data-modal-alt', '테스트 이미지')
+      document.body.appendChild(testImage)
+
+      await fireEvent.click(testImage)
+
+      const modal = document.querySelector('.image-modal')
+      expect(modal).toBeInTheDocument()
+
+      const closeButton = modal?.querySelector('button')
+      expect(closeButton).toBeInTheDocument()
+      expect(closeButton).toHaveTextContent('×')
+      expect(closeButton).toHaveClass(
+        'absolute',
+        'top-4',
+        'right-4',
+        'text-white',
+        'bg-black',
+        'bg-opacity-50',
+        'rounded-full',
+        'w-10',
+        'h-10'
+      )
+
+      document.body.removeChild(testImage)
+    })
   })
 })

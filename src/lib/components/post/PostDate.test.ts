@@ -109,6 +109,11 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('빈 날짜 문자열이 주어질 때 현재 날짜를 사용한다', () => {
+    const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
+    const originalDate = global.Date
+    global.Date = vi.fn(() => MOCK_NOW as any) as any
+    global.Date.now = vi.fn(() => MOCK_NOW.getTime())
+
     const postWithEmptyDate: Post = {
       ...mockPost,
       date: ''
@@ -116,12 +121,25 @@ describe('PostDate 컴포넌트', () => {
 
     render(PostDate, { post: postWithEmptyDate, decorate: false, class: '' })
 
-    // 현재 날짜가 렌더링되어야 함 (정확한 날짜는 확인하지 않고 요소 존재만 확인)
-    const timeElement = document.querySelector('time')
-    expect(timeElement).toBeInTheDocument()
+    // 모킹된 현재 날짜가 렌더링되는지 확인
+    const expectedDateString = MOCK_NOW.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+
+    expect(screen.getByText(expectedDateString)).toBeInTheDocument()
+
+    // Date 모킹 정리
+    global.Date = originalDate
   })
 
   it('잘못된 날짜 형식이 주어질 때 현재 날짜를 사용한다', () => {
+    const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
+    const originalDate = global.Date
+    global.Date = vi.fn(() => MOCK_NOW as any) as any
+    global.Date.now = vi.fn(() => MOCK_NOW.getTime())
+
     const postWithInvalidDate: Post = {
       ...mockPost,
       date: 'invalid-date-string'
@@ -129,9 +147,17 @@ describe('PostDate 컴포넌트', () => {
 
     render(PostDate, { post: postWithInvalidDate, decorate: false, class: '' })
 
-    // 현재 날짜가 렌더링되어야 함
-    const timeElement = document.querySelector('time')
-    expect(timeElement).toBeInTheDocument()
+    // 모킹된 현재 날짜가 렌더링되는지 확인
+    const expectedDateString = MOCK_NOW.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+
+    expect(screen.getByText(expectedDateString)).toBeInTheDocument()
+
+    // Date 모킹 정리
+    global.Date = originalDate
   })
 
   it('ISO 8601 형식의 날짜가 올바르게 파싱된다', () => {
