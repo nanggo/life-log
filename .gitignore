@@ -43,3 +43,6 @@ google-search-analysis.md
 
 # SEO Validation Reports (auto-generated)
 .seo-reports/
+
+# Test Coverage Reports (auto-generated)
+coverage/

@@ -5,6 +5,7 @@
     "verbatimModuleSyntax": true,
     "strict": true,
     "noImplicitReturns": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "types": ["vitest/globals", "@testing-library/jest-dom"]
   }
 }

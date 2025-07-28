@@ -1,0 +1,130 @@
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+
+import { addTimezoneOffset, isValidDate, formatDate } from './date'
+
+describe('날짜 유틸리티 함수', () => {
+  // 테스트 중 콘솔 스팸 방지를 위한 mock
+  beforeEach(() => {
+    vi.spyOn(console, 'warn').mockImplementation(() => {})
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+  })
+
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  describe('addTimezoneOffset', () => {
+    it('날짜에 타임존 오프셋을 추가해야 함', () => {
+      const originalDate = new Date('2023-01-01T00:00:00.000Z')
+      const offsetDate = addTimezoneOffset(originalDate)
+
+      // 차이는 타임존 오프셋(밀리초)과 같아야 함
+      const expectedOffset = originalDate.getTimezoneOffset() * 60 * 1000
+      expect(offsetDate.getTime() - originalDate.getTime()).toBe(expectedOffset)
+    })
+
+    it('다른 타임존을 처리해야 함', () => {
+      const date = new Date('2023-06-01T12:00:00.000Z')
+      const result = addTimezoneOffset(date)
+
+      expect(result).toBeInstanceOf(Date)
+      expect(result.getTime()).not.toBe(date.getTime())
+    })
+  })
+
+  describe('isValidDate', () => {
+    it('falsy 값들에 대해 false를 반환해야 함', () => {
+      expect(isValidDate(null)).toBe(false)
+      expect(isValidDate(undefined)).toBe(false)
+      expect(isValidDate('')).toBe(false)
+    })
+
+    it('유효한 Date 객체에 대해 true를 반환해야 함', () => {
+      expect(isValidDate(new Date())).toBe(true)
+      expect(isValidDate(new Date('2023-01-01'))).toBe(true)
+      expect(isValidDate(new Date(2023, 0, 1))).toBe(true)
+    })
+
+    it('유효한 날짜 문자열에 대해 true를 반환해야 함', () => {
+      expect(isValidDate('2023-01-01')).toBe(true)
+      expect(isValidDate('2023-01-01T12:00:00Z')).toBe(true)
+      expect(isValidDate('January 1, 2023')).toBe(true)
+    })
+
+    it('유효하지 않은 Date 객체에 대해 false를 반환해야 함', () => {
+      expect(isValidDate(new Date('invalid'))).toBe(false)
+      expect(isValidDate(new Date(NaN))).toBe(false)
+    })
+
+    it('유효하지 않은 날짜 문자열에 대해 false를 반환해야 함', () => {
+      expect(isValidDate('invalid date')).toBe(false)
+      expect(isValidDate('2023-13-01')).toBe(false) // 유효하지 않은 월
+      expect(isValidDate('2023-01-32')).toBe(false) // 유효하지 않은 일
+    })
+  })
+
+  describe('formatDate', () => {
+    it('falsy 값들에 대해 undefined를 반환해야 함', () => {
+      expect(formatDate(null)).toBeUndefined()
+      expect(formatDate(undefined)).toBeUndefined()
+      expect(formatDate('')).toBeUndefined()
+    })
+
+    it('유효한 Date 객체를 포맷팅해야 함', () => {
+      const date = new Date('2023-01-15T12:00:00Z')
+      const result = formatDate(date)
+
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(['2023-01-14', '2023-01-15', '2023-01-16']).toContain(result)
+    })
+
+    it('유효한 날짜 문자열을 포맷팅해야 함', () => {
+      const result = formatDate('2023-01-15')
+
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(['2023-01-14', '2023-01-15', '2023-01-16']).toContain(result)
+    })
+
+    it('유효하지 않은 날짜를 gracefully 처리해야 함', () => {
+      const result = formatDate('invalid date')
+
+      // yyyy-MM-dd 형식의 현재 날짜를 반환해야 함
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      expect(console.warn).toHaveBeenCalled()
+    })
+
+    it('Date 생성자 에러를 처리해야 함', () => {
+      // 날짜 포맷팅에서 에러를 발생시킬 수 있는 시나리오 생성
+      const invalidDate = new Date('2023-02-30') // 유효하지 않은 날짜
+      const result = formatDate(invalidDate)
+
+      // 현재 날짜로 fallback 해야 함
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+    })
+
+    it('타임존 오프셋을 올바르게 추가해야 함', () => {
+      // 알려진 날짜로 테스트하고 타임존 처리 확인
+      const utcDate = new Date('2023-01-01T00:00:00.000Z')
+      const result = formatDate(utcDate)
+
+      expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      // 결과는 유효한 날짜 문자열이어야 함
+      expect(new Date(result!)).toBeInstanceOf(Date)
+    })
+
+    it('다양한 날짜 문자열 형식을 처리해야 함', () => {
+      const formats = [
+        '2023-01-01',
+        '2023/01/01',
+        'January 1, 2023',
+        '2023-01-01T12:00:00Z',
+        '2023-01-01T12:00:00.000Z'
+      ]
+
+      formats.forEach((dateStr) => {
+        const result = formatDate(dateStr)
+        expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
+      })
+    })
+  })
+})
