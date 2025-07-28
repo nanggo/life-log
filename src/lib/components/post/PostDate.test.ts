@@ -110,9 +110,10 @@ describe('PostDate 컴포넌트', () => {
 
   it('빈 날짜 문자열이 주어질 때 현재 날짜를 사용한다', () => {
     const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
-    const originalDate = global.Date
-    global.Date = vi.fn(() => MOCK_NOW as any) as any
-    global.Date.now = vi.fn(() => MOCK_NOW.getTime())
+
+    // Vitest 내장 time-mocking 사용
+    vi.useFakeTimers()
+    vi.setSystemTime(MOCK_NOW)
 
     const postWithEmptyDate: Post = {
       ...mockPost,
@@ -130,15 +131,16 @@ describe('PostDate 컴포넌트', () => {
 
     expect(screen.getByText(expectedDateString)).toBeInTheDocument()
 
-    // Date 모킹 정리
-    global.Date = originalDate
+    // 실제 타이머로 복원
+    vi.useRealTimers()
   })
 
   it('잘못된 날짜 형식이 주어질 때 현재 날짜를 사용한다', () => {
     const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
-    const originalDate = global.Date
-    global.Date = vi.fn(() => MOCK_NOW as any) as any
-    global.Date.now = vi.fn(() => MOCK_NOW.getTime())
+
+    // Vitest 내장 time-mocking 사용
+    vi.useFakeTimers()
+    vi.setSystemTime(MOCK_NOW)
 
     const postWithInvalidDate: Post = {
       ...mockPost,
@@ -156,8 +158,8 @@ describe('PostDate 컴포넌트', () => {
 
     expect(screen.getByText(expectedDateString)).toBeInTheDocument()
 
-    // Date 모킹 정리
-    global.Date = originalDate
+    // 실제 타이머로 복원
+    vi.useRealTimers()
   })
 
   it('ISO 8601 형식의 날짜가 올바르게 파싱된다', () => {
