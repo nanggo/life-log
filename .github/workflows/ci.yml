@@ -103,11 +103,17 @@ jobs:
 
       - name: PR에 커버리지 코멘트
         uses: actions/github-script@v7
+        continue-on-error: true
         with:
           script: |
             const fs = require('fs');
             
             // 커버리지 요약 정보 읽기
+            if (!fs.existsSync('./coverage/coverage-summary.json')) {
+              console.log('커버리지 요약 파일이 없습니다. 스킵합니다.');
+              return;
+            }
+            
             const coverageSummary = JSON.parse(fs.readFileSync('./coverage/coverage-summary.json', 'utf8'));
             const total = coverageSummary.total;
             
