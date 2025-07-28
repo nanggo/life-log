@@ -165,8 +165,54 @@
         "testStrategy": "이미지 로딩 속도 측정, WebP 포맷 변환 확인, Lighthouse 성능 점수 90점 이상 유지 검증, 다양한 디바이스에서 반응형 이미지 테스트",
         "priority": "low",
         "dependencies": [3],
-        "status": "pending",
-        "subtasks": []
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Sharp 라이브러리 업데이트 및 WebP 변환 로직 구현",
+            "description": "Sharp 라이브러리를 최신 버전으로 업데이트하고 이미지 자동 WebP 변환 기능을 구현합니다.",
+            "dependencies": [],
+            "details": "Sharp npm 패키지를 최신 버전으로 업데이트하고, 이미지 업로드 시 자동으로 WebP 포맷으로 변환하는 로직을 src/lib/utils/에 구현합니다. 원본 이미지 포맷을 유지하면서 WebP 버전도 함께 생성하여 브라우저 지원에 따라 선택적으로 제공할 수 있도록 설정합니다.",
+            "status": "done",
+            "testStrategy": "다양한 포맷의 이미지(JPEG, PNG, GIF)를 WebP로 변환하는 테스트, 변환된 이미지 품질 확인, 변환 실패 시 원본 이미지 fallback 동작 검증"
+          },
+          {
+            "id": 2,
+            "title": "반응형 이미지 처리 및 srcset 생성 구현",
+            "description": "다양한 화면 크기에 최적화된 이미지를 생성하고 srcset 속성을 자동으로 생성하는 기능을 구현합니다.",
+            "dependencies": ["6.1"],
+            "details": "Sharp를 사용하여 이미지를 여러 해상도(320w, 640w, 960w, 1280w)로 리사이즈하고, Svelte 컴포넌트에서 srcset과 sizes 속성을 자동으로 생성하는 유틸리티 함수를 작성합니다. 블로그 포스트 내 이미지와 썸네일 이미지에 적용합니다.",
+            "status": "done",
+            "testStrategy": "각 해상도별 이미지 생성 확인, srcset 속성 정확성 검증, 다양한 디바이스에서 적절한 이미지 로딩 테스트"
+          },
+          {
+            "id": 3,
+            "title": "이미지 지연 로딩 및 압축 최적화 구현",
+            "description": "Intersection Observer API를 활용한 이미지 지연 로딩과 Sharp 압축 설정 최적화를 구현합니다.",
+            "dependencies": ["6.2"],
+            "details": "Svelte 컴포넌트로 lazy loading 기능을 구현하고, Sharp 압축 옵션을 최적화하여 품질과 파일 크기의 균형을 맞춥니다. WebP는 80% 품질, JPEG는 85% 품질로 설정하고, progressive JPEG 옵션을 활성화합니다.",
+            "status": "done",
+            "testStrategy": "스크롤 시 이미지 지연 로딩 동작 확인, 압축된 이미지 품질 육안 검증, 파일 크기 감소율 측정, Lighthouse 성능 점수 개선 확인"
+          },
+          {
+            "id": 4,
+            "title": "이미지 캐싱 전략 및 Vite asset 처리 최적화",
+            "description": "이미지 캐싱 전략을 구현하고 Vite의 asset 처리를 최적화하여 빌드 성능을 개선합니다.",
+            "dependencies": ["6.3"],
+            "details": "Vite 설정에서 이미지 asset 처리를 최적화하고, 브라우저 캐싱을 위한 적절한 HTTP 헤더를 설정합니다. 정적 이미지는 해시 기반 파일명을 사용하여 장기 캐싱을 활성화하고, CDN 연동을 위한 설정을 준비합니다.",
+            "status": "done",
+            "testStrategy": "빌드된 이미지 파일의 해시 네이밍 확인, 브라우저 개발자 도구에서 캐시 헤더 검증, 이미지 로딩 속도 측정"
+          },
+          {
+            "id": 5,
+            "title": "이미지 처리 타입 정의 및 통합 테스트",
+            "description": "이미지 처리 관련 TypeScript 타입을 정의하고 전체 이미지 최적화 기능의 통합 테스트를 수행합니다.",
+            "dependencies": ["6.1", "6.2", "6.3", "6.4"],
+            "details": "src/lib/types/image.ts에 이미지 처리 관련 인터페이스들을 정의하고, 모든 이미지 최적화 기능을 통합하여 테스트합니다. Lighthouse 성능 점수 90점 이상 달성을 목표로 최종 검증을 수행합니다.",
+            "status": "done",
+            "testStrategy": "TypeScript 컴파일 에러 없음 확인, Lighthouse 성능 점수 90점 이상 달성, WebP 지원 브라우저와 미지원 브라우저에서의 fallback 동작 검증, 이미지 로딩 속도 개선 정도 측정"
+          }
+        ]
       },
       {
         "id": 7,
@@ -176,8 +222,54 @@
         "testStrategy": "모든 테스트 케이스 통과 확인, 테스트 커버리지 70% 이상 달성, CI/CD에서 테스트 자동 실행 검증",
         "priority": "low",
         "dependencies": [4, 5],
-        "status": "pending",
-        "subtasks": []
+        "status": "in-progress",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Vitest 테스트 환경 설정 및 의존성 설치",
+            "description": "Vitest, @testing-library/svelte, jsdom 등 테스트에 필요한 의존성을 설치하고 기본 설정 파일을 생성합니다.",
+            "dependencies": [],
+            "details": "1. Vitest, @testing-library/svelte, @testing-library/jest-dom, jsdom 패키지 설치\n2. vitest.config.ts 파일 생성 및 기본 설정 구성\n3. TypeScript 설정에 테스트 환경 타입 추가\n4. package.json에 테스트 관련 스크립트 추가",
+            "status": "done",
+            "testStrategy": "vitest --run 명령으로 테스트 환경 정상 작동 확인"
+          },
+          {
+            "id": 2,
+            "title": "유틸리티 함수 단위 테스트 작성",
+            "description": "posts.js, utils 디렉토리의 핵심 유틸리티 함수들에 대한 포괄적인 단위 테스트를 작성합니다.",
+            "dependencies": ["7.1"],
+            "details": "1. src/lib/utils/posts.js의 slug 정규화 함수 테스트\n2. 날짜 포맷팅 함수 테스트\n3. 태그 처리 함수 테스트\n4. 읽기 시간 계산 함수 테스트\n5. 에지 케이스 및 에러 상황 테스트 포함\n<info added on 2025-07-28T00:55:25.699Z>\n테스트 케이스 한글화 작업 완료. 사용자 피드백을 반영하여 영어 대신 한글을 사용하도록 개선했습니다. 모든 describe, it 구문을 한글로 변경하여 테스트 설명이 더 명확하고 직관적이 되었으며, 코멘트도 한글로 통일하여 일관성을 유지했습니다. 31개 테스트 케이스가 모두 정상 통과하였고, 한글 테스트를 통해 개발자 간 소통이 더 명확해지고 테스트 실패 시 문제점 파악이 용이해졌습니다. 프로젝트가 한국어 기반이므로 일관성도 향상되었습니다.\n</info added on 2025-07-28T00:55:25.699Z>",
+            "status": "done",
+            "testStrategy": "모든 유틸리티 함수에 대해 정상 케이스, 에지 케이스, 에러 케이스 테스트 작성 및 100% 커버리지 달성"
+          },
+          {
+            "id": 3,
+            "title": "주요 컴포넌트 렌더링 테스트 작성",
+            "description": "Header, PostCard, TagList 등 핵심 UI 컴포넌트들의 렌더링 및 인터랙션 테스트를 작성합니다.",
+            "dependencies": ["7.1"],
+            "details": "1. Header 컴포넌트 렌더링 및 네비게이션 링크 테스트\n2. PostCard 컴포넌트 props 전달 및 렌더링 테스트\n3. TagList 컴포넌트 태그 표시 및 클릭 이벤트 테스트\n4. PostMeta 컴포넌트 날짜 및 읽기 시간 표시 테스트\n5. 반응형 동작 및 접근성 테스트 포함",
+            "status": "pending",
+            "testStrategy": "컴포넌트별 props 전달, 이벤트 처리, DOM 렌더링 정확성 검증"
+          },
+          {
+            "id": 4,
+            "title": "테스트 커버리지 설정 및 리포트 생성",
+            "description": "코드 커버리지 측정을 위한 설정을 구성하고 리포트 생성 환경을 구축합니다.",
+            "dependencies": ["7.2", "7.3"],
+            "details": "1. vitest.config.ts에 coverage 설정 추가\n2. @vitest/coverage-v8 패키지 설치 및 설정\n3. 커버리지 제외 파일 및 디렉토리 설정\n4. HTML 및 텍스트 형태 커버리지 리포트 생성\n5. 최소 커버리지 임계값 70% 설정",
+            "status": "pending",
+            "testStrategy": "전체 테스트 실행 후 커버리지 70% 이상 달성 확인 및 리포트 생성 검증"
+          },
+          {
+            "id": 5,
+            "title": "CI/CD 파이프라인 테스트 통합 및 자동화",
+            "description": "GitHub Actions 워크플로우에 테스트 실행을 통합하고 빌드 프로세스에 테스트 검증을 추가합니다.",
+            "dependencies": ["7.4"],
+            "details": "1. .github/workflows/ci.yml 파일 수정하여 테스트 단계 추가\n2. 테스트 실패 시 빌드 중단 설정\n3. 테스트 커버리지 결과를 PR 코멘트로 자동 게시\n4. 의존성 캐싱으로 CI 성능 최적화\n5. 테스트 실행 병렬화 설정",
+            "status": "done",
+            "testStrategy": "PR 생성 시 자동 테스트 실행 확인, 테스트 실패 시 빌드 중단 검증, 커버리지 리포트 자동 생성 확인"
+          }
+        ]
       },
       {
         "id": 8,
@@ -196,7 +288,7 @@
         "description": "layout과 page 레벨에서 발생하는 description 메타 태그 중복 문제를 해결하고, 개별 포스트의 고유 메타데이터가 올바르게 표시되도록 SEO를 최적화합니다.",
         "details": "1. app.html과 +layout.svelte에서 메타 태그 중복 발생 지점 분석\n2. 개별 포스트 페이지에서 고유 description 메타 태그 우선순위 설정\n3. svelte:head 블록을 통한 동적 메타 태그 관리 구현\n4. Open Graph 및 Twitter Card 메타 태그 추가\n5. JSON-LD 구조화 데이터 구현 (Article, BlogPosting)\n6. robots.txt 및 sitemap.xml 최적화\n7. Google Search Console 연동 및 크롤링 요청\n8. 검색 엔진 최적화를 위한 canonical URL 설정\n9. 메타 태그 중복 검증 도구 스크립트 작성\n10. SEO 성능 모니터링 설정",
         "testStrategy": "각 페이지별 메타 태그 중복 없음 확인, Google Rich Results Test로 구조화 데이터 검증, Lighthouse SEO 점수 90점 이상 달성, Google Search Console에서 크롤링 오류 0개 확인, 다양한 소셜 미디어 플랫폼에서 링크 미리보기 테스트",
-        "status": "pending",
+        "status": "done",
         "dependencies": [5],
         "priority": "high",
         "subtasks": [
@@ -250,7 +342,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-25T08:10:27.932Z",
+      "updated": "2025-07-28T00:58:16.434Z",
       "description": "Tasks for master context"
     }
   }

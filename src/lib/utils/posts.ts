@@ -9,9 +9,9 @@ export function normalizeSlug(slug: string): string {
   if (!slug) return ''
 
   return slug
+    .trim() // 앞뒤 공백 제거
     .toLowerCase()
-    .replace(/-/g, '_')
-    .replace(/\s+/g, '_')
+    .replace(/[\s-]+/g, '_') // 공백과 하이픈을 하나 이상의 시퀀스로 처리하여 언더스코어로 변환
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // 발음 구별 기호 제거
 }

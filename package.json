@@ -11,6 +11,10 @@
 		"lint": "prettier --check . && eslint --ignore-path .gitignore .",
 		"format": "prettier --write .",
 		"seo:validate": "node scripts/seo-validation.js",
+		"test": "vitest",
+		"test:run": "vitest run",
+		"test:coverage": "vitest run --coverage",
+		"test:ui": "vitest --ui",
 		"prepare": "husky"
 	},
 	"devDependencies": {
@@ -18,11 +22,15 @@
 		"@sveltejs/kit": "2.5.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
 		"@tailwindcss/typography": "^0.5.7",
+		"@testing-library/jest-dom": "^6.6.4",
+		"@testing-library/svelte": "^5.2.8",
 		"@types/fs-extra": "^11.0.4",
 		"@types/node": "^24.0.15",
 		"@typescript-eslint/eslint-plugin": "^8.38.0",
 		"@typescript-eslint/parser": "^8.38.0",
 		"@vcarl/remark-headings": "^0.0.1",
+		"@vitest/coverage-v8": "^3.2.4",
+		"@vitest/ui": "3.2.4",
 		"autoprefixer": "^10.4.8",
 		"cssnano": "^5.1.13",
 		"eslint": "^8.56.0",
@@ -32,6 +40,7 @@
 		"eslint-plugin-svelte": "^2.35.1",
 		"fs-extra": "^11.3.0",
 		"husky": "^9.1.7",
+		"jsdom": "^26.1.0",
 		"lint-staged": "^16.1.2",
 		"mdsvex": "^0.11.0",
 		"mdsvex-relative-images": "^1.0.3",
@@ -49,7 +58,8 @@
 		"tailwindcss": "^3.1.8",
 		"typescript": "^5.3.3",
 		"unist-util-visit": "^3.1.0",
-		"vite": "^5.0.3"
+		"vite": "^5.0.3",
+		"vitest": "^3.2.4"
 	},
 	"type": "module",
 	"lint-staged": {
