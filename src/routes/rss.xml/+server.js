@@ -15,9 +15,15 @@ const postsUrl = `${website}/posts`
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
+  // 최신 포스트 날짜 기반 ETag 생성
+  const latestPostDate = posts[0]?.date || new Date()
+  const etag = `"rss-${Buffer.from(latestPostDate.toString()).toString('base64')}"`
+
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=600`,
-    'Content-Type': 'application/xml'
+    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Content-Type': 'application/xml',
+    ETag: etag,
+    'Last-Modified': new Date(latestPostDate).toUTCString()
   })
 
   const xml = `<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">

@@ -65,9 +65,16 @@ const extractFirstImage = (post) => {
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
+  // 포스트 변경사항 기반 ETag 생성
+  const postsHash = posts.map((p) => `${p.slug}-${p.updated || p.date}`).join('')
+  const etag = `"sitemap-${Buffer.from(postsHash).toString('base64').slice(0, 16)}"`
+  const latestDate = posts[0]?.updated || posts[0]?.date || new Date()
+
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=600`,
-    'Content-Type': 'application/xml'
+    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Content-Type': 'application/xml',
+    ETag: etag,
+    'Last-Modified': new Date(latestDate).toUTCString()
   })
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
