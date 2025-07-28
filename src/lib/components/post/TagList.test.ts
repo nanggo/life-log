@@ -51,9 +51,10 @@ describe('TagList 컴포넌트', () => {
     expect(tagContainer).not.toBeInTheDocument()
   })
 
-  it('태그가 null일 때 아무것도 렌더링하지 않는다', () => {
-    render(TagList, { tags: null })
+  it('태그가 undefined일 때 기본값으로 동작한다', () => {
+    render(TagList, { tags: undefined as any })
 
+    // 빈 태그 배열과 같은 동작을 하므로 렌더링되지 않음
     const tagContainer = document.querySelector('.relative')
     expect(tagContainer).not.toBeInTheDocument()
   })

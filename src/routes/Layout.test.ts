@@ -77,7 +77,8 @@ Object.defineProperty(document, 'documentElement', {
 
 describe('Layout 컴포넌트', () => {
   const mockData = {
-    title: '낭고넷 - 테스트 페이지'
+    title: '낭고넷 - 테스트 페이지',
+    url: '/'
   }
 
   beforeEach(() => {

@@ -19,6 +19,7 @@ vi.mock('$lib/utils/posts', () => ({
 describe('PostPreview 컴포넌트', () => {
   const mockPost: Post = {
     title: '테스트 포스트 제목',
+    description: '테스트 포스트 설명',
     slug: 'test-post-slug',
     tags: ['JavaScript', 'Svelte', 'TypeScript', 'Node.js'],
     date: '2024-01-15',
@@ -27,8 +28,8 @@ describe('PostPreview 컴포넌트', () => {
       text: '이것은 테스트 포스트의 미리보기 내용입니다.'
     },
     readingTime: '5분 읽기',
-    content: '',
-    headings: []
+    headings: [],
+    isIndexFile: false
   }
 
   beforeEach(() => {

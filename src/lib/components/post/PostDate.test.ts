@@ -24,13 +24,14 @@ vi.mock('date-fns', () => ({
 describe('PostDate 컴포넌트', () => {
   const mockPost: Post = {
     title: '테스트 포스트',
+    description: '테스트 포스트 설명',
     slug: 'test-post',
     tags: ['JavaScript'],
     date: '2024-01-15',
     readingTime: '5분 읽기',
     preview: { html: '', text: '' },
-    content: '',
-    headings: []
+    headings: [],
+    isIndexFile: false
   }
 
   beforeEach(() => {

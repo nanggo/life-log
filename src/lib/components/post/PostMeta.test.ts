@@ -31,8 +31,8 @@ describe('PostMeta 컴포넌트', () => {
     expect(tagContainer).not.toBeInTheDocument()
   })
 
-  it('null 태그일 때 아무것도 렌더링하지 않는다', () => {
-    render(PostMeta, { tags: null })
+  it('undefined 태그일 때 아무것도 렌더링하지 않는다', () => {
+    render(PostMeta, { tags: undefined as any })
 
     const tagContainer = document.querySelector('.flex.flex-wrap.gap-2.mt-2')
     expect(tagContainer).not.toBeInTheDocument()
