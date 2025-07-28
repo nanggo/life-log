@@ -8,6 +8,9 @@ export default defineConfig({
     globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
+    typecheck: {
+      include: ['**/*.{test,spec}.ts', 'src/test/jest-dom.d.ts']
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'json-summary', 'html'],

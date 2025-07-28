@@ -225,6 +225,7 @@ jobs:
                 })
               }
 
+              const runNumber = '${{ github.run_number }}'
               let comment = `## ${statusIcon} SEO 검증 ${statusText}\n\n`
               comment += '| 항목 | 값 |\n'
               comment += '|--------|-------|\n'
@@ -233,10 +234,10 @@ jobs:
               comment += `| 총 오류 | ${summary.totalErrors} |\n`
               comment += `| 총 경고 | ${summary.totalWarnings} |\n`
               comment += `| robots.txt | ${summary.robotsTxtValid ? '✅ 유효' : '❌ 비유효'} |\n`
-              comment += `| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |\n`
-              comment += `${issueDetails}\n\n`
-              comment += '📁 **상세 리포트**는 워크플로우 로그에서 확인할 수 있습니다.\n\n'
-              comment += `<sub>SEO 검증 워크플로우에 의해 생성됨 - 실행 #${{ github.run_number }}</sub>`
+              comment += `| sitemap.xml | ${summary.sitemapXmlValid ? '✅ 유효' : '❌ 비유효'} |\n\n`
+              comment += issueDetails
+              comment += '\n\n📁 **상세 리포트**는 워크플로우 로그에서 확인할 수 있습니다.\n\n'
+              comment += `<sub>SEO 검증 워크플로우에 의해 생성됨 - 실행 #${runNumber}</sub>`
 
               await github.rest.issues.createComment({
                 issue_number: context.issue.number,
