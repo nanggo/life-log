@@ -290,20 +290,31 @@ function validateSEOFiles() {
   // Check sitemap generation (by checking actual generated file)
   try {
     const sitemapRoutePath = join(projectRoot, 'src/routes/sitemap.xml/+server.js')
-    const generatedSitemapPath = join(buildDir, 'prerendered/entries/pages/sitemap.xml/_server.js')
+    const prerenderedSitemapPath = join(buildDir, 'prerendered/pages/sitemap.xml')
 
     if (!existsSync(sitemapRoutePath)) {
       results.sitemapXml.issues.push('Sitemap route not found')
     } else {
       results.sitemapXml.exists = true
 
-      // Try to validate the actual sitemap by making a request to the built server
-      // For now, we'll check if the route was built successfully
-      if (existsSync(generatedSitemapPath)) {
-        results.sitemapXml.valid = true
+      // Check if the actual sitemap.xml file was generated
+      if (existsSync(prerenderedSitemapPath)) {
+        try {
+          // Basic validation: read and check if it's valid XML
+          const sitemapContent = readFileSync(prerenderedSitemapPath, 'utf-8')
+          if (sitemapContent.includes('<urlset') && sitemapContent.includes('<url>')) {
+            results.sitemapXml.valid = true
+          } else {
+            results.sitemapXml.valid = false
+            results.sitemapXml.issues.push('Generated sitemap.xml appears to be invalid')
+          }
+        } catch (readError) {
+          results.sitemapXml.valid = false
+          results.sitemapXml.issues.push(`Error reading generated sitemap: ${readError.message}`)
+        }
       } else {
         results.sitemapXml.valid = false
-        results.sitemapXml.issues.push('Sitemap route exists but may not be generating properly')
+        results.sitemapXml.issues.push('Sitemap route exists but sitemap.xml was not generated')
       }
     }
   } catch (error) {
