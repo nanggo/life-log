@@ -248,7 +248,7 @@
             "description": "Header, PostCard, TagList 등 핵심 UI 컴포넌트들의 렌더링 및 인터랙션 테스트를 작성합니다.",
             "dependencies": ["7.1"],
             "details": "1. Header 컴포넌트 렌더링 및 네비게이션 링크 테스트\n2. PostCard 컴포넌트 props 전달 및 렌더링 테스트\n3. TagList 컴포넌트 태그 표시 및 클릭 이벤트 테스트\n4. PostMeta 컴포넌트 날짜 및 읽기 시간 표시 테스트\n5. 반응형 동작 및 접근성 테스트 포함",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "컴포넌트별 props 전달, 이벤트 처리, DOM 렌더링 정확성 검증"
           },
           {
@@ -342,7 +342,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-28T00:58:16.434Z",
+      "updated": "2025-07-28T09:30:20.721Z",
       "description": "Tasks for master context"
     }
   }
