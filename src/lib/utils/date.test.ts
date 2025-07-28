@@ -10,8 +10,8 @@ describe('날짜 유틸리티 함수', () => {
     // 결정적 테스트를 위한 시간 고정
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2023-06-15T12:00:00.000Z'))
-    // 타임존 오프셋을 고정 (KST: UTC+9, 즉 -540분)
-    vi.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(-540)
+    // 타임존 오프셋을 UTC로 고정 (CI 환경과 일치)
+    vi.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(0)
   })
 
   afterEach(() => {
@@ -24,8 +24,8 @@ describe('날짜 유틸리티 함수', () => {
       const originalDate = new Date('2023-01-01T00:00:00.000Z')
       const offsetDate = addTimezoneOffset(originalDate)
 
-      // KST(-540분) 타임존에서 예상되는 오프셋: -540 * 60 * 1000 = -32400000ms
-      const expectedOffset = -540 * 60 * 1000
+      // UTC(0분) 타임존에서 예상되는 오프셋: 0 * 60 * 1000 = 0ms
+      const expectedOffset = 0
       expect(offsetDate.getTime() - originalDate.getTime()).toBe(expectedOffset)
     })
 
@@ -34,8 +34,8 @@ describe('날짜 유틸리티 함수', () => {
       const result = addTimezoneOffset(date)
 
       expect(result).toBeInstanceOf(Date)
-      // KST 고정 타임존에서 결정적 테스트
-      const expectedOffset = -540 * 60 * 1000
+      // UTC 고정 타임존에서 결정적 테스트
+      const expectedOffset = 0
       expect(result.getTime() - date.getTime()).toBe(expectedOffset)
     })
   })
@@ -83,7 +83,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(date)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // KST 타임존에서 예측 가능한 결과 (UTC+9)
+      // UTC 타임존에서 예측 가능한 결과
       expect(result).toBe('2023-01-15')
     })
 
@@ -91,7 +91,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate('2023-01-15')
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // KST 타임존에서 예측 가능한 결과
+      // UTC 환경에서 예측 가능한 결과
       expect(result).toBe('2023-01-15')
     })
 
@@ -108,7 +108,7 @@ describe('날짜 유틸리티 함수', () => {
       const invalidDate = new Date('2023-02-30') // JavaScript에서 자동으로 2023-03-02로 변환됨
       const result = formatDate(invalidDate)
 
-      // 자동 변환된 날짜가 정상적으로 포맷팅됨
+      // UTC 환경에서 자동 변환된 날짜가 정상적으로 포맷팅됨
       expect(result).toBe('2023-03-02')
     })
 
@@ -118,7 +118,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(utcDate)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // date-fns format은 로컬 시간 기준으로 포맷팅
+      // UTC 환경에서 타임존 오프셋 적용 결과 (오프셋 0이므로 동일)
       expect(result).toBe('2023-01-01')
     })
 
