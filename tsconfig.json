@@ -6,6 +6,6 @@
     "strict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom"]
+    "types": ["vitest/globals"]
   }
 }

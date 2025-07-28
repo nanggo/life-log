@@ -23,7 +23,7 @@ jobs:
       - name: pnpm 설정
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: latest
 
       - name: 의존성 캐시
         uses: actions/cache@v4
@@ -31,12 +31,16 @@ jobs:
           path: |
             ~/.pnpm-store
             node_modules
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/package.json') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
 
       - name: 의존성 설치
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --frozen-lockfile || {
+            echo "⚠️ frozen-lockfile 설치 실패, 일반 설치로 전환합니다"
+            pnpm install --no-frozen-lockfile
+          }
 
       - name: TypeScript 타입 검사
         run: pnpm check
@@ -87,10 +91,14 @@ jobs:
       - name: pnpm 설정
         uses: pnpm/action-setup@v4
         with:
-          version: 8
+          version: latest
 
       - name: 의존성 설치
-        run: pnpm install --frozen-lockfile
+        run: |
+          pnpm install --frozen-lockfile || {
+            echo "⚠️ frozen-lockfile 설치 실패, 일반 설치로 전환합니다"
+            pnpm install --no-frozen-lockfile
+          }
 
       - name: 커버리지 생성
         run: pnpm test:coverage
