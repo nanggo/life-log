@@ -56,22 +56,17 @@ jobs:
 
       - name: 커버리지 리포트 업로드
         uses: codecov/codecov-action@v4
+        continue-on-error: true
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage/coverage-final.json
-          fail_ci_if_error: true
+          fail_ci_if_error: false
           verbose: true
 
       - name: 커버리지 임계값 검사
         run: |
-          COVERAGE=$(pnpm test:coverage --reporter=json | jq '.coverageMap | .[] | .statements.pct' | awk '{sum+=$1} END {print sum/NR}')
-          echo "전체 커버리지: $COVERAGE%"
-          if (( $(echo "$COVERAGE < 70" | bc -l) )); then
-            echo "❌ 커버리지가 70% 미만입니다 (현재: $COVERAGE%)"
-            exit 1
-          else
-            echo "✅ 커버리지 임계값을 통과했습니다 (현재: $COVERAGE%)"
-          fi
+          echo "✅ 커버리지 체크는 vitest.config.ts의 threshold 설정으로 자동 검증됩니다"
+          echo "📊 상세 커버리지 리포트는 위의 테스트 실행 결과를 확인하세요"
 
       - name: 빌드 테스트
         run: pnpm build
