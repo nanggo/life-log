@@ -13,7 +13,7 @@
  */
 
 import { execSync } from 'child_process'
-import { writeFileSync, mkdirSync, existsSync, readFileSync } from 'fs'
+import { writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -31,9 +31,34 @@ if (!existsSync(reportsDir)) {
 }
 
 /**
+ * Find first available post for testing
+ */
+function getFirstAvailablePost() {
+  try {
+    const postsDir = join(projectRoot, 'posts')
+    const files = readdirSync(postsDir)
+
+    // Look for .md files (excluding directories)
+    const markdownFiles = files.filter((file) => file.endsWith('.md'))
+    if (markdownFiles.length > 0) {
+      // Remove .md extension to get slug
+      const firstPostSlug = markdownFiles[0].replace('.md', '')
+      return { path: `/post/${firstPostSlug}`, name: 'Sample Post Page' }
+    }
+
+    // Fallback to hardcoded post
+    return { path: '/post/why-i-became-developer', name: 'Sample Post Page' }
+  } catch (_error) {
+    // Fallback to hardcoded post if directory reading fails
+    return { path: '/post/why-i-became-developer', name: 'Sample Post Page' }
+  }
+}
+
+/**
  * Configuration for SEO validation
  */
 const config = {
+  productionDomain: 'https://blog.nanggo.net',
   metaTagsToCheck: [
     'title',
     'description',
@@ -50,7 +75,7 @@ const config = {
   testPages: [
     { path: '/', name: 'Homepage' },
     { path: '/about', name: 'About Page' },
-    { path: '/post/why-i-became-developer', name: 'Sample Post Page' }
+    getFirstAvailablePost()
   ]
 }
 
@@ -166,7 +191,7 @@ function validatePageSEO(htmlContent, pageName) {
   if (metaTags.canonical) {
     try {
       new URL(metaTags.canonical)
-      if (!metaTags.canonical.startsWith('https://blog.nanggo.net')) {
+      if (!metaTags.canonical.startsWith(config.productionDomain)) {
         issues.push({
           type: 'canonical_domain',
           tag: 'canonical',
@@ -262,14 +287,24 @@ function validateSEOFiles() {
     results.robotsTxt.issues.push(`Error reading robots.txt: ${error.message}`)
   }
 
-  // Check sitemap generation (by checking if route exists)
+  // Check sitemap generation (by checking actual generated file)
   try {
     const sitemapRoutePath = join(projectRoot, 'src/routes/sitemap.xml/+server.js')
-    if (existsSync(sitemapRoutePath)) {
-      results.sitemapXml.exists = true
-      results.sitemapXml.valid = true
-    } else {
+    const generatedSitemapPath = join(buildDir, 'prerendered/entries/pages/sitemap.xml/_server.js')
+
+    if (!existsSync(sitemapRoutePath)) {
       results.sitemapXml.issues.push('Sitemap route not found')
+    } else {
+      results.sitemapXml.exists = true
+
+      // Try to validate the actual sitemap by making a request to the built server
+      // For now, we'll check if the route was built successfully
+      if (existsSync(generatedSitemapPath)) {
+        results.sitemapXml.valid = true
+      } else {
+        results.sitemapXml.valid = false
+        results.sitemapXml.issues.push('Sitemap route exists but may not be generating properly')
+      }
     }
   } catch (error) {
     results.sitemapXml.issues.push(`Error checking sitemap: ${error.message}`)
@@ -305,12 +340,13 @@ function generateReport(pageResults, seoFiles) {
   }
 
   // Generate HTML report
+  const reportTimestamp = Date.now()
   const htmlReport = generateHTMLReport(reportData)
-  const htmlPath = join(reportsDir, `seo-report-${Date.now()}.html`)
+  const htmlPath = join(reportsDir, `seo-report-${reportTimestamp}.html`)
   writeFileSync(htmlPath, htmlReport)
 
   // Generate JSON report
-  const jsonPath = join(reportsDir, `seo-report-${Date.now()}.json`)
+  const jsonPath = join(reportsDir, `seo-report-${reportTimestamp}.json`)
   writeFileSync(jsonPath, JSON.stringify(reportData, null, 2))
 
   log(`Reports generated:`)
@@ -443,18 +479,14 @@ function generateHTMLReport(data) {
  * Get built HTML content for a page
  */
 function getBuiltPageHTML(pagePath) {
-  // Map paths to prerendered HTML file locations
-  const pathMap = {
-    '/': 'prerendered/pages/index.html',
-    '/about': 'prerendered/pages/about.html',
-    '/post/why-i-became-developer': 'prerendered/pages/post/why-i-became-developer.html'
-  }
-
-  const builtFile = pathMap[pagePath]
-  if (!builtFile) return null
+  // Dynamically determine the file path from the route.
+  // This assumes a standard SvelteKit prerendering output structure.
+  const builtFile =
+    pagePath === '/' ? 'prerendered/pages/index.html' : `prerendered/pages${pagePath}.html`
 
   const fullPath = join(buildDir, builtFile)
   if (!existsSync(fullPath)) {
+    log(`Built file not found at ${fullPath}`, 'warn')
     return null
   }
 
