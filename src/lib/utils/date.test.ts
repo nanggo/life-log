@@ -26,9 +26,11 @@ describe('날짜 유틸리티 함수', () => {
     it('다른 타임존을 처리해야 함', () => {
       const date = new Date('2023-06-01T12:00:00.000Z')
       const result = addTimezoneOffset(date)
+      const timezoneOffset = date.getTimezoneOffset() * 60 * 1000
 
       expect(result).toBeInstanceOf(Date)
-      expect(result.getTime()).not.toBe(date.getTime())
+      // UTC 환경(CI)에서는 오프셋이 0일 수 있으므로 절대값 차이로 검증
+      expect(Math.abs(result.getTime() - date.getTime())).toBe(Math.abs(timezoneOffset))
     })
   })
 
