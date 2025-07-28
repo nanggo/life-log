@@ -147,9 +147,9 @@ describe('Layout 컴포넌트', () => {
   })
 
   it('헤더 스타일이 올바르게 적용된다', () => {
-    render(Layout, { data: mockData })
+    const { container } = render(Layout, { data: mockData })
 
-    const header = document.querySelector('header')
+    const header = container.querySelector('header')
     expect(header).toHaveClass(
       'flex',
       'items-center',
@@ -177,26 +177,26 @@ describe('Layout 컴포넌트', () => {
   })
 
   it('다크모드 아이콘이 조건부로 표시된다', () => {
-    render(Layout, { data: mockData })
+    const { container } = render(Layout, { data: mockData })
 
     // MoonIcon (다크모드에서 보이는 아이콘)
-    const moonIcon = document.querySelector('.dark\\:block')
+    const moonIcon = container.querySelector('.dark\\:block')
     expect(moonIcon).toBeInTheDocument()
 
     // SunIcon (라이트모드에서 보이는 아이콘)
-    const sunIcon = document.querySelector('.dark\\:hidden')
+    const sunIcon = container.querySelector('.dark\\:hidden')
     expect(sunIcon).toBeInTheDocument()
   })
 
   it('레이아웃 구조가 올바르게 형성된다', () => {
-    render(Layout, { data: mockData })
+    const { container: renderedContainer } = render(Layout, { data: mockData })
 
     // 최상위 컨테이너
-    const container = document.querySelector('.flex.flex-col.min-h-screen')
+    const container = renderedContainer.querySelector('.flex.flex-col.min-h-screen')
     expect(container).toBeInTheDocument()
 
     // 콘텐츠 영역
-    const contentArea = document.querySelector('.flex.flex-col.flex-grow.w-full.px-4.py-2')
+    const contentArea = renderedContainer.querySelector('.flex.flex-col.flex-grow.w-full.px-4.py-2')
     expect(contentArea).toBeInTheDocument()
   })
 

@@ -25,16 +25,16 @@ describe('PostMeta 컴포넌트', () => {
   })
 
   it('태그가 없을 때 아무것도 렌더링하지 않는다', () => {
-    render(PostMeta, { tags: [] })
+    const { container } = render(PostMeta, { tags: [] })
 
-    const tagContainer = document.querySelector('.flex.flex-wrap.gap-2.mt-2')
+    const tagContainer = container.querySelector('.flex.flex-wrap.gap-2.mt-2')
     expect(tagContainer).not.toBeInTheDocument()
   })
 
   it('undefined 태그일 때 아무것도 렌더링하지 않는다', () => {
-    render(PostMeta, { tags: undefined as any })
+    const { container } = render(PostMeta, { tags: undefined as any })
 
-    const tagContainer = document.querySelector('.flex.flex-wrap.gap-2.mt-2')
+    const tagContainer = container.querySelector('.flex.flex-wrap.gap-2.mt-2')
     expect(tagContainer).not.toBeInTheDocument()
   })
 

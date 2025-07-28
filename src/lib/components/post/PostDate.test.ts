@@ -53,12 +53,12 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('decorate가 true일 때 데코레이션 스타일이 적용된다', () => {
-    render(PostDate, { post: mockPost, decorate: true, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: true, class: '' })
 
-    const container = document.querySelector('.relative.z-10.order-first.mb-3')
-    expect(container).toHaveClass('pl-3.5')
+    const containerElement = container.querySelector('.relative.z-10.order-first.mb-3')
+    expect(containerElement).toHaveClass('pl-3.5')
 
-    const decoration = document.querySelector('.absolute.inset-y-0.left-0')
+    const decoration = container.querySelector('.absolute.inset-y-0.left-0')
     expect(decoration).toBeInTheDocument()
 
     const decorationBar = decoration?.querySelector('.h-full.w-0\\.5.rounded-full')
@@ -66,46 +66,56 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('decorate가 false일 때 데코레이션이 표시되지 않는다', () => {
-    render(PostDate, { post: mockPost, decorate: false, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: false, class: '' })
 
-    const container = document.querySelector('.relative.z-10.order-first.mb-3')
-    expect(container).not.toHaveClass('pl-3.5')
+    const containerElement = container.querySelector('.relative.z-10.order-first.mb-3')
+    expect(containerElement).not.toHaveClass('pl-3.5')
 
-    const decoration = document.querySelector('.absolute.inset-y-0.left-0')
+    const decoration = container.querySelector('.absolute.inset-y-0.left-0')
     expect(decoration).not.toBeInTheDocument()
   })
 
   it('collapsed가 false일 때 세로 레이아웃으로 표시된다', () => {
-    render(PostDate, { post: mockPost, decorate: false, collapsed: false, class: '' })
+    const { container } = render(PostDate, {
+      post: mockPost,
+      decorate: false,
+      collapsed: false,
+      class: ''
+    })
 
     const innerFlexContainer = screen.getByText(mockPost.readingTime).parentElement // 두 번째 .flex 요소 (내부 flex 컨테이너)
     expect(innerFlexContainer).toHaveClass('flex-col')
 
     // 구분자(•)가 표시되지 않아야 함
-    expect(document.querySelector('.mx-1')).not.toBeInTheDocument()
+    expect(container.querySelector('.mx-1')).not.toBeInTheDocument()
   })
 
   it('collapsed가 true일 때 가로 레이아웃으로 표시된다', () => {
-    render(PostDate, { post: mockPost, decorate: false, collapsed: true, class: '' })
+    const { container } = render(PostDate, {
+      post: mockPost,
+      decorate: false,
+      collapsed: true,
+      class: ''
+    })
 
-    const flexContainer = document.querySelector('.flex')
+    const flexContainer = container.querySelector('.flex')
     expect(flexContainer).not.toHaveClass('flex-col')
 
     // 구분자(•)가 표시되어야 함
-    const separator = document.querySelector('.mx-1')
+    const separator = container.querySelector('.mx-1')
     expect(separator).toBeInTheDocument()
     expect(separator).toHaveTextContent('•')
   })
 
   it('커스텀 클래스가 올바르게 적용된다', () => {
-    render(PostDate, {
+    const { container } = render(PostDate, {
       post: mockPost,
       decorate: false,
       class: 'custom-class another-class'
     })
 
-    const container = document.querySelector('.relative.z-10.order-first.mb-3')
-    expect(container).toHaveClass('custom-class', 'another-class')
+    const containerElement = container.querySelector('.relative.z-10.order-first.mb-3')
+    expect(containerElement).toHaveClass('custom-class', 'another-class')
   })
 
   it('빈 날짜 문자열이 주어질 때 현재 날짜를 사용한다', () => {
@@ -175,10 +185,10 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('기본 텍스트 색상 클래스가 적용된다', () => {
-    render(PostDate, { post: mockPost, decorate: false, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: false, class: '' })
 
-    const container = document.querySelector('.relative.z-10.order-first.mb-3')
-    expect(container).toHaveClass('text-zinc-500', 'dark:text-zinc-400')
+    const containerElement = container.querySelector('.relative.z-10.order-first.mb-3')
+    expect(containerElement).toHaveClass('text-zinc-500', 'dark:text-zinc-400')
   })
 
   it('읽기 시간이 올바르게 표시된다', () => {
@@ -193,9 +203,9 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('날짜와 읽기 시간이 flex 컨테이너 안에 있다', () => {
-    render(PostDate, { post: mockPost, decorate: false, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: false, class: '' })
 
-    const flexContainer = document.querySelector('.flex')
+    const flexContainer = container.querySelector('.flex')
     expect(flexContainer).toBeInTheDocument()
 
     const timeElement = screen.getByText('January 15, 2024')
@@ -206,9 +216,9 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('데코레이션 바가 올바른 aria-hidden 속성을 가진다', () => {
-    render(PostDate, { post: mockPost, decorate: true, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: true, class: '' })
 
-    const decorationContainer = document.querySelector('[aria-hidden="true"]')
+    const decorationContainer = container.querySelector('[aria-hidden="true"]')
     expect(decorationContainer).toBeInTheDocument()
     expect(decorationContainer).toHaveClass(
       'absolute',
@@ -221,9 +231,9 @@ describe('PostDate 컴포넌트', () => {
   })
 
   it('time 엘리먼트가 올바른 시맨틱 구조를 가진다', () => {
-    render(PostDate, { post: mockPost, decorate: false, class: '' })
+    const { container } = render(PostDate, { post: mockPost, decorate: false, class: '' })
 
-    const timeElement = document.querySelector('time')
+    const timeElement = container.querySelector('time')
     expect(timeElement).toBeInTheDocument()
     expect(timeElement).toHaveAttribute('datetime', '2024-01-15')
   })
