@@ -10,6 +10,8 @@ describe('날짜 유틸리티 함수', () => {
     // 결정적 테스트를 위한 시간 고정
     vi.useFakeTimers()
     vi.setSystemTime(new Date('2023-06-15T12:00:00.000Z'))
+    // 타임존 오프셋을 고정 (KST: UTC+9, 즉 -540분)
+    vi.spyOn(Date.prototype, 'getTimezoneOffset').mockReturnValue(-540)
   })
 
   afterEach(() => {
@@ -22,19 +24,19 @@ describe('날짜 유틸리티 함수', () => {
       const originalDate = new Date('2023-01-01T00:00:00.000Z')
       const offsetDate = addTimezoneOffset(originalDate)
 
-      // 차이는 타임존 오프셋(밀리초)과 같아야 함
-      const expectedOffset = originalDate.getTimezoneOffset() * 60 * 1000
+      // KST(-540분) 타임존에서 예상되는 오프셋: -540 * 60 * 1000 = -32400000ms
+      const expectedOffset = -540 * 60 * 1000
       expect(offsetDate.getTime() - originalDate.getTime()).toBe(expectedOffset)
     })
 
     it('다른 타임존을 처리해야 함', () => {
       const date = new Date('2023-06-01T12:00:00.000Z')
       const result = addTimezoneOffset(date)
-      const timezoneOffset = date.getTimezoneOffset() * 60 * 1000
 
       expect(result).toBeInstanceOf(Date)
-      // 고정된 시간에서 결정적 테스트
-      expect(result.getTime() - date.getTime()).toBe(timezoneOffset)
+      // KST 고정 타임존에서 결정적 테스트
+      const expectedOffset = -540 * 60 * 1000
+      expect(result.getTime() - date.getTime()).toBe(expectedOffset)
     })
   })
 
@@ -81,7 +83,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(date)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // 고정된 시간에서 예측 가능한 결과
+      // KST 타임존에서 예측 가능한 결과 (UTC+9)
       expect(result).toBe('2023-01-15')
     })
 
@@ -89,7 +91,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate('2023-01-15')
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // 고정된 시간에서 예측 가능한 결과
+      // KST 타임존에서 예측 가능한 결과
       expect(result).toBe('2023-01-15')
     })
 
@@ -116,7 +118,7 @@ describe('날짜 유틸리티 함수', () => {
       const result = formatDate(utcDate)
 
       expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
-      // 고정된 시간에서 예측 가능한 결과
+      // date-fns format은 로컬 시간 기준으로 포맷팅
       expect(result).toBe('2023-01-01')
     })
 
