@@ -59,18 +59,21 @@
     }
     img.src = src
   }
+
+  // 조건부 스타일 로직을 변수로 추출
+  $: containerStyle = height ? `height: ${height}px` : 'aspect-ratio: 16/9'
 </script>
 
 <div
   bind:this={imageElement}
   class={`relative overflow-hidden ${className}`}
-  style={height ? `height: ${height}px` : 'aspect-ratio: 16/9'}
+  style={containerStyle}
 >
   {#if !loaded && !error}
     <!-- Placeholder while loading -->
     <div
       class="w-full h-full bg-gray-200 animate-pulse flex items-center justify-center"
-      style={height ? `height: ${height}px` : 'aspect-ratio: 16/9'}
+      style={containerStyle}
     >
       <svg class="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path
@@ -85,7 +88,7 @@
     <!-- Error placeholder -->
     <div
       class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-500"
-      style={height ? `height: ${height}px` : 'aspect-ratio: 16/9'}
+      style={containerStyle}
     >
       <span>{alt} 이미지를 불러올 수 없습니다</span>
     </div>

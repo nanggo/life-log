@@ -21,7 +21,11 @@ export async function GET({ setHeaders }) {
   const postsHash = posts.map((post) => `${post.slug}-${post.date}`).join('|')
   const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
 
-  const latestPostDate = posts[0]?.date || new Date()
+  // 모든 포스트에서 가장 최신 날짜 찾기 (updated 또는 date 중 최신)
+  const latestPostDate = posts.reduce((latest, post) => {
+    const postDate = new Date(post.updated || post.date)
+    return postDate > latest ? postDate : latest
+  }, new Date(0))
 
   setHeaders({
     'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가

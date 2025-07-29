@@ -31,8 +31,11 @@ export default defineConfig({
             if (id.includes('date-fns') || id.includes('clsx')) {
               return 'utils-vendor'
             }
+            // 모든 기타 node_modules 패키지를 위한 기본 vendor 청크
             return 'vendor'
           }
+          // 앱 코드는 기본 청킹 로직 사용
+          return undefined
         }
       }
     },
