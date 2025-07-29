@@ -22,15 +22,20 @@ export default defineConfig(({ mode }) => ({
         manualChunks: (id) => {
           // node_modules의 vendor 청크 분리
           if (id.includes('/node_modules/')) {
-            if (id.includes('@sveltejs')) {
-              return 'svelte-vendor'
+            // 데이터 주도적 청크 매핑
+            const vendorMap = {
+              'svelte-vendor': ['@sveltejs'],
+              'ui-vendor': ['lucide', 'heroicons'],
+              'utils-vendor': ['date-fns', 'clsx']
             }
-            if (id.includes('lucide') || id.includes('heroicons')) {
-              return 'ui-vendor'
+
+            // 각 청크 타입별로 패키지 매칭 확인
+            for (const [chunkName, packages] of Object.entries(vendorMap)) {
+              if (packages.some((pkg) => id.includes(pkg))) {
+                return chunkName
+              }
             }
-            if (id.includes('date-fns') || id.includes('clsx')) {
-              return 'utils-vendor'
-            }
+
             // 모든 기타 node_modules 패키지를 위한 기본 vendor 청크
             return 'vendor'
           }
