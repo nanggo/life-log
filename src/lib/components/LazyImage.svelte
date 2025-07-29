@@ -1,18 +1,20 @@
-<script>
-  import { onMount } from 'svelte'
+<script lang="ts">
+  import { onMount, onDestroy } from 'svelte'
   import { fade } from 'svelte/transition'
 
-  export let src
-  export let alt
-  export let width = 800
-  export let height = undefined
-  export let className = ''
+  export let src: string
+  export let alt: string
+  export let width: number = 800
+  export let height: number | undefined = undefined
+  export let className: string = ''
 
-  let imageElement
-  let loaded = false
-  let error = false
+  let imageElement: HTMLDivElement
+  let loaded: boolean = false
+  let error: boolean = false
+  let mounted: boolean = false
 
   onMount(() => {
+    mounted = true
     if (imageElement && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -36,13 +38,21 @@
     }
   })
 
+  onDestroy(() => {
+    mounted = false
+  })
+
   function loadImage() {
     const img = new Image()
     img.onload = () => {
-      loaded = true
+      if (mounted) {
+        loaded = true
+      }
     }
     img.onerror = () => {
-      error = true
+      if (mounted) {
+        error = true
+      }
     }
     img.src = src
   }
