@@ -2,10 +2,9 @@
 // It is OK to delete this file if you don't want an RSS feed.
 // credit: https://scottspence.com/posts/make-an-rss-feed-with-sveltekit#add-posts-for-the-rss-feed
 
-import { createHash } from 'crypto'
-
 import { posts } from '$lib/data/posts'
 import { name, website } from '$lib/info'
+import { generateCacheHeaders } from '$lib/utils/cache'
 
 export const prerender = true
 
@@ -17,21 +16,13 @@ const postsUrl = `${website}/post`
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
-  // 모든 포스트의 slug와 날짜를 조합한 SHA-1 해시 기반 ETag 생성
-  const postsHash = posts.map((post) => `${post.slug}-${post.updated || post.date}`).join('|')
-  const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
-
-  // 모든 포스트에서 가장 최신 날짜 찾기 (updated 또는 date 중 최신)
-  const latestPostDate = posts.reduce((latest, post) => {
-    const postDate = new Date(post.updated || post.date)
-    return postDate > latest ? postDate : latest
-  }, new Date(0))
+  const { etag, lastModified } = generateCacheHeaders(posts)
 
   setHeaders({
     'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
     'Content-Type': 'application/xml',
     ETag: etag,
-    'Last-Modified': new Date(latestPostDate).toUTCString()
+    'Last-Modified': lastModified
   })
 
   const xml = `<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">

@@ -2,12 +2,11 @@
 // It's helpful for SEO but does require you to keep it updated to reflect the routes of your website.
 // It is OK to delete this file if you'd rather not bother with it.
 
-import { createHash } from 'crypto'
-
 import { parse } from 'node-html-parser'
 
 import { posts } from '$lib/data/posts'
 import { website } from '$lib/info'
+import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
@@ -67,20 +66,13 @@ const extractFirstImage = (post) => {
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
-  // 포스트 변경사항 기반 ETag 생성
-  const postsHash = posts.map((p) => `${p.slug}-${p.updated || p.date}`).join('|')
-  const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
-  // 모든 포스트에서 가장 최신 날짜 찾기 (updated 또는 date 중 최신)
-  const latestDate = posts.reduce((latest, post) => {
-    const postDate = new Date(post.updated || post.date)
-    return postDate > latest ? postDate : latest
-  }, new Date(0))
+  const { etag, lastModified } = generateCacheHeaders(posts)
 
   setHeaders({
     'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
     'Content-Type': 'application/xml',
     ETag: etag,
-    'Last-Modified': new Date(latestDate).toUTCString()
+    'Last-Modified': lastModified
   })
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
