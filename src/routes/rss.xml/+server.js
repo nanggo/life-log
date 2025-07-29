@@ -15,9 +15,11 @@ const postsUrl = `${website}/posts`
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
-  // 최신 포스트 날짜 기반 ETag 생성
+  // 모든 포스트의 slug와 날짜를 조합한 해시 기반 ETag 생성
+  const postsHash = posts.map((post) => `${post.slug}-${post.date}`).join('|')
+  const etag = `"rss-${Buffer.from(postsHash).toString('base64').slice(0, 16)}"`
+
   const latestPostDate = posts[0]?.date || new Date()
-  const etag = `"rss-${Buffer.from(latestPostDate.toString()).toString('base64')}"`
 
   setHeaders({
     'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가

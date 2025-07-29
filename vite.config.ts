@@ -1,19 +1,17 @@
 import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
-import compression from 'vite-plugin-compression'
+import compression from 'vite-plugin-compression2'
 
 export default defineConfig({
   plugins: [
     sveltekit(),
     compression({
       algorithm: 'gzip',
-      ext: '.gz',
-      deleteOriginFile: false
+      deleteOriginalAssets: false
     }),
     compression({
       algorithm: 'brotliCompress',
-      ext: '.br',
-      deleteOriginFile: false
+      deleteOriginalAssets: false
     })
   ],
   // allows vite access to ./posts

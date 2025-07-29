@@ -1,5 +1,6 @@
 <script>
   import { onMount } from 'svelte'
+  import { fade } from 'svelte/transition'
 
   export let src
   export let alt
@@ -84,8 +85,8 @@
       {width}
       {height}
       {loading}
-      class="w-full h-full object-cover transition-opacity duration-300"
-      style="opacity: 1"
+      class="w-full h-full object-cover"
+      transition:fade={{ duration: 300 }}
     />
   {/if}
 </div>
