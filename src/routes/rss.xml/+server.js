@@ -5,12 +5,15 @@
 import { posts } from '$lib/data/posts'
 import { name, website } from '$lib/info'
 import { generateCacheHeaders } from '$lib/utils/cache'
+import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
 // update this to something more appropriate for your website
 const websiteDescription = `${name}'s blog`
-const rssPostsUrl = `${website}/post`
+
+// Sitemap과 일관된 URL 생성 방식 사용
+const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 
 /**
  * @type {import('@sveltejs/kit').RequestHandler}
@@ -36,10 +39,10 @@ export async function GET({ setHeaders }) {
             (post) =>
               `
               <item>
-                <guid>${rssPostsUrl}/${post.slug}</guid>
+                <guid>${getPostUrl(post.slug)}</guid>
                 <title>${post.title}</title>
                 <description>${post.preview.text}</description>
-                <link>${rssPostsUrl}/${post.slug}</link>
+                <link>${getPostUrl(post.slug)}</link>
                 <pubDate>${new Date(post.date).toUTCString()}</pubDate>
             </item>
           `
