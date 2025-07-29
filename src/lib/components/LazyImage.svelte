@@ -74,7 +74,7 @@
       class="w-full h-full bg-gray-100 flex items-center justify-center text-gray-500"
       style={height ? `height: ${height}px` : 'aspect-ratio: 16/9'}
     >
-      <span>이미지를 불러올 수 없습니다</span>
+      <span>{alt} 이미지를 불러올 수 없습니다</span>
     </div>
   {:else if loaded}
     <!-- Actual image -->
