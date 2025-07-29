@@ -18,7 +18,7 @@ const postsUrl = `${website}/post`
  */
 export async function GET({ setHeaders }) {
   // 모든 포스트의 slug와 날짜를 조합한 SHA-1 해시 기반 ETag 생성
-  const postsHash = posts.map((post) => `${post.slug}-${post.date}`).join('|')
+  const postsHash = posts.map((post) => `${post.slug}-${post.updated || post.date}`).join('|')
   const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
 
   // 모든 포스트에서 가장 최신 날짜 찾기 (updated 또는 date 중 최신)
