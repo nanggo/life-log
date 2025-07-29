@@ -20,6 +20,6 @@ export function generateCacheHeaders(posts) {
 
   return {
     etag,
-    lastModified: new Date(latestDate).toUTCString()
+    lastModified: latestDate.toUTCString()
   }
 }
