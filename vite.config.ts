@@ -6,11 +6,7 @@ export default defineConfig({
   plugins: [
     sveltekit(),
     compression({
-      algorithm: 'gzip',
-      deleteOriginalAssets: false
-    }),
-    compression({
-      algorithm: 'brotliCompress',
+      algorithm: ['gzip', 'brotliCompress'],
       deleteOriginalAssets: false
     })
   ],
