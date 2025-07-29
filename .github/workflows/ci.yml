@@ -71,6 +71,30 @@ jobs:
       - name: 빌드 테스트
         run: pnpm build
 
+      - name: 성능 메트릭 측정
+        run: |
+          echo "📊 빌드 결과 분석"
+          
+          # 번들 크기 분석
+          du -sh .svelte-kit/output/client/ || echo "클라이언트 번들 분석 실패"
+          
+          # 주요 청크 크기 확인
+          if [ -d ".svelte-kit/output/client/_app/immutable/chunks" ]; then
+            echo "🔍 주요 청크 크기:"
+            ls -lah .svelte-kit/output/client/_app/immutable/chunks/ | head -10
+          fi
+          
+          # 압축 파일 확인
+          if [ -f ".svelte-kit/output/client/_app/immutable/chunks/svelte-vendor.*.js.gz" ]; then
+            echo "✅ Gzip 압축 파일 생성됨"
+          fi
+          
+          if [ -f ".svelte-kit/output/client/_app/immutable/chunks/svelte-vendor.*.js.br" ]; then
+            echo "✅ Brotli 압축 파일 생성됨"
+          fi
+          
+          echo "🎯 성능 최적화 확인 완료"
+
   comment-coverage:
     name: PR에 커버리지 결과 코멘트
     needs: test

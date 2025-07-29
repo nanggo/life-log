@@ -4,20 +4,28 @@
 
 import { posts } from '$lib/data/posts'
 import { name, website } from '$lib/info'
+import { generateCacheHeaders } from '$lib/utils/cache'
+import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
 // update this to something more appropriate for your website
 const websiteDescription = `${name}'s blog`
-const postsUrl = `${website}/posts`
+
+// Sitemap과 일관된 URL 생성 방식 사용
+const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 
 /**
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
+  const { etag, lastModified } = generateCacheHeaders(posts)
+
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=600`,
-    'Content-Type': 'application/xml'
+    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Content-Type': 'application/xml',
+    ETag: etag,
+    'Last-Modified': lastModified
   })
 
   const xml = `<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
@@ -31,10 +39,10 @@ export async function GET({ setHeaders }) {
             (post) =>
               `
               <item>
-                <guid>${postsUrl}/${post.slug}</guid>
+                <guid>${getPostUrl(post.slug)}</guid>
                 <title>${post.title}</title>
                 <description>${post.preview.text}</description>
-                <link>${postsUrl}/${post.slug}</link>
+                <link>${getPostUrl(post.slug)}</link>
                 <pubDate>${new Date(post.date).toUTCString()}</pubDate>
             </item>
           `

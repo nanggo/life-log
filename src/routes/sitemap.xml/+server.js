@@ -6,6 +6,7 @@ import { parse } from 'node-html-parser'
 
 import { posts } from '$lib/data/posts'
 import { website } from '$lib/info'
+import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
@@ -65,9 +66,13 @@ const extractFirstImage = (post) => {
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
+  const { etag, lastModified } = generateCacheHeaders(posts)
+
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=600`,
-    'Content-Type': 'application/xml'
+    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Content-Type': 'application/xml',
+    ETag: etag,
+    'Last-Modified': lastModified
   })
 
   const xml = `<?xml version="1.0" encoding="UTF-8" ?>
