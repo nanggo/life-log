@@ -35,6 +35,9 @@
     } else {
       // Fallback for browsers without IntersectionObserver
       loadImage()
+      return () => {
+        // No cleanup needed for fallback
+      }
     }
   })
 
