@@ -18,8 +18,7 @@
     if (imageElement && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
-          const entry = entries[0]
-          if (entry.isIntersecting) {
+          if (entries[0].isIntersecting) {
             loadImage()
             observer.disconnect()
           }

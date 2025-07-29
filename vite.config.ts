@@ -2,6 +2,13 @@ import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression2'
 
+// 데이터 주도적 vendor 청크 매핑 (성능 최적화를 위해 함수 외부에 정의)
+const vendorMap = {
+  'svelte-vendor': ['@sveltejs'],
+  'ui-vendor': ['lucide', 'heroicons'],
+  'utils-vendor': ['date-fns', 'clsx']
+}
+
 export default defineConfig(({ mode }) => ({
   plugins: [
     sveltekit(),
@@ -22,13 +29,6 @@ export default defineConfig(({ mode }) => ({
         manualChunks: (id) => {
           // node_modules의 vendor 청크 분리
           if (id.includes('/node_modules/')) {
-            // 데이터 주도적 청크 매핑
-            const vendorMap = {
-              'svelte-vendor': ['@sveltejs'],
-              'ui-vendor': ['lucide', 'heroicons'],
-              'utils-vendor': ['date-fns', 'clsx']
-            }
-
             // 각 청크 타입별로 패키지 매칭 확인
             for (const [chunkName, packages] of Object.entries(vendorMap)) {
               if (packages.some((pkg) => id.includes(pkg))) {
