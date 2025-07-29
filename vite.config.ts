@@ -21,7 +21,7 @@ export default defineConfig({
       output: {
         manualChunks: (id) => {
           // node_modules의 vendor 청크 분리
-          if (id.includes('node_modules')) {
+          if (id.includes('/node_modules/')) {
             if (id.includes('@sveltejs')) {
               return 'svelte-vendor'
             }
