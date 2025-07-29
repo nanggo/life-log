@@ -18,12 +18,11 @@
     if (imageElement && 'IntersectionObserver' in window) {
       const observer = new IntersectionObserver(
         (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              loadImage()
-              observer.disconnect()
-            }
-          })
+          const entry = entries[0]
+          if (entry.isIntersecting) {
+            loadImage()
+            observer.disconnect()
+          }
         },
         { threshold: 0.1, rootMargin: '50px' }
       )

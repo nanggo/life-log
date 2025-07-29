@@ -10,7 +10,7 @@ export const prerender = true
 
 // update this to something more appropriate for your website
 const websiteDescription = `${name}'s blog`
-const postsUrl = `${website}/post`
+const rssPostsUrl = `${website}/post`
 
 /**
  * @type {import('@sveltejs/kit').RequestHandler}
@@ -36,10 +36,10 @@ export async function GET({ setHeaders }) {
             (post) =>
               `
               <item>
-                <guid>${postsUrl}/${post.slug}</guid>
+                <guid>${rssPostsUrl}/${post.slug}</guid>
                 <title>${post.title}</title>
                 <description>${post.preview.text}</description>
-                <link>${postsUrl}/${post.slug}</link>
+                <link>${rssPostsUrl}/${post.slug}</link>
                 <pubDate>${new Date(post.date).toUTCString()}</pubDate>
             </item>
           `
