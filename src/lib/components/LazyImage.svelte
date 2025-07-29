@@ -51,7 +51,7 @@
 <div
   bind:this={imageElement}
   class={`relative overflow-hidden ${className}`}
-  style={height ? `height: ${height}px` : ''}
+  style={height ? `height: ${height}px` : 'aspect-ratio: 16/9'}
 >
   {#if !loaded && !error}
     <!-- Placeholder while loading -->
