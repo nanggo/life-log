@@ -2,6 +2,8 @@
 // It is OK to delete this file if you don't want an RSS feed.
 // credit: https://scottspence.com/posts/make-an-rss-feed-with-sveltekit#add-posts-for-the-rss-feed
 
+import { createHash } from 'crypto'
+
 import { posts } from '$lib/data/posts'
 import { name, website } from '$lib/info'
 
@@ -15,9 +17,9 @@ const postsUrl = `${website}/posts`
  * @type {import('@sveltejs/kit').RequestHandler}
  */
 export async function GET({ setHeaders }) {
-  // 모든 포스트의 slug와 날짜를 조합한 해시 기반 ETag 생성
+  // 모든 포스트의 slug와 날짜를 조합한 SHA-1 해시 기반 ETag 생성
   const postsHash = posts.map((post) => `${post.slug}-${post.date}`).join('|')
-  const etag = `"rss-${Buffer.from(postsHash).toString('base64').slice(0, 16)}"`
+  const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
 
   const latestPostDate = posts[0]?.date || new Date()
 

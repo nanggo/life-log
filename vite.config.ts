@@ -43,7 +43,7 @@ export default defineConfig({
     // CSS 코드 분할
     cssCodeSplit: true,
     // 소스맵 최적화 (프로덕션에서는 hidden)
-    sourcemap: process.env.NODE_ENV === 'development',
+    sourcemap: process.env.NODE_ENV === 'development' ? true : 'hidden',
     // 압축 최적화
     minify: 'esbuild',
     // 청크 크기 경고 임계값 증가
