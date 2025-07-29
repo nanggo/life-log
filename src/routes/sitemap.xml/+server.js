@@ -2,6 +2,8 @@
 // It's helpful for SEO but does require you to keep it updated to reflect the routes of your website.
 // It is OK to delete this file if you'd rather not bother with it.
 
+import { createHash } from 'crypto'
+
 import { parse } from 'node-html-parser'
 
 import { posts } from '$lib/data/posts'
@@ -66,8 +68,8 @@ const extractFirstImage = (post) => {
  */
 export async function GET({ setHeaders }) {
   // 포스트 변경사항 기반 ETag 생성
-  const postsHash = posts.map((p) => `${p.slug}-${p.updated || p.date}`).join('')
-  const etag = `"sitemap-${Buffer.from(postsHash).toString('base64').slice(0, 16)}"`
+  const postsHash = posts.map((p) => `${p.slug}-${p.updated || p.date}`).join('|')
+  const etag = `"${createHash('sha1').update(postsHash).digest('base64')}"`
   const latestDate = posts[0]?.updated || posts[0]?.date || new Date()
 
   setHeaders({

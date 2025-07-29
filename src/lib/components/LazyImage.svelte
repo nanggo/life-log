@@ -7,7 +7,6 @@
   export let width = 800
   export let height = undefined
   export let className = ''
-  export let loading = 'lazy'
 
   let imageElement
   let loaded = false
@@ -84,7 +83,6 @@
       {alt}
       {width}
       {height}
-      {loading}
       class="w-full h-full object-cover"
       transition:fade={{ duration: 300 }}
     />

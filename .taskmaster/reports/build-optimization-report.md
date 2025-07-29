@@ -24,7 +24,7 @@ Generated on: 2025-07-28
 
 - **정적 리소스**: 1년 캐시 (immutable assets)
 - **RSS/Sitemap**: 1시간 캐시 + ETag/Last-Modified 헤더
-- **이미지 API**: 1년 캐시 + immutable 설정
+- **이미지**: 1년 캐시
 
 ### 4. 빌드 성능
 
