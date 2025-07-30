@@ -75,14 +75,20 @@
         {@const elementType = getTagElementType(clickable, hasClickHandler)}
         {@const elementProps = getTagProps(tag, clickable, hasClickHandler)}
 
-        <svelte:element
-          this={elementType}
-          {...elementProps}
-          role={elementType === 'span' && hasClickHandler ? 'button' : undefined}
-          on:click={hasClickHandler && handleTagClick ? () => handleTagClick(tag) : undefined}
-        >
-          #{tag}
-        </svelte:element>
+        {#if hasClickHandler && handleTagClick}
+          <svelte:element
+            this={elementType}
+            {...elementProps}
+            role={elementType === 'span' ? 'button' : undefined}
+            on:click={() => handleTagClick(tag)}
+          >
+            #{tag}
+          </svelte:element>
+        {:else}
+          <svelte:element this={elementType} {...elementProps}>
+            #{tag}
+          </svelte:element>
+        {/if}
       {/each}
     </div>
   </div>

@@ -38,7 +38,7 @@
   })
 
   // 잘못된 태그 파라미터 처리 - reactive statement로 이동하여 클라이언트 사이드 네비게이션에서도 작동
-  $: if (browser && ((rawSelectedTag && !selectedTag) || rawSelectedTag === '')) {
+  $: if (browser && rawSelectedTag && (!selectedTag || rawSelectedTag === '')) {
     // 존재하지 않는 태그나 빈 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
     goto('/posts', { replaceState: true })
   }
