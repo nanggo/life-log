@@ -16,8 +16,9 @@
   // layout 데이터에서 전체 포스트와 태그 가져오기
   $: ({ allPosts, allTags } = data)
 
-  // URL에서 태그 파라미터 읽기 (브라우저에서만)
-  $: selectedTag = browser ? $page.url.searchParams.get('tag') : null
+  // URL에서 태그 파라미터 읽기 및 유효성 검사 (브라우저에서만)
+  $: rawSelectedTag = browser ? $page.url.searchParams.get('tag') : null
+  $: selectedTag = rawSelectedTag && allTags.includes(rawSelectedTag) ? rawSelectedTag : null
 
   // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
   $: filteredPosts =
@@ -31,6 +32,12 @@
   onMount(() => {
     // 컴포넌트가 마운트되면 하이드레이션 완료로 표시
     isHydrated = true
+
+    // 잘못된 태그 파라미터가 있는 경우 URL 정리
+    if (rawSelectedTag && !selectedTag) {
+      // 존재하지 않는 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
+      goto('/posts', { replaceState: true })
+    }
   })
 
   $: showContent = !selectedTag || (browser && isHydrated)
