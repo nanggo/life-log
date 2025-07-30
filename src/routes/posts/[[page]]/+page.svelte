@@ -11,13 +11,17 @@
 
   export let data: PageData
 
+  // layout 데이터에서 전체 포스트와 태그 가져오기
+  $: ({ allPosts, allTags } = data)
+
   // URL에서 태그 파라미터 읽기 (브라우저에서만)
   $: selectedTag = browser ? $page.url.searchParams.get('tag') : null
 
-  // 클라이언트 사이드 필터링
-  $: filteredPosts = selectedTag
-    ? data.allPosts.filter((post: Post) => post.tags.includes(selectedTag))
-    : data.allPosts
+  // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
+  $: filteredPosts =
+    browser && selectedTag
+      ? allPosts.filter((post: Post) => post.tags.includes(selectedTag))
+      : allPosts
 
   // 클라이언트 사이드 페이지네이션
   const postsPerPage = data.limit
@@ -80,9 +84,14 @@
     <p class="mt-6">{detail}</p>
   </header>
 
-  {#if data.allTags && data.allTags.length > 0}
+  {#if allTags && allTags.length > 0}
     <div class="mt-6">
-      <TagList tags={data.allTags} clickable={true} {selectedTag} onTagClick={handleTagClick} />
+      <TagList
+        tags={allTags}
+        clickable={true}
+        selectedTag={browser ? selectedTag : null}
+        onTagClick={handleTagClick}
+      />
     </div>
   {/if}
 

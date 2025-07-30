@@ -37,14 +37,6 @@
   const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
   const unselectedTagClass: string =
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
-
-  // 태그 클릭 핸들러
-  const handleTagClick = (tag: string, event: Event) => {
-    if (onTagClick) {
-      event.preventDefault()
-      onTagClick(tag)
-    }
-  }
 </script>
 
 {#if tags && tags.length > 0}
@@ -54,7 +46,7 @@
         {#if onTagClick && clickable}
           <button
             type="button"
-            on:click={(event) => handleTagClick(tag, event)}
+            on:click={() => onTagClick(tag)}
             class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
             tag
               ? selectedTagClass
