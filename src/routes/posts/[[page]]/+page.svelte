@@ -17,8 +17,8 @@
   // layout 데이터에서 전체 포스트와 태그 가져오기
   $: ({ allPosts, allTags } = data)
 
-  // 성능 최적화: Set을 사용한 O(1) 태그 검증
-  const allTagsSet = new Set(allTags)
+  // 성능 최적화: Set을 사용한 O(1) 태그 검증 (reactive)
+  $: allTagsSet = new Set(allTags)
 
   // URL에서 태그 파라미터 읽기 및 유효성 검사 (브라우저에서만)
   $: rawSelectedTag = browser ? $page.url.searchParams.get('tag') : null

@@ -43,7 +43,7 @@
 
   // 태그 엘리먼트 타입 결정
   const getTagElementType = (clickable: boolean, hasClickHandler: boolean): string => {
-    if (hasClickHandler && clickable) return 'button'
+    if (hasClickHandler) return 'button'
     if (clickable) return 'a'
     return 'span'
   }
@@ -55,7 +55,7 @@
       'aria-current': (selectedTag === tag ? 'page' : undefined) as 'page' | undefined
     }
 
-    if (hasClickHandler && clickable) {
+    if (hasClickHandler) {
       return { ...baseProps, type: 'button' }
     }
 
