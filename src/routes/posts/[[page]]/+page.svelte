@@ -23,6 +23,10 @@
       ? allPosts.filter((post: Post) => post.tags.includes(selectedTag))
       : allPosts
 
+  // FOUC 방지: 브라우저에서 태그 필터가 활성화된 상태에서 아직 필터링되지 않은 경우 감지
+  $: isHydrated = browser
+  $: showContent = !selectedTag || isHydrated
+
   // 클라이언트 사이드 페이지네이션
   const postsPerPage = data.limit
   $: currentPage = data.page
@@ -95,7 +99,12 @@
     </div>
   {/if}
 
-  {#if !paginatedPosts || paginatedPosts.length === 0}
+  {#if !showContent}
+    <!-- FOUC 방지를 위한 로딩 상태 -->
+    <div class="mt-16 sm:mt-20 text-center text-zinc-600 dark:text-zinc-400">
+      <p>포스트를 불러오는 중...</p>
+    </div>
+  {:else if !paginatedPosts || paginatedPosts.length === 0}
     <div class="mt-16 sm:mt-20 text-center text-zinc-600 dark:text-zinc-400">
       {#if selectedTag}
         <p>'{selectedTag}' 태그에 해당하는 포스트가 없습니다.</p>

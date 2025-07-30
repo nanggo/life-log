@@ -55,19 +55,27 @@
           >
             #{tag}
           </button>
-        {:else}
+        {:else if clickable}
           <a
-            href={clickable ? getTagUrl(tag) : 'javascript:void(0)'}
-            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap {selectedTag ===
+            href={getTagUrl(tag)}
+            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
             tag
               ? selectedTagClass
               : unselectedTagClass}"
-            class:cursor-pointer={clickable}
-            class:cursor-default={!clickable}
             aria-current={selectedTag === tag ? 'page' : undefined}
           >
             #{tag}
           </a>
+        {:else}
+          <span
+            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-default {selectedTag ===
+            tag
+              ? selectedTagClass
+              : unselectedTagClass}"
+            aria-current={selectedTag === tag ? 'page' : undefined}
+          >
+            #{tag}
+          </span>
         {/if}
       {/each}
     </div>
