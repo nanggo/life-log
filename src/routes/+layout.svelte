@@ -294,7 +294,7 @@
         role="switch"
         aria-label="Toggle Dark Mode"
         aria-checked={isDarkMode}
-        class="w-5 h-5 sm:h-8 sm:w-8 sm:p-1"
+        class="w-11 h-11 sm:h-12 sm:w-12 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
         on:click={() => {
           isDarkMode = !isDarkMode
           localStorage.setItem('isDarkMode', isDarkMode.toString())
@@ -308,8 +308,8 @@
           }
         }}
       >
-        <MoonIcon class="hidden text-zinc-500 dark:block" />
-        <SunIcon class="block text-zinc-400 dark:hidden" />
+        <MoonIcon class="hidden text-zinc-500 dark:block w-5 h-5 sm:w-6 sm:h-6" />
+        <SunIcon class="block text-zinc-400 dark:hidden w-5 h-5 sm:w-6 sm:h-6" />
       </button>
     </header>
     <main

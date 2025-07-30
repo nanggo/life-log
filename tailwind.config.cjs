@@ -88,6 +88,10 @@ module.exports = {
           // Base
           color: 'var(--tw-prose-body)',
           lineHeight: theme('lineHeight.7'),
+          // Prevent long text from breaking mobile layout
+          wordWrap: 'break-word',
+          overflowWrap: 'break-word',
+          hyphens: 'auto',
           '> *': {
             marginTop: theme('spacing.10'),
             marginBottom: theme('spacing.10')
@@ -134,7 +138,12 @@ module.exports = {
             textDecorationColor: 'var(--tw-prose-underline)',
             transitionProperty: 'color, text-decoration-color',
             transitionDuration: theme('transitionDuration.150'),
-            transitionTimingFunction: theme('transitionTimingFunction.in-out')
+            transitionTimingFunction: theme('transitionTimingFunction.in-out'),
+            // Break long URLs on mobile
+            wordBreak: 'break-all',
+            '@screen sm': {
+              wordBreak: 'normal'
+            }
           },
           'a:hover': {
             color: 'var(--tw-prose-links-hover)',
@@ -152,12 +161,24 @@ module.exports = {
           code: {
             display: 'inline-block',
             color: 'var(--tw-prose-code)',
-            fontSize: theme('fontSize.sm')[0],
+            fontSize: theme('fontSize.xs')[0],
             fontWeight: theme('fontWeight.semibold'),
             backgroundColor: 'var(--tw-prose-code-bg)',
             borderRadius: theme('borderRadius.lg'),
-            paddingLeft: theme('spacing.1'),
-            paddingRight: theme('spacing.1')
+            paddingLeft: theme('spacing.1.5'),
+            paddingRight: theme('spacing.1.5'),
+            paddingTop: theme('spacing.1'),
+            paddingBottom: theme('spacing.1'),
+            // Long code text wrapping on mobile
+            wordBreak: 'break-all',
+            '@screen sm': {
+              fontSize: theme('fontSize.sm')[0],
+              paddingLeft: theme('spacing.1'),
+              paddingRight: theme('spacing.1'),
+              paddingTop: 0,
+              paddingBottom: 0,
+              wordBreak: 'normal'
+            }
           },
           'a code': {
             color: 'inherit'
@@ -168,10 +189,27 @@ module.exports = {
 
           // Quotes
           blockquote: {
-            paddingLeft: theme('spacing.6'),
+            paddingLeft: theme('spacing.4'),
+            paddingRight: theme('spacing.2'),
+            paddingTop: theme('spacing.2'),
+            paddingBottom: theme('spacing.2'),
             borderLeftWidth: theme('borderWidth.2'),
             borderLeftColor: 'var(--tw-prose-quote-borders)',
-            fontStyle: 'italic'
+            fontStyle: 'italic',
+            backgroundColor: 'var(--tw-prose-code-bg)',
+            borderRadius: theme('borderRadius.lg'),
+            marginLeft: theme('spacing.2'),
+            marginRight: theme('spacing.2'),
+            '@screen sm': {
+              paddingLeft: theme('spacing.6'),
+              paddingRight: 0,
+              paddingTop: 0,
+              paddingBottom: 0,
+              backgroundColor: 'transparent',
+              borderRadius: 0,
+              marginLeft: 0,
+              marginRight: 0
+            }
           },
 
           // Figures
@@ -304,7 +342,35 @@ module.exports = {
             width: '100%',
             tableLayout: 'auto',
             textAlign: 'left',
-            fontSize: theme('fontSize.sm')[0]
+            fontSize: theme('fontSize.sm')[0],
+            overflowX: 'auto',
+            display: 'block',
+            whiteSpace: 'nowrap',
+            '@screen sm': {
+              display: 'table',
+              whiteSpace: 'normal'
+            },
+            // Mobile touch scrolling optimization
+            WebkitOverflowScrolling: 'touch',
+            // Position relative for scroll hint
+            position: 'relative',
+            // Scroll hint gradient on mobile
+            '@media (max-width: 639px)': {
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: '20px',
+                background: 'linear-gradient(to left, white, transparent)',
+                '.dark &': {
+                  background: 'linear-gradient(to left, rgb(24 24 27), transparent)'
+                },
+                pointerEvents: 'none',
+                opacity: 0.8
+              }
+            }
           },
           thead: {
             borderBottomWidth: '1px',
