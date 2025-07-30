@@ -34,9 +34,17 @@
     }
   })
 
+  const baseTagClasses: string =
+    'flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap'
   const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
   const unselectedTagClass: string =
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
+
+  const getTagClasses = (tag: string, clickable: boolean): string => {
+    const colorClass = selectedTag === tag ? selectedTagClass : unselectedTagClass
+    const cursorClass = clickable ? 'cursor-pointer' : 'cursor-default'
+    return `${baseTagClasses} ${colorClass} ${cursorClass}`
+  }
 </script>
 
 {#if tags && tags.length > 0}
@@ -47,10 +55,7 @@
           <button
             type="button"
             on:click={() => onTagClick(tag)}
-            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
-            tag
-              ? selectedTagClass
-              : unselectedTagClass}"
+            class={getTagClasses(tag, true)}
             aria-current={selectedTag === tag ? 'page' : undefined}
           >
             #{tag}
@@ -58,20 +63,14 @@
         {:else if clickable}
           <a
             href={getTagUrl(tag)}
-            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
-            tag
-              ? selectedTagClass
-              : unselectedTagClass}"
+            class={getTagClasses(tag, true)}
             aria-current={selectedTag === tag ? 'page' : undefined}
           >
             #{tag}
           </a>
         {:else}
           <span
-            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-default {selectedTag ===
-            tag
-              ? selectedTagClass
-              : unselectedTagClass}"
+            class={getTagClasses(tag, false)}
             aria-current={selectedTag === tag ? 'page' : undefined}
           >
             #{tag}
