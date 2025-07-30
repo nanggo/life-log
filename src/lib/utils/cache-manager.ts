@@ -158,8 +158,6 @@ export const generateCacheKey = {
   posts: (tag?: string, page: number = 1, limit: number = 10) =>
     `posts:${tag || 'all'}:${page}:${limit}`,
 
-  allPosts: (page: number = 1, limit: number = 10) => `all-posts:${page}:${limit}`,
-
   postDetail: (slug: string) => `post:${slug}`,
 
   tagList: () => 'tags:all',
