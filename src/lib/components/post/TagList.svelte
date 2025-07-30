@@ -52,7 +52,7 @@
   const getTagProps = (tag: string, clickable: boolean, hasClickHandler: boolean) => {
     const baseProps = {
       class: getTagClasses(tag, clickable),
-      'aria-current': selectedTag === tag ? 'page' : undefined
+      'aria-current': (selectedTag === tag ? 'page' : undefined) as 'page' | undefined
     }
 
     if (hasClickHandler && clickable) {
@@ -79,7 +79,7 @@
           this={elementType}
           {...elementProps}
           role={hasClickHandler ? 'button' : undefined}
-          on:click={hasClickHandler ? () => handleTagClick(tag) : undefined}
+          on:click={hasClickHandler && handleTagClick ? () => handleTagClick(tag) : undefined}
         >
           #{tag}
         </svelte:element>

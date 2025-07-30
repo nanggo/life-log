@@ -39,8 +39,8 @@
   })
 
   // 잘못된 태그 파라미터 처리 - reactive statement로 이동하여 클라이언트 사이드 네비게이션에서도 작동
-  $: if (browser && rawSelectedTag && !selectedTag) {
-    // 존재하지 않는 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
+  $: if ((browser && rawSelectedTag && !selectedTag) || rawSelectedTag === '') {
+    // 존재하지 않는 태그나 빈 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
     goto('/posts', { replaceState: true })
   }
 
@@ -57,8 +57,8 @@
   $: paginatedPosts = filteredPosts.slice(startIndex, endIndex)
 
   // 필터링 후 현재 페이지가 유효하지 않으면 첫 페이지로 리다이렉트
-  $: if (browser && selectedTag && currentPage > 1 && currentPage > totalFilteredPages) {
-    goto(createTagUrl(selectedTag))
+  $: if (browser && currentPage > 1 && currentPage > totalFilteredPages) {
+    goto(createPageUrl(1, selectedTag), { replaceState: true })
   }
 
   // 태그 클릭 핸들러 - 유틸리티 함수 사용으로 코드 간소화
