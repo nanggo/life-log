@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { onMount } from 'svelte'
+
   import type { PageData } from './$types'
 
   import { browser } from '$app/environment'
@@ -25,12 +27,12 @@
 
   // FOUC 방지: 클라이언트 하이드레이션이 완료되고 필터링이 적용될 때까지 기다림
   let isHydrated = false
-  $: if (browser && !isHydrated) {
-    // 다음 틱에서 하이드레이션 완료로 표시하여 필터링된 콘텐츠만 보여줌
-    setTimeout(() => {
-      isHydrated = true
-    }, 0)
-  }
+
+  onMount(() => {
+    // 컴포넌트가 마운트되면 하이드레이션 완료로 표시
+    isHydrated = true
+  })
+
   $: showContent = !selectedTag || (browser && isHydrated)
 
   // 클라이언트 사이드 페이지네이션
