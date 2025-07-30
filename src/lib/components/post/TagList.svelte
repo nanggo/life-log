@@ -53,6 +53,7 @@
       {#each tags as tag}
         {#if onTagClick && clickable}
           <button
+            type="button"
             on:click={(event) => handleTagClick(tag, event)}
             class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
             tag

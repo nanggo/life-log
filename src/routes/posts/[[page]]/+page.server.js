@@ -2,9 +2,9 @@ import { error } from '@sveltejs/kit'
 
 import { allTags, posts as allPosts } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
-import { globalCacheManager, CACHE_TAGS } from '$lib/utils/cache-manager'
+import { globalCacheManager, generateCacheKey, CACHE_TAGS } from '$lib/utils/cache-manager'
 
-// 태그 없는 페이지만 prerender (태그가 있으면 SSR)
+// Statically generate all post list pages, with tag filtering handled on the client.
 export const prerender = true
 
 /** @type {import('./$types').PageServerLoad} */
@@ -13,7 +13,7 @@ export function load({ params }) {
   const limit = 10
 
   // 클라이언트 사이드 필터링을 위해 전체 포스트 메타데이터 제공
-  const cacheKey = `all-posts:${page}:${limit}`
+  const cacheKey = generateCacheKey.allPosts(page, limit)
 
   // 캐시에서 확인
   if (globalCacheManager.has(cacheKey)) {

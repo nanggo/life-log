@@ -28,6 +28,11 @@
   $: endIndex = startIndex + postsPerPage
   $: paginatedPosts = filteredPosts.slice(startIndex, endIndex)
 
+  // 필터링 후 현재 페이지가 유효하지 않으면 첫 페이지로 리다이렉트
+  $: if (browser && selectedTag && totalFilteredPages > 0 && currentPage > totalFilteredPages) {
+    goto(`/posts?tag=${encodeURIComponent(selectedTag)}`)
+  }
+
   // 태그 클릭 핸들러
   const handleTagClick = (tag: string) => {
     if (selectedTag === tag) {
