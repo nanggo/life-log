@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
+  import { generateTagClasses } from '$lib/utils/tag-styles'
+
   export let tags: string[] = []
   export let clickable: boolean = true
   export let selectedTag: string | null = null
@@ -34,16 +36,9 @@
     }
   })
 
-  const baseTagClasses: string =
-    'flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap'
-  const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
-  const unselectedTagClass: string =
-    'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
-
+  // 태그 클래스 생성을 위한 헬퍼 함수
   const getTagClasses = (tag: string, clickable: boolean): string => {
-    const colorClass = selectedTag === tag ? selectedTagClass : unselectedTagClass
-    const cursorClass = clickable ? 'cursor-pointer' : 'cursor-default'
-    return `${baseTagClasses} ${colorClass} ${cursorClass}`
+    return generateTagClasses(tag, selectedTag, clickable)
   }
 </script>
 

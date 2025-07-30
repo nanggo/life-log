@@ -16,9 +16,12 @@
   // layout 데이터에서 전체 포스트와 태그 가져오기
   $: ({ allPosts, allTags } = data)
 
+  // 성능 최적화: Set을 사용한 O(1) 태그 검증
+  $: allTagsSet = new Set(allTags)
+
   // URL에서 태그 파라미터 읽기 및 유효성 검사 (브라우저에서만)
   $: rawSelectedTag = browser ? $page.url.searchParams.get('tag') : null
-  $: selectedTag = rawSelectedTag && allTags.includes(rawSelectedTag) ? rawSelectedTag : null
+  $: selectedTag = rawSelectedTag && allTagsSet.has(rawSelectedTag) ? rawSelectedTag : null
 
   // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
   $: filteredPosts =
@@ -32,13 +35,13 @@
   onMount(() => {
     // 컴포넌트가 마운트되면 하이드레이션 완료로 표시
     isHydrated = true
-
-    // 잘못된 태그 파라미터가 있는 경우 URL 정리
-    if (rawSelectedTag && !selectedTag) {
-      // 존재하지 않는 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
-      goto('/posts', { replaceState: true })
-    }
   })
+
+  // 잘못된 태그 파라미터 처리 - reactive statement로 이동하여 클라이언트 사이드 네비게이션에서도 작동
+  $: if (browser && rawSelectedTag && !selectedTag) {
+    // 존재하지 않는 태그로 접근한 경우 기본 posts 페이지로 리다이렉트
+    goto('/posts', { replaceState: true })
+  }
 
   $: showContent = !selectedTag || (browser && isHydrated)
 
@@ -53,25 +56,33 @@
 
   // 필터링 후 현재 페이지가 유효하지 않으면 첫 페이지로 리다이렉트
   $: if (browser && selectedTag && currentPage > 1 && currentPage > totalFilteredPages) {
-    goto(`/posts?tag=${encodeURIComponent(selectedTag)}`)
+    const params = new URLSearchParams()
+    params.set('tag', selectedTag)
+    goto(`/posts?${params.toString()}`)
   }
 
-  // 태그 클릭 핸들러
+  // 태그 클릭 핸들러 - URLSearchParams 사용으로 더 안전한 URL 생성
   const handleTagClick = (tag: string) => {
     if (selectedTag === tag) {
       // 같은 태그 클릭 시 필터 해제
       goto('/posts')
     } else {
-      // 새 태그로 필터링
-      goto(`/posts?tag=${encodeURIComponent(tag)}`)
+      // 새 태그로 필터링 - URLSearchParams 사용
+      const params = new URLSearchParams()
+      params.set('tag', tag)
+      goto(`/posts?${params.toString()}`)
     }
   }
 
-  // URL 생성 로직
+  // URL 생성 로직 - URLSearchParams 사용으로 더 안전한 URL 생성
   const getPageUrl = (p: number) => {
     const base = p > 1 ? `/posts/${p}` : '/posts'
-    const searchParams = selectedTag ? `?tag=${encodeURIComponent(selectedTag)}` : ''
-    return base + searchParams
+    if (selectedTag) {
+      const params = new URLSearchParams()
+      params.set('tag', selectedTag)
+      return `${base}?${params.toString()}`
+    }
+    return base
   }
 
   // 현재 페이지 URL 생성
