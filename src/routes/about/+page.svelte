@@ -88,31 +88,37 @@
 
 <style lang="postcss">
   :global(.about p) {
-    margin-top: 0 !important;
-    margin-bottom: 13px !important;
+    margin-top: 0;
+    margin-bottom: 13px;
   }
   :global(.about ol) {
-    margin-top: 13px !important;
-    margin-bottom: 13px !important;
+    margin-top: 13px;
+    margin-bottom: 13px;
   }
   :global(.about ul) {
-    margin-top: 0 !important;
-    margin-bottom: 6px !important;
+    margin-top: 0;
+    margin-bottom: 6px;
   }
   :global(.about li) {
-    margin-top: 0 !important;
-    margin-bottom: 2px !important;
+    margin-top: 0;
+    margin-bottom: 2px;
   }
   :global(.about h1) {
-    border-left: 12px solid #0f6ae5;
+    border-left: 12px solid var(--tw-prose-links);
     padding-left: 8px;
     padding-bottom: 0px;
     line-height: 1.05;
     margin-top: 2em;
-    font-size: 2.4em;
+    font-size: 1.8em;
     font-weight: bolder;
     letter-spacing: -1px;
-    border-bottom: transparent !important;
+    border-bottom: transparent;
+  }
+
+  @media (min-width: 640px) {
+    :global(.about h1) {
+      font-size: 2.4em;
+    }
   }
 
   :global(.about h2) {
@@ -120,10 +126,16 @@
     display: inline-block;
     margin-top: 2em;
     margin-bottom: 0.2em;
-    font-size: 2.15em;
+    font-size: 1.6em;
     font-weight: bold;
     letter-spacing: -1px;
-    border-bottom: transparent !important;
+    border-bottom: transparent;
+  }
+
+  @media (min-width: 640px) {
+    :global(.about h2) {
+      font-size: 2.15em;
+    }
   }
 
   :global(.about h2::after) {
@@ -131,80 +143,98 @@
     display: inline-block;
     top: 0;
     right: -14px;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background-color: #0f6ae5;
+    background-color: var(--tw-prose-links);
     content: '';
+  }
+
+  @media (min-width: 640px) {
+    :global(.about h2::after) {
+      width: 12px;
+      height: 12px;
+    }
   }
 
   :global(.about h3) {
     margin-top: 1.5em;
     margin-bottom: 0.3em;
-    font-size: 1.5em;
+    font-size: 1.25em;
     letter-spacing: -1px;
-    border-bottom: transparent !important;
+    border-bottom: transparent;
+  }
+
+  @media (min-width: 640px) {
+    :global(.about h3) {
+      font-size: 1.5em;
+    }
   }
 
   :global(.about h4) {
-    font-size: 1.25em;
+    font-size: 1.1em;
     font-weight: 600;
     letter-spacing: -1px;
-    margin-top: 26px !important;
-    margin-bottom: 13px !important;
+    margin-top: 26px;
+    margin-bottom: 13px;
+  }
+
+  @media (min-width: 640px) {
+    :global(.about h4) {
+      font-size: 1.25em;
+    }
   }
 
   :global(.about td:first-child) {
-    text-align: right !important;
-    font-weight: bolder !important;
+    text-align: right;
+    font-weight: bold;
   }
 
   :global(.about table) {
     margin-top: 15px;
     margin-bottom: 13px;
-  }
-
-  :global(.about th) {
-    padding: 0 !important;
+    /* Remove custom styling to use global prose table styles with mobile optimization */
   }
 
   :global(.about code) {
-    font-weight: 500 !important;
+    font-weight: 500;
   }
 
   :global(.about div.final) {
-    margin-top: 5em !important;
+    margin-top: 5em;
   }
 
   :global(.about code.language-text) {
-    color: #0f6ae5;
-    border: 1.4px solid #0f6ae5;
+    color: var(--tw-prose-links);
+    border: 1.4px solid var(--tw-prose-links);
   }
   :global(.about h2 a) {
-    color: #0687f0;
+    color: var(--tw-prose-links);
     text-decoration: none;
+    transition: color 0.15s ease-in-out;
   }
 
   :global(.about h2 a:hover) {
+    color: var(--tw-prose-links-hover);
     text-decoration: none;
   }
 
   @media print {
     :global(*::-webkit-scrollbar) {
-      display: none !important;
+      display: none;
     }
 
     :global(*) {
-      -ms-overflow-style: none !important;
-      scrollbar-width: none !important;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     :global(.about) {
-      overflow: visible !important;
+      overflow: visible;
     }
 
     :global(html, body) {
-      overflow: visible !important;
+      overflow: visible;
     }
   }
 </style>
