@@ -78,7 +78,7 @@
         <svelte:element
           this={elementType}
           {...elementProps}
-          role={hasClickHandler ? 'button' : undefined}
+          role={elementType === 'span' && hasClickHandler ? 'button' : undefined}
           on:click={hasClickHandler && handleTagClick ? () => handleTagClick(tag) : undefined}
         >
           #{tag}
