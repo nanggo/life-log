@@ -2,11 +2,9 @@ import { error } from '@sveltejs/kit'
 
 import { allTags, posts as allPosts, postsByTag } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
+import { globalCacheManager, generateCacheKey, CACHE_TAGS } from '$lib/utils/cache-manager'
 
 export const prerender = false
-
-// 페이지 결과 캐싱 (메모리 캐시)
-const pageCache = new Map()
 
 /** @type {import('./$types').PageServerLoad} */
 export function load({ params, url }) {
@@ -15,11 +13,11 @@ export function load({ params, url }) {
   const tag = url.searchParams.get('tag')
 
   // 캐시 키 생성
-  const cacheKey = `${tag || 'all'}-${page}-${limit}`
+  const cacheKey = generateCacheKey.posts(tag, page, limit)
 
   // 캐시에서 확인
-  if (pageCache.has(cacheKey)) {
-    return pageCache.get(cacheKey)
+  if (globalCacheManager.has(cacheKey)) {
+    return globalCacheManager.get(cacheKey)
   }
 
   // 사전 계산된 태그별 포스트 사용 (성능 최적화)
@@ -49,7 +47,13 @@ export function load({ params, url }) {
 
   // 결과 캐싱 (개발 환경에서는 캐시 비활성화)
   if (process.env.NODE_ENV === 'production') {
-    pageCache.set(cacheKey, result)
+    // 태그별 캐시와 페이지네이션 캐시 설정
+    const cacheTags = [CACHE_TAGS.POSTS, CACHE_TAGS.PAGINATION]
+    if (tag) {
+      cacheTags.push(`tag:${tag}`)
+    }
+
+    globalCacheManager.set(cacheKey, result, cacheTags)
   }
 
   return result

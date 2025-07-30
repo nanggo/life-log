@@ -53,6 +53,113 @@ function generatePostRoutes() {
   }
 }
 
+// 실제 포스트에서 태그를 추출하는 함수
+function extractTagsFromPosts() {
+  try {
+    const postsDir = join(__dirname, 'posts')
+    const tags = new Set()
+
+    const extractFromDirectory = (dir) => {
+      const files = readdirSync(dir)
+
+      for (const file of files) {
+        const fullPath = join(dir, file)
+        const stat = statSync(fullPath)
+
+        if (stat.isDirectory()) {
+          extractFromDirectory(fullPath)
+        } else if (file.endsWith('.md')) {
+          const content = readFileSync(fullPath, 'utf8')
+
+          // draft인 포스트는 제외
+          if (content.includes('draft: true')) continue
+
+          // frontmatter에서 tags 추출
+          const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/)
+          if (frontmatterMatch) {
+            const frontmatter = frontmatterMatch[1]
+            const tagsMatch = frontmatter.match(/tags:\s*\n((?:\s*-\s*.+\n?)+)/)
+
+            if (tagsMatch) {
+              const tagLines = tagsMatch[1].match(/^\s*-\s*(.+)$/gm)
+              if (tagLines) {
+                tagLines.forEach((line) => {
+                  const tag = line.replace(/^\s*-\s*/, '').trim()
+                  if (tag && tag.length < 50) {
+                    // 너무 긴 태그는 제외
+                    tags.add(tag)
+                  }
+                })
+              }
+            }
+          }
+        }
+      }
+    }
+
+    extractFromDirectory(postsDir)
+    return Array.from(tags)
+  } catch (error) {
+    console.warn('Could not extract tags from posts:', error)
+    return []
+  }
+}
+
+// Posts 목록 페이지들을 생성하는 함수
+function generatePostsListRoutes() {
+  try {
+    const routes = ['/posts'] // 기본 posts 페이지
+
+    // 실제 포스트 수 계산
+    const postsDir = join(__dirname, 'posts')
+    let postCount = 0
+
+    const countPosts = (dir) => {
+      const files = readdirSync(dir)
+      for (const file of files) {
+        const fullPath = join(dir, file)
+        const stat = statSync(fullPath)
+
+        if (stat.isDirectory()) {
+          countPosts(fullPath)
+        } else if (file.endsWith('.md')) {
+          const content = readFileSync(fullPath, 'utf8')
+          if (!content.includes('draft: true')) {
+            postCount++
+          }
+        }
+      }
+    }
+
+    countPosts(postsDir)
+
+    // 페이지네이션 페이지 생성
+    const postsPerPage = 10
+    const totalPages = Math.ceil(postCount / postsPerPage)
+
+    for (let i = 2; i <= totalPages; i++) {
+      routes.push(`/posts/${i}`)
+    }
+
+    // 실제 태그들을 추출해서 태그별 페이지도 생성
+    const tags = extractTagsFromPosts()
+    console.log('Extracted tags for prerendering:', tags)
+
+    tags.forEach((tag) => {
+      routes.push(`/posts?tag=${encodeURIComponent(tag)}`)
+      // 태그별 페이지네이션도 일부 생성 (태그별로는 최대 2페이지까지만)
+      for (let i = 2; i <= 2; i++) {
+        routes.push(`/posts/${i}?tag=${encodeURIComponent(tag)}`)
+      }
+    })
+
+    return routes
+  } catch (error) {
+    console.warn('Could not generate posts list routes:', error)
+    return ['/posts']
+  }
+}
+
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
   extensions: ['.svelte', ...mdsvexConfig.extensions],
@@ -74,7 +181,13 @@ const config = {
 
     // remove this if you don't want prerendering
     prerender: {
-      entries: ['*', '/sitemap.xml', '/rss.xml', ...generatePostRoutes()],
+      entries: [
+        '*',
+        '/sitemap.xml',
+        '/rss.xml',
+        ...generatePostRoutes(),
+        ...generatePostsListRoutes()
+      ],
       handleMissingId: 'warn',
       handleHttpError: ({ status, path, referrer, message }) => {
         // Ignore 404 errors for asset files during prerendering
