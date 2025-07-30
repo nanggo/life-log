@@ -5,6 +5,7 @@
   export let clickable: boolean = true
   export let selectedTag: string | null = null
   export let getTagUrl: (tagName: string) => string = (tagName: string) => `/posts?tag=${tagName}`
+  export let onTagClick: ((tagName: string) => void) | null = null
 
   // 스크롤 컨테이너 참조 변수
   let scrollContainer: HTMLDivElement
@@ -36,24 +37,45 @@
   const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
   const unselectedTagClass: string =
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
+
+  // 태그 클릭 핸들러
+  const handleTagClick = (tag: string, event: Event) => {
+    if (onTagClick) {
+      event.preventDefault()
+      onTagClick(tag)
+    }
+  }
 </script>
 
 {#if tags && tags.length > 0}
   <div class="relative">
     <div bind:this={scrollContainer} class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
       {#each tags as tag}
-        <a
-          href={clickable ? getTagUrl(tag) : 'javascript:void(0)'}
-          class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap {selectedTag ===
-          tag
-            ? selectedTagClass
-            : unselectedTagClass}"
-          class:cursor-pointer={clickable}
-          class:cursor-default={!clickable}
-          aria-current={selectedTag === tag ? 'page' : undefined}
-        >
-          #{tag}
-        </a>
+        {#if onTagClick && clickable}
+          <button
+            on:click={(event) => handleTagClick(tag, event)}
+            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap cursor-pointer {selectedTag ===
+            tag
+              ? selectedTagClass
+              : unselectedTagClass}"
+            aria-current={selectedTag === tag ? 'page' : undefined}
+          >
+            #{tag}
+          </button>
+        {:else}
+          <a
+            href={clickable ? getTagUrl(tag) : 'javascript:void(0)'}
+            class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap {selectedTag ===
+            tag
+              ? selectedTagClass
+              : unselectedTagClass}"
+            class:cursor-pointer={clickable}
+            class:cursor-default={!clickable}
+            aria-current={selectedTag === tag ? 'page' : undefined}
+          >
+            #{tag}
+          </a>
+        {/if}
       {/each}
     </div>
   </div>

@@ -1,30 +1,58 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
+  import { browser } from '$app/environment'
+  import { goto } from '$app/navigation'
+  import { page } from '$app/stores'
   import { Pagination } from '$lib/components/layout'
   import { PostsList, TagList } from '$lib/components/post'
   import { detail, name, topic, website } from '$lib/info'
+  import type { Post } from '$lib/types'
 
   export let data: PageData
 
-  $: ({ posts, page, totalPages, allTags, tag } = data)
+  // URL에서 태그 파라미터 읽기 (브라우저에서만)
+  $: selectedTag = browser ? $page.url.searchParams.get('tag') : null
+
+  // 클라이언트 사이드 필터링
+  $: filteredPosts = selectedTag
+    ? data.allPosts.filter((post: Post) => post.tags.includes(selectedTag))
+    : data.allPosts
+
+  // 클라이언트 사이드 페이지네이션
+  const postsPerPage = data.limit
+  $: currentPage = data.page
+  $: totalFilteredPosts = filteredPosts.length
+  $: totalFilteredPages = Math.ceil(totalFilteredPosts / postsPerPage)
+  $: startIndex = (currentPage - 1) * postsPerPage
+  $: endIndex = startIndex + postsPerPage
+  $: paginatedPosts = filteredPosts.slice(startIndex, endIndex)
+
+  // 태그 클릭 핸들러
+  const handleTagClick = (tag: string) => {
+    if (selectedTag === tag) {
+      // 같은 태그 클릭 시 필터 해제
+      goto('/posts')
+    } else {
+      // 새 태그로 필터링
+      goto(`/posts?tag=${encodeURIComponent(tag)}`)
+    }
+  }
 
   // URL 생성 로직
   const getPageUrl = (p: number) => {
     const base = p > 1 ? `/posts/${p}` : '/posts'
-    const searchParams = tag ? `?tag=${tag}` : ''
+    const searchParams = selectedTag ? `?tag=${encodeURIComponent(selectedTag)}` : ''
     return base + searchParams
   }
 
-  const getTagUrl = (t: string) => {
-    return tag === t ? '/posts' : `/posts?tag=${t}`
-  }
-
   // 현재 페이지 URL 생성
-  $: currentUrl = `${website}${getPageUrl(page)}`
+  $: currentUrl = `${website}${getPageUrl(currentPage)}`
 
   // 페이지 타이틀 생성
-  $: pageTitle = tag ? `${tag} - ${name}'s life log | Posts` : `${name}'s life log | Posts`
+  $: pageTitle = selectedTag
+    ? `${selectedTag} - ${name}'s life log | Posts`
+    : `${name}'s life log | Posts`
 
   // 메타 설명은 +layout.svelte에서 기본 description 사용
 </script>
@@ -47,21 +75,25 @@
     <p class="mt-6">{detail}</p>
   </header>
 
-  {#if allTags && allTags.length > 0}
+  {#if data.allTags && data.allTags.length > 0}
     <div class="mt-6">
-      <TagList tags={allTags} clickable={true} selectedTag={tag} {getTagUrl} />
+      <TagList tags={data.allTags} clickable={true} {selectedTag} onTagClick={handleTagClick} />
     </div>
   {/if}
 
-  {#if !posts || posts.length === 0}
+  {#if !paginatedPosts || paginatedPosts.length === 0}
     <div class="mt-16 sm:mt-20 text-center text-zinc-600 dark:text-zinc-400">
-      <p>'{tag}' 태그에 해당하는 포스트가 없습니다.</p>
+      {#if selectedTag}
+        <p>'{selectedTag}' 태그에 해당하는 포스트가 없습니다.</p>
+      {:else}
+        <p>포스트가 없습니다.</p>
+      {/if}
     </div>
   {:else}
     <div class="mt-16 sm:mt-20">
-      <PostsList {posts} />
+      <PostsList posts={paginatedPosts} />
     </div>
 
-    <Pagination currentPage={page} {totalPages} {getPageUrl} />
+    <Pagination {currentPage} totalPages={totalFilteredPages} {getPageUrl} />
   {/if}
 </div>
