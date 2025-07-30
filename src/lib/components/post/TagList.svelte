@@ -1,10 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
+  import { generateTagClasses } from '$lib/utils/tag-styles'
+
   export let tags: string[] = []
   export let clickable: boolean = true
   export let selectedTag: string | null = null
   export let getTagUrl: (tagName: string) => string = (tagName: string) => `/posts?tag=${tagName}`
+  export let handleTagClick: ((tagName: string) => void) | null = null
 
   // 스크롤 컨테이너 참조 변수
   let scrollContainer: HTMLDivElement
@@ -33,27 +36,59 @@
     }
   })
 
-  const selectedTagClass: string = 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100'
-  const unselectedTagClass: string =
-    'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700'
+  // 태그 클래스 생성을 위한 헬퍼 함수
+  const getTagClasses = (tag: string, clickable: boolean): string => {
+    return generateTagClasses(tag, selectedTag, clickable)
+  }
+
+  // 태그 엘리먼트 타입 결정
+  const getTagElementType = (clickable: boolean, hasClickHandler: boolean): string => {
+    if (hasClickHandler) return 'button'
+    if (clickable) return 'a'
+    return 'span'
+  }
+
+  // 태그 엘리먼트 속성 생성
+  const getTagProps = (tag: string, clickable: boolean, hasClickHandler: boolean) => {
+    const baseProps = {
+      class: getTagClasses(tag, clickable),
+      'aria-current': (selectedTag === tag ? 'page' : undefined) as 'page' | undefined
+    }
+
+    if (hasClickHandler) {
+      return { ...baseProps, type: 'button' }
+    }
+
+    if (clickable) {
+      return { ...baseProps, href: getTagUrl(tag) }
+    }
+
+    return baseProps
+  }
 </script>
 
 {#if tags && tags.length > 0}
   <div class="relative">
     <div bind:this={scrollContainer} class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
       {#each tags as tag}
-        <a
-          href={clickable ? getTagUrl(tag) : 'javascript:void(0)'}
-          class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap {selectedTag ===
-          tag
-            ? selectedTagClass
-            : unselectedTagClass}"
-          class:cursor-pointer={clickable}
-          class:cursor-default={!clickable}
-          aria-current={selectedTag === tag ? 'page' : undefined}
-        >
-          #{tag}
-        </a>
+        {@const hasClickHandler = !!(handleTagClick && clickable)}
+        {@const elementType = getTagElementType(clickable, hasClickHandler)}
+        {@const elementProps = getTagProps(tag, clickable, hasClickHandler)}
+
+        {#if hasClickHandler && handleTagClick}
+          <svelte:element
+            this={elementType}
+            {...elementProps}
+            role={elementType === 'span' ? 'button' : undefined}
+            on:click={() => handleTagClick(tag)}
+          >
+            #{tag}
+          </svelte:element>
+        {:else}
+          <svelte:element this={elementType} {...elementProps}>
+            #{tag}
+          </svelte:element>
+        {/if}
       {/each}
     </div>
   </div>
