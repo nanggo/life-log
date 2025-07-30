@@ -102,7 +102,8 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags, clickable: false })
 
     const jsTag = screen.getByText('#JavaScript')
-    expect(jsTag.closest('a')).toHaveAttribute('href', 'javascript:void(0)')
+    expect(jsTag.closest('a')).toBeNull()
+    expect(jsTag.tagName).toBe('SPAN')
   })
 
   it('커스텀 getTagUrl 함수가 올바르게 적용된다', () => {
