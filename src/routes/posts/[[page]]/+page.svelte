@@ -106,12 +106,7 @@
 
   {#if allTags && allTags.length > 0}
     <div class="mt-6">
-      <TagList
-        tags={allTags}
-        clickable={true}
-        selectedTag={browser ? selectedTag : null}
-        {handleTagClick}
-      />
+      <TagList tags={allTags} clickable={true} {selectedTag} {handleTagClick} />
     </div>
   {/if}
 
