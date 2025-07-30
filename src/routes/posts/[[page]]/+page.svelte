@@ -10,6 +10,7 @@
   import { PostsList, TagList } from '$lib/components/post'
   import { detail, name, topic, website } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
+  import { createTagUrl, createPageUrl } from '$lib/utils/url-helpers'
 
   export let data: PageData
 
@@ -24,6 +25,7 @@
   $: selectedTag = rawSelectedTag && allTagsSet.has(rawSelectedTag) ? rawSelectedTag : null
 
   // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
+  // 성능 최적화: selectedTag가 변경될 때만 필터링 재실행
   $: filteredPosts =
     browser && selectedTag
       ? allPosts.filter((post: PostMetadata) => post.tags.includes(selectedTag))
@@ -56,34 +58,22 @@
 
   // 필터링 후 현재 페이지가 유효하지 않으면 첫 페이지로 리다이렉트
   $: if (browser && selectedTag && currentPage > 1 && currentPage > totalFilteredPages) {
-    const params = new URLSearchParams()
-    params.set('tag', selectedTag)
-    goto(`/posts?${params.toString()}`)
+    goto(createTagUrl(selectedTag))
   }
 
-  // 태그 클릭 핸들러 - URLSearchParams 사용으로 더 안전한 URL 생성
+  // 태그 클릭 핸들러 - 유틸리티 함수 사용으로 코드 간소화
   const handleTagClick = (tag: string) => {
     if (selectedTag === tag) {
       // 같은 태그 클릭 시 필터 해제
       goto('/posts')
     } else {
-      // 새 태그로 필터링 - URLSearchParams 사용
-      const params = new URLSearchParams()
-      params.set('tag', tag)
-      goto(`/posts?${params.toString()}`)
+      // 새 태그로 필터링
+      goto(createTagUrl(tag))
     }
   }
 
-  // URL 생성 로직 - URLSearchParams 사용으로 더 안전한 URL 생성
-  const getPageUrl = (p: number) => {
-    const base = p > 1 ? `/posts/${p}` : '/posts'
-    if (selectedTag) {
-      const params = new URLSearchParams()
-      params.set('tag', selectedTag)
-      return `${base}?${params.toString()}`
-    }
-    return base
-  }
+  // URL 생성 로직 - 유틸리티 함수 사용으로 코드 간소화
+  const getPageUrl = (p: number) => createPageUrl(p, selectedTag)
 
   // 현재 페이지 URL 생성
   $: currentUrl = `${website}${getPageUrl(currentPage)}`
