@@ -7,7 +7,7 @@
   export let clickable: boolean = true
   export let selectedTag: string | null = null
   export let getTagUrl: (tagName: string) => string = (tagName: string) => `/posts?tag=${tagName}`
-  export let onTagClick: ((tagName: string) => void) | null = null
+  export let handleTagClick: ((tagName: string) => void) | null = null
 
   // 스크롤 컨테이너 참조 변수
   let scrollContainer: HTMLDivElement
@@ -46,10 +46,10 @@
   <div class="relative">
     <div bind:this={scrollContainer} class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
       {#each tags as tag}
-        {#if onTagClick && clickable}
+        {#if handleTagClick && clickable}
           <button
             type="button"
-            on:click={() => onTagClick(tag)}
+            on:click={() => handleTagClick(tag)}
             class={getTagClasses(tag, true)}
             aria-current={selectedTag === tag ? 'page' : undefined}
           >

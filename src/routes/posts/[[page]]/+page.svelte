@@ -22,7 +22,7 @@
 
   // URL에서 태그 파라미터 읽기 및 유효성 검사 (브라우저에서만)
   $: rawSelectedTag = browser ? $page.url.searchParams.get('tag') : null
-  $: selectedTag = rawSelectedTag && allTagsSet.has(rawSelectedTag) ? rawSelectedTag : null
+  $: selectedTag = allTagsSet.has(rawSelectedTag) ? rawSelectedTag : null
 
   // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
   // 성능 최적화: selectedTag가 변경될 때만 필터링 재실행
@@ -109,7 +109,7 @@
         tags={allTags}
         clickable={true}
         selectedTag={browser ? selectedTag : null}
-        onTagClick={handleTagClick}
+        {handleTagClick}
       />
     </div>
   {/if}
