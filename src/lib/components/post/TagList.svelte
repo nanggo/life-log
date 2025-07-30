@@ -40,37 +40,49 @@
   const getTagClasses = (tag: string, clickable: boolean): string => {
     return generateTagClasses(tag, selectedTag, clickable)
   }
+
+  // 태그 엘리먼트 타입 결정
+  const getTagElementType = (clickable: boolean, hasClickHandler: boolean): string => {
+    if (hasClickHandler && clickable) return 'button'
+    if (clickable) return 'a'
+    return 'span'
+  }
+
+  // 태그 엘리먼트 속성 생성
+  const getTagProps = (tag: string, clickable: boolean, hasClickHandler: boolean) => {
+    const baseProps = {
+      class: getTagClasses(tag, clickable),
+      'aria-current': selectedTag === tag ? 'page' : undefined
+    }
+
+    if (hasClickHandler && clickable) {
+      return { ...baseProps, type: 'button' }
+    }
+
+    if (clickable) {
+      return { ...baseProps, href: getTagUrl(tag) }
+    }
+
+    return baseProps
+  }
 </script>
 
 {#if tags && tags.length > 0}
   <div class="relative">
     <div bind:this={scrollContainer} class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
       {#each tags as tag}
-        {#if handleTagClick && clickable}
-          <button
-            type="button"
-            on:click={() => handleTagClick(tag)}
-            class={getTagClasses(tag, true)}
-            aria-current={selectedTag === tag ? 'page' : undefined}
-          >
-            #{tag}
-          </button>
-        {:else if clickable}
-          <a
-            href={getTagUrl(tag)}
-            class={getTagClasses(tag, true)}
-            aria-current={selectedTag === tag ? 'page' : undefined}
-          >
-            #{tag}
-          </a>
-        {:else}
-          <span
-            class={getTagClasses(tag, false)}
-            aria-current={selectedTag === tag ? 'page' : undefined}
-          >
-            #{tag}
-          </span>
-        {/if}
+        {@const hasClickHandler = !!(handleTagClick && clickable)}
+        {@const elementType = getTagElementType(clickable, hasClickHandler)}
+        {@const elementProps = getTagProps(tag, clickable, hasClickHandler)}
+
+        <svelte:element
+          this={elementType}
+          {...elementProps}
+          role={hasClickHandler ? 'button' : undefined}
+          on:click={hasClickHandler ? () => handleTagClick(tag) : undefined}
+        >
+          #{tag}
+        </svelte:element>
       {/each}
     </div>
   </div>
