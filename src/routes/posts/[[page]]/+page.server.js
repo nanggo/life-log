@@ -21,7 +21,7 @@ export async function load({ params, parent }) {
     return globalCacheManager.get(cacheKey)
   }
 
-  // 서버 사이드 페이지네이션 (기본 페이지 로딩용)
+  // 페이지 파라미터 유효성 검사 (기본적인 범위 체크)
   const totalPosts = allPosts.length
   const totalPages = Math.ceil(totalPosts / limit)
 
@@ -29,17 +29,10 @@ export async function load({ params, parent }) {
     throw error(404, 'Page not found')
   }
 
-  // 현재 페이지의 포스트들 (초기 로딩용)
-  const paginatedPosts = allPosts.slice((page - 1) * limit, page * limit)
-
   const result = {
-    // 현재 페이지 포스트들 (서버 사이드 페이지네이션)
-    posts: paginatedPosts,
-    // 페이지네이션 정보
+    // 페이지네이션 정보만 제공 (클라이언트에서 필터링 및 페이지네이션 처리)
     page,
-    limit,
-    totalPosts,
-    totalPages
+    limit
   }
 
   // 결과 캐싱 (개발 환경에서는 캐시 비활성화)

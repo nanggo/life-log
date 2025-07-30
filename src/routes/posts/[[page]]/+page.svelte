@@ -45,7 +45,7 @@
     goto('/posts', { replaceState: true })
   }
 
-  $: showContent = !selectedTag || (browser && isHydrated)
+  $: showContent = !rawSelectedTag || (browser && isHydrated)
 
   // 클라이언트 사이드 페이지네이션
   const postsPerPage = data.limit
