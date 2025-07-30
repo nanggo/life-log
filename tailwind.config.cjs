@@ -223,13 +223,59 @@ module.exports = {
           pre: {
             color: 'var(--tw-prose-pre-code)',
             fontSize: theme('fontSize.sm')[0],
+            lineHeight: theme('lineHeight.6'),
             fontWeight: theme('fontWeight.medium'),
             backgroundColor: 'var(--tw-prose-pre-bg)',
             borderRadius: theme('borderRadius.3xl'),
-            padding: theme('spacing.8'),
+            padding: theme('spacing.4'),
+            '@screen sm': {
+              padding: theme('spacing.6')
+            },
+            '@screen lg': {
+              padding: theme('spacing.8')
+            },
             overflowX: 'auto',
             border: '1px solid',
-            borderColor: 'var(--tw-prose-pre-border)'
+            borderColor: 'var(--tw-prose-pre-border)',
+            // Mobile touch scrolling optimization
+            WebkitOverflowScrolling: 'touch',
+            // Scrollbar styling for better visibility
+            '&::-webkit-scrollbar': {
+              height: '8px'
+            },
+            '&::-webkit-scrollbar-track': {
+              backgroundColor: 'transparent'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: theme('colors.zinc.400'),
+              borderRadius: '4px'
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              backgroundColor: theme('colors.zinc.500')
+            },
+            // Dark mode scrollbar
+            '.dark &::-webkit-scrollbar-thumb': {
+              backgroundColor: theme('colors.zinc.600')
+            },
+            '.dark &::-webkit-scrollbar-thumb:hover': {
+              backgroundColor: theme('colors.zinc.500')
+            },
+            // Add position relative for pseudo-element scroll hint
+            position: 'relative',
+            // Scroll hint gradient on mobile
+            '@media (max-width: 767px)': {
+              '&::after': {
+                content: '""',
+                position: 'absolute',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: '20px',
+                background: 'linear-gradient(to left, var(--tw-prose-pre-bg), transparent)',
+                pointerEvents: 'none',
+                opacity: 0.8
+              }
+            }
           },
           'pre code': {
             display: 'inline',
