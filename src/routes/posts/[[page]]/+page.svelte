@@ -9,7 +9,6 @@
   import { Pagination } from '$lib/components/layout'
   import { PostsList, TagList } from '$lib/components/post'
   import { detail, name, topic, website } from '$lib/info'
-  import type { PostMetadata } from '$lib/types'
   import { createTagUrl, createPageUrl } from '$lib/utils/url-helpers'
 
   export let data: PageData
@@ -18,7 +17,7 @@
   $: ({ allPosts, allTags } = data)
 
   // 성능 최적화: Set을 사용한 O(1) 태그 검증
-  $: allTagsSet = new Set(allTags)
+  const allTagsSet = new Set(allTags)
 
   // URL에서 태그 파라미터 읽기 및 유효성 검사 (브라우저에서만)
   $: rawSelectedTag = browser ? $page.url.searchParams.get('tag') : null
@@ -26,10 +25,9 @@
 
   // 클라이언트 사이드 필터링 (서버에서는 항상 전체 포스트, 클라이언트에서만 필터링)
   // 성능 최적화: selectedTag가 변경될 때만 필터링 재실행
-  $: filteredPosts =
-    browser && selectedTag
-      ? allPosts.filter((post: PostMetadata) => post.tags.includes(selectedTag))
-      : allPosts
+  $: filteredPosts = selectedTag
+    ? allPosts.filter((post) => post.tags.includes(selectedTag))
+    : allPosts
 
   // FOUC 방지: 클라이언트 하이드레이션이 완료되고 필터링이 적용될 때까지 기다림
   let isHydrated = false
