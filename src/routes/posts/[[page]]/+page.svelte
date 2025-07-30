@@ -44,7 +44,8 @@
     goto('/posts', { replaceState: true })
   }
 
-  $: showContent = !rawSelectedTag || (browser && isHydrated)
+  // FOUC 방지: CSS 기반 투명도 제어로 하이드레이션 오류 방지
+  $: shouldHideContent = rawSelectedTag && (!browser || !isHydrated)
 
   // 클라이언트 사이드 페이지네이션
   const postsPerPage = data.limit
@@ -114,24 +115,29 @@
     </div>
   {/if}
 
-  {#if !showContent}
-    <!-- FOUC 방지를 위한 로딩 상태 -->
-    <div class="mt-16 sm:mt-20 text-center text-zinc-600 dark:text-zinc-400">
-      <p>포스트를 불러오는 중...</p>
-    </div>
-  {:else if !paginatedPosts || paginatedPosts.length === 0}
-    <div class="mt-16 sm:mt-20 text-center text-zinc-600 dark:text-zinc-400">
-      {#if selectedTag}
-        <p>'{selectedTag}' 태그에 해당하는 포스트가 없습니다.</p>
-      {:else}
-        <p>포스트가 없습니다.</p>
-      {/if}
-    </div>
-  {:else}
-    <div class="mt-16 sm:mt-20">
-      <PostsList posts={paginatedPosts} />
-    </div>
+  <!-- FOUC 방지: 항상 동일한 DOM 구조 유지, CSS 투명도로 부드러운 전환 -->
+  <div class="mt-16 sm:mt-20 transition-opacity duration-300" class:opacity-0={shouldHideContent}>
+    {#if shouldHideContent}
+      <!-- 로딩 상태 -->
+      <div class="text-center text-zinc-600 dark:text-zinc-400">
+        <p>포스트를 불러오는 중...</p>
+      </div>
+    {:else if !paginatedPosts || paginatedPosts.length === 0}
+      <!-- 빈 결과 상태 -->
+      <div class="text-center text-zinc-600 dark:text-zinc-400">
+        {#if selectedTag}
+          <p>'{selectedTag}' 태그에 해당하는 포스트가 없습니다.</p>
+        {:else}
+          <p>포스트가 없습니다.</p>
+        {/if}
+      </div>
+    {:else}
+      <!-- 콘텐츠 상태 -->
+      <div>
+        <PostsList posts={paginatedPosts} />
+      </div>
 
-    <Pagination {currentPage} totalPages={totalFilteredPages} {getPageUrl} />
-  {/if}
+      <Pagination {currentPage} totalPages={totalFilteredPages} {getPageUrl} />
+    {/if}
+  </div>
 </div>
