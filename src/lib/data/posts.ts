@@ -2,8 +2,9 @@ import { parse, type HTMLElement } from 'node-html-parser'
 import readingTime from 'reading-time'
 
 import { browser, dev } from '$app/environment'
-import type { Post, PostMetadata } from '$lib/types'
+import type { PostMetadata } from '$lib/types'
 import { Category } from '$lib/types/blog'
+import type { Post } from '$lib/types/blog'
 import { formatDate } from '$lib/utils/date'
 
 // import.meta.glob의 타입 정의
@@ -187,20 +188,27 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     value: heading.text.trim()
   }))
 
-  return {
-    ...post.metadata,
+  const result: Post = {
     slug,
-    isIndexFile: filepath.endsWith('/index.md'),
+    title: post.metadata.title,
+    description: post.metadata.description,
     date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
+    updated: post.metadata.updated,
+    category,
+    tags,
+    draft: post.metadata.draft,
     preview: {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
+    image: post.metadata.thumbnail,
+    author: post.metadata.author,
     readingTime: readingTime(html.structuredText).text,
-    category,
-    tags,
+    isIndexFile: filepath.endsWith('/index.md'),
     headings
-  } as Post
+  }
+
+  return result
 }
 
 // 모든 태그 수집 및 빈도 계산을 위한 변수 초기화
@@ -235,9 +243,8 @@ export const posts = Object.entries(
     })
 
     // 카테고리별 개수 집계
-    const postWithCategory = post as Post
-    if (postWithCategory.category) {
-      categoryCounts[postWithCategory.category]++
+    if (post.category) {
+      categoryCounts[post.category]++
     }
 
     return {
@@ -269,7 +276,7 @@ export const allTags = Array.from(tagSet).sort((a: string, b: string) => {
  * @returns 해당 카테고리의 포스트 배열 (날짜순 정렬)
  */
 export function getPostsByCategory(category: Category): Post[] {
-  return posts.filter((post) => (post as Post).category === category)
+  return posts.filter((post) => post.category === category)
 }
 
 /**

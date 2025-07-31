@@ -119,6 +119,10 @@ export interface Post {
   previous?: LinkedPost
   /** 다음 포스트 */
   next?: LinkedPost
+  /** 숙련도 레벨 (기술 글용) */
+  proficiencyLevel?: string
+  /** 의존성 (기술 글용) */
+  dependencies?: string
 }
 
 /**
