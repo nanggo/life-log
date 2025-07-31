@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { goto } from '$app/navigation'
   import { PostsList, TagList } from '$lib/components/post'
   import { name } from '$lib/info'
 
@@ -12,7 +13,7 @@
   // Handle tag click - navigate to that tag's page
   const handleTagClick = (tag: string) => {
     if (tag !== data.tagName) {
-      window.location.href = `/tags/${encodeURIComponent(tag)}`
+      goto(`/tags/${encodeURIComponent(tag)}`)
     }
   }
 

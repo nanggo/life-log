@@ -234,9 +234,10 @@ export const posts = Object.entries(
       }
     })
 
-    // 카테고리별 개수 집계 (타입 단언 사용)
-    if ('category' in post) {
-      categoryCounts[(post as any).category as Category]++
+    // 카테고리별 개수 집계
+    const postWithCategory = post as Post
+    if (postWithCategory.category) {
+      categoryCounts[postWithCategory.category]++
     }
 
     return {
@@ -268,7 +269,7 @@ export const allTags = Array.from(tagSet).sort((a: string, b: string) => {
  * @returns 해당 카테고리의 포스트 배열 (날짜순 정렬)
  */
 export function getPostsByCategory(category: Category): Post[] {
-  return posts.filter((post) => (post as any).category === category)
+  return posts.filter((post) => (post as Post).category === category)
 }
 
 /**

@@ -25,7 +25,7 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     title: post.title,
     description: post.description,
     date: post.date,
-    category: (post as any).category,
+    category: (post as Post).category,
     tags: post.tags,
     draft: post.draft,
     preview: post.preview,

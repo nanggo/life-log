@@ -27,7 +27,11 @@ function determineCategoryFromTags(tags) {
   const firstTag = tags[0].toLowerCase()
 
   for (const [category, tagList] of Object.entries(categoryMappings)) {
-    if (tagList.some((tag) => firstTag.includes(tag) || tag.includes(firstTag))) {
+    if (
+      tagList.some(
+        (tag) => firstTag === tag.toLowerCase() || firstTag.includes(tag) || tag.includes(firstTag)
+      )
+    ) {
       switch (category) {
         case 'development':
           return '개발'
