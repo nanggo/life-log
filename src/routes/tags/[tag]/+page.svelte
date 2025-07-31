@@ -1,6 +1,5 @@
 <script lang="ts">
   import { PostsList, TagList } from '$lib/components/post'
-  import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { name } from '$lib/info'
 
   /** @type {import('./$types').PageData} */
@@ -8,10 +7,6 @@
 
   interface PostMetadata {
     tags: string[]
-  }
-
-  const goBack = (): void => {
-    history.back()
   }
 
   // Handle tag click - navigate to that tag's page
@@ -38,22 +33,6 @@
 </svelte:head>
 
 <div class="flex flex-col flex-grow">
-  <!-- Back Button -->
-  <div class="hidden lg:block">
-    <div class="flex justify-end pt-8 pr-8">
-      <button
-        type="button"
-        class="flex items-center justify-center w-10 h-10 transition bg-white rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 hover:ring-zinc-300 dark:hover:border-zinc-600"
-        aria-label="Go back"
-        on:click={goBack}
-      >
-        <ArrowLeftIcon
-          class="w-4 h-4 transition stroke-zinc-500 group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"
-        />
-      </button>
-    </div>
-  </div>
-
   <div class="max-w-2xl mx-auto w-full px-4 sm:px-6 lg:px-8">
     <!-- Breadcrumb Navigation -->
     <nav class="mt-4" aria-label="Breadcrumb">
