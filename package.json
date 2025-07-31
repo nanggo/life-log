@@ -84,6 +84,7 @@
 		"clsx": "^1.2.1",
 		"date-fns": "^2.29.1",
 		"github-slugger": "^2.0.0",
+		"gray-matter": "^4.0.3",
 		"heroicons-svelte": "^0.0.1",
 		"js-yaml": "^4.1.0",
 		"node-html-parser": "^5.4.1",

@@ -31,10 +31,6 @@ node_modules/
 .cursor/mcp.json
 .mcp.json
 
-# Task files
-# tasks.json
-# tasks/ 
-
 # Auto-generated optimized images (created during build)
 static/posts/
 
@@ -46,3 +42,7 @@ google-search-analysis.md
 
 # Test Coverage Reports (auto-generated)
 coverage/
+
+# Task files
+# tasks.json
+# tasks/ 
