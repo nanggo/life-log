@@ -53,7 +53,7 @@
         "testStrategy": "다양한 태그로 URL 접근 테스트, 한글 태그 URL 인코딩/디코딩 확인, 존재하지 않는 태그 처리 검증",
         "priority": "medium",
         "dependencies": [15],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -70,7 +70,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-31T02:25:56.861Z",
+      "updated": "2025-07-31T02:36:03.424Z",
       "description": "Tasks for master context"
     }
   }

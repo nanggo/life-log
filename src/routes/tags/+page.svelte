@@ -5,6 +5,11 @@
   /** @type {import('./$types').PageData} */
   export let data
 
+  interface TagInfo {
+    tag: string
+    count: number
+  }
+
   const goBack = (): void => {
     history.back()
   }
@@ -13,6 +18,14 @@
   const getTagUrl = (tagName: string): string => {
     return `/tags/${encodeURIComponent(tagName)}`
   }
+
+  // Calculate tag statistics
+  $: tagInfos = data.tagInfos as TagInfo[]
+  $: maxCount = Math.max(...tagInfos.map((info) => info.count))
+  $: minCount = Math.min(...tagInfos.map((info) => info.count))
+  $: avgCount =
+    Math.round((tagInfos.reduce((sum, info) => sum + info.count, 0) / tagInfos.length) * 10) / 10
+  $: totalCount = tagInfos.reduce((sum, info) => sum + info.count, 0)
 </script>
 
 <svelte:head>
@@ -65,7 +78,7 @@
         <div
           class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 sm:p-8"
         >
-          <TagCloud tagInfos={data.tagInfos} {getTagUrl} clickable={false} />
+          <TagCloud {tagInfos} {getTagUrl} clickable={true} />
         </div>
       </div>
 
@@ -76,7 +89,7 @@
             class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
           >
             <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {Math.max(...data.tagInfos.map((info) => info.count))}
+              {maxCount}
             </div>
             <div class="text-xs text-zinc-600 dark:text-zinc-400">최다 포스트</div>
           </div>
@@ -84,7 +97,7 @@
             class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
           >
             <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {Math.min(...data.tagInfos.map((info) => info.count))}
+              {minCount}
             </div>
             <div class="text-xs text-zinc-600 dark:text-zinc-400">최소 포스트</div>
           </div>
@@ -92,10 +105,7 @@
             class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
           >
             <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {Math.round(
-                (data.tagInfos.reduce((sum, info) => sum + info.count, 0) / data.tagInfos.length) *
-                  10
-              ) / 10}
+              {avgCount}
             </div>
             <div class="text-xs text-zinc-600 dark:text-zinc-400">평균</div>
           </div>
@@ -103,7 +113,7 @@
             class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
           >
             <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {data.tagInfos.reduce((sum, info) => sum + info.count, 0)}
+              {totalCount}
             </div>
             <div class="text-xs text-zinc-600 dark:text-zinc-400">총 포스트</div>
           </div>
