@@ -86,31 +86,7 @@ export interface Heading {
 /**
  * 완전한 포스트 정보
  */
-export interface Post {
-  /** URL 슬러그 */
-  slug: string
-  /** 포스트 제목 */
-  title: string
-  /** 포스트 설명 */
-  description: string
-  /** 발행일 */
-  date: string
-  /** 업데이트일 (선택사항) */
-  updated?: string
-  /** 카테고리 */
-  category: Category
-  /** 태그 목록 */
-  tags: string[]
-  /** 초안 여부 */
-  draft?: boolean
-  /** 미리보기 정보 */
-  preview: PostPreview
-  /** 커버 이미지 (선택사항) */
-  image?: string
-  /** 작성자 정보 (선택사항) */
-  author?: string
-  /** 읽기 시간 */
-  readingTime: string
+export interface Post extends PostMetadata {
   /** 인덱스 파일 여부 */
   isIndexFile: boolean
   /** 헤딩 목록 */
