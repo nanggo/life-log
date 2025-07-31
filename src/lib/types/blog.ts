@@ -6,6 +6,16 @@
  */
 
 /**
+ * 블로그 포스트 카테고리
+ */
+export enum Category {
+  DAILY = '일상',
+  DEVELOPMENT = '개발',
+  THOUGHTS = '생각',
+  REVIEW = '리뷰'
+}
+
+/**
  * 포스트 미리보기 정보
  */
 export interface PostPreview {
@@ -29,6 +39,8 @@ export interface PostMetadata {
   date: string
   /** 업데이트일 (선택사항) */
   updated?: string
+  /** 카테고리 */
+  category: Category
   /** 태그 목록 */
   tags: string[]
   /** 초안 여부 */
@@ -62,17 +74,47 @@ export interface PostSummary extends PostMetadata {
 }
 
 /**
+ * 헤딩 정보
+ */
+export interface Heading {
+  /** 헤딩 레벨 (1-6) */
+  depth: number
+  /** 헤딩 텍스트 */
+  value: string
+}
+
+/**
  * 완전한 포스트 정보
  */
-export interface Post extends Omit<PostMetadata, 'preview'> {
+export interface Post {
   /** URL 슬러그 */
   slug: string
-  /** 인덱스 파일 여부 */
-  isIndexFile: boolean
+  /** 포스트 제목 */
+  title: string
+  /** 포스트 설명 */
+  description: string
+  /** 발행일 */
+  date: string
+  /** 업데이트일 (선택사항) */
+  updated?: string
+  /** 카테고리 */
+  category: Category
+  /** 태그 목록 */
+  tags: string[]
+  /** 초안 여부 */
+  draft?: boolean
   /** 미리보기 정보 */
   preview: PostPreview
+  /** 커버 이미지 (선택사항) */
+  image?: string
+  /** 작성자 정보 (선택사항) */
+  author?: string
   /** 읽기 시간 */
   readingTime: string
+  /** 인덱스 파일 여부 */
+  isIndexFile: boolean
+  /** 헤딩 목록 */
+  headings: Heading[]
   /** 이전 포스트 */
   previous?: LinkedPost
   /** 다음 포스트 */
@@ -114,6 +156,18 @@ export interface Tag {
   description?: string
   /** 태그 색상 (선택사항) */
   color?: string
+}
+
+/**
+ * 카테고리 정보
+ */
+export interface CategoryInfo {
+  /** 카테고리 값 */
+  category: Category
+  /** 카테고리에 속한 포스트 수 */
+  count: number
+  /** 카테고리 설명 (선택사항) */
+  description?: string
 }
 
 /**
