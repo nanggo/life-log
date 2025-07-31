@@ -189,20 +189,16 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
   }))
 
   const result: Post = {
+    ...post.metadata,
     slug,
-    title: post.metadata.title,
     description: post.metadata.description || '',
     date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
-    updated: post.metadata.updated,
     category,
     tags,
-    draft: post.metadata.draft,
     preview: {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
-    image: post.metadata.image,
-    author: post.metadata.author,
     readingTime: readingTime(html.structuredText).text,
     isIndexFile: filepath.endsWith('/index.md'),
     headings
