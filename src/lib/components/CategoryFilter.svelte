@@ -44,8 +44,13 @@
   }
 
   function getCategoryClasses(category: Category): string {
-    const baseClasses =
+    const compactClasses =
+      'group relative flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border whitespace-nowrap'
+
+    const defaultClasses =
       'group relative flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 border'
+
+    const baseClasses = variant === 'compact' ? compactClasses : defaultClasses
 
     if (activeCategory === category) {
       return `${baseClasses} bg-teal-500 text-white border-teal-500 shadow-md`
@@ -57,19 +62,18 @@
 
 <nav class="category-filter" aria-label="카테고리 필터">
   {#if variant === 'compact'}
-    <!-- 컴팩트 버전: 가로 스크롤 -->
-    <div class="flex gap-2 overflow-x-auto pb-2">
+    <!-- 컴팩트 버전: 한 줄 레이아웃 -->
+    <div class="flex flex-wrap gap-2">
       {#each categoryInfos as { category, count }}
         <a
           href={getCategoryUrl(category)}
           class={getCategoryClasses(category)}
-          style="flex-shrink: 0;"
           aria-current={activeCategory === category ? 'page' : undefined}
         >
-          <span class="text-base" aria-hidden="true">{getCategoryIcon(category)}</span>
+          <span class="text-sm" aria-hidden="true">{getCategoryIcon(category)}</span>
           <span>{getCategoryDisplayName(category)}</span>
           {#if showCounts}
-            <span class="ml-1 text-xs opacity-75">({count})</span>
+            <span class="text-xs opacity-75">({count})</span>
           {/if}
         </a>
       {/each}
@@ -90,7 +94,7 @@
               {#if showCounts}
                 <span class="text-xs opacity-75 mt-0.5 sm:mt-0 sm:ml-1 sm:inline">
                   {#if variant === 'default'}<br class="sm:hidden" />{/if}
-                  ({count}개)
+                  ({count})
                 </span>
               {/if}
             </div>

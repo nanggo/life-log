@@ -14,9 +14,18 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
+// 카테고리 옵션
+const categories = [
+  { value: '일상', name: '일상', emoji: '📝' },
+  { value: '개발', name: '개발', emoji: '💻' },
+  { value: '생각', name: '생각', emoji: '🤔' },
+  { value: '리뷰', name: '리뷰', emoji: '📖' }
+]
+
 const questions = [
   { name: 'title', question: '포스트 제목을 입력하세요 (한글 가능): ' },
   { name: 'slug', question: '포스트 URL slug를 입력하세요 (영문, 숫자, 하이픈만 사용): ' },
+  { name: 'category', question: '카테고리를 선택하세요', type: 'select', options: categories },
   { name: 'tags', question: '태그를 입력하세요 (쉼표로 구분): ' }
 ]
 
@@ -26,7 +35,7 @@ const askQuestion = (index, answers) => {
     return rl.close()
   }
 
-  const { name, question } = questions[index]
+  const { name, question, type, options } = questions[index]
 
   // slug를 자동으로 제안
   if (name === 'slug' && answers.title) {
@@ -35,6 +44,22 @@ const askQuestion = (index, answers) => {
       // 빈 값이면 제안된 slug 사용
       answers[name] = answer.trim() || suggestedSlug
       askQuestion(index + 1, answers)
+    })
+  } else if (type === 'select' && options) {
+    // 카테고리 선택
+    console.log(`\n${question}:`)
+    options.forEach((option, i) => {
+      console.log(`  ${i + 1}. ${option.emoji} ${option.name}`)
+    })
+    rl.question('\n번호를 선택하세요 (1-4): ', (answer) => {
+      const choice = parseInt(answer.trim())
+      if (choice >= 1 && choice <= options.length) {
+        answers[name] = options[choice - 1].value
+        askQuestion(index + 1, answers)
+      } else {
+        console.log('올바른 번호를 선택해주세요.')
+        askQuestion(index, answers)
+      }
     })
   } else {
     rl.question(question, (answer) => {
@@ -52,7 +77,7 @@ function createSlug(title) {
 }
 
 const createPost = (answers) => {
-  const { title, slug, tags } = answers
+  const { title, slug, category, tags } = answers
   const date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
   const safeSlug = createSlug(slug) // slug도 안전하게 처리
   const fileName = `${safeSlug}.md`
@@ -67,10 +92,11 @@ const createPost = (answers) => {
     .map((tag) => tag.trim())
     .filter((tag) => tag.length > 0)
 
-  content = content.replace('New Post Title', title).replace('YYYY-MM-DD', date)
-
-  // slug 추가 (템플릿의 기본 slug 대체)
-  content = content.replace('new-post-slug', safeSlug)
+  content = content
+    .replace('New Post Title', title)
+    .replace('YYYY-MM-DD', date)
+    .replace('new-post-slug', safeSlug)
+    .replace('new-post-category', category)
 
   // 템플릿에서 기본 태그 항목을 사용자 입력 태그로 대체
   if (tagArray.length > 0) {
@@ -81,6 +107,8 @@ const createPost = (answers) => {
 
   fs.writeFileSync(filePath, content)
   console.log(`포스트가 생성되었습니다: ${filePath}`)
+  console.log(`카테고리: ${category}`)
+  console.log(`태그: ${tagArray.join(', ')}`)
 }
 
 // 시작

@@ -52,7 +52,7 @@
 
   <!-- Category Filter -->
   <div class="mt-6">
-    <CategoryFilter {categoryInfos} />
+    <CategoryFilter {categoryInfos} variant="compact" />
   </div>
 
   <!-- Tags Navigation Link -->

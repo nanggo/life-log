@@ -19,13 +19,7 @@
     return `/tags/${encodeURIComponent(tagName)}`
   }
 
-  // Calculate tag statistics
   $: tagInfos = data.tagInfos as TagInfo[]
-  $: maxCount = Math.max(...tagInfos.map((info) => info.count))
-  $: minCount = Math.min(...tagInfos.map((info) => info.count))
-  $: avgCount =
-    Math.round((tagInfos.reduce((sum, info) => sum + info.count, 0) / tagInfos.length) * 10) / 10
-  $: totalCount = tagInfos.reduce((sum, info) => sum + info.count, 0)
 </script>
 
 <svelte:head>
@@ -68,7 +62,7 @@
         총 {data.totalTags}개의 태그
       </p>
       <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
-        태그 크기는 포스트 개수에 비례합니다
+        태그 크기는 포스트 개수에 비례합니다.
       </p>
     </header>
 
@@ -83,6 +77,7 @@
       </div>
 
       <!-- Tag Statistics -->
+      <!-- 
       <div class="mt-8 text-center">
         <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-lg mx-auto">
           <div
@@ -119,6 +114,7 @@
           </div>
         </div>
       </div>
+       -->
     {:else}
       <div class="mt-16 sm:mt-20">
         <div class="text-center py-12">
