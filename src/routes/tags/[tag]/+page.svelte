@@ -37,13 +37,13 @@
   <meta name="twitter:description" content={data.seo.description} />
 </svelte:head>
 
-<div class="root max-w-2xl mx-auto lg:max-w-none">
+<div class="flex flex-col flex-grow">
   <!-- Back Button -->
-  <div class="hidden lg:block pt-8">
-    <div class="sticky top-0 w-full flex justify-end pt-11 pr-8">
+  <div class="hidden lg:block">
+    <div class="flex justify-end pt-8 pr-8">
       <button
         type="button"
-        class="items-center justify-center hidden w-10 h-10 mb-8 transition bg-white rounded-full shadow-md -top-1 -left-16 lg:flex group shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 dark:focus-visible:ring-2 dark:ring-white/10 dark:hover:border-zinc-700 dark:hover:ring-white/20"
+        class="flex items-center justify-center w-10 h-10 transition bg-white rounded-full shadow-md shadow-zinc-800/5 ring-1 ring-zinc-900/5 dark:border dark:border-zinc-700/50 dark:bg-zinc-800 dark:ring-0 hover:ring-zinc-300 dark:hover:border-zinc-600"
         aria-label="Go back"
         on:click={goBack}
       >
@@ -54,25 +54,36 @@
     </div>
   </div>
 
-  <div class="w-full mx-auto overflow-x-hidden">
+  <div class="max-w-2xl mx-auto w-full px-4 sm:px-6 lg:px-8">
+    <!-- Breadcrumb Navigation -->
+    <nav class="mt-4" aria-label="Breadcrumb">
+      <ol class="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <li>
+          <a href="/tags" class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">
+            태그
+          </a>
+        </li>
+        <li class="flex items-center">
+          <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              fill-rule="evenodd"
+              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="text-zinc-900 dark:text-zinc-100 font-medium">#{data.tagName}</span>
+        </li>
+      </ol>
+    </nav>
+
     <!-- Tag Header -->
-    <header class="flex flex-col text-center">
-      <h1
-        class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl"
-      >
+    <header class="flex flex-col mt-8">
+      <h1 class="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
         #{data.tagName}
       </h1>
       <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
-        {data.postCount}개의 포스트
+        총 {data.postCount}개의 포스트
       </p>
-      <div class="mt-4">
-        <a
-          href="/tags"
-          class="inline-flex items-center text-sm text-teal-600 hover:text-teal-700 dark:text-teal-400 dark:hover:text-teal-300 transition-colors"
-        >
-          ← 모든 태그 보기
-        </a>
-      </div>
     </header>
 
     <!-- Related Tags -->
@@ -112,17 +123,3 @@
     {/if}
   </div>
 </div>
-
-<style lang="postcss">
-  .root {
-    display: grid;
-    grid-template-columns: 1fr;
-  }
-
-  @media screen(lg) {
-    .root {
-      /* 42rem matches max-w-2xl */
-      grid-template-columns: 1fr 42rem 1fr;
-    }
-  }
-</style>
