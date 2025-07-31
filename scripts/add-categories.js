@@ -21,13 +21,16 @@ const categoryMappings = {
 
 // 태그를 기반으로 카테고리 결정
 function determineCategoryFromTags(tags) {
-  if (!tags || tags.length === 0) return '개발' // 기본값
+  if (!tags || !tags.length) return '개발' // 기본값
 
-  // 첫 번째 태그를 기준으로 카테고리 결정
-  const firstTag = tags[0].toLowerCase()
+  const lowercasedTags = tags.map((tag) => tag.toLowerCase())
 
-  for (const [category, tagList] of Object.entries(categoryMappings)) {
-    if (tagList.some((tag) => firstTag === tag.toLowerCase())) {
+  // 카테고리 우선순위에 따라 확인
+  const categoryPriority = ['일상', '생각', '리뷰', '개발']
+
+  for (const category of categoryPriority) {
+    const keywords = categoryMappings[category]
+    if (keywords && lowercasedTags.some((tag) => keywords.includes(tag))) {
       return category
     }
   }
