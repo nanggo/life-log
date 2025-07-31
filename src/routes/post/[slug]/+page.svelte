@@ -8,6 +8,7 @@
   import { SocialLinks } from '$lib/components/layout'
   import { PostDate, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
+  import ReadingProgressBar from '$lib/components/ui/ReadingProgressBar.svelte'
   import { website, name, bio, avatar, twitterHandle } from '$lib/info'
 
   interface PageData extends BasePageData {
@@ -94,6 +95,8 @@
 {@html data.breadcrumbLd}
   </script>
 </svelte:head>
+
+<ReadingProgressBar />
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">
   <div class="hidden lg:block pt-8">
