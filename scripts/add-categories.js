@@ -10,13 +10,13 @@ const POSTS_DIR = 'posts'
 // 카테고리 매핑 규칙
 const categoryMappings = {
   // 개발 관련 태그들
-  development: ['frontend', 'react', 'git', 'debugging', 'devops', 'testing'],
+  개발: ['frontend', 'react', 'git', 'debugging', 'devops', 'testing'],
   // 리뷰 관련 태그들
-  review: ['경험', '리뷰', 'tip', 'mac'],
+  리뷰: ['경험', '리뷰', 'tip', 'mac'],
   // 생각 관련 태그들
-  thoughts: ['생각'],
+  생각: ['생각'],
   // 일상 관련 태그들
-  daily: ['일상', '회고']
+  일상: ['일상', '회고']
 }
 
 // 태그를 기반으로 카테고리 결정
@@ -32,16 +32,7 @@ function determineCategoryFromTags(tags) {
         (tag) => firstTag === tag.toLowerCase() || firstTag.includes(tag) || tag.includes(firstTag)
       )
     ) {
-      switch (category) {
-        case 'development':
-          return '개발'
-        case 'review':
-          return '리뷰'
-        case 'thoughts':
-          return '생각'
-        case 'daily':
-          return '일상'
-      }
+      return category
     }
   }
 
