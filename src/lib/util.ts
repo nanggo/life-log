@@ -32,6 +32,6 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     preview: post.preview,
     author: post.author,
     readingTime: post.readingTime,
-    thumbnail: post.image
+    image: post.image
   }))
 }
