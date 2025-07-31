@@ -191,7 +191,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
   const result: Post = {
     slug,
     title: post.metadata.title,
-    description: post.metadata.description,
+    description: post.metadata.description || '',
     date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
     updated: post.metadata.updated,
     category,
