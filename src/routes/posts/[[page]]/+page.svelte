@@ -6,6 +6,7 @@
   import { browser } from '$app/environment'
   import { goto } from '$app/navigation'
   import { page } from '$app/stores'
+  import { CategoryFilter } from '$lib/components'
   import { Pagination } from '$lib/components/layout'
   import { PostsList, TagList } from '$lib/components/post'
   import { detail, name, topic, website } from '$lib/info'
@@ -102,6 +103,11 @@
     </h1>
     <p class="mt-6">{detail}</p>
   </header>
+
+  <!-- Category Filter -->
+  <div class="mt-6">
+    <CategoryFilter />
+  </div>
 
   {#if allTags && allTags.length > 0}
     <div class="mt-6">
