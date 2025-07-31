@@ -1,11 +1,12 @@
 ---
-title: '제어 컴포넌트와 비제어 컴포넌트'
+title: 제어 컴포넌트와 비제어 컴포넌트
 date: 2023-08-28T20:08:56.000Z
 tags:
   - frontend
 thumbnail: ''
 draft: false
-slug: 'controlled-and-uncontrolled-component'
+slug: controlled-and-uncontrolled-component
+category: 개발
 ---
 
 얼마 전 면접에서 질문을 받은 기억이 나서 리마인드 할 겸 정리한다. React에서 컴포넌트를 다룰 때, 이를 "Controlled" 및 "Uncontrolled"로 나누어 생각할 수 있다. 두 방식 간의 주요 차이점을 이해하는 것은 React와 상태 관리를 제대로 다루기 위해 중요하다.

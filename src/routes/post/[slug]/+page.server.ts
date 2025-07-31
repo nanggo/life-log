@@ -145,7 +145,7 @@ export const load: PageServerLoad = async ({ params }) => {
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
     // Determine if this is a technical article based on tags
-    const isTechArticle = post.tags.some((tag) => techRegex.test(tag.toLowerCase()))
+    const isTechArticle = post.tags.some((tag: string) => techRegex.test(tag.toLowerCase()))
 
     const jsonLd = {
       '@context': 'https://schema.org',
@@ -193,7 +193,7 @@ export const load: PageServerLoad = async ({ params }) => {
       genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
       about:
         post.tags.length > 0
-          ? post.tags.map((tag) => ({
+          ? post.tags.map((tag: string) => ({
               '@type': 'Thing',
               name: tag
             }))
