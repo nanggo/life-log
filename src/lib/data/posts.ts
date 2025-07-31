@@ -16,7 +16,7 @@ type PostModule = {
     tags?: string[] | string
     category?: string // frontmatter에서는 문자열로 입력됨
     preview?: string
-    thumbnail?: string
+    image?: string
   }
 }
 
@@ -201,7 +201,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
-    image: post.metadata.thumbnail,
+    image: post.metadata.image,
     author: post.metadata.author,
     readingTime: readingTime(html.structuredText).text,
     isIndexFile: filepath.endsWith('/index.md'),

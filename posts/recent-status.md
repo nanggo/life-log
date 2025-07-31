@@ -3,10 +3,10 @@ title: 근황
 date: 2023-06-14T11:06:23.000Z
 tags:
   - 일상
-thumbnail: ''
 draft: false
 slug: recent-status
 category: 일상
+image: ''
 ---
 
 ### 가족과 시간 보내기

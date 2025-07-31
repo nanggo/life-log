@@ -4,10 +4,10 @@ date: 2024-03-27T11:04:38.000Z
 tags:
   - tip
   - mac
-thumbnail: ''
 draft: false
 slug: hide-mac-dock-bar
 category: 리뷰
+image: ''
 ---
 
 맥북을 쓰면서 화면을 더 넓게 이용하고자 평소에는 독바를 숨겨두고 이용중이다. 숨기고 나타내는 딜레이가 유려하긴 하지만 개인적으로는 답답하다 생각했다. 그러다가 클리앙[^1]에서 팁을 보고 정리해 둔다.
