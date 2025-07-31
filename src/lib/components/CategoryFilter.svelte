@@ -1,14 +1,11 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  import { getCategoryInfos } from '$lib/data/posts'
   import { Category } from '$lib/types/blog'
 
   export let currentCategory: Category | null = null
   export let showCounts: boolean = true
   export let variant: 'default' | 'compact' = 'default'
-
-  // 카테고리 정보 (카테고리별 포스트 개수 포함)
-  const categoryInfos = getCategoryInfos()
+  export let categoryInfos: Array<{ category: Category; count: number }> = []
 
   // 현재 경로에서 활성 카테고리 감지
   $: activeCategory = currentCategory || extractCategoryFromPath($page.url.pathname)

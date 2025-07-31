@@ -14,8 +14,8 @@
 
   export let data: PageData
 
-  // layout 데이터에서 전체 포스트와 태그 가져오기
-  $: ({ allPosts, allTags } = data)
+  // layout 데이터에서 전체 포스트와 태그, 카테고리 정보 가져오기
+  $: ({ allPosts, allTags, categoryInfos } = data)
 
   // 성능 최적화: Set을 사용한 O(1) 태그 검증 (reactive)
   $: allTagsSet = new Set(allTags)
@@ -106,7 +106,7 @@
 
   <!-- Category Filter -->
   <div class="mt-6">
-    <CategoryFilter />
+    <CategoryFilter {categoryInfos} />
   </div>
 
   {#if allTags && allTags.length > 0}
