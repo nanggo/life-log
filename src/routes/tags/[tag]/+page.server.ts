@@ -5,7 +5,7 @@ import type { PageServerLoad } from './$types'
 import { getPostsByTag, getAllTagsWithCounts } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
 
-export const prerender = false // Dynamic route requires SSR
+export const prerender = true
 
 export const load: PageServerLoad = async ({ params }) => {
   const tagName = decodeURIComponent(params.tag)
