@@ -31,7 +31,7 @@
         "testStrategy": "모든 카테고리 버튼 클릭 동작 확인, 반응형 레이아웃 테스트, 접근성 검증",
         "priority": "medium",
         "dependencies": [13],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -42,7 +42,7 @@
         "testStrategy": "태그 개수 정확성 확인, 정렬 순서 검증, 태그 클라우드 시각적 표현 테스트",
         "priority": "medium",
         "dependencies": [12],
-        "status": "pending",
+        "status": "done",
         "subtasks": []
       },
       {
@@ -70,7 +70,7 @@
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-31T02:13:15.490Z",
+      "updated": "2025-07-31T02:25:56.861Z",
       "description": "Tasks for master context"
     }
   }

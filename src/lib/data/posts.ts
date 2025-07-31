@@ -319,3 +319,14 @@ export function getPostsByTag(tag: string): Post[] {
 export function getTagCounts(): Record<string, number> {
   return { ...tagCounts }
 }
+
+/**
+ * 모든 태그와 각 태그별 포스트 개수를 정렬된 순서로 반환합니다.
+ * @returns 태그 정보 배열 (포스트 개수 순으로 정렬, 동일하면 알파벳순)
+ */
+export function getAllTagsWithCounts(): Array<{ tag: string; count: number }> {
+  return allTags.map((tag) => ({
+    tag,
+    count: tagCounts[tag]
+  }))
+}
