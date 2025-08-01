@@ -35,11 +35,6 @@ function determineCategoryFromTags(tags) {
     }
   }
 
-  // 특별한 경우들 처리
-  if (tags.some((tag) => tag.includes('회고') || tag.includes('retrospective'))) {
-    return '일상'
-  }
-
   // 기본값은 개발
   return '개발'
 }

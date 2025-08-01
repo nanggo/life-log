@@ -10,11 +10,14 @@ export const prerender = true
 export async function load({ params }) {
   const { name: categoryParam } = params
 
+  // URL 파라미터 디코딩 (한국어 카테고리명 지원)
+  const decodedParam = decodeURIComponent(categoryParam)
+
   // URL 파라미터를 Category enum 값으로 검증
-  const validCategory = Object.values(Category).find((cat) => cat === categoryParam)
+  const validCategory = Object.values(Category).find((cat) => cat === decodedParam)
 
   if (!validCategory) {
-    throw error(404, `Invalid category: ${categoryParam}`)
+    throw error(404, `Invalid category: ${decodedParam}`)
   }
 
   // 해당 카테고리의 포스트들 가져오기
