@@ -51,21 +51,24 @@ const askQuestion = (index, answers) => {
     options.forEach((option, i) => {
       console.log(`  ${i + 1}. ${option.emoji} ${option.name}`)
     })
-    rl.question('\n번호를 선택하세요 (1-4, 기본값: 1. 일상): ', (answer) => {
-      const choice = parseInt(answer.trim())
-      if (choice >= 1 && choice <= options.length) {
-        answers[name] = options[choice - 1].value
-        askQuestion(index + 1, answers)
-      } else if (answer.trim() === '') {
-        // 빈 값이면 기본값으로 '일상' 설정
-        answers[name] = '일상'
-        console.log('기본 카테고리 "일상"이 선택되었습니다.')
-        askQuestion(index + 1, answers)
-      } else {
-        console.log('올바른 번호를 선택해주세요.')
-        askQuestion(index, answers)
+    rl.question(
+      `\n번호를 선택하세요 (1-${options.length}, 기본값: 1. ${options[0].name}): `,
+      (answer) => {
+        const choice = parseInt(answer.trim())
+        if (choice >= 1 && choice <= options.length) {
+          answers[name] = options[choice - 1].value
+          askQuestion(index + 1, answers)
+        } else if (answer.trim() === '') {
+          // 빈 값이면 기본값으로 첫 번째 옵션 설정
+          answers[name] = options[0].value
+          console.log(`기본 카테고리 "${options[0].name}"이(가) 선택되었습니다.`)
+          askQuestion(index + 1, answers)
+        } else {
+          console.log('올바른 번호를 선택해주세요.')
+          askQuestion(index, answers)
+        }
       }
-    })
+    )
   } else {
     rl.question(question, (answer) => {
       answers[name] = answer

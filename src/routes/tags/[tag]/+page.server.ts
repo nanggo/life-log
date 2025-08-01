@@ -8,7 +8,7 @@ import { extractPostMetadata } from '$lib/util'
 export const prerender = true
 
 export const load: PageServerLoad = async ({ params }) => {
-  const tagName = decodeURIComponent(params.tag)
+  const tagName = params.tag
 
   // Validate tag exists
   const allTagInfos = getAllTagsWithCounts()
