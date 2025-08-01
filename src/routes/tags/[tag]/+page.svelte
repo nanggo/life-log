@@ -2,13 +2,10 @@
   import { goto } from '$app/navigation'
   import { PostsList, TagList } from '$lib/components/post'
   import { name } from '$lib/info'
+  import type { PostMetadata } from '$lib/types'
 
   /** @type {import('./$types').PageData} */
   export let data
-
-  interface PostMetadata {
-    tags: string[]
-  }
 
   // Handle tag click - navigate to that tag's page
   const handleTagClick = (tag: string) => {
@@ -18,8 +15,9 @@
   }
 
   // Extract unique tags from posts
-  $: typedPosts = data.posts as PostMetadata[]
-  $: allTagsFromPosts = [...new Set(typedPosts.flatMap((post) => post.tags))].sort()
+  $: allTagsFromPosts = [
+    ...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))
+  ].sort()
 </script>
 
 <svelte:head>
