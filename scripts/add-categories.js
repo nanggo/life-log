@@ -21,7 +21,7 @@ const categoryMappings = {
 
 // 태그를 기반으로 카테고리 결정
 function determineCategoryFromTags(tags) {
-  if (!tags || !tags.length) return '개발' // 기본값
+  if (!tags || !tags.length) return '일상' // 기본값
 
   const lowercasedTags = tags.map((tag) => tag.toLowerCase())
 
@@ -35,8 +35,8 @@ function determineCategoryFromTags(tags) {
     }
   }
 
-  // 기본값은 개발
-  return '개발'
+  // 기본값은 일상
+  return '일상'
 }
 
 // 제목이나 내용을 기반으로 카테고리 보정
