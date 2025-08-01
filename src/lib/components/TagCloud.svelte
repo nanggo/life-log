@@ -4,10 +4,14 @@
   export let clickable: boolean = false
   export let compact: boolean = false
 
+  // 태그 크기 임계값 상수
+  const TAG_SIZE_LARGE_THRESHOLD = 7
+  const TAG_SIZE_MEDIUM_THRESHOLD = 4
+
   // 태그 크기 계산 함수 (포스트 개수에 따라)
   function getTagSizeClass(count: number): string {
-    if (count >= 7) return 'text-lg font-semibold'
-    if (count >= 4) return 'text-base font-medium'
+    if (count >= TAG_SIZE_LARGE_THRESHOLD) return 'text-lg font-semibold'
+    if (count >= TAG_SIZE_MEDIUM_THRESHOLD) return 'text-base font-medium'
     return 'text-sm font-normal'
   }
 
