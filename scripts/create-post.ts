@@ -5,6 +5,8 @@ import { fileURLToPath } from 'url'
 
 import { format } from 'date-fns'
 
+import { Category } from '../src/lib/types/blog.js'
+
 // __dirname and __filename are not available in ES modules, so we need to define them
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -14,13 +16,28 @@ const rl = readline.createInterface({
   output: process.stdout
 })
 
-// 카테고리 옵션
-const categories = [
-  { value: '일상', name: '일상', emoji: '📝' },
-  { value: '개발', name: '개발', emoji: '💻' },
-  { value: '생각', name: '생각', emoji: '🤔' },
-  { value: '리뷰', name: '리뷰', emoji: '📖' }
-]
+// 카테고리별 이모지 매핑 함수
+function getEmojiForCategory(categoryValue: Category): string {
+  switch (categoryValue) {
+    case Category.DAILY:
+      return '📝'
+    case Category.DEVELOPMENT:
+      return '💻'
+    case Category.THOUGHTS:
+      return '🤔'
+    case Category.REVIEW:
+      return '📖'
+    default:
+      return '📄'
+  }
+}
+
+// Category enum에서 동적으로 카테고리 옵션 생성
+const categories = Object.values(Category).map((value) => ({
+  value,
+  name: value,
+  emoji: getEmojiForCategory(value)
+}))
 
 const questions = [
   { name: 'title', question: '포스트 제목을 입력하세요 (한글 가능): ' },
