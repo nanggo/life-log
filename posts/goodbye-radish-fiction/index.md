@@ -6,6 +6,7 @@ tags:
 draft: false
 image: ./radish.png
 slug: 'goodbye-radish-fiction'
+category: 일상
 ---
 
 ![radish](./radish.png)
