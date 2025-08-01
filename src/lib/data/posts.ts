@@ -179,6 +179,11 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     const categoryMatch = Object.values(Category).find((cat) => cat === categoryValue)
     if (categoryMatch) {
       category = categoryMatch as Category
+    } else {
+      // 유효하지 않은 카테고리에 대한 경고
+      console.warn(
+        `[경고] 파일 '${filepath}'에 유효하지 않은 카테고리 '${categoryValue}'가 있습니다. 기본값 '${Category.DEVELOPMENT}'을 사용합니다.`
+      )
     }
   }
 

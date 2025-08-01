@@ -94,11 +94,29 @@ const askQuestion = (index, answers) => {
   }
 }
 
-function createSlug(title) {
-  return title
+function createSlug(title: string): string {
+  // 기본 slug 생성 시도
+  let slug = title
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-') // 특수문자와 공백을 하이픈으로
+    .replace(/[^a-z0-9가-힣]+/g, '-') // 영문, 숫자, 한글 허용, 나머지는 하이픈으로
     .replace(/^-+|-+$/g, '') // 시작과 끝의 하이픈 제거
+
+  // 한글만 있는 경우 또는 빈 slug인 경우 날짜 기반 fallback 사용
+  if (!slug || slug === '' || /^[가-힣-]+$/.test(slug)) {
+    const now = new Date()
+    const dateStr = now.toISOString().slice(0, 10) // YYYY-MM-DD
+    const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '') // HHMMSS
+
+    // 한글이 포함된 경우 한글을 유지하되 날짜 추가
+    if (/[가-힣]/.test(slug)) {
+      slug = `${slug}-${dateStr}-${timeStr}`
+    } else {
+      // 완전히 빈 경우 날짜만 사용
+      slug = `post-${dateStr}-${timeStr}`
+    }
+  }
+
+  return slug
 }
 
 const createPost = (answers) => {
