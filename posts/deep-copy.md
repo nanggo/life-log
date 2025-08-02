@@ -1,11 +1,12 @@
 ---
-title: '깊은 복사'
+title: 깊은 복사
 date: 2023-06-15T10:07:04.000Z
 tags:
   - frontend
-thumbnail: ''
 draft: false
-slug: 'deep-copy'
+slug: deep-copy
+category: 리뷰
+image: ''
 ---
 
 깊은 복사는 항상 라이브러리를 이용해서 썼었다. 최근에 면접에서 깊은 복사에 대한 질문을 받고 직접 구현해보는 라이브 코딩 시간을 가졌었는데 나는 recursion을 이용해서 구현했었다. Recursion 외에도 방법이 존재하기에 생각나는 김에 정리해본다.

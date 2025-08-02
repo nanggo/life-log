@@ -1,10 +1,11 @@
 ---
-title: '내가 개발자가 된 이유'
+title: 내가 개발자가 된 이유
 date: '2024-11-25'
 tags:
   - 생각
 draft: false
-slug: 'why-i-became-developer'
+slug: why-i-became-developer
+category: 리뷰
 ---
 
 면접에서 간혹 이런 질문을 받는다.

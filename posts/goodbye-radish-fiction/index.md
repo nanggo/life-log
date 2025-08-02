@@ -4,8 +4,9 @@ date: 2023-04-01T15:04:11.000Z
 tags:
   - 회고
 draft: false
-thumbnail: ./radish.png
+image: ./radish.png
 slug: 'goodbye-radish-fiction'
+category: 일상
 ---
 
 ![radish](./radish.png)

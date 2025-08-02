@@ -1,10 +1,11 @@
 ---
 title: 'AI 구독 유목민의 기록: 더 나은 도구를 찾아서'
-slug: 'a-developers-journey-through-ai-subscriptions'
+slug: a-developers-journey-through-ai-subscriptions
 date: '2025-07-08 11:46:55'
 tags:
   - 생각
 draft: false
+category: 리뷰
 ---
 
 ![A conceptual image representing AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)

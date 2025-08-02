@@ -2,393 +2,75 @@
   "master": {
     "tasks": [
       {
-        "id": 1,
-        "title": "TypeScript 기본 설정 및 환경 구축",
-        "description": "jsconfig.json을 tsconfig.json으로 변경하고 TypeScript 컴파일러 설정을 최적화하여 SvelteKit TypeScript 지원을 활성화합니다.",
-        "status": "done",
+        "id": 12,
+        "title": "카테고리 필터링 로직 구현",
+        "description": "포스트를 카테고리별로 필터링하는 유틸리티 함수 구현",
+        "details": "src/lib/utils/posts.js에 getPostsByCategory(category: Category) 함수 추가. 기존 getPosts() 함수를 확장하여 카테고리 필터 매개변수 지원. 클라이언트 사이드 필터링 최적화를 위해 카테고리별 포스트 개수를 반환하는 getCategoryCounts() 함수 구현. 메모이제이션을 활용해 성능 최적화.",
+        "testStrategy": "각 카테고리별 포스트 반환 정확성 테스트, 빈 카테고리 처리 확인, 성능 테스트",
+        "priority": "high",
         "dependencies": [],
-        "priority": "high",
-        "details": "✅ 완료된 작업:\n\n1. jsconfig.json을 tsconfig.json으로 변경 완료\n2. TypeScript 5.0+ 최신 버전 설치 완료\n3. @types/node, @typescript-eslint/eslint-plugin, @typescript-eslint/parser 설치 완료\n4. tsconfig.json에서 strict: true, noImplicitReturns: true, noUnusedLocals: true 설정 완료\n5. SvelteKit의 TypeScript 지원을 위해 svelte.config.js에서 typescript: true 설정 완료\n6. vite.config.ts 파일로 변경하고 TypeScript 설정 적용 완료\n7. package.json의 type: \"module\" 설정 확인 완료\n\n모든 하위 작업이 성공적으로 완료되어 TypeScript 기본 환경 구축이 완전히 끝났습니다. 빌드 및 린트 테스트도 모두 통과하여 다음 단계인 타입 정의 및 마이그레이션 작업을 진행할 준비가 완료되었습니다.",
-        "testStrategy": "✅ 검증 완료: TypeScript 컴파일 에러 0개 확인, npm run build 성공, npm run check 명령어로 타입 체크 통과 검증 완료",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "현재 상황 분석 및 변경 계획 수립",
-            "description": "기존 jsconfig.json 설정 분석하고 TypeScript 마이그레이션 계획 수립",
-            "status": "done",
-            "dependencies": [],
-            "details": "jsconfig.json 현재 설정 확인, package.json 의존성 검토, 누락된 TypeScript 관련 패키지 식별, svelte.config.js 현재 설정 검토, vite.config.js 현재 설정 분석",
-            "testStrategy": ""
-          },
-          {
-            "id": 2,
-            "title": "jsconfig.json을 tsconfig.json으로 변경",
-            "description": "기존 jsconfig.json 설정을 tsconfig.json으로 변환하고 TypeScript 전용 설정 추가",
-            "status": "done",
-            "dependencies": [],
-            "details": "✅ 완료: jsconfig.json을 tsconfig.json으로 변경, strict: true, noImplicitReturns: true, noUnusedLocals: true 설정 적용",
-            "testStrategy": ""
-          },
-          {
-            "id": 3,
-            "title": "누락된 TypeScript 의존성 설치",
-            "description": "@types/node와 @typescript-eslint 관련 패키지 설치",
-            "status": "done",
-            "dependencies": [],
-            "details": "✅ 완료: @types/node, @typescript-eslint/eslint-plugin, @typescript-eslint/parser 설치 완료",
-            "testStrategy": ""
-          },
-          {
-            "id": 4,
-            "title": "svelte.config.js에 TypeScript 설정 활성화",
-            "description": "SvelteKit에서 TypeScript 지원을 위한 설정 추가",
-            "status": "done",
-            "dependencies": [],
-            "details": "✅ 완료: svelte.config.js에 TypeScript 설정 활성화 완료",
-            "testStrategy": ""
-          },
-          {
-            "id": 5,
-            "title": "vite.config.js를 vite.config.ts로 변환",
-            "description": "Vite 설정 파일을 TypeScript로 변환하고 타입 지원 추가",
-            "status": "done",
-            "dependencies": [],
-            "details": "✅ 완료: vite.config.js를 vite.config.ts로 성공적으로 변환 완료",
-            "testStrategy": ""
-          },
-          {
-            "id": 6,
-            "title": "최종 검증 및 테스트",
-            "description": "모든 설정 변경 후 TypeScript 컴파일 및 빌드 테스트",
-            "status": "done",
-            "dependencies": [],
-            "details": "✅ 완료: npm run check, npm run build, npm run lint 모든 테스트 통과 완료",
-            "testStrategy": ""
-          }
-        ]
-      },
-      {
-        "id": 2,
-        "title": "블로그 도메인 타입 정의 작성",
-        "description": "Post, Author, Tag 등 블로그 관련 핵심 타입과 API 응답 타입을 정의하여 타입 안전성을 확보합니다.",
-        "details": "1. src/lib/types/ 디렉토리 생성\n2. Post 인터페이스 정의 (title, slug, date, content, tags, readingTime 등)\n3. Author 인터페이스 정의\n4. Tag 인터페이스 정의\n5. API 응답 타입 정의 (PostListResponse, PostDetailResponse 등)\n6. Frontmatter 타입 정의\n7. 페이지네이션 관련 타입 정의\n8. SEO 메타데이터 타입 정의\n9. 각 타입에 JSDoc 코멘트로 상세 설명 추가",
-        "testStrategy": "모든 타입이 올바르게 export되는지 확인, 타입 정의가 실제 데이터 구조와 일치하는지 검증, TypeScript 컴파일 에러 없음 확인",
-        "priority": "high",
-        "dependencies": [1],
         "status": "done",
         "subtasks": []
       },
       {
-        "id": 3,
-        "title": "JavaScript 파일을 TypeScript로 마이그레이션",
-        "description": "모든 .js 파일을 .ts로 변환하고 Svelte 컴포넌트 내 스크립트 블록을 TypeScript화합니다.",
-        "details": "1. src/lib/utils/ 내 모든 .js 파일을 .ts로 변환\n2. 각 유틸리티 함수에 타입 annotation 추가\n3. Svelte 컴포넌트의 <script> 블록을 <script lang=\"ts\">로 변경\n4. 컴포넌트 props 타입 정의 (export let prop: Type)\n5. 이벤트 핸들러 타입 정의\n6. stores.js를 stores.ts로 변환하고 Writable<Type> 타입 적용\n7. app.d.ts 파일에서 글로벌 타입 정의\n8. 함수 매개변수와 반환값에 명시적 타입 지정",
-        "testStrategy": "모든 파일이 TypeScript로 변환되었는지 확인, 타입 체크 통과, 기존 기능 정상 작동 검증, ESLint 에러 없음 확인",
-        "priority": "high",
-        "dependencies": [1, 2],
-        "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "src/lib/utils/ JavaScript 파일들을 TypeScript로 변환",
-            "description": "src/lib/utils/ 디렉토리 내의 모든 .js 파일을 .ts 확장자로 변경하고 각 유틸리티 함수에 타입 어노테이션을 추가합니다.",
-            "dependencies": [],
-            "details": "1. posts.js를 posts.ts로 변환하고 함수 매개변수 및 반환 타입 정의\n2. slugs.js를 slugs.ts로 변환하고 문자열 처리 함수 타입 정의\n3. 기타 유틸리티 파일들의 확장자 변경 및 타입 적용\n4. 각 함수의 JSDoc 주석을 TypeScript 타입으로 대체",
-            "status": "done",
-            "testStrategy": "변환된 파일들이 정상적으로 import되는지 확인, 함수 호출 시 타입 안전성 검증, pnpm check 명령어로 타입 체크 통과 확인"
-          },
-          {
-            "id": 2,
-            "title": "Svelte 컴포넌트 스크립트 블록을 TypeScript로 변환",
-            "description": "모든 Svelte 컴포넌트의 <script> 태그를 <script lang=\"ts\">로 변경하고 컴포넌트 props에 타입을 정의합니다.",
-            "dependencies": ["3.1"],
-            "details": "1. src/lib/components/ 내 모든 .svelte 파일의 script 태그 변경\n2. src/routes/ 내 모든 페이지 컴포넌트 script 태그 변경\n3. export let prop 구문을 export let prop: Type 형태로 변환\n4. 컴포넌트 간 props 전달 시 타입 안전성 확보",
-            "status": "done",
-            "testStrategy": "모든 컴포넌트가 TypeScript 모드로 정상 작동하는지 확인, props 타입 검증이 올바르게 작동하는지 테스트"
-          },
-          {
-            "id": 3,
-            "title": "이벤트 핸들러 및 반응형 변수 타입 정의",
-            "description": "Svelte 컴포넌트 내 이벤트 핸들러 함수와 반응형 변수들에 명시적 타입을 정의합니다.",
-            "dependencies": ["3.2"],
-            "details": "1. 클릭, 입력 등 이벤트 핸들러 함수 매개변수 타입 정의\n2. $: 반응형 구문에서 사용되는 변수 타입 명시\n3. on:click, on:input 등 이벤트 바인딩 타입 정의\n4. dispatch 함수에서 커스텀 이벤트 타입 정의",
-            "status": "done",
-            "testStrategy": "이벤트 핸들러가 올바른 타입으로 호출되는지 확인, 반응형 변수의 타입 안전성 검증"
-          },
-          {
-            "id": 4,
-            "title": "stores.js를 TypeScript로 변환 및 Writable 타입 적용",
-            "description": "Svelte stores 파일을 TypeScript로 변환하고 각 store에 적절한 Writable<Type> 타입을 적용합니다.",
-            "dependencies": ["3.1"],
-            "details": "1. src/lib/stores.js를 src/lib/stores.ts로 변환\n2. 각 store 변수에 Writable<Type> 또는 Readable<Type> 타입 적용\n3. store에서 파생되는 derived store들의 타입 정의\n4. store 구독 및 업데이트 함수에 타입 안전성 적용",
-            "status": "done",
-            "testStrategy": "store의 타입이 올바르게 추론되는지 확인, store 사용 시 타입 체크 통과 검증"
-          },
-          {
-            "id": 5,
-            "title": "app.d.ts 글로벌 타입 정의 및 최종 검증",
-            "description": "app.d.ts 파일에 글로벌 타입 정의를 추가하고 전체 마이그레이션 결과를 검증합니다.",
-            "dependencies": ["3.1", "3.2", "3.3", "3.4"],
-            "details": "1. app.d.ts에 앱 전역에서 사용할 타입 선언 추가\n2. SvelteKit 관련 타입 확장 및 커스터마이징\n3. 환경 변수 타입 정의 추가\n4. 전체 프로젝트에서 남은 any 타입 제거\n5. pnpm build, pnpm check, pnpm lint 명령어로 최종 검증",
-            "status": "done",
-            "testStrategy": "모든 TypeScript 에러가 해결되었는지 확인, 빌드 성공 및 타입 체크 통과, ESLint 에러 0개 달성"
-          }
-        ]
-      },
-      {
-        "id": 4,
-        "title": "ESLint 규칙 강화 및 코드 품질 개선",
-        "description": "TypeScript ESLint 규칙을 추가하고 Svelte 전용 린팅 규칙을 강화하여 코드 품질을 개선합니다.",
-        "details": "1. @typescript-eslint/recommended 규칙 적용\n2. eslint-plugin-svelte 최신 버전으로 업데이트\n3. Import 순서 정리를 위한 eslint-plugin-import 설정\n4. no-unused-vars, no-undef 등 TypeScript 전용 규칙 적용\n5. Prettier와 ESLint 충돌 방지 설정\n6. Pre-commit 훅 설정 (husky + lint-staged)\n7. .vscode/settings.json에 자동 포맷팅 설정\n8. 네이밍 컨벤션 규칙 정의 (@typescript-eslint/naming-convention)",
-        "testStrategy": "npm run lint 명령어로 ESLint 에러 0개 확인, Pre-commit 훅 정상 작동 검증, 코드 포맷팅 자동 적용 확인",
+        "id": 13,
+        "title": "카테고리별 라우팅 구현",
+        "description": "/posts/[category] 라우트 생성 및 동적 페이지 구현",
+        "details": "src/routes/posts/[category]/+page.svelte와 +page.server.ts 생성. params.category를 검증하여 유효한 Category enum 값인지 확인. getPostsByCategory() 함수를 사용해 해당 카테고리 포스트 로드. 페이지네이션 지원을 위해 기존 pagination 로직 재사용. SEO를 위한 메타 태그 설정 (제목: '{카테고리} 포스트', 설명 포함).",
+        "testStrategy": "각 카테고리 URL 접근 테스트, 유효하지 않은 카테고리 처리 확인, 페이지네이션 동작 검증",
         "priority": "medium",
-        "dependencies": [3],
+        "dependencies": [12],
         "status": "done",
         "subtasks": []
       },
       {
-        "id": 5,
-        "title": "컴포넌트 구조 재조직 및 분리",
-        "description": "컴포넌트를 논리적 단위로 재조직하고 재사용 가능한 컴포넌트를 추출하여 유지보수성을 개선합니다.",
-        "details": "1. src/lib/components/ 하위에 ui/, layout/, post/, common/ 디렉토리 생성\n2. 기존 컴포넌트들을 역할에 따라 적절한 디렉토리로 이동\n3. 큰 컴포넌트를 작은 단위로 분리 (PostCard, PostMeta, TagList 등)\n4. 재사용 가능한 UI 컴포넌트 추출 (Button, Icon, Loading 등)\n5. 각 컴포넌트에 Props 인터페이스 정의\n6. 컴포넌트별 index.ts 파일로 export 정리\n7. 슬롯과 이벤트에 타입 정의 추가",
-        "testStrategy": "컴포넌트 import 경로 정상 작동 확인, 기존 기능 유지 검증, 컴포넌트 재사용성 테스트, TypeScript 타입 체크 통과",
+        "id": 14,
+        "title": "CategoryFilter 컴포넌트 구현",
+        "description": "4개 고정 카테고리 버튼을 제공하는 필터 컴포넌트 개발",
+        "details": "src/lib/components/CategoryFilter.svelte 생성. 4개 카테고리 버튼을 Tailwind CSS로 스타일링 (현재 활성 카테고리 하이라이트 포함). 클릭 시 해당 카테고리 페이지로 내비게이션. 반응형 디자인으로 모바일에서는 2x2 그리드, 데스크톱에서는 4개 버튼 일렬 배치. 각 카테고리별 포스트 개수 표시.",
+        "testStrategy": "모든 카테고리 버튼 클릭 동작 확인, 반응형 레이아웃 테스트, 접근성 검증",
         "priority": "medium",
-        "dependencies": [3],
+        "dependencies": [13],
         "status": "done",
         "subtasks": []
       },
       {
-        "id": 6,
-        "title": "이미지 최적화 및 성능 개선",
-        "description": "Sharp 이미지 처리를 개선하고 WebP 포맷 지원을 강화하여 로딩 성능을 최적화합니다.",
-        "details": "1. Sharp 라이브러리 최신 버전으로 업데이트\n2. WebP 포맷 자동 변환 로직 구현\n3. 반응형 이미지 처리를 위한 srcset 생성\n4. 이미지 지연 로딩 (lazy loading) 구현\n5. 이미지 압축 최적화 설정\n6. 이미지 캐싱 전략 구현\n7. 이미지 처리 관련 타입 정의\n8. Vite의 asset 처리 최적화 설정",
-        "testStrategy": "이미지 로딩 속도 측정, WebP 포맷 변환 확인, Lighthouse 성능 점수 90점 이상 유지 검증, 다양한 디바이스에서 반응형 이미지 테스트",
-        "priority": "low",
-        "dependencies": [3],
-        "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Sharp 라이브러리 업데이트 및 WebP 변환 로직 구현",
-            "description": "Sharp 라이브러리를 최신 버전으로 업데이트하고 이미지 자동 WebP 변환 기능을 구현합니다.",
-            "dependencies": [],
-            "details": "Sharp npm 패키지를 최신 버전으로 업데이트하고, 이미지 업로드 시 자동으로 WebP 포맷으로 변환하는 로직을 src/lib/utils/에 구현합니다. 원본 이미지 포맷을 유지하면서 WebP 버전도 함께 생성하여 브라우저 지원에 따라 선택적으로 제공할 수 있도록 설정합니다.",
-            "status": "done",
-            "testStrategy": "다양한 포맷의 이미지(JPEG, PNG, GIF)를 WebP로 변환하는 테스트, 변환된 이미지 품질 확인, 변환 실패 시 원본 이미지 fallback 동작 검증"
-          },
-          {
-            "id": 2,
-            "title": "반응형 이미지 처리 및 srcset 생성 구현",
-            "description": "다양한 화면 크기에 최적화된 이미지를 생성하고 srcset 속성을 자동으로 생성하는 기능을 구현합니다.",
-            "dependencies": ["6.1"],
-            "details": "Sharp를 사용하여 이미지를 여러 해상도(320w, 640w, 960w, 1280w)로 리사이즈하고, Svelte 컴포넌트에서 srcset과 sizes 속성을 자동으로 생성하는 유틸리티 함수를 작성합니다. 블로그 포스트 내 이미지와 썸네일 이미지에 적용합니다.",
-            "status": "done",
-            "testStrategy": "각 해상도별 이미지 생성 확인, srcset 속성 정확성 검증, 다양한 디바이스에서 적절한 이미지 로딩 테스트"
-          },
-          {
-            "id": 3,
-            "title": "이미지 지연 로딩 및 압축 최적화 구현",
-            "description": "Intersection Observer API를 활용한 이미지 지연 로딩과 Sharp 압축 설정 최적화를 구현합니다.",
-            "dependencies": ["6.2"],
-            "details": "Svelte 컴포넌트로 lazy loading 기능을 구현하고, Sharp 압축 옵션을 최적화하여 품질과 파일 크기의 균형을 맞춥니다. WebP는 80% 품질, JPEG는 85% 품질로 설정하고, progressive JPEG 옵션을 활성화합니다.",
-            "status": "done",
-            "testStrategy": "스크롤 시 이미지 지연 로딩 동작 확인, 압축된 이미지 품질 육안 검증, 파일 크기 감소율 측정, Lighthouse 성능 점수 개선 확인"
-          },
-          {
-            "id": 4,
-            "title": "이미지 캐싱 전략 및 Vite asset 처리 최적화",
-            "description": "이미지 캐싱 전략을 구현하고 Vite의 asset 처리를 최적화하여 빌드 성능을 개선합니다.",
-            "dependencies": ["6.3"],
-            "details": "Vite 설정에서 이미지 asset 처리를 최적화하고, 브라우저 캐싱을 위한 적절한 HTTP 헤더를 설정합니다. 정적 이미지는 해시 기반 파일명을 사용하여 장기 캐싱을 활성화하고, CDN 연동을 위한 설정을 준비합니다.",
-            "status": "done",
-            "testStrategy": "빌드된 이미지 파일의 해시 네이밍 확인, 브라우저 개발자 도구에서 캐시 헤더 검증, 이미지 로딩 속도 측정"
-          },
-          {
-            "id": 5,
-            "title": "이미지 처리 타입 정의 및 통합 테스트",
-            "description": "이미지 처리 관련 TypeScript 타입을 정의하고 전체 이미지 최적화 기능의 통합 테스트를 수행합니다.",
-            "dependencies": ["6.1", "6.2", "6.3", "6.4"],
-            "details": "src/lib/types/image.ts에 이미지 처리 관련 인터페이스들을 정의하고, 모든 이미지 최적화 기능을 통합하여 테스트합니다. Lighthouse 성능 점수 90점 이상 달성을 목표로 최종 검증을 수행합니다.",
-            "status": "done",
-            "testStrategy": "TypeScript 컴파일 에러 없음 확인, Lighthouse 성능 점수 90점 이상 달성, WebP 지원 브라우저와 미지원 브라우저에서의 fallback 동작 검증, 이미지 로딩 속도 개선 정도 측정"
-          }
-        ]
-      },
-      {
-        "id": 7,
-        "title": "테스트 환경 구축 및 기본 테스트 작성",
-        "description": "Vitest를 사용한 테스트 환경을 구축하고 핵심 컴포넌트와 유틸리티 함수에 대한 기본 테스트를 작성합니다.",
-        "details": "1. Vitest 및 @testing-library/svelte 설치\n2. vitest.config.ts 파일 생성 및 설정\n3. 테스트 환경을 위한 TypeScript 설정 추가\n4. 유틸리티 함수들에 대한 단위 테스트 작성\n5. 주요 컴포넌트에 대한 렌더링 테스트 작성\n6. 테스트 커버리지 설정 및 리포트 생성\n7. CI/CD 파이프라인에 테스트 실행 추가\n8. 테스트 스크립트 package.json에 추가",
-        "testStrategy": "모든 테스트 케이스 통과 확인, 테스트 커버리지 70% 이상 달성, CI/CD에서 테스트 자동 실행 검증",
-        "priority": "low",
-        "dependencies": [4, 5],
-        "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Vitest 테스트 환경 설정 및 의존성 설치",
-            "description": "Vitest, @testing-library/svelte, jsdom 등 테스트에 필요한 의존성을 설치하고 기본 설정 파일을 생성합니다.",
-            "dependencies": [],
-            "details": "1. Vitest, @testing-library/svelte, @testing-library/jest-dom, jsdom 패키지 설치\n2. vitest.config.ts 파일 생성 및 기본 설정 구성\n3. TypeScript 설정에 테스트 환경 타입 추가\n4. package.json에 테스트 관련 스크립트 추가",
-            "status": "done",
-            "testStrategy": "vitest --run 명령으로 테스트 환경 정상 작동 확인"
-          },
-          {
-            "id": 2,
-            "title": "유틸리티 함수 단위 테스트 작성",
-            "description": "posts.js, utils 디렉토리의 핵심 유틸리티 함수들에 대한 포괄적인 단위 테스트를 작성합니다.",
-            "dependencies": ["7.1"],
-            "details": "1. src/lib/utils/posts.js의 slug 정규화 함수 테스트\n2. 날짜 포맷팅 함수 테스트\n3. 태그 처리 함수 테스트\n4. 읽기 시간 계산 함수 테스트\n5. 에지 케이스 및 에러 상황 테스트 포함\n<info added on 2025-07-28T00:55:25.699Z>\n테스트 케이스 한글화 작업 완료. 사용자 피드백을 반영하여 영어 대신 한글을 사용하도록 개선했습니다. 모든 describe, it 구문을 한글로 변경하여 테스트 설명이 더 명확하고 직관적이 되었으며, 코멘트도 한글로 통일하여 일관성을 유지했습니다. 31개 테스트 케이스가 모두 정상 통과하였고, 한글 테스트를 통해 개발자 간 소통이 더 명확해지고 테스트 실패 시 문제점 파악이 용이해졌습니다. 프로젝트가 한국어 기반이므로 일관성도 향상되었습니다.\n</info added on 2025-07-28T00:55:25.699Z>",
-            "status": "done",
-            "testStrategy": "모든 유틸리티 함수에 대해 정상 케이스, 에지 케이스, 에러 케이스 테스트 작성 및 100% 커버리지 달성"
-          },
-          {
-            "id": 3,
-            "title": "주요 컴포넌트 렌더링 테스트 작성",
-            "description": "Header, PostCard, TagList 등 핵심 UI 컴포넌트들의 렌더링 및 인터랙션 테스트를 작성합니다.",
-            "dependencies": ["7.1"],
-            "details": "1. Header 컴포넌트 렌더링 및 네비게이션 링크 테스트\n2. PostCard 컴포넌트 props 전달 및 렌더링 테스트\n3. TagList 컴포넌트 태그 표시 및 클릭 이벤트 테스트\n4. PostMeta 컴포넌트 날짜 및 읽기 시간 표시 테스트\n5. 반응형 동작 및 접근성 테스트 포함",
-            "status": "done",
-            "testStrategy": "컴포넌트별 props 전달, 이벤트 처리, DOM 렌더링 정확성 검증"
-          },
-          {
-            "id": 4,
-            "title": "테스트 커버리지 설정 및 리포트 생성",
-            "description": "코드 커버리지 측정을 위한 설정을 구성하고 리포트 생성 환경을 구축합니다.",
-            "dependencies": ["7.2", "7.3"],
-            "details": "1. vitest.config.ts에 coverage 설정 추가\n2. @vitest/coverage-v8 패키지 설치 및 설정\n3. 커버리지 제외 파일 및 디렉토리 설정\n4. HTML 및 텍스트 형태 커버리지 리포트 생성\n5. 최소 커버리지 임계값 70% 설정",
-            "status": "done",
-            "testStrategy": "전체 테스트 실행 후 커버리지 70% 이상 달성 확인 및 리포트 생성 검증"
-          },
-          {
-            "id": 5,
-            "title": "CI/CD 파이프라인 테스트 통합 및 자동화",
-            "description": "GitHub Actions 워크플로우에 테스트 실행을 통합하고 빌드 프로세스에 테스트 검증을 추가합니다.",
-            "dependencies": ["7.4"],
-            "details": "1. .github/workflows/ci.yml 파일 수정하여 테스트 단계 추가\n2. 테스트 실패 시 빌드 중단 설정\n3. 테스트 커버리지 결과를 PR 코멘트로 자동 게시\n4. 의존성 캐싱으로 CI 성능 최적화\n5. 테스트 실행 병렬화 설정",
-            "status": "done",
-            "testStrategy": "PR 생성 시 자동 테스트 실행 확인, 테스트 실패 시 빌드 중단 검증, 커버리지 리포트 자동 생성 확인"
-          }
-        ]
-      },
-      {
-        "id": 8,
-        "title": "빌드 최적화 및 최종 검증",
-        "description": "Vite 설정을 최적화하고 번들 크기를 분석하여 전체 프로젝트의 성능을 최종 검증합니다.",
-        "details": "1. vite.config.ts 최적화 (code splitting, tree shaking)\n2. 번들 크기 분석도구 설치 및 실행 (vite-bundle-analyzer)\n3. 불필요한 의존성 제거 및 정리\n4. 프로덕션 빌드 최적화 설정\n5. RSS/Sitemap 생성 캐싱 구현\n6. Static 리소스 캐싱 최적화\n7. GitHub Actions 워크플로우 TypeScript 지원 업데이트\n8. 최종 성능 검증 및 문서화",
-        "testStrategy": "빌드 시간 현재 대비 동일하거나 개선 확인, 번들 크기 증가 없음 검증, Lighthouse 성능 점수 90점 이상 유지, 모든 기존 기능 정상 작동 최종 확인",
+        "id": 15,
+        "title": "태그 전용 페이지 구현",
+        "description": "/tags 페이지에 태그 클라우드 구현",
+        "details": "src/routes/tags/+page.svelte와 +page.server.ts 생성. 모든 태그와 각 태그별 포스트 개수를 수집하는 getAllTagsWithCounts() 함수 구현. 태그를 포스트 개수 순으로 정렬하여 표시. TagCloud 컴포넌트에서 글꼴 크기를 포스트 개수에 비례하여 조정 (1-3개: text-sm, 4-6개: text-base, 7개 이상: text-lg). Tailwind CSS로 태그 클라우드 스타일링.",
+        "testStrategy": "태그 개수 정확성 확인, 정렬 순서 검증, 태그 클라우드 시각적 표현 테스트",
         "priority": "medium",
-        "dependencies": [6, 7],
+        "dependencies": [12],
         "status": "done",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "Vite 설정 최적화 및 코드 분할 구현",
-            "description": "vite.config.ts에서 code splitting, tree shaking, chunk 최적화를 구현하여 번들 크기를 줄이고 로딩 성능을 개선합니다.",
-            "dependencies": [],
-            "details": "1. vite.config.ts에서 build.rollupOptions.output.manualChunks 설정으로 vendor 청크 분리\n2. tree shaking 최적화를 위한 sideEffects: false 설정\n3. dynamic import를 활용한 route-based 코드 분할 구현\n4. CSS 코드 분할 및 최적화 설정\n5. 번들 크기 최적화를 위한 압축 설정 적용\n<info added on 2025-07-28T23:33:15.697Z>\nVite 설정 최적화 구현 완료:\n- 고급 manualChunks 함수로 세분화된 vendor 청크 분리 구현 (svelte-vendor, ui-vendor, utils-vendor, vendor)\n- CSS 코드 분할 활성화로 스타일 시트 최적화\n- esbuild minify 설정으로 압축 효율성 향상\n- optimizeDeps 설정 추가로 의존성 tree shaking 최적화\n- 빌드 프로세스 성공적으로 완료\n- 번들 크기 최적화 효과 확인: gzip 압축 후 svelte-vendor 청크가 29.49kB에서 11.50kB로 61% 크기 감소 달성\n</info added on 2025-07-28T23:33:15.697Z>",
-            "status": "done",
-            "testStrategy": "번들 크기 감소 확인, 초기 로딩 시간 개선 측정, 모든 페이지 정상 로딩 검증"
-          },
-          {
-            "id": 2,
-            "title": "번들 분석 도구 설치 및 의존성 최적화",
-            "description": "vite-bundle-analyzer를 설치하여 번들 크기를 분석하고 불필요한 의존성을 제거합니다.",
-            "dependencies": ["8.1"],
-            "details": "1. vite-bundle-analyzer 패키지 설치 및 설정\n2. package.json 의존성 분석으로 미사용 패키지 식별\n3. bundle 분석 보고서 생성 및 큰 모듈 식별\n4. 불필요한 devDependencies 및 dependencies 제거\n5. 중복 의존성 확인 및 정리\n6. tree-shaking이 제대로 작동하지 않는 라이브러리 대체 검토\n<info added on 2025-07-28T23:36:42.923Z>\nvite-bundle-analyzer 설치 완료 및 npm 스크립트 추가됨. package.json에서 미사용 의존성 reading-time-estimator 제거 완료 (reading-time만 실제 사용됨을 확인). 번들 분석 결과 코드 분할이 효과적으로 작동하여 vendor 청크가 적절히 분리됨을 확인. 총 번들 크기는 svelte-vendor 기준 29.49kB에서 11.50kB gzip으로 최적화됨. 의존성 정리 후에도 pnpm build 명령어로 빌드가 성공적으로 완료되어 기능 이상 없음을 검증함.\n</info added on 2025-07-28T23:36:42.923Z>",
-            "status": "done",
-            "testStrategy": "의존성 제거 후 빌드 성공 확인, 번들 크기 감소 측정, 모든 기능 정상 작동 검증"
-          },
-          {
-            "id": 3,
-            "title": "프로덕션 빌드 최적화 및 캐싱 전략 구현",
-            "description": "프로덕션 환경을 위한 빌드 최적화 설정과 정적 리소스 캐싱 전략을 구현합니다.",
-            "dependencies": ["8.2"],
-            "details": "1. 프로덕션 빌드를 위한 환경별 설정 분리\n2. 정적 리소스(이미지, 폰트)에 대한 캐시 헤더 설정\n3. CSS 및 JS 파일 압축 및 최적화\n4. 이미지 최적화 및 lazy loading 구현\n5. Service Worker를 통한 캐싱 전략 검토\n6. CDN 준비를 위한 static asset 경로 최적화\n<info added on 2025-07-28T23:38:46.195Z>\n구현 완료 내역:\n- vercel.json 설정: immutable assets 1년 캐시, 일반 리소스 1년 캐시, favicon 1일 캐시 적용\n- LazyImage.svelte 컴포넌트: Intersection Observer API를 활용한 이미지 lazy loading 구현\n- vite-plugin-compression 플러그인: Gzip 및 Brotli 압축 활성화로 번들 크기 대폭 감소\n- 소스맵 최적화: 환경변수 기반으로 개발환경에서만 생성하도록 설정\n- 압축 성과: svelte-vendor.js 파일 28.79kb에서 11.22kb(gzip), 10.13kb(brotli)로 60% 이상 크기 감소 달성\n- 모든 정적 리소스에 .gz, .br 압축 파일 자동 생성으로 네트워크 성능 최적화 완료\n</info added on 2025-07-28T23:38:46.195Z>",
-            "status": "done",
-            "testStrategy": "프로덕션 빌드 성공 확인, 캐시 헤더 적용 검증, 로딩 성능 개선 측정"
-          },
-          {
-            "id": 4,
-            "title": "RSS/Sitemap 생성 캐싱 및 GitHub Actions 업데이트",
-            "description": "RSS와 Sitemap 생성에 캐싱을 구현하고 GitHub Actions 워크플로우를 TypeScript를 지원하도록 업데이트합니다.",
-            "dependencies": ["8.3"],
-            "details": "1. RSS 피드 생성 시 캐싱 메커니즘 구현\n2. Sitemap 생성 최적화 및 캐싱 적용\n3. GitHub Actions 워크플로우에서 TypeScript 타입 체크 단계 추가\n4. CI/CD 파이프라인에서 빌드 최적화 검증 단계 포함\n5. 배포 전 성능 메트릭 측정 자동화\n6. 캐시 무효화 전략 구현\n<info added on 2025-07-28T23:40:06.587Z>\n구현 완료:\n- RSS 피드에 ETag 및 Last-Modified 헤더를 추가하여 캐싱 성능 개선\n- 캐시 유지 시간을 기존 30분에서 1시간으로 확장 적용\n- Sitemap에 포스트 변경사항 기반 동적 ETag 생성으로 스마트 캐시 무효화 구현\n- GitHub Actions CI 워크플로우에 성능 메트릭 자동 측정 단계 통합\n- 빌드 번들 크기 분석, Gzip 압축 검증, 정적 파일 최적화 상태 점검 자동화\n- CI 파이프라인에서 모든 캐싱 및 최적화 기능 정상 작동 검증 완료\n</info added on 2025-07-28T23:40:06.587Z>",
-            "status": "done",
-            "testStrategy": "RSS/Sitemap 생성 시간 단축 확인, GitHub Actions 빌드 성공 검증, 캐시 효과 측정"
-          },
-          {
-            "id": 5,
-            "title": "최종 성능 검증 및 문서화",
-            "description": "전체 프로젝트의 성능을 종합적으로 검증하고 최적화 결과를 문서화합니다.",
-            "dependencies": ["8.1", "8.2", "8.3", "8.4"],
-            "details": "1. Lighthouse 성능 감사 실행 및 90점 이상 달성 확인\n2. 빌드 시간 및 번들 크기 최적화 전후 비교 분석\n3. 로딩 시간, First Content Paint, Largest Contentful Paint 측정\n4. Core Web Vitals 지표 확인 및 개선사항 정리\n5. 성능 최적화 결과 보고서 작성\n6. 향후 성능 모니터링을 위한 가이드라인 문서화\n7. 프로덕션 배포 전 최종 검증 체크리스트 완성\n<info added on 2025-07-28T23:41:49.475Z>\n최종 성능 검증 완료 - 모든 품질 검사를 성공적으로 통과했습니다:\n\n✅ 코드 품질 검증 완료:\n- TypeScript 타입 체크: 0 errors, 0 warnings\n- ESLint 및 Prettier 규칙: 모든 검사 통과\n- 코드 포맷팅 일관성 확인\n\n✅ 빌드 성능 최적화 완료:\n- 최종 빌드 시간: 827ms (이전 대비 대폭 개선)\n- 압축 성능: Gzip 61%, Brotli 65% 평균 압축률 달성\n- Vendor 청크 분리를 통한 효율적 캐싱 전략 적용\n\n✅ 프로덕션 배포 준비 완료:\n- 모든 최적화 기능 정상 작동 확인\n- 캐싱 헤더 및 압축 파일 생성 검증\n- 성능 최적화 결과 보고서 '.taskmaster/reports/build-optimization-report.md' 생성\n\n전체 빌드 최적화 및 최종 검증 작업이 성공적으로 완료되어 프로덕션 배포 준비가 완전히 끝났습니다.\n</info added on 2025-07-28T23:41:49.475Z>",
-            "status": "done",
-            "testStrategy": "Lighthouse 점수 90점 이상 달성, 모든 기능 정상 작동 최종 확인, 성능 메트릭 목표치 달성 검증"
-          }
-        ]
+        "subtasks": []
       },
       {
-        "id": 9,
-        "title": "Google SEO 개선: 메타 태그 중복 문제 해결 및 검색 최적화",
-        "description": "layout과 page 레벨에서 발생하는 description 메타 태그 중복 문제를 해결하고, 개별 포스트의 고유 메타데이터가 올바르게 표시되도록 SEO를 최적화합니다.",
-        "details": "1. app.html과 +layout.svelte에서 메타 태그 중복 발생 지점 분석\n2. 개별 포스트 페이지에서 고유 description 메타 태그 우선순위 설정\n3. svelte:head 블록을 통한 동적 메타 태그 관리 구현\n4. Open Graph 및 Twitter Card 메타 태그 추가\n5. JSON-LD 구조화 데이터 구현 (Article, BlogPosting)\n6. robots.txt 및 sitemap.xml 최적화\n7. Google Search Console 연동 및 크롤링 요청\n8. 검색 엔진 최적화를 위한 canonical URL 설정\n9. 메타 태그 중복 검증 도구 스크립트 작성\n10. SEO 성능 모니터링 설정",
-        "testStrategy": "각 페이지별 메타 태그 중복 없음 확인, Google Rich Results Test로 구조화 데이터 검증, Lighthouse SEO 점수 90점 이상 달성, Google Search Console에서 크롤링 오류 0개 확인, 다양한 소셜 미디어 플랫폼에서 링크 미리보기 테스트",
+        "id": 16,
+        "title": "개별 태그 라우팅 구현",
+        "description": "/tags/[tag] 라우트로 태그별 포스트 목록 페이지 구현",
+        "details": "src/routes/tags/[tag]/+page.svelte와 +page.server.ts 생성. URL의 태그 파라미터를 디코딩하여 해당 태그를 포함한 포스트 필터링. 기존 getPostsByTag() 함수 활용 또는 새로 구현. 카테고리와 독립적으로 모든 카테고리의 포스트에서 해당 태그 검색. SEO 최적화를 위한 동적 메타 태그 설정. 페이지네이션 지원.",
+        "testStrategy": "다양한 태그로 URL 접근 테스트, 한글 태그 URL 인코딩/디코딩 확인, 존재하지 않는 태그 처리 검증",
+        "priority": "medium",
+        "dependencies": [15],
         "status": "done",
-        "dependencies": [5],
-        "priority": "high",
-        "subtasks": [
-          {
-            "id": 1,
-            "title": "메타 태그 중복 분석 및 우선순위 설정",
-            "description": "app.html과 +layout.svelte에서 발생하는 메타 태그 중복 지점을 분석하고, 개별 포스트 페이지에서 고유 description 메타 태그가 우선적으로 표시되도록 설정합니다.",
-            "dependencies": [],
-            "details": "1. app.html의 기본 메타 태그 구조 분석\n2. +layout.svelte의 메타 태그 설정 현황 파악\n3. 개별 포스트 페이지의 메타 태그 처리 방식 검토\n4. 메타 태그 우선순위 규칙 정의 (page > layout > app)\n5. svelte:head 블록을 통한 동적 메타 태그 관리 구현\n6. 중복 제거를 위한 조건부 렌더링 로직 추가",
-            "status": "done",
-            "testStrategy": "각 레벨별 메타 태그 렌더링 확인, Chrome DevTools로 실제 DOM 메타 태그 검증, 중복 태그 없음 확인"
-          },
-          {
-            "id": 2,
-            "title": "Open Graph 및 Twitter Card 메타 태그 구현",
-            "description": "소셜 미디어 공유를 위한 Open Graph 및 Twitter Card 메타 태그를 각 포스트별로 동적 생성하여 추가합니다.",
-            "dependencies": ["9.1"],
-            "details": "1. Open Graph 메타 태그 구조 설계 (og:title, og:description, og:image, og:url)\n2. Twitter Card 메타 태그 구조 설계 (twitter:card, twitter:title, twitter:description, twitter:image)\n3. 포스트별 대표 이미지 추출 로직 구현\n4. 기본 이미지 fallback 설정\n5. URL canonical 설정과 연동\n6. 다국어 지원을 위한 og:locale 설정\n<info added on 2025-07-24T10:48:33.620Z>\n구현 완료됨. 레이아웃과 포스트 페이지에서 포괄적인 Open Graph 및 Twitter Card 메타 태그를 성공적으로 구현했습니다.\n\n레이아웃 레벨에서는 og:image:width, og:image:height, og:image:type, og:site_name, og:locale 등의 추가 Open Graph 속성과 twitter:site, twitter:creator, twitter:image:alt 등의 강화된 Twitter Card 메타 태그를 추가했습니다.\n\n포스트 레벨에서는 의미적 정확성을 위해 og:type을 \"website\"에서 \"article\"로 변경하고, article:author, article:published_time, article:tag 등 아티클 전용 메타 태그를 추가했습니다. 이미지 유형에 따른 조건부 dimensions와 동적 콘텐츠가 포함된 Twitter 이미지 alt 텍스트도 구현했습니다.\n\n서버 측에서는 포스트 콘텐츠 HTML에서 첫 번째 이미지를 추출하는 로직을 구현하고, 포스트 이미지 → 생성된 OG 이미지 → 사이트 파비콘으로 이어지는 스마트 폴백 전략을 수립했습니다. 상대 경로 이미지에 대한 절대 URL 처리와 적절한 dimensions를 가진 JSON-LD 스키마 강화도 완료했습니다.\n\n기술적으로는 사용하지 않는 `updated` 필드 참조를 제거하여 TypeScript 컴파일 오류를 수정하고, 한국어 로케일(ko_KR) 지원을 추가했습니다. 모든 빌드, 린트, 타입 체크가 통과하며, 포스트별 이미지가 있을 때 향상된 소셜 미디어 링크 미리보기와 개선된 SEO가 제공됩니다.\n</info added on 2025-07-24T10:48:33.620Z>",
-            "status": "done",
-            "testStrategy": "Facebook Debugger 및 Twitter Card Validator로 메타 태그 검증, 다양한 소셜 플랫폼에서 링크 미리보기 테스트"
-          },
-          {
-            "id": 3,
-            "title": "JSON-LD 구조화 데이터 구현",
-            "description": "Google 검색 결과 향상을 위해 Article 및 BlogPosting 스키마를 활용한 JSON-LD 구조화 데이터를 구현합니다.",
-            "dependencies": ["9.1"],
-            "details": "1. Article 스키마 구조 설계 (@type: Article, headline, author, datePublished, dateModified)\n2. BlogPosting 스키마 구조 설계 (추가 블로그 관련 속성)\n3. 저자 정보 Person 스키마 구현\n4. 이미지 ImageObject 스키마 구현\n5. 웹사이트 Organization/Person 스키마 구현\n6. 각 포스트별 동적 JSON-LD 생성 함수 작성\n7. breadcrumb 구조화 데이터 추가\n<info added on 2025-07-24T15:05:52.468Z>\n구현 완료: 종합적인 JSON-LD 구조화 데이터 개선이 성공적으로 완료되었습니다.\n\n**완료된 주요 개선사항:**\n\n1. **BlogPosting 스키마 고도화** - 기술 포스트의 경우 TechArticle 타입으로 조건부 변환, articleSection/keywords/wordCount 등 풍부한 메타데이터 추가, Creative Commons 라이센스 및 접근성 정보 포함\n\n2. **Organization 스키마 강화** - 브랜드 변형명, 설립일, 창립자 정보, 다국어 연락처, 전문 분야 배열 추가로 브랜드 신뢰도 향상\n\n3. **WebSite 스키마 확장** - 사이트 검색 기능, 섹션별 구조화, Blog 엔티티, 저작권 및 접근성 정보, 지역별 타겟팅 정보 포함\n\n4. **이미지 스키마 최적화** - 동적 크기 처리, 캡션 및 설명으로 접근성 개선, 이미지 소스별 조건부 처리\n\n**기술적 성과:**\n- 포괄적인 태그 매칭 알고리즘으로 기술 글 자동 분류\n- safeToISOString 함수로 안전한 날짜 처리\n- 모든 선택적 필드에 대한 폴백 전략 구현\n- TypeScript 호환성 유지 및 Schema.org 표준 준수\n\n**검증 결과:**\n빌드, 타입 검사, 린팅 모두 통과하여 구조화 데이터가 Google 검색 결과 향상에 기여할 준비가 완료되었습니다.\n</info added on 2025-07-24T15:05:52.468Z>",
-            "status": "done",
-            "testStrategy": "Google Rich Results Test로 구조화 데이터 유효성 검증, Schema.org validator로 스키마 검증, Search Console에서 구조화 데이터 오류 확인"
-          },
-          {
-            "id": 4,
-            "title": "robots.txt 및 sitemap.xml 최적화",
-            "description": "검색 엔진 크롤링 최적화를 위해 robots.txt를 개선하고 sitemap.xml을 동적 생성하도록 최적화합니다.",
-            "dependencies": ["9.2", "9.3"],
-            "details": "1. robots.txt 파일 최적화 (User-agent, Allow, Disallow 규칙 정의)\n2. sitemap.xml 동적 생성 로직 구현\n3. 포스트별 lastmod, changefreq, priority 설정\n4. 이미지 sitemap 추가 구현\n5. RSS feed와 sitemap 연동\n6. sitemap index 파일 생성 (필요시)\n7. robots.txt에 sitemap 위치 명시\n<info added on 2025-07-25T05:59:50.881Z>\nrobots.txt와 sitemap.xml 최적화 작업이 성공적으로 완료되었습니다:\n\n**robots.txt 개선사항:**\n- 중요 콘텐츠에 대한 명시적 Allow 규칙 추가 (/post/, /posts/, /about/, /rss.xml, /sitemap.xml)\n- 정적 자산에 대한 강화된 Disallow 규칙 적용 (/static/posts/, /favicon.png)\n- 중복 콘텐츠 방지를 위한 페이지네이션 크롤링 제한 설정 (Disallow: /posts/1*, /posts/2*, /posts/3*)\n- 더 나은 인덱싱 속도를 위해 crawl-delay를 0.5초로 최적화\n- sitemap 위치와 함께 RSS 피드 참조 추가\n\n**sitemap.xml 개선사항:**\n- 누락된 /posts 목록 페이지를 적절한 우선순위(0.9)와 일일 변경 빈도로 추가\n- 우선순위 점수 최적화: 홈페이지(1.0), 포스트 목록(0.9), 소개 페이지(0.8), 개별 포스트(0.7)\n- 변경 빈도 최적화: 홈페이지/포스트 목록(daily), 소개 페이지(monthly), 개별 포스트(weekly)\n- 모든 URL에 적절한 lastmod 타임스탬프 추가\n- 포스트 콘텐츠에서 첫 번째 이미지 추출을 통한 이미지 sitemap 지원 구현\n- 적절한 loc, title, caption 속성을 가진 image:image 태그 추가\n- 에러 핸들링과 상대-절대 URL 변환을 포함한 견고한 이미지 추출 함수 구현\n\n**기술적 구현사항:**\n- node-html-parser를 사용하여 포스트 미리보기 HTML에서 이미지 추출\n- 콘솔 스팸 없는 안전한 에러 핸들링 구현\n- 적절한 import 순서 및 ESLint 준수\n- 모든 빌드, 린트 검사, 타입 검사 성공적으로 통과\n- 향상된 검색 엔진 이해를 위한 적절한 메타데이터를 포함한 이미지 sitemap 데이터\n\n**검증 결과:**\n- 빌드 성공적으로 완료, 에러 없음\n- 린트 경고 수정 완료 (변경사항과 무관한 기존 경고만 남음)\n- TypeScript 타입 검사 0개 에러로 통과\n- sitemap에 더 나은 검색 엔진 크롤링 및 인덱싱을 위한 포괄적인 SEO 메타데이터 포함\n</info added on 2025-07-25T05:59:50.881Z>",
-            "status": "done",
-            "testStrategy": "Google Search Console에서 sitemap 제출 및 인덱싱 확인, robots.txt tester로 크롤링 규칙 검증, sitemap validator로 XML 유효성 검증"
-          },
-          {
-            "id": 5,
-            "title": "SEO 성능 모니터링 및 검증 도구 구현",
-            "description": "메타 태그 중복 검증 스크립트를 작성하고 Google Search Console 연동을 통한 SEO 성능 모니터링 환경을 구축합니다.",
-            "dependencies": ["9.1", "9.2", "9.3", "9.4"],
-            "details": "1. 메타 태그 중복 검증 스크립트 작성 (Node.js/Puppeteer 활용)\n2. canonical URL 유효성 검증 로직 구현\n3. Google Search Console API 연동 설정\n4. 크롤링 요청 자동화 스크립트 작성\n5. Lighthouse SEO 점수 모니터링 스크립트 구현\n6. 검증 결과 리포트 생성 기능\n7. CI/CD 파이프라인에 SEO 검증 단계 추가\n8. 성능 지표 추적을 위한 대시보드 구성\n<info added on 2025-07-25T08:11:01.549Z>\n**구현 완료 상세 내역:**\n\nscripts/seo-validation.js 파일 생성하여 포괄적인 SEO 검증 도구 완성. 기존 프로젝트 의존성만 활용하여 브라우저 자동화 없이 경량화된 솔루션 구현.\n\n**핵심 검증 기능:**\n- 메타 태그 중복 탐지: .svelte-kit/output/prerendered/pages/ 내 HTML 파일 분석\n- canonical URL 형식 및 도메인 일관성 검증  \n- 필수 SEO 태그(title, description, og:*, twitter:*) 누락 검사\n- 콘텐츠 품질 검증: 제목 50-60자, 설명 150-160자 권장 길이 체크\n- robots.txt 구조 및 sitemap.xml 라우트 유효성 검증\n\n**보고서 생성:**\n- .seo-reports/ 디렉토리에 HTML/JSON 형식 리포트 자동 생성\n- 오류/경고 분류별 상세 피드백 제공\n- 타임스탬프 포함 검증 결과 요약\n\n**검증 결과:**\n3개 테스트 페이지에서 32개 오류, 5개 경고 성공적으로 탐지. 다층 SEO 구현에서 발생한 실제 메타 태그 중복 문제 식별하여 도구의 유효성 입증.\n\n**기술적 특징:**\n- 추가 의존성 없이 기존 node-html-parser 활용\n- CI/CD 통합 가능한 종료 코드 설정 (성공 0, 실패 1)\n- ESLint 준수 코드 품질\n- pnpm seo:validate 명령어로 간편 실행\n</info added on 2025-07-25T08:11:01.549Z>",
-            "status": "done",
-            "testStrategy": "전체 사이트 메타 태그 중복 0개 확인, Lighthouse SEO 점수 90점 이상 달성, Google Search Console에서 크롤링 오류 0개 확인, 검증 스크립트 정상 실행 확인"
-          }
-        ]
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "UI/UX 통합 및 최적화",
+        "description": "전체 UI 통합, 성능 최적화 및 접근성 개선",
+        "details": "메인 /posts 페이지에 CategoryFilter 컴포넌트 통합. 기존 TagList 컴포넌트를 개선하여 태그 페이지 링크 추가. 브레드크럼 내비게이션 구현 (/posts > /posts/[category] > 개별 포스트). 클라이언트 사이드 필터링 성능 최적화를 위한 가상 스크롤링 고려. 접근성을 위한 ARIA 레이블 추가. 모바일 최적화 및 터치 인터랙션 개선.",
+        "testStrategy": "전체 사용자 플로우 테스트, 성능 메트릭 측정, 접근성 도구로 검증, 다양한 디바이스에서 반응형 테스트",
+        "priority": "medium",
+        "dependencies": [14, 16],
+        "status": "pending",
+        "subtasks": []
       }
     ],
     "metadata": {
       "created": "2025-07-22T05:48:25.873Z",
-      "updated": "2025-07-28T23:42:00.081Z",
+      "updated": "2025-07-31T02:36:03.424Z",
       "description": "Tasks for master context"
     }
   }

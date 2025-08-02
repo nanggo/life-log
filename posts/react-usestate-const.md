@@ -1,10 +1,11 @@
 ---
 title: 'React의 useState, 어떻게 const 상수를 변경할까?'
-slug: 'react-usestate-const'
+slug: react-usestate-const
 date: '2025-07-23 20:08:41'
 tags:
   - react
 draft: false
+category: 개발
 ---
 
 **"const로 선언했는데 어떻게 값이 바뀌는 거죠?"**

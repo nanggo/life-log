@@ -1,11 +1,12 @@
 ---
-title: 'HTML input의 accept 속성 이해하기'
+title: HTML input의 accept 속성 이해하기
 date: 2023-11-14T16:11:45.000Z
 tags:
   - frontend
-thumbnail: ''
 draft: false
-slug: 'understanding-html-input-accept-attribute'
+slug: understanding-html-input-accept-attribute
+category: 리뷰
+image: ''
 ---
 
 웹 기술이 발전함에 따라 사용자 경험과 효율적인 데이터 처리의 중요성이 커지고 있다. 이런 맥락에서 HTML 폼의 `accept` 속성은 중요한 역할을 한다. 사용자가 업로드할 파일 유형을 제어하는데 있어 이 속성은 종종 간과되지만, 매우 강력한 기능을 제공하여 사용자 경험과 백엔드 처리 효율성을 향상시킨다.

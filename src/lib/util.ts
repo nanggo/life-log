@@ -1,4 +1,5 @@
-import type { Post, PostMetadata } from '$lib/types'
+import type { PostMetadata } from '$lib/types'
+import type { Post } from '$lib/types/blog'
 
 interface PaginateOptions {
   page?: number
@@ -25,11 +26,12 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     title: post.title,
     description: post.description,
     date: post.date,
+    category: post.category,
     tags: post.tags,
     draft: post.draft,
     preview: post.preview,
     author: post.author,
     readingTime: post.readingTime,
-    thumbnail: post.thumbnail
+    image: post.image
   }))
 }

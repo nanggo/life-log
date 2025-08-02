@@ -1,11 +1,12 @@
 ---
-title: '근황2'
+title: 근황2
 date: 2023-07-07T15:08:37.000Z
 tags:
   - 일상
-thumbnail: ''
 draft: false
-slug: 'recent-status-2'
+slug: recent-status-2
+category: 일상
+image: ''
 ---
 
 ### 공부

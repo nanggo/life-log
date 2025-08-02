@@ -14,6 +14,8 @@ export type {
   PostSummary,
   Author,
   Tag,
+  CategoryInfo,
+  Heading,
   Pagination,
   SEOMetadata,
   PostListResponse,
@@ -25,3 +27,6 @@ export type {
   SiteConfig,
   ReadingTimeResult
 } from './blog.js'
+
+// enum 타입들 (값으로 사용하기 위해 별도 export)
+export { Category } from './blog.js'

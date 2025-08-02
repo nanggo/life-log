@@ -1,11 +1,12 @@
 ---
-title: '프론트엔드 개발자를 위한 SOLID 원칙 길라잡이'
-slug: 'solid-principles-frontend-guide'
+title: 프론트엔드 개발자를 위한 SOLID 원칙 길라잡이
+slug: solid-principles-frontend-guide
 date: '2025-07-30 10:28:51'
 tags:
   - frontend
-description: '더 견고하고 유연한 UI 코드를 만드는 5가지 설계 원칙을 예시와 함께 알아본다'
+description: 더 견고하고 유연한 UI 코드를 만드는 5가지 설계 원칙을 예시와 함께 알아본다
 draft: false
+category: 리뷰
 ---
 
 **"이 컴포넌트 좀 수정해주세요."**

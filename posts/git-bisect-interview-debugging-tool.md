@@ -4,8 +4,9 @@ date: 2025-07-10T15:30:00.000Z
 tags:
   - git
   - debugging
-slug: 'git-bisect-interview-debugging-tool'
+slug: git-bisect-interview-debugging-tool
 draft: false
+category: 리뷰
 ---
 
 **"수백 개의 커밋 중에서 버그가 생긴 정확한 시점을 어떻게 찾을 건가요?"** 면접관의 이 질문에 당황했던 기억이 있다. 당시에는 `git log`로 하나씩 찾아보거나 최근 커밋부터 되돌아가며 확인하겠다고 답했지만, 다른 방법은 없는지 다시 물었다.

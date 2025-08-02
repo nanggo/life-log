@@ -1,10 +1,11 @@
 ---
 title: 'Zed 에디터: 가장 빠른 코드 편집기'
-slug: 'zed-editor-review-fastest-code-editor'
+slug: zed-editor-review-fastest-code-editor
 date: '2025-05-26 14:35:55'
 tags:
   - 경험
 draft: false
+category: 리뷰
 ---
 
 [GeekNews](https://news.hada.io/topic?id=20775)에서 관련 아티클을 읽고 Zed 에디터를 바로 설치해봤다. `가장 빠르다`는 문구에 끌렸는데, 실제로 사용해보니 꽤 마음에 든다. VS Code나 Cursor에 비해 부족한 기능도 있고 아직 손에 익숙하진 않지만, 현재는 Zed 에디터의 가장 큰 장점인 속도에 중점을 두고 사용하고 있다.
