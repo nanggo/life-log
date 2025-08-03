@@ -7,6 +7,12 @@ import { extractPostMetadata } from '$lib/util'
 
 export const prerender = true
 
+/** @type {import('./$types').EntryGenerator} */
+export function entries() {
+  const tagInfos = getAllTagsWithCounts()
+  return tagInfos.map(({ tag }) => ({ tag }))
+}
+
 export const load: PageServerLoad = async ({ params }) => {
   const tagName = params.tag
 

@@ -204,7 +204,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
-    readingTime: readingTime(html.structuredText).text,
+    readingTime: `${Math.ceil(readingTime(html.structuredText).minutes)}분 읽기`,
     isIndexFile: filepath.endsWith('/index.md'),
     headings
   }
