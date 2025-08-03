@@ -1,6 +1,7 @@
 <script lang="ts">
   export let tagInfos: Array<{ tag: string; count: number }> = []
-  export let getTagUrl: (tagName: string) => string = (tagName: string) => `/tags/${tagName}`
+  export let getTagUrl: (tagName: string) => string = (tagName: string) =>
+    `/tags/${encodeURIComponent(tagName)}`
   export let clickable: boolean = false
   export let compact: boolean = false
 

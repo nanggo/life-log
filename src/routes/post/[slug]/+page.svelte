@@ -43,7 +43,7 @@
   }
 
   const getTagUrl = (tag: string) => {
-    return `/posts?tag=${tag}`
+    return `/tags/${encodeURIComponent(tag)}`
   }
 </script>
 
