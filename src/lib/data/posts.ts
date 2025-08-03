@@ -23,10 +23,10 @@ type PostModule = {
 /**
  * GitHub 이미지 URL을 썸네일 크기로 변환합니다.
  * @param {string} url - 원본 GitHub 이미지 URL
- * @param {number} size - 썸네일 크기 (기본값: 400px)
+ * @param {number} size - 썸네일 크기 (기본값: 300px, preview용으로 축소)
  * @returns {string} 썸네일 URL
  */
-const convertToGitHubThumbnail = (url: string, size: number = 400): string => {
+const convertToGitHubThumbnail = (url: string, size: number = 300): string => {
   const GITHUB_THUMBNAIL_SUPPORTED_HOSTS = [
     'github.com/user-attachments/assets/',
     'avatars.githubusercontent.com/',
@@ -59,11 +59,11 @@ const optimizePreviewImages = (previewElement: HTMLElement | null) => {
       const optimizedSrc = convertToGitHubThumbnail(src)
       img.setAttribute('src', optimizedSrc)
 
-      // preview용 스타일 추가 (적절한 크기로 조정)
+      // preview용 스타일 최적화 (더 작은 크기)
       const existingStyle = img.getAttribute('style') || ''
       img.setAttribute(
         'style',
-        `${existingStyle}; max-height: 300px; width: auto; min-width: 250px; max-width: 100%; object-fit: cover;`
+        `${existingStyle}; max-height: 200px; width: auto; min-width: 200px; max-width: 100%; object-fit: cover;`
       )
     }
   })
@@ -75,63 +75,41 @@ const optimizePreviewImages = (previewElement: HTMLElement | null) => {
  * HTML에서 깨끗한 평문 텍스트를 추출합니다.
  * node-html-parser의 .text 속성을 활용하여 효율적으로 처리합니다.
  */
-const extractPlainText = (element: HTMLElement | null): string => {
+const extractPlainText = (element: HTMLElement | null, maxLength: number = 150): string => {
   if (!element) return ''
+
+  let text = ''
 
   // structuredText가 있으면 우선 사용
   if (element.structuredText) {
-    return element.structuredText.trim()
+    text = element.structuredText.trim()
+  } else {
+    // node-html-parser의 .text 속성 사용하여 평문 추출
+    text = element.text.replace(/\s+/g, ' ').trim()
   }
 
-  // node-html-parser의 .text 속성 사용하여 평문 추출
-  return element.text.replace(/\s+/g, ' ').trim()
+  // 성능 최적화: preview 텍스트 길이 제한
+  return text.length > maxLength ? text.substring(0, maxLength) + '...' : text
 }
 
 /**
  * 개선된 프리뷰 생성: 이미지 + 텍스트를 하나의 p 태그 안에 결합
+ * 성능 최적화: 더 간결한 preview 생성
  */
 const createEnhancedPreview = (html: HTMLElement) => {
   const allParagraphs = html.querySelectorAll('p')
   if (!allParagraphs.length) return null
 
-  let imageHtml = ''
-  let textHtml = ''
-  let hasImage = false
-  let textParagraphsAdded = 0
-  const maxTextParagraphs = 1 // 최대 1개의 텍스트 문단
-
+  // 성능 최적화: 첫 번째 의미있는 문단만 사용
   for (const p of allParagraphs) {
-    const hasImageInParagraph = p.querySelector('img')
-
-    if (hasImageInParagraph && !hasImage) {
-      // 첫 번째 이미지가 있는 문단에서 이미지만 추출
-      const img = p.querySelector('img')
-      imageHtml = img ? img.toString() : ''
-      hasImage = true
-    } else if (
-      !hasImageInParagraph &&
-      p.text.trim().length > 0 &&
-      textParagraphsAdded < maxTextParagraphs
-    ) {
-      // 텍스트가 있는 문단을 추가 (최대 1개)
-      textHtml += p.innerHTML
-      textParagraphsAdded++
-    }
-
-    // 이미지 + 1개 텍스트 문단이 모두 채워지면 중단
-    if (hasImage && textParagraphsAdded >= maxTextParagraphs) {
-      break
+    const textContent = p.text.trim()
+    if (textContent.length > 10) {
+      // 최소 10자 이상인 문단만 사용
+      return p
     }
   }
 
-  // 이미지가 없고 텍스트만 있는 경우, 첫 번째 문단만 반환
-  if (!hasImage && textParagraphsAdded === 0 && allParagraphs[0]) {
-    return allParagraphs[0]
-  }
-
-  // 이미지와 텍스트를 하나의 p 태그 안에 결합
-  const combinedContent = imageHtml + textHtml
-  return combinedContent ? parse(`<p>${combinedContent}</p>`).querySelector('p') : allParagraphs[0]
+  return allParagraphs[0] || null
 }
 
 // we require some server-side APIs to parse all metadata
@@ -187,8 +165,8 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     }
   }
 
-  // Extract headings from HTML
-  const headings = html.querySelectorAll('h1, h2, h3, h4, h5, h6').map((heading) => ({
+  // Extract headings from HTML (performance: only h2, h3 for ToC)
+  const headings = html.querySelectorAll('h2, h3').map((heading) => ({
     depth: parseInt(heading.tagName.substring(1)),
     value: heading.text.trim()
   }))

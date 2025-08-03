@@ -23,7 +23,7 @@
             observer.disconnect()
           }
         },
-        { threshold: 0.1, rootMargin: '50px' }
+        { threshold: 0.1, rootMargin: '100px' } // 더 빠른 로딩을 위해 rootMargin 증가
       )
       observer.observe(imageElement)
 
@@ -55,6 +55,9 @@
         error = true
       }
     }
+    // 성능 최적화: loading priority 설정
+    img.loading = 'lazy'
+    img.decoding = 'async'
     img.src = src
   }
 
@@ -97,8 +100,10 @@
       {alt}
       {width}
       {height}
+      loading="lazy"
+      decoding="async"
       class="w-full h-full object-cover"
-      transition:fade={{ duration: 300 }}
+      transition:fade={{ duration: 200 }}
     />
   {/if}
 </div>

@@ -2,13 +2,6 @@ import { sveltekit } from '@sveltejs/kit/vite'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression2'
 
-// 데이터 주도적 vendor 청크 매핑 (성능 최적화를 위해 함수 외부에 정의)
-const vendorMap = {
-  'svelte-vendor': ['@sveltejs'],
-  'ui-vendor': ['lucide', 'heroicons'],
-  'utils-vendor': ['date-fns', 'clsx']
-}
-
 export default defineConfig(({ mode }) => ({
   plugins: [
     sveltekit(),
@@ -27,19 +20,28 @@ export default defineConfig(({ mode }) => ({
     rollupOptions: {
       output: {
         manualChunks: (id) => {
-          // node_modules의 vendor 청크 분리
+          // 간단한 vendor 청크 분리만 유지
           if (id.includes('/node_modules/')) {
-            // 각 청크 타입별로 패키지 매칭 확인
-            for (const [chunkName, packages] of Object.entries(vendorMap)) {
-              if (packages.some((pkg) => id.includes(pkg))) {
-                return chunkName
-              }
+            // Svelte 관련 패키지
+            if (id.includes('@sveltejs') || id.includes('svelte')) {
+              return 'svelte-vendor'
             }
-
-            // 모든 기타 node_modules 패키지를 위한 기본 vendor 청크
+            // 유틸리티 라이브러리
+            if (id.includes('date-fns') || id.includes('clsx') || id.includes('js-yaml')) {
+              return 'utils-vendor'
+            }
+            // 마크다운 관련
+            if (
+              id.includes('mdsvex') ||
+              id.includes('gray-matter') ||
+              id.includes('reading-time')
+            ) {
+              return 'markdown-vendor'
+            }
+            // 기타 모든 vendor 패키지
             return 'main-vendor'
           }
-          // 앱 코드는 기본 청킹 로직 사용
+          // 앱 코드는 기본 청킹 사용
           return undefined
         }
       }
@@ -55,6 +57,8 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     // Tree shaking 최적화를 위한 pre-bundling
-    include: ['date-fns', 'clsx', 'js-yaml', 'github-slugger']
+    include: ['date-fns', 'clsx', 'js-yaml', 'github-slugger', 'node-html-parser', 'reading-time'],
+    // 개발 시 빠른 빌드를 위한 exclude
+    exclude: ['@sveltejs/kit', 'svelte']
   }
 }))
