@@ -9,7 +9,7 @@
   // 태그 클릭 시 필터링
   const handleTagClick = (tag: string): void => {
     if (!clickable) return
-    goto(`/posts?tag=${encodeURIComponent(tag)}`)
+    goto(`/tags/${encodeURIComponent(tag)}`)
   }
 
   // 태그 제한 처리

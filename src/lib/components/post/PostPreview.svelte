@@ -12,7 +12,7 @@
 
   // 태그 클릭 시 필터링
   const handleTagClick = (tag: string): void => {
-    goto(`/posts?tag=${encodeURIComponent(tag)}`)
+    goto(`/tags/${encodeURIComponent(tag)}`)
   }
 
   // 더보기 클릭 시 포스트 페이지로 이동

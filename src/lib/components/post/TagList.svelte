@@ -6,7 +6,7 @@
   export let tags: string[] = []
   export let clickable: boolean = true
   export let selectedTag: string | null = null
-  export let getTagUrl: (tagName: string) => string = (tagName: string) => `/posts?tag=${tagName}`
+  export let getTagUrl: (tagName: string) => string = (tagName: string) => `/tags/${tagName}`
   export let handleTagClick: ((tagName: string) => void) | null = null
 
   // 스크롤 컨테이너 참조 변수
