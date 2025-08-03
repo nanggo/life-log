@@ -94,7 +94,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags, clickable: true })
 
     const jsTag = screen.getByText('#JavaScript')
-    expect(jsTag.closest('a')).toHaveAttribute('href', '/posts?tag=JavaScript')
+    expect(jsTag.closest('a')).toHaveAttribute('href', '/tags/JavaScript')
   })
 
   it('clickable이 false일 때 태그가 링크로 동작하지 않는다', () => {
@@ -122,7 +122,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags, clickable: true })
     const tagLink = screen.getByText('#JavaScript').closest('a')
     expect(tagLink).toHaveClass('cursor-pointer')
-    expect(tagLink).toHaveAttribute('href', '/posts?tag=JavaScript')
+    expect(tagLink).toHaveAttribute('href', '/tags/JavaScript')
   })
 
   it('스크롤 컨테이너가 올바른 클래스를 가진다', () => {

@@ -67,7 +67,7 @@ describe('PostMeta 컴포넌트', () => {
     const jsTag = screen.getByText('#JavaScript')
     await fireEvent.click(jsTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=JavaScript')
+    expect(goto).toHaveBeenCalledWith('/tags/JavaScript')
   })
 
   it('clickable이 false일 때 태그 클릭이 동작하지 않는다', async () => {
@@ -87,17 +87,17 @@ describe('PostMeta 컴포넌트', () => {
     const reactTag = screen.getByText('#React.js')
     await fireEvent.click(reactTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=React.js')
+    expect(goto).toHaveBeenCalledWith('/tags/React.js')
 
     const cppTag = screen.getByText('#C++')
     await fireEvent.click(cppTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=C%2B%2B')
+    expect(goto).toHaveBeenCalledWith('/tags/C%2B%2B')
 
     const koreanTag = screen.getByText('#한글태그')
     await fireEvent.click(koreanTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8')
+    expect(goto).toHaveBeenCalledWith('/tags/%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8')
   })
 
   it('더보기 버튼 클릭 시 onMoreTagsClick이 호출된다', async () => {

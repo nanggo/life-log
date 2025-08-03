@@ -82,7 +82,7 @@ describe('PostPreview 컴포넌트', () => {
     const jsTag = screen.getByText('#JavaScript')
     await fireEvent.click(jsTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=JavaScript')
+    expect(goto).toHaveBeenCalledWith('/tags/JavaScript')
   })
 
   it('더보기 태그 버튼 클릭 시 포스트 페이지로 이동한다', async () => {
@@ -106,7 +106,7 @@ describe('PostPreview 컴포넌트', () => {
     await fireEvent.click(jsTag)
 
     // 태그 클릭 시 goto가 호출되지만 카드 클릭 이벤트는 호출되지 않아야 함
-    expect(goto).toHaveBeenCalledWith('/posts?tag=JavaScript')
+    expect(goto).toHaveBeenCalledWith('/tags/JavaScript')
     expect(cardClickHandler).not.toHaveBeenCalled()
   })
 
@@ -121,17 +121,17 @@ describe('PostPreview 컴포넌트', () => {
     const cppTag = screen.getByText('#C++')
     await fireEvent.click(cppTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=C%2B%2B')
+    expect(goto).toHaveBeenCalledWith('/tags/C%2B%2B')
 
     const reactTag = screen.getByText('#React.js')
     await fireEvent.click(reactTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=React.js')
+    expect(goto).toHaveBeenCalledWith('/tags/React.js')
 
     const koreanTag = screen.getByText('#한글태그')
     await fireEvent.click(koreanTag)
 
-    expect(goto).toHaveBeenCalledWith('/posts?tag=%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8')
+    expect(goto).toHaveBeenCalledWith('/tags/%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8')
   })
 
   it('Read 액션 버튼이 올바르게 렌더링된다', () => {
