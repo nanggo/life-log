@@ -93,6 +93,47 @@ const extractPlainText = (element: HTMLElement | null, maxLength: number = 150):
 }
 
 /**
+ * HTML 요소에서 읽기 시간을 계산합니다.
+ * @param html - 파싱된 HTML 요소
+ * @param filepath - 파일 경로 (에러 로깅용)
+ * @returns 읽기 시간 (분 단위)
+ */
+const calculateReadingTime = (html: HTMLElement, filepath: string): number => {
+  try {
+    // HTML 텍스트 추출 개선
+    const textContent = html.structuredText || html.text || ''
+    if (!textContent.trim()) {
+      console.warn(
+        `[경고] 파일 '${filepath}'에서 텍스트 내용을 찾을 수 없습니다. 기본값 1분을 사용합니다.`
+      )
+      return 1
+    }
+    const readingResult = readingTime(textContent)
+    const minutes = readingResult.minutes
+    // Fallback to 0 if minutes is not a finite number to prevent NaN
+    const safeMinutes = typeof minutes === 'number' && isFinite(minutes) ? minutes : 0
+    return Math.max(1, Math.ceil(safeMinutes)) // 최소 1분 보장
+  } catch (error) {
+    // 개발 환경에서는 더 상세한 에러 정보 제공
+    if (dev) {
+      console.error(
+        `[개발 모드] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다.\n` +
+          `- 에러 타입: ${error instanceof Error ? error.name : 'Unknown'}\n` +
+          `- 에러 메시지: ${error instanceof Error ? error.message : String(error)}\n` +
+          `- 스택 트레이스:`,
+        error
+      )
+    } else {
+      console.warn(
+        `[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다. ` +
+          `기본값 1분을 사용합니다. (${error instanceof Error ? error.message : String(error)})`
+      )
+    }
+    return 1 // 기본값으로 1분 설정 - graceful fallback 유지
+  }
+}
+
+/**
  * 개선된 프리뷰 생성: 이미지 + 텍스트를 하나의 p 태그 안에 결합
  * 성능 최적화: 더 간결한 preview 생성
  */
@@ -128,6 +169,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       .pop() || ''
 
   const html = parse(post.default.render().html)
+
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
     : createEnhancedPreview(html)
@@ -182,7 +224,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
-    readingTime: `${Math.ceil(readingTime(html.structuredText).minutes)}분 읽기`,
+    readingTime: calculateReadingTime(html, filepath),
     isIndexFile: filepath.endsWith('/index.md'),
     headings
   }

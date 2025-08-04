@@ -46,6 +46,6 @@
     {#if collapsed}
       <span class="mx-1">•</span>
     {/if}
-    <span>{post.readingTime}</span>
+    <span>{post.readingTime}분</span>
   </div>
 </div>
