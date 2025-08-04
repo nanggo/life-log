@@ -8,7 +8,7 @@
  * @param delay - Delay in milliseconds
  * @returns Debounced function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -26,7 +26,7 @@ export function debounce<T extends (...args: any[]) => any>(
  * @param delay - Delay in milliseconds
  * @returns Throttled function
  */
-export function throttle<T extends (...args: any[]) => any>(
+export function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   delay: number
 ): (...args: Parameters<T>) => void {
@@ -47,7 +47,7 @@ export function throttle<T extends (...args: any[]) => any>(
  * @param getKey - Function to generate cache key from arguments
  * @returns Memoized function
  */
-export function memoize<T extends (...args: any[]) => any>(
+export function memoize<T extends (...args: unknown[]) => unknown>(
   func: T,
   getKey?: (...args: Parameters<T>) => string
 ): T {
@@ -119,14 +119,14 @@ export function optimizedScrollHandler(
 /**
  * Memory usage monitoring (development only)
  */
-export function logMemoryUsage(label: string): void {
+export function logMemoryUsage(_label: string): void {
   if (typeof window !== 'undefined' && 'performance' in window && window.performance.memory) {
-    const memory = window.performance.memory
-    console.debug(`[${label}] Memory usage:`, {
-      used: `${Math.round(memory.usedJSHeapSize / 1024 / 1024)} MB`,
-      total: `${Math.round(memory.totalJSHeapSize / 1024 / 1024)} MB`,
-      limit: `${Math.round(memory.jsHeapSizeLimit / 1024 / 1024)} MB`
-    })
+    const _memory = window.performance.memory
+    // console.debug(`[${_label}] Memory usage:`, {
+    //   used: `${Math.round(_memory.usedJSHeapSize / 1024 / 1024)} MB`,
+    //   total: `${Math.round(_memory.totalJSHeapSize / 1024 / 1024)} MB`,
+    //   limit: `${Math.round(_memory.jsHeapSizeLimit / 1024 / 1024)} MB`
+    // })
   }
 }
 
@@ -146,7 +146,7 @@ export class PerformanceTimer {
     if (typeof performance !== 'undefined' && this.marks.has(label)) {
       const startTime = this.marks.get(label)!
       const duration = performance.now() - startTime
-      console.debug(`[Performance] ${label}: ${duration.toFixed(2)}ms`)
+      // console.debug(`[Performance] ${label}: ${duration.toFixed(2)}ms`)
       this.marks.delete(label)
       return duration
     }
@@ -162,7 +162,11 @@ export class PerformanceTimer {
  */
 export function createOptimizedIntersectionObserver(
   callback: (entries: IntersectionObserverEntry[]) => void,
-  options: IntersectionObserverInit = {}
+  options: {
+    root?: Element | null
+    rootMargin?: string
+    threshold?: number | number[]
+  } = {}
 ): IntersectionObserver | null {
   if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
     return null
