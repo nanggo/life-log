@@ -5,7 +5,7 @@ tags:
   - frontend
 draft: false
 slug: validatedomnesting-error-at-react-mui
-category: 리뷰
+category: 개발
 ---
 
 # 현상

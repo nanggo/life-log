@@ -6,7 +6,7 @@ tags:
   - mac
 draft: false
 slug: hide-mac-dock-bar
-category: 리뷰
+category: 개발
 image: ''
 ---
 

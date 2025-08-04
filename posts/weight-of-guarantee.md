@@ -5,7 +5,7 @@ tags:
   - 생각
 draft: false
 slug: weight-of-guarantee
-category: 리뷰
+category: 생각
 image: ''
 ---
 

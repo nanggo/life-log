@@ -5,7 +5,7 @@ tags:
   - 생각
 draft: false
 slug: why-i-became-developer
-category: 리뷰
+category: 생각
 ---
 
 면접에서 간혹 이런 질문을 받는다.

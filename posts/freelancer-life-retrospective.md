@@ -5,7 +5,7 @@ tags:
   - 회고
 draft: true
 slug: freelancer-life-retrospective
-category: 일상
+category: 생각
 image: ''
 ---
 

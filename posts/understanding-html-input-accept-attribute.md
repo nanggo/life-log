@@ -5,7 +5,7 @@ tags:
   - frontend
 draft: false
 slug: understanding-html-input-accept-attribute
-category: 리뷰
+category: 개발
 image: ''
 ---
 

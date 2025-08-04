@@ -5,7 +5,7 @@ tags:
   - 생각
 draft: false
 slug: dark-pattern
-category: 리뷰
+category: 생각
 ---
 
 > 다크패턴(dark pattern, deceptive design pattern) 또는 눈속임 설계는 사용자가 특정 행동을 하도록 유도하기 위해 교묘히 설계된 사용자 인터페이스를 말한다. - [위키피디아](https://ko.wikipedia.org/wiki/%EB%8B%A4%ED%81%AC%ED%8C%A8%ED%84%B4)

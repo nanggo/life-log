@@ -5,7 +5,7 @@ tags:
   - frontend
 draft: false
 slug: deep-copy
-category: 리뷰
+category: 개발
 image: ''
 ---
 

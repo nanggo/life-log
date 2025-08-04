@@ -5,7 +5,7 @@ tags:
   - frontend
 draft: false
 slug: blog-update-tag-feature
-category: 리뷰
+category: 개발
 ---
 
 블로그 글이 점점 쌓이다 보니 원하는 글을 찾기가 어려워졌다. 처음에는 검색 기능을 추가할까 고민했지만, 너무 복잡해질 것 같아 태그 기능을 도입했다.
