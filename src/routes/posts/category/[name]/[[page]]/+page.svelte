@@ -43,11 +43,6 @@
       </h1>
       <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
         총 {data.totalPosts}개의 포스트
-        {#if data.totalPages > 1}
-          <span class="text-sm">
-            ({data.page}/{data.totalPages} 페이지)
-          </span>
-        {/if}
       </p>
     </header>
 
