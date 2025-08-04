@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Breadcrumb } from '$lib/components/layout'
+  import { Breadcrumb, Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
 
   /** @type {import('./$types').PageData} */
@@ -10,6 +10,12 @@
     { label: '포스트', href: '/posts' },
     { label: data.category, current: true }
   ]
+
+  // URL 생성 함수
+  const getPageUrl = (p: number) =>
+    p === 1
+      ? `/posts/category/${encodeURIComponent(data.category)}`
+      : `/posts/category/${encodeURIComponent(data.category)}/${p}`
 </script>
 
 <svelte:head>
@@ -37,6 +43,11 @@
       </h1>
       <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
         총 {data.totalPosts}개의 포스트
+        {#if data.totalPages > 1}
+          <span class="text-sm">
+            ({data.page}/{data.totalPages} 페이지)
+          </span>
+        {/if}
       </p>
     </header>
 
@@ -45,6 +56,10 @@
       <div class="mt-16 sm:mt-20">
         <PostsList posts={data.posts} />
       </div>
+
+      {#if data.totalPages > 1}
+        <Pagination currentPage={data.page} totalPages={data.totalPages} {getPageUrl} />
+      {/if}
     {:else}
       <div class="mt-16 sm:mt-20">
         <div class="text-center py-12">
