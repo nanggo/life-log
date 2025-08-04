@@ -200,6 +200,7 @@
     width: 100%;
     word-break: break-word;
     overflow-wrap: break-word;
+    font-size: 0.9em; /* Mobile first: smaller font size as default */
     /* Remove custom styling to use global prose table styles with mobile optimization */
   }
 
@@ -207,13 +208,17 @@
     width: 100%;
   }
 
-  @media (max-width: 640px) {
+  :global(.about table td) {
+    padding: 0.25rem 0.5rem; /* Mobile first: smaller padding as default */
+  }
+
+  @media (min-width: 640px) {
     :global(.about table) {
-      font-size: 0.9em;
+      font-size: 1em; /* Desktop: regular font size */
     }
 
     :global(.about table td) {
-      padding: 0.25rem 0.5rem;
+      padding: 0.5rem 0.75rem; /* Desktop: larger padding */
     }
   }
 
