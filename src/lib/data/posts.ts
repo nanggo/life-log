@@ -182,7 +182,14 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       html: preview?.toString() || '',
       text: extractPlainText(preview)
     },
-    readingTime: Math.ceil(readingTime(html.structuredText || '').minutes),
+    readingTime: (() => {
+      try {
+        return Math.ceil(readingTime(html.structuredText || '').minutes)
+      } catch (error) {
+        console.warn(`[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다:`, error)
+        return 1 // 기본값으로 1분 설정
+      }
+    })(),
     isIndexFile: filepath.endsWith('/index.md'),
     headings
   }

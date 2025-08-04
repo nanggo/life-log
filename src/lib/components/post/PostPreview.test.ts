@@ -5,6 +5,7 @@ import PostPreview from './PostPreview.svelte'
 
 import { goto } from '$app/navigation'
 import type { Post } from '$lib/types'
+import { Category } from '$lib/types/blog'
 
 // Mock goto function
 vi.mock('$app/navigation', () => ({
@@ -23,6 +24,7 @@ describe('PostPreview 컴포넌트', () => {
     slug: 'test-post-slug',
     tags: ['JavaScript', 'Svelte', 'TypeScript', 'Node.js'],
     date: '2024-01-15',
+    category: Category.DEVELOPMENT,
     preview: {
       html: '<p>이것은 테스트 포스트의 미리보기 내용입니다.</p>',
       text: '이것은 테스트 포스트의 미리보기 내용입니다.'

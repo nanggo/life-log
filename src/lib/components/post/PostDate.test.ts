@@ -4,6 +4,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import PostDate from './PostDate.svelte'
 
 import type { Post } from '$lib/types'
+import { Category } from '$lib/types/blog'
 
 // Mock date-fns functions
 vi.mock('date-fns', () => ({
@@ -31,7 +32,8 @@ describe('PostDate 컴포넌트', () => {
     readingTime: 5,
     preview: { html: '', text: '' },
     headings: [],
-    isIndexFile: false
+    isIndexFile: false,
+    category: Category.DEVELOPMENT
   }
 
   beforeEach(() => {

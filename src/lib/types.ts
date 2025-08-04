@@ -1,38 +1,27 @@
 // Post types and interfaces
+// Note: This file is maintained for backwards compatibility
+// Main types are defined in $lib/types/blog.ts
 
-export interface PostMetadata {
-  title: string
-  description: string
-  date: string
-  updated?: string
-  author?: string
-  draft?: boolean
-  tags: string[]
-  thumbnail?: string
-  preview: {
-    html: string
-    text: string
-  }
-  slug: string
-  readingTime: number
+import type {
+  PostMetadata as BlogPostMetadata,
+  Post as BlogPost,
+  LinkedPost,
+  Heading
+} from '$lib/types/blog'
+
+// Re-export types from blog.ts for backwards compatibility
+export interface PostMetadata extends BlogPostMetadata {
   // TechArticle properties (optional, for technical posts)
   proficiencyLevel?: string
   dependencies?: string
 }
 
-export interface PostHeading {
-  depth: number
-  value: string
-}
+// Re-export compatible types
+export type PostHeading = Heading
+export type PostReference = LinkedPost
 
-export interface PostReference {
-  slug: string
-  title: string
-}
-
-export interface Post extends PostMetadata {
-  isIndexFile: boolean
-  next?: PostReference
-  previous?: PostReference
-  headings: PostHeading[]
+export interface Post extends BlogPost {
+  // TechArticle properties (optional, for technical posts)
+  proficiencyLevel?: string
+  dependencies?: string
 }
