@@ -70,7 +70,7 @@
 
 {#if tags && tags.length > 0}
   <div class="relative">
-    <div bind:this={scrollContainer} class="flex gap-2 mt-2 overflow-x-auto pb-2 scrollbar-thin">
+    <div bind:this={scrollContainer} class="flex gap-2 mt-2 pt-1 overflow-x-auto overflow-y-visible pb-2 scrollbar-thin">
       {#each tags as tag}
         {@const hasClickHandler = !!(handleTagClick && clickable)}
         {@const elementType = getTagElementType(clickable, hasClickHandler)}

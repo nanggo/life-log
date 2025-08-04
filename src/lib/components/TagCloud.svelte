@@ -81,7 +81,7 @@
       </div>
     {:else}
       <!-- 기본 모드: 태그 클라우드 -->
-      <div class="flex flex-wrap justify-center items-center gap-2 p-4">
+      <div class="flex flex-wrap justify-center items-start gap-2 p-4 py-6">
         {#each tagInfos as { tag, count }}
           {#if clickable}
             <a
