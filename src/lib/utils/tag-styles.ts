@@ -3,11 +3,11 @@
  */
 
 export const TAG_STYLES = {
-  base: 'flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap',
+  base: 'flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap touch-manipulation',
   selected: 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100',
   unselected:
-    'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700',
-  clickable: 'cursor-pointer',
+    'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600',
+  clickable: 'cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1',
   nonClickable: 'cursor-default'
 } as const
 

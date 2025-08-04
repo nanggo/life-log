@@ -47,16 +47,18 @@
     <div class="flex flex-wrap gap-2 mt-2">
       {#each visibleTags as tag}
         <button
-          class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap bg-zinc-100 text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 cursor-pointer"
+          class="flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600 cursor-pointer touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1"
           on:click|stopPropagation|preventDefault={() => handleTagClick(tag)}
+          aria-label={`View posts tagged with ${tag}`}
         >
           #{tag}
         </button>
       {/each}
       {#if hasMoreTags}
         <button
-          class="flex-shrink-0 px-2 py-1 text-xs font-medium rounded-full transition-colors whitespace-nowrap bg-zinc-50 text-zinc-500 hover:bg-zinc-100 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 cursor-pointer"
+          class="flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap bg-zinc-50 text-zinc-500 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:active:bg-zinc-700 cursor-pointer touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1"
           on:click|stopPropagation|preventDefault={handleMoreTagsClick}
+          aria-label={`View ${hiddenTagsCount} more tags for this post`}
         >
           +{hiddenTagsCount}개
         </button>

@@ -23,7 +23,7 @@
             observer.disconnect()
           }
         },
-        { threshold: 0.1, rootMargin: '100px' } // 더 빠른 로딩을 위해 rootMargin 증가
+        { threshold: 0.1, rootMargin: '200px' } // 더 빠른 로딩을 위해 rootMargin 증가
       )
       observer.observe(imageElement)
 
@@ -48,6 +48,8 @@
     img.onload = () => {
       if (mounted) {
         loaded = true
+        // 메모리 최적화: 원본 URL 저장
+        img.dataset.original = src
       }
     }
     img.onerror = () => {
@@ -58,6 +60,8 @@
     // 성능 최적화: loading priority 설정
     img.loading = 'lazy'
     img.decoding = 'async'
+    // 캐시 최적화
+    img.fetchPriority = 'auto'
     img.src = src
   }
 

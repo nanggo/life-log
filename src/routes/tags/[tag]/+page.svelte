@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { Breadcrumb } from '$lib/components/layout'
   import { PostsList, TagList } from '$lib/components/post'
   import { name } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
@@ -17,6 +18,12 @@
   $: allTagsFromPosts = [
     ...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))
   ].sort()
+
+  // Breadcrumb items
+  $: breadcrumbItems = [
+    { label: '태그', href: '/tags' },
+    { label: `#${data.tagName}`, current: true }
+  ]
 </script>
 
 <svelte:head>
@@ -33,25 +40,9 @@
 <div class="flex flex-col flex-grow">
   <div class="max-w-2xl mx-auto w-full px-4 sm:px-6 lg:px-8">
     <!-- Breadcrumb Navigation -->
-    <nav class="mt-4" aria-label="Breadcrumb">
-      <ol class="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
-        <li>
-          <a href="/tags" class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors">
-            태그
-          </a>
-        </li>
-        <li class="flex items-center">
-          <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-            <path
-              fill-rule="evenodd"
-              d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-              clip-rule="evenodd"
-            />
-          </svg>
-          <span class="text-zinc-900 dark:text-zinc-100 font-medium">#{data.tagName}</span>
-        </li>
-      </ol>
-    </nav>
+    <div class="mt-4">
+      <Breadcrumb items={breadcrumbItems} />
+    </div>
 
     <!-- Tag Header -->
     <header class="flex flex-col mt-8">

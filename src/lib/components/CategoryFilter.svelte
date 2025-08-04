@@ -44,11 +44,12 @@
   }
 
   function getCategoryClasses(category: Category): string {
+    // Enhanced accessibility and touch targets
     const compactClasses =
-      'group relative flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border whitespace-nowrap'
+      'group relative flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-full text-sm font-medium transition-all duration-200 border whitespace-nowrap touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2'
 
     const defaultClasses =
-      'group relative flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 border'
+      'group relative flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] rounded-lg text-sm font-medium transition-all duration-200 border touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2'
 
     const baseClasses = variant === 'compact' ? compactClasses : defaultClasses
 
@@ -56,7 +57,7 @@
       return `${baseClasses} bg-teal-500 text-white border-teal-500 shadow-md`
     }
 
-    return `${baseClasses} bg-white text-zinc-700 border-zinc-200 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700 dark:hover:border-teal-500 dark:hover:bg-zinc-700 dark:hover:text-teal-400`
+    return `${baseClasses} bg-white text-zinc-700 border-zinc-200 hover:border-teal-300 hover:bg-teal-50 hover:text-teal-700 active:bg-teal-100 dark:bg-zinc-800 dark:text-zinc-300 dark:border-zinc-700 dark:hover:border-teal-500 dark:hover:bg-zinc-700 dark:hover:text-teal-400 dark:active:bg-zinc-600`
   }
 </script>
 

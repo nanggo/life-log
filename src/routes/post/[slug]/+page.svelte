@@ -5,7 +5,7 @@
 
   import { afterNavigate } from '$app/navigation'
   import { Image, ToC } from '$lib/components/content'
-  import { SocialLinks } from '$lib/components/layout'
+  import { Breadcrumb, SocialLinks } from '$lib/components/layout'
   import { PostDate, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar, twitterHandle } from '$lib/info'
@@ -45,6 +45,13 @@
   const getTagUrl = (tag: string) => {
     return `/tags/${encodeURIComponent(tag)}`
   }
+
+  // Breadcrumb items for post page
+  $: breadcrumbItems = [
+    { label: '포스트', href: '/posts' },
+    { label: data.post.category, href: `/posts/category/${data.post.category}` },
+    { label: data.post.title, current: true }
+  ]
 </script>
 
 <svelte:head>
@@ -116,6 +123,11 @@
   </div>
 
   <div class="w-full mx-auto overflow-x-hidden">
+    <!-- Breadcrumb Navigation -->
+    <div class="mt-4 mb-6">
+      <Breadcrumb items={breadcrumbItems} />
+    </div>
+
     <article>
       <header class="flex flex-col">
         <h1

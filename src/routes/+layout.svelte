@@ -280,6 +280,14 @@
 </svelte:head>
 
 <div class="flex flex-col min-h-screen">
+  <!-- Skip Link for Accessibility -->
+  <a 
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-teal-600 focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+  >
+    Skip to main content
+  </a>
+  
   <div class="flex flex-col flex-grow w-full px-4 py-2">
     <header class="flex items-center justify-between w-full max-w-2xl py-4 mx-auto lg:pb-8">
       <a
@@ -292,9 +300,9 @@
       <button
         type="button"
         role="switch"
-        aria-label="Toggle Dark Mode"
+        aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         aria-checked={isDarkMode}
-        class="w-11 h-11 sm:h-12 sm:w-12 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+        class="w-11 h-11 sm:h-12 sm:w-12 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
         on:click={() => {
           isDarkMode = !isDarkMode
           localStorage.setItem('isDarkMode', isDarkMode.toString())
@@ -313,6 +321,7 @@
       </button>
     </header>
     <main
+      id="main-content"
       class="flex flex-col flex-grow w-full mx-auto"
       class:max-w-2xl={!$page.data.layout?.fullWidth}
     >

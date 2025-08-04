@@ -11,9 +11,12 @@
   export let posts: Post[]
 
   // 성능 최적화: 포스트가 많을 때만 Virtual Scrolling 사용
-  $: useVirtualScrolling = posts.length > 20
-  const ITEM_HEIGHT = 300 // 각 포스트 아이템의 예상 높이
-  const CONTAINER_HEIGHT = 1200 // Virtual List 컨테이너 높이
+  $: useVirtualScrolling = posts.length > 15 // 임계값을 15로 낮춤 (더 빠른 활성화)
+  const ITEM_HEIGHT = 280 // 각 포스트 아이템의 예상 높이 (조정됨)
+  const CONTAINER_HEIGHT = 1400 // Virtual List 컨테이너 높이 (더 많은 아이템 표시)
+  
+  // 메모이제이션을 위한 키 생성
+  $: postsKey = posts.map(p => `${p.slug}-${p.date}`).join(',')
 </script>
 
 {#if useVirtualScrolling}
@@ -46,7 +49,7 @@
   <div
     class="flex flex-col gap-16 md:border-l md:border-zinc-100 md:pl-6 md:dark:border-zinc-700/40"
   >
-    {#each posts as post}
+    {#each posts as post (post.slug)}
       <article class="grid items-start grid-cols-4 gap-8">
         <PostDate class="flex-col hidden md:flex text-sm" {post} decorate={false} />
 
