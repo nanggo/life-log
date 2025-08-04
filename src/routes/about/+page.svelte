@@ -67,12 +67,12 @@
   </script>
 </svelte:head>
 
-<main class="about max-w-2xl mx-auto lg:max-w-none overflow-x-hidden">
+<main class="about max-w-2xl mx-auto lg:max-w-none">
   <div class="hidden lg:block pt-8">
     <div class="sticky top-0 w-full flex justify-end pt-11 pr-8"></div>
   </div>
 
-  <div class="w-full mx-auto overflow-x-hidden">
+  <div class="w-full mx-auto">
     <article>
       <header class="flex flex-col">
         <h1 class="sr-only">{data.aboutData.title}</h1>
@@ -186,12 +186,13 @@
     }
   }
 
+  /* Override default prose table styles for the about page to implement a word-wrapping strategy */
   :global(.about td:first-child) {
     text-align: right;
     font-weight: bold;
     width: auto;
     min-width: fit-content;
-    white-space: nowrap;
+    /* Removed white-space: nowrap to allow text wrapping on small screens */
   }
 
   :global(.about table) {
