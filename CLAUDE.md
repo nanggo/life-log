@@ -23,6 +23,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Build and lint checks are mandatory** - Never commit code that fails these checks. If lint fails, run `pnpm format` first to auto-fix formatting issues, then address any remaining ESLint errors manually.
 
+## SEO Validation
+
+For SEO quality assurance, run the following command locally before major releases or structural changes:
+
+- `pnpm seo:validate` - Run comprehensive SEO validation
+
+**SEO checks are recommended** - Run SEO validation when:
+
+- Adding new pages or routes
+- Modifying meta tags or structured data
+- Changing site structure or navigation
+- Before major releases
+
+The automated SEO validation in CI/CD has been removed to simplify the pipeline. Manual validation ensures quality while avoiding over-automation for a personal blog.
+
 ## Architecture
 
 This is a SvelteKit-based blog using:
