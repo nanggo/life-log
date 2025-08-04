@@ -189,6 +189,9 @@
   :global(.about td:first-child) {
     text-align: right;
     font-weight: bold;
+    width: auto;
+    min-width: fit-content;
+    white-space: nowrap;
   }
 
   :global(.about table) {
@@ -200,10 +203,8 @@
     /* Remove custom styling to use global prose table styles with mobile optimization */
   }
 
-  :global(.about table td) {
-    max-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  :global(.about td:last-child) {
+    width: 100%;
   }
 
   @media (max-width: 640px) {
