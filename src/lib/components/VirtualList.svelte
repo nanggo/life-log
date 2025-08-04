@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte'
+  import { onMount } from 'svelte'
 
   import type { Post } from '$lib/types'
 
@@ -52,8 +52,7 @@
   // 스크롤 위치 오프셋
   $: offsetY = startIndex * itemHeight
 
-  // 성능 최적화: 스크롤 이벤트 스로틀링과 디바운싱
-  let scrollTimeout: ReturnType<typeof setTimeout>
+  // 성능 최적화: 스크롤 이벤트 스로틀링
   let lastScrollTime = 0
   const THROTTLE_DELAY = 16 // ~60fps
 
@@ -69,17 +68,6 @@
       }
       lastScrollTime = now
     }
-
-    // 디바운싱: 스크롤이 끝난 후 정리 작업
-    clearTimeout(scrollTimeout)
-    scrollTimeout = setTimeout(() => {
-      if (viewport) {
-        // 최종 스크롤 위치 업데이트
-        scrollTop = viewport.scrollTop
-
-        // 최종 스크롤 위치 정리 완료
-      }
-    }, 150)
   }
 
   // IntersectionObserver 인스턴스를 저장할 변수
@@ -166,11 +154,6 @@
 
     // Return void to satisfy TypeScript
     return
-  })
-
-  onDestroy(() => {
-    // 정리 작업: 타이머 정리
-    clearTimeout(scrollTimeout)
   })
 </script>
 
