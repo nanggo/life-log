@@ -155,9 +155,6 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       .pop() || ''
 
   const html = parse(post.default.render().html)
-  if (!html) {
-    throw new Error(`[오류] 파일 '${filepath}'의 HTML 파싱에 실패했습니다.`)
-  }
 
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
