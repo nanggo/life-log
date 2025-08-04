@@ -98,6 +98,39 @@
   // IntersectionObserver 인스턴스를 저장할 변수
   let intersectionObserver: IntersectionObserver | null = null
 
+  // IntersectionObserver 생성 함수 (중복 제거)
+  function createIntersectionObserver() {
+    return new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const element = entry.target as HTMLElement
+          if (!entry.isIntersecting) {
+            // 화면 밖의 요소에 대한 최적화 (예: 이미지 언로드)
+            const images = element.querySelectorAll('img')
+            images.forEach((img) => {
+              if (img.src && img.dataset.original) {
+                img.src = '' // 메모리 절약을 위해 이미지 언로드
+              }
+            })
+          } else {
+            // 화면에 다시 나타난 요소의 이미지 복원
+            const images = element.querySelectorAll('img')
+            images.forEach((img) => {
+              if (!img.src && img.dataset.original) {
+                img.src = img.dataset.original // 이미지 다시 로드
+              }
+            })
+          }
+        })
+      },
+      {
+        root: viewport,
+        rootMargin: `${adaptiveBuffer * itemHeight}px`,
+        threshold: 0
+      }
+    )
+  }
+
   // 요소 관찰을 위한 action 함수
   function observeElement(node: HTMLElement) {
     if (intersectionObserver) {
@@ -119,27 +152,7 @@
     intersectionObserver.disconnect()
 
     // 새로운 rootMargin으로 observer 재생성
-    intersectionObserver = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const element = entry.target as HTMLElement
-          if (!entry.isIntersecting) {
-            // 화면 밖의 요소에 대한 최적화 (예: 이미지 언로드)
-            const images = element.querySelectorAll('img')
-            images.forEach((img) => {
-              if (img.src && img.dataset.original) {
-                img.src = '' // 메모리 절약을 위해 이미지 언로드
-              }
-            })
-          }
-        })
-      },
-      {
-        root: viewport,
-        rootMargin: `${adaptiveBuffer * itemHeight}px`,
-        threshold: 0
-      }
-    )
+    intersectionObserver = createIntersectionObserver()
 
     // 기존에 관찰 중인 요소들을 다시 관찰
     const existingItems = document.querySelectorAll('.virtual-list-item')
@@ -154,27 +167,7 @@
 
     // Intersection Observer를 사용한 추가 최적화 (선택적)
     if ('IntersectionObserver' in window && viewport) {
-      intersectionObserver = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const element = entry.target as HTMLElement
-            if (!entry.isIntersecting) {
-              // 화면 밖의 요소에 대한 최적화 (예: 이미지 언로드)
-              const images = element.querySelectorAll('img')
-              images.forEach((img) => {
-                if (img.src && img.dataset.original) {
-                  img.src = '' // 메모리 절약을 위해 이미지 언로드
-                }
-              })
-            }
-          })
-        },
-        {
-          root: viewport,
-          rootMargin: `${adaptiveBuffer * itemHeight}px`,
-          threshold: 0
-        }
-      )
+      intersectionObserver = createIntersectionObserver()
 
       return () => {
         if (intersectionObserver) {
