@@ -72,7 +72,7 @@
     <div class="sticky top-0 w-full flex justify-end pt-11 pr-8"></div>
   </div>
 
-  <div class="w-full mx-auto overflow-x-hidden">
+  <div class="w-full mx-auto">
     <article>
       <header class="flex flex-col">
         <h1 class="sr-only">{data.aboutData.title}</h1>
@@ -142,7 +142,7 @@
     position: absolute;
     display: inline-block;
     top: 0;
-    right: -14px;
+    right: -10px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -152,6 +152,7 @@
 
   @media (min-width: 640px) {
     :global(.about h2::after) {
+      right: -12px;
       width: 12px;
       height: 12px;
     }
@@ -185,15 +186,41 @@
     }
   }
 
+  /* Override default prose table styles for the about page to implement a word-wrapping strategy */
   :global(.about td:first-child) {
     text-align: right;
     font-weight: bold;
+    width: auto;
+    min-width: fit-content;
+    /* Removed white-space: nowrap to allow text wrapping on small screens */
   }
 
   :global(.about table) {
     margin-top: 15px;
     margin-bottom: 13px;
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    font-size: 0.9em; /* Mobile first: smaller font size as default */
     /* Remove custom styling to use global prose table styles with mobile optimization */
+  }
+
+  :global(.about td:last-child) {
+    width: 100%;
+  }
+
+  :global(.about table td) {
+    padding: 0.25rem 0.5rem; /* Mobile first: smaller padding as default */
+  }
+
+  @media (min-width: 640px) {
+    :global(.about table) {
+      font-size: 1em; /* Desktop: regular font size */
+    }
+
+    :global(.about table td) {
+      padding: 0.5rem 0.75rem; /* Desktop: larger padding */
+    }
   }
 
   :global(.about code) {
