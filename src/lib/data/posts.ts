@@ -114,8 +114,22 @@ const calculateReadingTime = (html: HTMLElement, filepath: string): number => {
     const safeMinutes = typeof minutes === 'number' && isFinite(minutes) ? minutes : 0
     return Math.max(1, Math.ceil(safeMinutes)) // 최소 1분 보장
   } catch (error) {
-    console.warn(`[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다:`, error)
-    return 1 // 기본값으로 1분 설정
+    // 개발 환경에서는 더 상세한 에러 정보 제공
+    if (dev) {
+      console.error(
+        `[개발 모드] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다.\n` +
+          `- 에러 타입: ${error instanceof Error ? error.name : 'Unknown'}\n` +
+          `- 에러 메시지: ${error instanceof Error ? error.message : String(error)}\n` +
+          `- 스택 트레이스:`,
+        error
+      )
+    } else {
+      console.warn(
+        `[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다. ` +
+          `기본값 1분을 사용합니다. (${error instanceof Error ? error.message : String(error)})`
+      )
+    }
+    return 1 // 기본값으로 1분 설정 - graceful fallback 유지
   }
 }
 
