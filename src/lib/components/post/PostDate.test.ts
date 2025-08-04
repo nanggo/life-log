@@ -83,7 +83,7 @@ describe('PostDate 컴포넌트', () => {
       class: ''
     })
 
-    const innerFlexContainer = screen.getByText(mockPost.readingTime).parentElement // 두 번째 .flex 요소 (내부 flex 컨테이너)
+    const innerFlexContainer = screen.getByText('5분').parentElement // 두 번째 .flex 요소 (내부 flex 컨테이너)
     expect(innerFlexContainer).toHaveClass('flex-col')
 
     // 구분자(•)가 표시되지 않아야 함
