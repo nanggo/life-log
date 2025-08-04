@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte'
+  import { onMount, onDestroy } from 'svelte'
 
   import type { Post } from '$lib/types'
 
@@ -10,150 +10,57 @@
 
   let viewport: HTMLDivElement
   let scrollTop = 0
+  let mounted = false
 
   // 계산된 값들
   $: visibleItemCount = Math.ceil(containerHeight / itemHeight)
   $: totalItems = items.length
   $: totalHeight = totalItems * itemHeight
 
-  // 적응형 버퍼 크기 (성능에 따라 동적 조정)
-  let adaptiveBuffer = buffer
-  let frameCount = 0
-  let lastFrameTime = 0
-
-  // 현재 보이는 아이템들의 범위 계산
-  $: startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - adaptiveBuffer)
-  $: endIndex = Math.min(totalItems - 1, startIndex + visibleItemCount + adaptiveBuffer * 2)
+  // 현재 보이는 아이템들의 범위 계산 (단순화)
+  $: startIndex = Math.max(0, Math.floor(scrollTop / itemHeight) - buffer)
+  $: endIndex = Math.min(totalItems - 1, startIndex + visibleItemCount + buffer * 2)
   $: visibleItems = items.slice(startIndex, endIndex + 1)
-
-  // 성능 모니터링 및 버퍼 조정
-  function measurePerformance() {
-    const now = performance.now()
-    frameCount++
-
-    if (frameCount % 60 === 0) {
-      // 60프레임마다 체크
-      const fps = (1000 / (now - lastFrameTime)) * 60
-
-      // FPS에 따라 버퍼 크기 적응적 조정
-      if (fps < 30) {
-        // 성능이 낮으면 버퍼 크기 줄임
-        adaptiveBuffer = Math.max(1, buffer - 1)
-      } else if (fps > 55) {
-        // 성능이 좋으면 버퍼 크기 늘림 (부드러운 스크롤)
-        adaptiveBuffer = Math.min(buffer + 2, buffer * 2)
-      }
-
-      lastFrameTime = now
-      frameCount = 0
-    }
-  }
 
   // 스크롤 위치 오프셋
   $: offsetY = startIndex * itemHeight
 
   // 성능 최적화: 스크롤 이벤트 스로틀링
-  let lastScrollTime = 0
-  const THROTTLE_DELAY = 16 // ~60fps
+  let scrollRAF: number | null = null
 
   function handleScroll() {
-    const now = performance.now()
+    // RAF를 사용한 더 나은 스로틀링
+    if (scrollRAF !== null) {
+      return
+    }
 
-    // 스로틀링: 60fps 제한으로 성능 향상
-    if (now - lastScrollTime >= THROTTLE_DELAY) {
-      if (viewport) {
+    scrollRAF = requestAnimationFrame(() => {
+      if (viewport && mounted) {
         scrollTop = viewport.scrollTop
-        // 성능 모니터링
-        measurePerformance()
       }
-      lastScrollTime = now
-    }
-  }
-
-  // IntersectionObserver 인스턴스를 저장할 변수
-  let intersectionObserver: IntersectionObserver | null = null
-
-  // IntersectionObserver 생성 함수 (중복 제거)
-  function createIntersectionObserver() {
-    return new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          const element = entry.target as HTMLElement
-          if (!entry.isIntersecting) {
-            // 화면 밖의 요소에 대한 최적화 (예: 이미지 언로드)
-            const images = element.querySelectorAll('img')
-            images.forEach((img) => {
-              if (img.src && img.dataset.original) {
-                img.src = '' // 메모리 절약을 위해 이미지 언로드
-              }
-            })
-          } else {
-            // 화면에 다시 나타난 요소의 이미지 복원
-            const images = element.querySelectorAll('img')
-            images.forEach((img) => {
-              if (!img.src && img.dataset.original) {
-                img.src = img.dataset.original // 이미지 다시 로드
-              }
-            })
-          }
-        })
-      },
-      {
-        root: viewport,
-        rootMargin: `${adaptiveBuffer * itemHeight}px`,
-        threshold: 0
-      }
-    )
-  }
-
-  // 요소 관찰을 위한 action 함수
-  function observeElement(node: HTMLElement) {
-    if (intersectionObserver) {
-      intersectionObserver.observe(node)
-    }
-
-    return {
-      destroy() {
-        if (intersectionObserver) {
-          intersectionObserver.unobserve(node)
-        }
-      }
-    }
-  }
-
-  // adaptiveBuffer가 변경될 때 observer 재생성
-  $: if (intersectionObserver && viewport) {
-    // 기존 observer 정리
-    intersectionObserver.disconnect()
-
-    // 새로운 rootMargin으로 observer 재생성
-    intersectionObserver = createIntersectionObserver()
-
-    // 기존에 관찰 중인 요소들을 다시 관찰 (viewport 범위로 제한)
-    const existingItems = viewport?.querySelectorAll('.virtual-list-item') || []
-    existingItems.forEach((item) => {
-      intersectionObserver?.observe(item as HTMLElement)
+      scrollRAF = null
     })
   }
 
   onMount(() => {
-    // Virtual List 마운트 시 초기화
-    lastFrameTime = performance.now()
+    mounted = true
 
-    // Intersection Observer를 사용한 추가 최적화 (선택적)
-    if ('IntersectionObserver' in window && viewport) {
-      intersectionObserver = createIntersectionObserver()
-
-      return () => {
-        if (intersectionObserver) {
-          intersectionObserver.disconnect()
-          intersectionObserver = null
-        }
+    // cleanup 함수 반환
+    return () => {
+      mounted = false
+      if (scrollRAF !== null) {
+        cancelAnimationFrame(scrollRAF)
+        scrollRAF = null
       }
     }
+  })
 
-    // Return void to satisfy TypeScript
-    return
+  onDestroy(() => {
+    mounted = false
+    if (scrollRAF !== null) {
+      cancelAnimationFrame(scrollRAF)
+      scrollRAF = null
+    }
   })
 </script>
 
@@ -174,7 +81,6 @@
             class="virtual-list-item"
             style="height: {itemHeight}px;"
             data-index={startIndex + index}
-            use:observeElement
           >
             <slot {item} index={startIndex + index} {totalItems} />
           </div>

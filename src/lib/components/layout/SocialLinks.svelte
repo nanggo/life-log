@@ -3,7 +3,11 @@
 </script>
 
 {#if twitter}
-  <a href={`https://twitter.com/${twitter}`} class="group" aria-label="Follow on Twitter">
+  <a
+    href={`https://twitter.com/${twitter}`}
+    class="group flex items-center justify-center w-11 h-11 -m-2.5 p-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+    aria-label="Follow on Twitter"
+  >
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
@@ -17,7 +21,11 @@
 {/if}
 
 {#if instagram}
-  <a href={`https://instagram.com/${instagram}`} class="group" aria-label="Follow on Instagram">
+  <a
+    href={`https://instagram.com/${instagram}`}
+    class="group flex items-center justify-center w-11 h-11 -m-2.5 p-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+    aria-label="Follow on Instagram"
+  >
     <svg
       viewBox="0 0 24 24"
       aria-hidden="true"
@@ -36,7 +44,7 @@
 {#if github}
   <a
     href={`https://github.com/${github}`}
-    class="group"
+    class="group flex items-center justify-center w-11 h-11 -m-2.5 p-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
     aria-label="Follow on GitHub"
     target="_blank"
     rel="noopener noreferrer"
@@ -58,7 +66,7 @@
 {#if linkedin}
   <a
     href={`https://linkedin.com/in/${linkedin}`}
-    class="group"
+    class="group flex items-center justify-center w-11 h-11 -m-2.5 p-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
     aria-label="Follow on LinkedIn"
     target="_blank"
     rel="noopener noreferrer"
@@ -76,7 +84,7 @@
 
 {#if email}
   <a
-    class="group flex text-sm font-medium text-zinc-800 transition hover:text-teal-500 dark:text-zinc-200 dark:hover:text-teal-500"
+    class="group flex items-center justify-center w-11 h-11 -m-2.5 p-2.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
     href={`mailto:${email}`}
     aria-label="Send email"
   >
