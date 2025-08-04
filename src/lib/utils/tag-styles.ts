@@ -3,7 +3,7 @@
  */
 
 export const TAG_STYLES = {
-  base: 'flex-shrink-0 flex items-center px-3 py-2 min-h-11 min-w-11 text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap touch-manipulation leading-relaxed',
+  base: 'flex-shrink-0 flex items-start px-3 py-3 min-h-11 min-w-11 text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap touch-manipulation leading-relaxed',
   selected: 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100',
   unselected:
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600',
