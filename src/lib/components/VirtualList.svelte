@@ -85,6 +85,7 @@
               // 많은 자식 요소가 있을 때만 정리 수행
               // 화면 밖의 요소들에 대한 정리 작업 (필요시)
               if (import.meta.env.DEV) {
+                // eslint-disable-next-line no-console
                 console.debug(`Virtual scroll optimization: ${visibleItems.length} items visible`)
               }
             }
