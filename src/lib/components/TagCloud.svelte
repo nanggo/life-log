@@ -114,10 +114,6 @@
 {/if}
 
 <style>
-  .tag-cloud {
-    /* 태그 클라우드 기본 스타일 */
-  }
-
   .tag-cloud a,
   .tag-cloud span {
     text-decoration: none;

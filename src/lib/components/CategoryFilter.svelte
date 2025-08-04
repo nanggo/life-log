@@ -107,10 +107,6 @@
 </nav>
 
 <style>
-  .category-filter {
-    /* 접근성을 위한 포커스 스타일 개선 */
-  }
-
   .category-filter a:focus {
     outline: 2px solid #14b8a6;
     outline-offset: 2px;

@@ -13,7 +13,7 @@ export function debounce<T extends (...args: unknown[]) => unknown>(
   delay: number
 ): (...args: Parameters<T>) => void {
   let timeoutId: ReturnType<typeof setTimeout>
-  
+
   return (...args: Parameters<T>) => {
     clearTimeout(timeoutId)
     timeoutId = setTimeout(() => func(...args), delay)
@@ -31,7 +31,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
   delay: number
 ): (...args: Parameters<T>) => void {
   let lastCall = 0
-  
+
   return (...args: Parameters<T>) => {
     const now = Date.now()
     if (now - lastCall >= delay) {
@@ -52,23 +52,25 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
   getKey?: (...args: Parameters<T>) => string
 ): T {
   const cache = new Map<string, ReturnType<T>>()
-  
+
   return ((...args: Parameters<T>) => {
     const key = getKey ? getKey(...args) : JSON.stringify(args)
-    
+
     if (cache.has(key)) {
       return cache.get(key)!
     }
-    
-    const result = func(...args)
+
+    const result = func(...args) as ReturnType<T>
     cache.set(key, result)
-    
+
     // Prevent cache from growing too large
     if (cache.size > 100) {
       const firstKey = cache.keys().next().value
-      cache.delete(firstKey)
+      if (firstKey !== undefined) {
+        cache.delete(firstKey)
+      }
     }
-    
+
     return result
   }) as T
 }
@@ -80,11 +82,11 @@ export function memoize<T extends (...args: unknown[]) => unknown>(
 export function batchDOMOperations(operations: (() => void)[]): void {
   if (typeof window !== 'undefined' && 'requestAnimationFrame' in window) {
     window.requestAnimationFrame(() => {
-      operations.forEach(op => op())
+      operations.forEach((op) => op())
     })
   } else {
     // Fallback for environments without RAF
-    operations.forEach(op => op())
+    operations.forEach((op) => op())
   }
 }
 
@@ -98,36 +100,33 @@ export function optimizedScrollHandler(
   callback: (event: Event) => void,
   delay: number = 16
 ): () => void {
-  const throttledCallback = throttle(callback, delay)
-  
+  const throttledCallback = throttle(callback as (...args: unknown[]) => unknown, delay) as (
+    event: Event
+  ) => void
+
   const handleScroll = (event: Event) => {
     // Use passive listeners for better performance
     throttledCallback(event)
   }
-  
+
   if (typeof window !== 'undefined') {
     window.addEventListener('scroll', handleScroll, { passive: true })
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
   }
-  
+
   return () => {} // No-op cleanup for SSR
 }
 
 /**
  * Memory usage monitoring (development only)
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
 export function logMemoryUsage(_label: string): void {
-  if (typeof window !== 'undefined' && 'performance' in window && window.performance.memory) {
-    const _memory = window.performance.memory
-    // console.debug(`[${_label}] Memory usage:`, {
-    //   used: `${Math.round(_memory.usedJSHeapSize / 1024 / 1024)} MB`,
-    //   total: `${Math.round(_memory.totalJSHeapSize / 1024 / 1024)} MB`,
-    //   limit: `${Math.round(_memory.jsHeapSizeLimit / 1024 / 1024)} MB`
-    // })
-  }
+  // Memory logging disabled in production
+  // Implementation removed to avoid TypeScript/ESLint issues
 }
 
 /**
@@ -135,13 +134,13 @@ export function logMemoryUsage(_label: string): void {
  */
 export class PerformanceTimer {
   private marks: Map<string, number> = new Map()
-  
+
   start(label: string): void {
     if (typeof performance !== 'undefined') {
       this.marks.set(label, performance.now())
     }
   }
-  
+
   end(label: string): number {
     if (typeof performance !== 'undefined' && this.marks.has(label)) {
       const startTime = this.marks.get(label)!
@@ -171,12 +170,12 @@ export function createOptimizedIntersectionObserver(
   if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
     return null
   }
-  
+
   const defaultOptions = {
     rootMargin: '50px',
     threshold: 0.1,
     ...options
   }
-  
+
   return new IntersectionObserver(callback, defaultOptions)
 }
