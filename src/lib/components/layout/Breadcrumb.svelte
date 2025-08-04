@@ -14,9 +14,9 @@
       <li class="flex items-center">
         {#if index > 0}
           <!-- Separator -->
-          <svg 
-            class="w-4 h-4 mx-2 flex-shrink-0" 
-            fill="currentColor" 
+          <svg
+            class="w-4 h-4 mx-2 flex-shrink-0"
+            fill="currentColor"
             viewBox="0 0 20 20"
             aria-hidden="true"
           >
@@ -30,7 +30,7 @@
 
         {#if item.current || !item.href}
           <!-- Current page or non-linked item -->
-          <span 
+          <span
             class="text-zinc-900 dark:text-zinc-100 font-medium"
             aria-current={item.current ? 'page' : undefined}
           >
@@ -38,7 +38,7 @@
           </span>
         {:else}
           <!-- Linked item -->
-          <a 
+          <a
             href={item.href}
             class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 rounded-sm"
             aria-label={`Go to ${item.label}`}
@@ -52,12 +52,6 @@
 </nav>
 
 <style>
-  /* Enhanced focus styling for better accessibility */
-  nav a:focus {
-    outline: 2px solid #14b8a6;
-    outline-offset: 2px;
-  }
-
   /* Responsive text size for mobile */
   @media (max-width: 640px) {
     nav ol {
@@ -70,7 +64,7 @@
     nav ol {
       font-size: 0.75rem; /* text-xs */
     }
-    
+
     /* Smaller separators on mobile */
     nav svg {
       width: 0.875rem; /* w-3.5 */

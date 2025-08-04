@@ -58,7 +58,7 @@
   const THROTTLE_DELAY = 16 // ~60fps
 
   function handleScroll() {
-    const now = Date.now()
+    const now = performance.now()
 
     // 스로틀링: 60fps 제한으로 성능 향상
     if (now - lastScrollTime >= THROTTLE_DELAY) {
@@ -77,20 +77,7 @@
         // 최종 스크롤 위치 업데이트
         scrollTop = viewport.scrollTop
 
-        // 메모리 최적화: 보이지 않는 DOM 노드 정리 힌트
-        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-          window.requestIdleCallback(() => {
-            // 브라우저가 여유가 있을 때 추가 최적화 작업
-            if (viewport && viewport.children.length > 50) {
-              // 많은 자식 요소가 있을 때만 정리 수행
-              // 화면 밖의 요소들에 대한 정리 작업 (필요시)
-              if (import.meta.env.DEV) {
-                // eslint-disable-next-line no-console
-                console.debug(`Virtual scroll optimization: ${visibleItems.length} items visible`)
-              }
-            }
-          })
-        }
+        // 최종 스크롤 위치 정리 완료
       }
     }, 150)
   }
