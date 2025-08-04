@@ -28,7 +28,7 @@ describe('PostDate 컴포넌트', () => {
     slug: 'test-post',
     tags: ['JavaScript'],
     date: '2024-01-15',
-    readingTime: '5분 읽기',
+    readingTime: '5분',
     preview: { html: '', text: '' },
     headings: [],
     isIndexFile: false
@@ -42,7 +42,7 @@ describe('PostDate 컴포넌트', () => {
     render(PostDate, { post: mockPost, decorate: false, class: '' })
 
     expect(screen.getByText('January 15, 2024')).toBeInTheDocument()
-    expect(screen.getByText('5분 읽기')).toBeInTheDocument()
+    expect(screen.getByText('5분')).toBeInTheDocument()
   })
 
   it('datetime 속성이 올바르게 설정된다', () => {
@@ -194,12 +194,12 @@ describe('PostDate 컴포넌트', () => {
   it('읽기 시간이 올바르게 표시된다', () => {
     const postWithDifferentReadingTime: Post = {
       ...mockPost,
-      readingTime: '10분 읽기'
+      readingTime: '10분'
     }
 
     render(PostDate, { post: postWithDifferentReadingTime, decorate: false, class: '' })
 
-    expect(screen.getByText('10분 읽기')).toBeInTheDocument()
+    expect(screen.getByText('10분')).toBeInTheDocument()
   })
 
   it('날짜와 읽기 시간이 flex 컨테이너 안에 있다', () => {
@@ -209,7 +209,7 @@ describe('PostDate 컴포넌트', () => {
     expect(flexContainer).toBeInTheDocument()
 
     const timeElement = screen.getByText('January 15, 2024')
-    const readingTimeElement = screen.getByText('5분 읽기')
+    const readingTimeElement = screen.getByText('5분')
 
     expect(flexContainer).toContainElement(timeElement)
     expect(flexContainer).toContainElement(readingTimeElement)
