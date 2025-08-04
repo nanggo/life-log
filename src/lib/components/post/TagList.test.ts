@@ -176,9 +176,9 @@ describe('TagList 컴포넌트', () => {
       expect(tagElement).toHaveClass(
         'flex-shrink-0',
         'flex',
-        'items-center',
+        'items-start',
         'px-3',
-        'py-2',
+        'py-3',
         'min-h-11',
         'min-w-11',
         'text-xs',
