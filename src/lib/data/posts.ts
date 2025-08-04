@@ -109,7 +109,10 @@ const calculateReadingTime = (html: HTMLElement, filepath: string): number => {
       return 1
     }
     const readingResult = readingTime(textContent)
-    return Math.max(1, Math.ceil(readingResult.minutes)) // 최소 1분 보장
+    const minutes = readingResult.minutes
+    // Fallback to 0 if minutes is not a finite number to prevent NaN
+    const safeMinutes = typeof minutes === 'number' && isFinite(minutes) ? minutes : 0
+    return Math.max(1, Math.ceil(safeMinutes)) // 최소 1분 보장
   } catch (error) {
     console.warn(`[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다:`, error)
     return 1 // 기본값으로 1분 설정
