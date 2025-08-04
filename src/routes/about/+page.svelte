@@ -67,7 +67,7 @@
   </script>
 </svelte:head>
 
-<main class="about max-w-2xl mx-auto lg:max-w-none">
+<main class="about max-w-2xl mx-auto lg:max-w-none overflow-x-hidden">
   <div class="hidden lg:block pt-8">
     <div class="sticky top-0 w-full flex justify-end pt-11 pr-8"></div>
   </div>
@@ -142,7 +142,7 @@
     position: absolute;
     display: inline-block;
     top: 0;
-    right: -14px;
+    right: -10px;
     width: 10px;
     height: 10px;
     border-radius: 50%;
@@ -152,6 +152,7 @@
 
   @media (min-width: 640px) {
     :global(.about h2::after) {
+      right: -12px;
       width: 12px;
       height: 12px;
     }
@@ -193,7 +194,26 @@
   :global(.about table) {
     margin-top: 15px;
     margin-bottom: 13px;
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
     /* Remove custom styling to use global prose table styles with mobile optimization */
+  }
+
+  :global(.about table td) {
+    max-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 640px) {
+    :global(.about table) {
+      font-size: 0.9em;
+    }
+
+    :global(.about table td) {
+      padding: 0.25rem 0.5rem;
+    }
   }
 
   :global(.about code) {
