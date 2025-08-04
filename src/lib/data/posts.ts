@@ -128,6 +128,10 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       .pop() || ''
 
   const html = parse(post.default.render().html)
+  if (!html) {
+    throw new Error(`[오류] 파일 '${filepath}'의 HTML 파싱에 실패했습니다.`)
+  }
+
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
     : createEnhancedPreview(html)
@@ -184,7 +188,16 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     },
     readingTime: (() => {
       try {
-        return Math.ceil(readingTime(html.structuredText || '').minutes)
+        // HTML 텍스트 추출 개선
+        const textContent = html.structuredText || html.text || ''
+        if (!textContent.trim()) {
+          console.warn(
+            `[경고] 파일 '${filepath}'에서 텍스트 내용을 찾을 수 없습니다. 기본값 1분을 사용합니다.`
+          )
+          return 1
+        }
+        const readingResult = readingTime(textContent)
+        return Math.max(1, Math.ceil(readingResult.minutes)) // 최소 1분 보장
       } catch (error) {
         console.warn(`[경고] 파일 '${filepath}'의 읽기 시간 계산 중 오류가 발생했습니다:`, error)
         return 1 // 기본값으로 1분 설정
