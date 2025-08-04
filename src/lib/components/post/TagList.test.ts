@@ -130,7 +130,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags })
 
     const scrollContainer = document.querySelector(
-      '.flex.gap-2.mt-2.overflow-x-auto.pb-2.scrollbar-thin'
+      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
     )
     expect(scrollContainer).toBeInTheDocument()
   })
@@ -153,7 +153,7 @@ describe('TagList 컴포넌트', () => {
     expect(container).toBeInTheDocument()
 
     const scrollContainer = container?.querySelector(
-      '.flex.gap-2.mt-2.overflow-x-auto.pb-2.scrollbar-thin'
+      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
     )
     expect(scrollContainer).toBeInTheDocument()
   })
@@ -175,13 +175,19 @@ describe('TagList 컴포넌트', () => {
       const tagElement = screen.getByText(`#${tag}`)
       expect(tagElement).toHaveClass(
         'flex-shrink-0',
+        'flex',
+        'items-center',
         'px-3',
         'py-2',
+        'min-h-11',
+        'min-w-11',
         'text-xs',
         'font-medium',
         'rounded-full',
         'transition-all',
-        'whitespace-nowrap'
+        'whitespace-nowrap',
+        'touch-manipulation',
+        'leading-relaxed'
       )
     })
   })
@@ -224,7 +230,7 @@ describe('TagList 컴포넌트', () => {
 
     // 스크롤 컨테이너
     const scrollContainer = outerContainer?.querySelector(
-      '.flex.gap-2.mt-2.overflow-x-auto.pb-2.scrollbar-thin'
+      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
     )
     expect(scrollContainer).toBeInTheDocument()
 
