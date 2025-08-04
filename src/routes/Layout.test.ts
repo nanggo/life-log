@@ -120,14 +120,14 @@ describe('Layout 컴포넌트', () => {
   it('다크모드 토글 버튼이 렌더링된다', () => {
     render(Layout, { data: mockData })
 
-    const darkModeToggle = screen.getByRole('switch', { name: 'Toggle Dark Mode' })
+    const darkModeToggle = screen.getByRole('switch', { name: 'Switch to dark mode' })
     expect(darkModeToggle).toBeInTheDocument()
   })
 
   it('다크모드 토글 클릭 시 localStorage와 html 클래스가 올바르게 변경된다', async () => {
     // With browser: true and contains() returning false by default, isDarkMode starts as false.
     render(Layout, { data: mockData })
-    const darkModeToggle = screen.getByRole('switch', { name: 'Toggle Dark Mode' })
+    const darkModeToggle = screen.getByRole('switch', { name: 'Switch to dark mode' })
 
     // Act: switch to dark mode
     await fireEvent.click(darkModeToggle)

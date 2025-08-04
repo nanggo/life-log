@@ -206,12 +206,12 @@ describe('PostPreview 컴포넌트', () => {
     const tagButton = screen.getByText('#JavaScript')
     expect(tagButton).toHaveClass(
       'flex-shrink-0',
-      'px-2',
-      'py-1',
+      'px-3',
+      'py-2',
       'text-xs',
       'font-medium',
       'rounded-full',
-      'transition-colors',
+      'transition-all',
       'whitespace-nowrap'
     )
     expect(tagButton).toHaveClass('cursor-pointer')
@@ -223,12 +223,12 @@ describe('PostPreview 컴포넌트', () => {
     const moreButton = screen.getByText('+2개')
     expect(moreButton).toHaveClass(
       'flex-shrink-0',
-      'px-2',
-      'py-1',
+      'px-3',
+      'py-2',
       'text-xs',
       'font-medium',
       'rounded-full',
-      'transition-colors',
+      'transition-all',
       'whitespace-nowrap'
     )
     expect(moreButton).toHaveClass('cursor-pointer')

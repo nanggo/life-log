@@ -175,12 +175,12 @@ describe('TagList 컴포넌트', () => {
       const tagElement = screen.getByText(`#${tag}`)
       expect(tagElement).toHaveClass(
         'flex-shrink-0',
-        'px-2',
-        'py-1',
+        'px-3',
+        'py-2',
         'text-xs',
         'font-medium',
         'rounded-full',
-        'transition-colors',
+        'transition-all',
         'whitespace-nowrap'
       )
     })
