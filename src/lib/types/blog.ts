@@ -51,8 +51,8 @@ export interface PostMetadata {
   image?: string
   /** 작성자 정보 (선택사항) */
   author?: string
-  /** 읽기 시간 */
-  readingTime: string
+  /** 읽기 시간 (분) */
+  readingTime: number
 }
 
 /**

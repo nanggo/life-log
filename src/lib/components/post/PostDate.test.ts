@@ -28,7 +28,7 @@ describe('PostDate 컴포넌트', () => {
     slug: 'test-post',
     tags: ['JavaScript'],
     date: '2024-01-15',
-    readingTime: '5분',
+    readingTime: 5,
     preview: { html: '', text: '' },
     headings: [],
     isIndexFile: false
@@ -194,7 +194,7 @@ describe('PostDate 컴포넌트', () => {
   it('읽기 시간이 올바르게 표시된다', () => {
     const postWithDifferentReadingTime: Post = {
       ...mockPost,
-      readingTime: '10분'
+      readingTime: 10
     }
 
     render(PostDate, { post: postWithDifferentReadingTime, decorate: false, class: '' })

@@ -27,7 +27,7 @@ describe('PostPreview 컴포넌트', () => {
       html: '<p>이것은 테스트 포스트의 미리보기 내용입니다.</p>',
       text: '이것은 테스트 포스트의 미리보기 내용입니다.'
     },
-    readingTime: '5분',
+    readingTime: 5,
     headings: [],
     isIndexFile: false
   }
