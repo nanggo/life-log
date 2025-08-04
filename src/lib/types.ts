@@ -14,7 +14,7 @@ export interface PostMetadata {
     text: string
   }
   slug: string
-  readingTime: string
+  readingTime: number
   // TechArticle properties (optional, for technical posts)
   proficiencyLevel?: string
   dependencies?: string
