@@ -95,13 +95,66 @@
     }, 150)
   }
 
+  // IntersectionObserver 인스턴스를 저장할 변수
+  let intersectionObserver: IntersectionObserver | null = null
+
+  // 요소 관찰을 위한 action 함수
+  function observeElement(node: HTMLElement) {
+    if (intersectionObserver) {
+      intersectionObserver.observe(node)
+    }
+
+    return {
+      destroy() {
+        if (intersectionObserver) {
+          intersectionObserver.unobserve(node)
+        }
+      }
+    }
+  }
+
+  // adaptiveBuffer가 변경될 때 observer 재생성
+  $: if (intersectionObserver && viewport) {
+    // 기존 observer 정리
+    intersectionObserver.disconnect()
+
+    // 새로운 rootMargin으로 observer 재생성
+    intersectionObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const element = entry.target as HTMLElement
+          if (!entry.isIntersecting) {
+            // 화면 밖의 요소에 대한 최적화 (예: 이미지 언로드)
+            const images = element.querySelectorAll('img')
+            images.forEach((img) => {
+              if (img.src && img.dataset.original) {
+                img.src = '' // 메모리 절약을 위해 이미지 언로드
+              }
+            })
+          }
+        })
+      },
+      {
+        root: viewport,
+        rootMargin: `${adaptiveBuffer * itemHeight}px`,
+        threshold: 0
+      }
+    )
+
+    // 기존에 관찰 중인 요소들을 다시 관찰
+    const existingItems = document.querySelectorAll('.virtual-list-item')
+    existingItems.forEach((item) => {
+      intersectionObserver?.observe(item as HTMLElement)
+    })
+  }
+
   onMount(() => {
     // Virtual List 마운트 시 초기화
     lastFrameTime = performance.now()
 
     // Intersection Observer를 사용한 추가 최적화 (선택적)
     if ('IntersectionObserver' in window && viewport) {
-      const observer = new IntersectionObserver(
+      intersectionObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
             const element = entry.target as HTMLElement
@@ -124,7 +177,10 @@
       )
 
       return () => {
-        observer.disconnect()
+        if (intersectionObserver) {
+          intersectionObserver.disconnect()
+          intersectionObserver = null
+        }
       }
     }
 
@@ -155,6 +211,7 @@
             class="virtual-list-item"
             style="height: {itemHeight}px;"
             data-index={startIndex + index}
+            use:observeElement
           >
             <slot {item} index={startIndex + index} {totalItems} />
           </div>

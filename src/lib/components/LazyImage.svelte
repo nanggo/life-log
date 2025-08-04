@@ -48,8 +48,6 @@
     img.onload = () => {
       if (mounted) {
         loaded = true
-        // 메모리 최적화: 원본 URL 저장
-        img.dataset.original = src
       }
     }
     img.onerror = () => {
@@ -107,6 +105,7 @@
       loading="lazy"
       decoding="async"
       class="w-full h-full object-cover"
+      data-original={src}
       transition:fade={{ duration: 200 }}
     />
   {/if}
