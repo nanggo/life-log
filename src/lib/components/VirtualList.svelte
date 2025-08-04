@@ -154,8 +154,8 @@
     // 새로운 rootMargin으로 observer 재생성
     intersectionObserver = createIntersectionObserver()
 
-    // 기존에 관찰 중인 요소들을 다시 관찰
-    const existingItems = document.querySelectorAll('.virtual-list-item')
+    // 기존에 관찰 중인 요소들을 다시 관찰 (viewport 범위로 제한)
+    const existingItems = viewport?.querySelectorAll('.virtual-list-item') || []
     existingItems.forEach((item) => {
       intersectionObserver?.observe(item as HTMLElement)
     })

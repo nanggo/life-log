@@ -55,8 +55,7 @@
         error = true
       }
     }
-    // 성능 최적화: loading priority 설정
-    img.loading = 'lazy'
+    // 성능 최적화: decoding과 priority 설정 (loading은 intersection observer로 관리)
     img.decoding = 'async'
     // 캐시 최적화
     img.fetchPriority = 'auto'
@@ -102,7 +101,6 @@
       {alt}
       {width}
       {height}
-      loading="lazy"
       decoding="async"
       class="w-full h-full object-cover"
       data-original={src}
