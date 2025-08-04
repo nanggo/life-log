@@ -150,13 +150,13 @@
         class="virtual-list-items"
         style="transform: translateY({offsetY}px); position: absolute; top: 0; left: 0; right: 0;"
       >
-        {#each visibleItems as item, index (startIndex + index)}
+        {#each visibleItems as item, index (item.slug)}
           <div
             class="virtual-list-item"
             style="height: {itemHeight}px;"
             data-index={startIndex + index}
           >
-            <slot {item} index={startIndex + index} />
+            <slot {item} index={startIndex + index} {totalItems} />
           </div>
         {/each}
       </div>

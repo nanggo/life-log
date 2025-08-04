@@ -22,10 +22,13 @@
     containerHeight={CONTAINER_HEIGHT}
     buffer={2}
     let:item={post}
+    let:index
+    let:totalItems
   >
     <div class="w-full px-4">
       <article
-        class="grid items-start grid-cols-4 gap-8 py-8 border-b border-zinc-100 dark:border-zinc-700/40 last:border-b-0"
+        class="grid items-start grid-cols-4 gap-8 py-8 border-b border-zinc-100 dark:border-zinc-700/40"
+        class:!border-b-0={index === totalItems - 1}
       >
         <PostDate class="flex-col hidden md:flex text-sm" {post} decorate={false} />
 
