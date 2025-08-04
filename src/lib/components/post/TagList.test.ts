@@ -47,7 +47,7 @@ describe('TagList 컴포넌트', () => {
   it('빈 태그 배열일 때 아무것도 렌더링하지 않는다', () => {
     render(TagList, { tags: [] })
 
-    const tagContainer = document.querySelector('.relative')
+    const tagContainer = screen.queryByTestId('tag-list-container')
     expect(tagContainer).not.toBeInTheDocument()
   })
 
@@ -55,7 +55,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags: undefined as any })
 
     // 빈 태그 배열과 같은 동작을 하므로 렌더링되지 않음
-    const tagContainer = document.querySelector('.relative')
+    const tagContainer = screen.queryByTestId('tag-list-container')
     expect(tagContainer).not.toBeInTheDocument()
   })
 
@@ -63,7 +63,7 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript', 'Svelte', 'TypeScript']
     render(TagList, { tags, selectedTag: 'Svelte' })
 
-    const selectedTag = screen.getByText('#Svelte')
+    const selectedTag = screen.getByTestId('tag-item-Svelte')
     expect(selectedTag).toHaveClass(
       'bg-teal-100',
       'text-teal-800',
@@ -77,7 +77,7 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript', 'Svelte', 'TypeScript']
     render(TagList, { tags, selectedTag: 'Svelte' })
 
-    const unselectedTag = screen.getByText('#JavaScript')
+    const unselectedTag = screen.getByTestId('tag-item-JavaScript')
     expect(unselectedTag).toHaveClass(
       'bg-zinc-100',
       'text-zinc-800',
@@ -93,7 +93,7 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript', 'Svelte']
     render(TagList, { tags, clickable: true })
 
-    const jsTag = screen.getByText('#JavaScript')
+    const jsTag = screen.getByTestId('tag-item-JavaScript')
     expect(jsTag.closest('a')).toHaveAttribute('href', '/tags/JavaScript')
   })
 
@@ -101,7 +101,7 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript', 'Svelte']
     render(TagList, { tags, clickable: false })
 
-    const jsTag = screen.getByText('#JavaScript')
+    const jsTag = screen.getByTestId('tag-item-JavaScript')
     expect(jsTag.closest('a')).toBeNull()
     expect(jsTag.tagName).toBe('SPAN')
   })
@@ -112,7 +112,7 @@ describe('TagList 컴포넌트', () => {
 
     render(TagList, { tags, clickable: true, getTagUrl: customGetTagUrl })
 
-    const jsTag = screen.getByText('#JavaScript')
+    const jsTag = screen.getByTestId('tag-item-JavaScript')
     expect(jsTag.closest('a')).toHaveAttribute('href', '/custom?tag=JavaScript')
   })
 
@@ -120,7 +120,7 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript']
 
     render(TagList, { tags, clickable: true })
-    const tagLink = screen.getByText('#JavaScript').closest('a')
+    const tagLink = screen.getByTestId('tag-item-JavaScript').closest('a')
     expect(tagLink).toHaveClass('cursor-pointer')
     expect(tagLink).toHaveAttribute('href', '/tags/JavaScript')
   })
@@ -129,10 +129,9 @@ describe('TagList 컴포넌트', () => {
     const tags = ['JavaScript', 'Svelte', 'TypeScript']
     render(TagList, { tags })
 
-    const scrollContainer = document.querySelector(
-      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
-    )
+    const scrollContainer = screen.getByTestId('tag-list-scroll-container')
     expect(scrollContainer).toBeInTheDocument()
+    expect(scrollContainer).toHaveClass('overflow-x-auto', 'overflow-y-visible', 'scrollbar-thin')
   })
 
   it('컴포넌트가 마운트될 때 스크롤 컨테이너가 존재한다', () => {
@@ -140,7 +139,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags })
 
     // 스크롤 컨테이너가 존재하는지 확인
-    const scrollContainer = document.querySelector('.overflow-x-auto')
+    const scrollContainer = screen.getByTestId('tag-list-scroll-container')
     expect(scrollContainer).toBeInTheDocument()
   })
 
@@ -149,13 +148,14 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags })
 
     // 기본 구조 확인
-    const container = document.querySelector('.relative')
+    const container = screen.getByTestId('tag-list-container')
     expect(container).toBeInTheDocument()
 
-    const scrollContainer = container?.querySelector(
-      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
-    )
+    const scrollContainer = screen.getByTestId('tag-list-scroll-container')
     expect(scrollContainer).toBeInTheDocument()
+
+    // 컨테이너 계층 구조 확인
+    expect(container).toContainElement(scrollContainer)
   })
 
   it('컴포넌트가 언마운트될 때 wheel 이벤트 리스너가 제거된다', () => {
@@ -172,7 +172,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags })
 
     tags.forEach((tag) => {
-      const tagElement = screen.getByText(`#${tag}`)
+      const tagElement = screen.getByTestId(`tag-item-${tag}`)
       expect(tagElement).toHaveClass(
         'flex-shrink-0',
         'flex',
@@ -197,7 +197,7 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags, selectedTag: null })
 
     tags.forEach((tag) => {
-      const tagElement = screen.getByText(`#${tag}`)
+      const tagElement = screen.getByTestId(`tag-item-${tag}`)
       expect(tagElement).toHaveClass(
         'bg-zinc-100',
         'text-zinc-800',
@@ -225,18 +225,16 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags })
 
     // 최상위 컨테이너
-    const outerContainer = document.querySelector('.relative')
+    const outerContainer = screen.getByTestId('tag-list-container')
     expect(outerContainer).toBeInTheDocument()
 
     // 스크롤 컨테이너
-    const scrollContainer = outerContainer?.querySelector(
-      '.flex.gap-2.mt-2.pt-1.overflow-x-auto.overflow-y-visible.pb-2.scrollbar-thin'
-    )
+    const scrollContainer = screen.getByTestId('tag-list-scroll-container')
     expect(scrollContainer).toBeInTheDocument()
 
     // 태그들이 스크롤 컨테이너 안에 있는지 확인
     tags.forEach((tag) => {
-      const tagElement = screen.getByText(`#${tag}`)
+      const tagElement = screen.getByTestId(`tag-item-${tag}`)
       expect(scrollContainer).toContainElement(tagElement)
     })
   })
