@@ -14,10 +14,10 @@
     }
   }
 
-  // Extract unique tags from posts
-  $: allTagsFromPosts = [
-    ...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))
-  ].sort()
+  // Extract unique tags from posts (excluding current tag)
+  $: allTagsFromPosts = [...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))]
+    .filter((tag) => tag !== data.tagName)
+    .sort()
 
   // Breadcrumb items
   $: breadcrumbItems = [
@@ -55,7 +55,7 @@
     </header>
 
     <!-- Related Tags -->
-    {#if allTagsFromPosts && allTagsFromPosts.length > 1}
+    {#if allTagsFromPosts && allTagsFromPosts.length > 0}
       <div class="mt-8">
         <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4">관련 태그</h2>
         <TagList
