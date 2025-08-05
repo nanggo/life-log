@@ -207,7 +207,6 @@
     font-weight: bold;
     width: 30% !important; /* Mobile: slightly wider first column for better readability */
     min-width: 0;
-    max-width: 30% !important;
     white-space: nowrap; /* Prevent text wrapping in first column */
     vertical-align: top; /* Align content to top for better layout */
   }
@@ -215,7 +214,6 @@
   :global(.about .prose th:nth-child(2)),
   :global(.about .prose td:nth-child(2)) {
     width: 70% !important; /* Mobile: adjusted second column width */
-    max-width: 70% !important;
     word-break: break-all; /* More aggressive word breaking for URLs */
     overflow-wrap: anywhere; /* Enhanced text wrapping */
     vertical-align: top; /* Align content to top */
@@ -227,13 +225,11 @@
     :global(.about .prose th:nth-child(1)),
     :global(.about .prose td:nth-child(1)) {
       width: 25% !important; /* Desktop: original 1:3 ratio */
-      max-width: 25% !important;
     }
 
     :global(.about .prose th:nth-child(2)),
     :global(.about .prose td:nth-child(2)) {
       width: 75% !important; /* Desktop: original 1:3 ratio */
-      max-width: 75% !important;
       word-break: break-word; /* Less aggressive breaking on desktop */
       line-height: 1.5; /* Standard line height for desktop */
     }
@@ -241,7 +237,7 @@
 
   /* Responsive padding and spacing */
   :global(.about table td) {
-    padding: 0.75rem 0.5rem; /* Mobile: increased padding for better touch targets (44px minimum) */
+    padding: 0.8rem 0.5rem; /* Mobile: increased padding for better touch targets (44px minimum) */
   }
 
   /* Make tech (italic) text have same color as bold text */
