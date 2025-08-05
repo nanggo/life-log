@@ -26,7 +26,8 @@
 
   onMount(() => {
     if (scrollContainer) {
-      scrollContainer.scrollLeft = 0
+      // 좌측 패딩(pl-2 = 8px)을 고려하여 스크롤 위치를 약간 조정
+      scrollContainer.scrollLeft = -8
       scrollContainer.addEventListener('wheel', handleWheel, { passive: false })
     }
   })
@@ -73,7 +74,7 @@
   <div class="relative" data-testid="tag-list-container">
     <div
       bind:this={scrollContainer}
-      class="flex gap-2 mt-2 pt-1 overflow-x-auto overflow-y-visible pb-2 scrollbar-thin"
+      class="flex gap-2 mt-2 pt-1 pl-2 overflow-x-auto overflow-y-visible pb-2 scrollbar-thin"
       data-testid="tag-list-scroll-container"
     >
       {#each tags as tag}
