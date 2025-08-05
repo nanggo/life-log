@@ -37,3 +37,8 @@ node_modules/
 
 # Auto-generated optimized images (created during build)
 static/posts/
+
+# Test and analysis reports
+.seo-reports/
+coverage/
+google-search-analysis.md
