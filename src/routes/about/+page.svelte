@@ -187,26 +187,43 @@
   }
 
   /* Override default prose table styles for the about page to implement a word-wrapping strategy */
-  :global(.about td:first-child) {
-    text-align: right;
-    font-weight: bold;
-    width: auto;
-    min-width: fit-content;
-    /* Removed white-space: nowrap to allow text wrapping on small screens */
-  }
-
-  :global(.about table) {
+  :global(.about .prose table) {
     margin-top: 15px;
     margin-bottom: 13px;
     width: 100%;
     word-break: break-word;
     overflow-wrap: break-word;
     font-size: 0.9em; /* Mobile first: smaller font size as default */
+    table-layout: fixed !important; /* Enforce fixed layout for consistent column widths */
+    display: table !important; /* Override prose default */
+    white-space: normal !important; /* Override prose default */
     /* Remove custom styling to use global prose table styles with mobile optimization */
   }
 
-  :global(.about td:last-child) {
-    width: 100%;
+  /* Use nth-child to target columns more specifically */
+  :global(.about .prose tbody td:nth-child(1)) {
+    text-align: right;
+    font-weight: bold;
+    width: 20% !important; /* 1:4 ratio - first column takes 20% */
+    min-width: 0;
+    max-width: 20% !important;
+    /* Removed white-space: nowrap to allow text wrapping on small screens */
+  }
+
+  :global(.about .prose tbody td:nth-child(2)) {
+    width: 80% !important; /* 1:4 ratio - second column takes 80% */
+    max-width: 80% !important;
+  }
+
+  /* Also apply to thead if present */
+  :global(.about .prose thead th:nth-child(1)) {
+    width: 20% !important;
+    max-width: 20% !important;
+  }
+
+  :global(.about .prose thead th:nth-child(2)) {
+    width: 80% !important;
+    max-width: 80% !important;
   }
 
   :global(.about table td) {
