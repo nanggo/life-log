@@ -70,40 +70,40 @@
         <h3 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4 text-center">
           태그 통계
         </h3>
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-2xl mx-auto">
+        <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-2xl mx-auto">
           <div
             class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-2xl font-bold text-teal-600 dark:text-teal-400">
+            <dd class="text-2xl font-bold text-teal-600 dark:text-teal-400">
               {statistics.maxCount}
-            </div>
-            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최다 포스트</div>
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최다 포스트</dt>
           </div>
           <div
             class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+            <dd class="text-2xl font-bold text-orange-600 dark:text-orange-400">
               {statistics.minCount}
-            </div>
-            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최소 포스트</div>
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최소 포스트</dt>
           </div>
           <div
             class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+            <dd class="text-2xl font-bold text-purple-600 dark:text-purple-400">
               {statistics.avgCount}
-            </div>
-            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">평균 포스트</div>
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">평균 포스트</dt>
           </div>
           <div
             class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {statistics.totalTagApplications}
-            </div>
-            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">총 태그 사용</div>
+            <dd class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {statistics.totalPosts}
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">총 포스트</dt>
           </div>
-        </div>
+        </dl>
       </div>
     </div>
   {:else}

@@ -1,17 +1,24 @@
 import { getAllTagsWithCounts } from '$lib/data/posts'
 
+interface TagStatistics {
+  maxCount: number
+  minCount: number
+  avgCount: number
+  totalPosts: number
+}
+
 /**
  * 태그별 포스트 수 데이터를 기반으로 통계를 계산합니다.
  * @param tagInfos - 태그 정보 배열
  * @returns 통계 객체 (maxCount, minCount, avgCount, totalPosts)
  */
-function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>) {
+function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>): TagStatistics {
   if (tagInfos.length === 0) {
     return {
       maxCount: 0,
       minCount: 0,
       avgCount: 0,
-      totalTagApplications: 0
+      totalPosts: 0
     }
   }
 
@@ -22,15 +29,14 @@ function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>)
   const minCount = counts.reduce((a, b) => Math.min(a, b))
 
   const totalTags = tagInfos.length
-  // This is the total number of tag usages, not total posts. Renamed for clarity.
-  const totalTagApplications = counts.reduce((sum, count) => sum + count, 0)
-  const avgCount = Math.round((totalTagApplications / totalTags) * 10) / 10 // 소수점 첫째 자리까지
+  const totalPosts = counts.reduce((sum, count) => sum + count, 0)
+  const avgCount = Math.round((totalPosts / totalTags) * 10) / 10 // 소수점 첫째 자리까지
 
   return {
     maxCount,
     minCount,
     avgCount,
-    totalTagApplications
+    totalPosts
   }
 }
 
