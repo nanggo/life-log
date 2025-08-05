@@ -204,26 +204,26 @@
   :global(.about .prose tbody td:nth-child(1)) {
     text-align: right;
     font-weight: bold;
-    width: 20% !important; /* 1:4 ratio - first column takes 20% */
+    width: 25% !important; /* 1:3 ratio - first column takes 25% */
     min-width: 0;
-    max-width: 20% !important;
-    /* Removed white-space: nowrap to allow text wrapping on small screens */
+    max-width: 25% !important;
+    white-space: nowrap; /* Prevent text wrapping in first column */
   }
 
   :global(.about .prose tbody td:nth-child(2)) {
-    width: 80% !important; /* 1:4 ratio - second column takes 80% */
-    max-width: 80% !important;
+    width: 75% !important; /* 1:3 ratio - second column takes 75% */
+    max-width: 75% !important;
   }
 
   /* Also apply to thead if present */
   :global(.about .prose thead th:nth-child(1)) {
-    width: 20% !important;
-    max-width: 20% !important;
+    width: 25% !important;
+    max-width: 25% !important;
   }
 
   :global(.about .prose thead th:nth-child(2)) {
-    width: 80% !important;
-    max-width: 80% !important;
+    width: 75% !important;
+    max-width: 75% !important;
   }
 
   :global(.about table td) {
