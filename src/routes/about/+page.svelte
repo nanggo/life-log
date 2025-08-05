@@ -200,8 +200,9 @@
     border-collapse: collapse; /* Ensure clean borders */
   }
 
-  /* Mobile-optimized column ratios */
-  :global(.about .prose tbody td:nth-child(1)) {
+  /* Mobile-optimized column ratios for both thead and tbody */
+  :global(.about .prose th:nth-child(1)),
+  :global(.about .prose td:nth-child(1)) {
     text-align: right;
     font-weight: bold;
     width: 30% !important; /* Mobile: slightly wider first column for better readability */
@@ -211,7 +212,8 @@
     vertical-align: top; /* Align content to top for better layout */
   }
 
-  :global(.about .prose tbody td:nth-child(2)) {
+  :global(.about .prose th:nth-child(2)),
+  :global(.about .prose td:nth-child(2)) {
     width: 70% !important; /* Mobile: adjusted second column width */
     max-width: 70% !important;
     word-break: break-all; /* More aggressive word breaking for URLs */
@@ -222,12 +224,14 @@
 
   /* Desktop optimized ratios - return to 1:3 ratio */
   @media (min-width: 768px) {
-    :global(.about .prose tbody td:nth-child(1)) {
+    :global(.about .prose th:nth-child(1)),
+    :global(.about .prose td:nth-child(1)) {
       width: 25% !important; /* Desktop: original 1:3 ratio */
       max-width: 25% !important;
     }
 
-    :global(.about .prose tbody td:nth-child(2)) {
+    :global(.about .prose th:nth-child(2)),
+    :global(.about .prose td:nth-child(2)) {
       width: 75% !important; /* Desktop: original 1:3 ratio */
       max-width: 75% !important;
       word-break: break-word; /* Less aggressive breaking on desktop */
@@ -235,32 +239,9 @@
     }
   }
 
-  /* Also apply to thead if present */
-  :global(.about .prose thead th:nth-child(1)) {
-    width: 30% !important; /* Mobile */
-    max-width: 30% !important;
-  }
-
-  :global(.about .prose thead th:nth-child(2)) {
-    width: 70% !important; /* Mobile */
-    max-width: 70% !important;
-  }
-
-  @media (min-width: 768px) {
-    :global(.about .prose thead th:nth-child(1)) {
-      width: 25% !important; /* Desktop */
-      max-width: 25% !important;
-    }
-
-    :global(.about .prose thead th:nth-child(2)) {
-      width: 75% !important; /* Desktop */
-      max-width: 75% !important;
-    }
-  }
-
   /* Responsive padding and spacing */
   :global(.about table td) {
-    padding: 0.375rem 0.5rem; /* Mobile: increased padding for better touch targets */
+    padding: 0.75rem 0.5rem; /* Mobile: increased padding for better touch targets (44px minimum) */
   }
 
   /* Make tech (italic) text have same color as bold text */
