@@ -5,36 +5,13 @@
 
   export let data: PageData
 
-  interface TagInfo {
-    tag: string
-    count: number
-  }
-
-  interface TagStatistics {
-    maxCount: number
-    minCount: number
-    avgCount: number
-    totalPosts: number
-  }
-
-  interface TagPageData extends PageData {
-    tagInfos: TagInfo[]
-    totalTags: number
-    statistics: TagStatistics
-    seo: {
-      title: string
-      description: string
-    }
-  }
-
   // 태그 URL 생성 함수
   const getTagUrl = (tagName: string): string => {
     return `/tags/${encodeURIComponent(tagName)}`
   }
 
-  $: tagData = data as TagPageData
-  $: tagInfos = tagData.tagInfos
-  $: statistics = tagData.statistics
+  $: tagInfos = data.tagInfos
+  $: statistics = data.statistics
 </script>
 
 <svelte:head>
