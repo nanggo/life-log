@@ -205,7 +205,7 @@
   :global(.about .prose td:nth-child(1)) {
     text-align: right;
     font-weight: bold;
-    width: 30% !important; /* Mobile: slightly wider first column for better readability */
+    width: 30%; /* Mobile: slightly wider first column for better readability */
     min-width: 0;
     white-space: nowrap; /* Prevent text wrapping in first column */
     vertical-align: top; /* Align content to top for better layout */
@@ -213,7 +213,7 @@
 
   :global(.about .prose th:nth-child(2)),
   :global(.about .prose td:nth-child(2)) {
-    width: 70% !important; /* Mobile: adjusted second column width */
+    width: 70%; /* Mobile: adjusted second column width */
     word-break: break-all; /* More aggressive word breaking for URLs */
     overflow-wrap: anywhere; /* Enhanced text wrapping */
     vertical-align: top; /* Align content to top */
@@ -224,19 +224,20 @@
   @media (min-width: 768px) {
     :global(.about .prose th:nth-child(1)),
     :global(.about .prose td:nth-child(1)) {
-      width: 25% !important; /* Desktop: original 1:3 ratio */
+      width: 25%; /* Desktop: original 1:3 ratio */
     }
 
     :global(.about .prose th:nth-child(2)),
     :global(.about .prose td:nth-child(2)) {
-      width: 75% !important; /* Desktop: original 1:3 ratio */
+      width: 75%; /* Desktop: original 1:3 ratio */
       word-break: break-word; /* Less aggressive breaking on desktop */
       line-height: 1.5; /* Standard line height for desktop */
     }
   }
 
   /* Responsive padding and spacing */
-  :global(.about table td) {
+  :global(.about .prose table th),
+  :global(.about .prose table td) {
     padding: 0.8rem 0.5rem; /* Mobile: increased padding for better touch targets (44px minimum) */
   }
 
