@@ -1,20 +1,17 @@
 <script lang="ts">
+  import type { PageData } from './$types'
+
   import { TagCloud } from '$lib/components'
 
-  /** @type {import('./$types').PageData} */
-  export let data
-
-  interface TagInfo {
-    tag: string
-    count: number
-  }
+  export let data: PageData
 
   // 태그 URL 생성 함수
   const getTagUrl = (tagName: string): string => {
     return `/tags/${encodeURIComponent(tagName)}`
   }
 
-  $: tagInfos = data.tagInfos as TagInfo[]
+  $: tagInfos = data.tagInfos
+  $: statistics = data.statistics
 </script>
 
 <svelte:head>
@@ -66,44 +63,49 @@
     </div>
 
     <!-- Tag Statistics -->
-    <!-- 
-      <div class="mt-8 text-center">
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-lg mx-auto">
+    <div class="mt-8">
+      <div
+        class="bg-white dark:bg-zinc-800 rounded-xl shadow-sm border border-zinc-200 dark:border-zinc-700 p-6 sm:p-8"
+      >
+        <h3 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4 text-center">
+          태그 통계
+        </h3>
+        <dl class="grid grid-cols-2 gap-4 sm:grid-cols-4 max-w-2xl mx-auto">
           <div
-            class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
+            class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {maxCount}
-            </div>
-            <div class="text-xs text-zinc-600 dark:text-zinc-400">최다 포스트</div>
+            <dd class="text-2xl font-bold text-teal-600 dark:text-teal-400">
+              {statistics.maxCount}
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최다 포스트</dt>
           </div>
           <div
-            class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
+            class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {minCount}
-            </div>
-            <div class="text-xs text-zinc-600 dark:text-zinc-400">최소 포스트</div>
+            <dd class="text-2xl font-bold text-orange-600 dark:text-orange-400">
+              {statistics.minCount}
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">최소 포스트</dt>
           </div>
           <div
-            class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
+            class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {avgCount}
-            </div>
-            <div class="text-xs text-zinc-600 dark:text-zinc-400">평균</div>
+            <dd class="text-2xl font-bold text-purple-600 dark:text-purple-400">
+              {statistics.avgCount}
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">평균 포스트</dt>
           </div>
           <div
-            class="p-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700"
+            class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
-            <div class="text-lg font-semibold text-zinc-800 dark:text-zinc-100">
-              {totalCount}
-            </div>
-            <div class="text-xs text-zinc-600 dark:text-zinc-400">총 포스트</div>
+            <dd class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+              {statistics.totalPosts}
+            </dd>
+            <dt class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">총 포스트</dt>
           </div>
-        </div>
+        </dl>
       </div>
-       -->
+    </div>
   {:else}
     <div class="mt-16 sm:mt-20">
       <div class="text-center py-12">

@@ -1,0 +1,123 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 12,
+        "title": "카테고리 필터링 로직 구현",
+        "description": "포스트를 카테고리별로 필터링하는 유틸리티 함수 구현",
+        "details": "src/lib/utils/posts.js에 getPostsByCategory(category: Category) 함수 추가. 기존 getPosts() 함수를 확장하여 카테고리 필터 매개변수 지원. 클라이언트 사이드 필터링 최적화를 위해 카테고리별 포스트 개수를 반환하는 getCategoryCounts() 함수 구현. 메모이제이션을 활용해 성능 최적화.",
+        "testStrategy": "각 카테고리별 포스트 반환 정확성 테스트, 빈 카테고리 처리 확인, 성능 테스트",
+        "priority": "high",
+        "dependencies": [],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 13,
+        "title": "카테고리별 라우팅 구현",
+        "description": "/posts/[category] 라우트 생성 및 동적 페이지 구현",
+        "details": "src/routes/posts/[category]/+page.svelte와 +page.server.ts 생성. params.category를 검증하여 유효한 Category enum 값인지 확인. getPostsByCategory() 함수를 사용해 해당 카테고리 포스트 로드. 페이지네이션 지원을 위해 기존 pagination 로직 재사용. SEO를 위한 메타 태그 설정 (제목: '{카테고리} 포스트', 설명 포함).",
+        "testStrategy": "각 카테고리 URL 접근 테스트, 유효하지 않은 카테고리 처리 확인, 페이지네이션 동작 검증",
+        "priority": "medium",
+        "dependencies": [12],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 14,
+        "title": "CategoryFilter 컴포넌트 구현",
+        "description": "4개 고정 카테고리 버튼을 제공하는 필터 컴포넌트 개발",
+        "details": "src/lib/components/CategoryFilter.svelte 생성. 4개 카테고리 버튼을 Tailwind CSS로 스타일링 (현재 활성 카테고리 하이라이트 포함). 클릭 시 해당 카테고리 페이지로 내비게이션. 반응형 디자인으로 모바일에서는 2x2 그리드, 데스크톱에서는 4개 버튼 일렬 배치. 각 카테고리별 포스트 개수 표시.",
+        "testStrategy": "모든 카테고리 버튼 클릭 동작 확인, 반응형 레이아웃 테스트, 접근성 검증",
+        "priority": "medium",
+        "dependencies": [13],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 15,
+        "title": "태그 전용 페이지 구현",
+        "description": "/tags 페이지에 태그 클라우드 구현",
+        "details": "src/routes/tags/+page.svelte와 +page.server.ts 생성. 모든 태그와 각 태그별 포스트 개수를 수집하는 getAllTagsWithCounts() 함수 구현. 태그를 포스트 개수 순으로 정렬하여 표시. TagCloud 컴포넌트에서 글꼴 크기를 포스트 개수에 비례하여 조정 (1-3개: text-sm, 4-6개: text-base, 7개 이상: text-lg). Tailwind CSS로 태그 클라우드 스타일링.",
+        "testStrategy": "태그 개수 정확성 확인, 정렬 순서 검증, 태그 클라우드 시각적 표현 테스트",
+        "priority": "medium",
+        "dependencies": [12],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 16,
+        "title": "개별 태그 라우팅 구현",
+        "description": "/tags/[tag] 라우트로 태그별 포스트 목록 페이지 구현",
+        "details": "src/routes/tags/[tag]/+page.svelte와 +page.server.ts 생성. URL의 태그 파라미터를 디코딩하여 해당 태그를 포함한 포스트 필터링. 기존 getPostsByTag() 함수 활용 또는 새로 구현. 카테고리와 독립적으로 모든 카테고리의 포스트에서 해당 태그 검색. SEO 최적화를 위한 동적 메타 태그 설정. 페이지네이션 지원.",
+        "testStrategy": "다양한 태그로 URL 접근 테스트, 한글 태그 URL 인코딩/디코딩 확인, 존재하지 않는 태그 처리 검증",
+        "priority": "medium",
+        "dependencies": [15],
+        "status": "done",
+        "subtasks": []
+      },
+      {
+        "id": 17,
+        "title": "UI/UX 통합 및 최적화",
+        "description": "전체 UI 통합, 성능 최적화 및 접근성 개선",
+        "details": "메인 /posts 페이지에 CategoryFilter 컴포넌트 통합. 기존 TagList 컴포넌트를 개선하여 태그 페이지 링크 추가. 브레드크럼 내비게이션 구현 (/posts > /posts/[category] > 개별 포스트). 클라이언트 사이드 필터링 성능 최적화를 위한 가상 스크롤링 고려. 접근성을 위한 ARIA 레이블 추가. 모바일 최적화 및 터치 인터랙션 개선.",
+        "testStrategy": "전체 사용자 플로우 테스트, 성능 메트릭 측정, 접근성 도구로 검증, 다양한 디바이스에서 반응형 테스트",
+        "priority": "medium",
+        "dependencies": [14, 16],
+        "status": "done",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "메인 /posts 페이지에 CategoryFilter 컴포넌트 통합",
+            "description": "기존 메인 포스트 페이지에 CategoryFilter 컴포넌트를 통합하여 카테고리별 필터링 기능 제공",
+            "dependencies": [],
+            "details": "src/routes/posts/+page.svelte에 CategoryFilter 컴포넌트 임포트 및 추가. 현재 활성 카테고리 상태 관리 구현. 컴포넌트 위치는 페이지 상단, 포스트 목록 위에 배치. 모바일과 데스크톱 모두에서 적절한 간격과 레이아웃 적용.",
+            "status": "done",
+            "testStrategy": "메인 페이지에서 CategoryFilter 표시 확인, 카테고리 버튼 클릭 시 올바른 페이지 이동, 반응형 레이아웃 테스트"
+          },
+          {
+            "id": 2,
+            "title": "TagList 컴포넌트 개선 및 태그 페이지 링크 추가",
+            "description": "기존 TagList 컴포넌트를 개선하여 태그 클릭 시 해당 태그 페이지로 이동하는 링크 기능 추가",
+            "dependencies": [],
+            "details": "src/lib/components/TagList.svelte 수정하여 각 태그를 클릭 가능한 링크로 변경. 태그 클릭 시 /tags/[tag] 페이지로 이동. 한글 태그의 경우 적절한 URL 인코딩 적용. 태그 호버 효과와 활성 상태 스타일링 추가. 접근성을 위한 적절한 aria-label 추가.\n<info added on 2025-08-03T16:30:00.869Z>\n코드 분석 완료 - 모든 요구사항이 이미 구현되어 있음을 확인했습니다. clickable 속성과 getTagUrl 함수를 통한 /tags/[encoded-tag] URL 생성, encodeURIComponent를 사용한 한글 태그 URL 인코딩, CSS 전환 효과와 호버 상태, selectedTag prop과 aria-current를 통한 활성 상태 및 접근성, 휠 이벤트 처리가 포함된 모바일 최적화가 모두 구현되어 있습니다. 개별 포스트 페이지와 태그 페이지에서 모두 사용되고 있으며 추가 수정이 필요하지 않습니다.\n</info added on 2025-08-03T16:30:00.869Z>",
+            "status": "done",
+            "testStrategy": "태그 클릭 시 올바른 페이지 이동 확인, 한글 태그 URL 인코딩 검증, 호버 및 포커스 상태 테스트"
+          },
+          {
+            "id": 3,
+            "title": "브레드크럼 내비게이션 컴포넌트 구현",
+            "description": "/posts > /posts/[category] > 개별 포스트 경로를 보여주는 브레드크럼 내비게이션 구현",
+            "dependencies": ["17.1"],
+            "details": "src/lib/components/Breadcrumb.svelte 새로 생성. 현재 페이지 경로를 분석하여 적절한 브레드크럼 표시. 각 단계별 링크 제공 (홈 > 포스트 > 카테고리 > 현재 페이지). Tailwind CSS로 시각적 구분자와 스타일링 적용. 모바일에서는 축약된 형태로 표시.\n<info added on 2025-08-03T16:33:20.401Z>\n구현 완료됨. 접근성 기능(aria-label, aria-current, 키보드 네비게이션용 포커스 스타일링) 포함. 카테고리 페이지, 태그 페이지, 개별 포스트 페이지에 성공적으로 통합. layout/index.ts에 컴포넌트 export 추가. 빌드 및 린트 검사 통과.\n</info added on 2025-08-03T16:33:20.401Z>",
+            "status": "done",
+            "testStrategy": "다양한 페이지에서 브레드크럼 경로 정확성 확인, 링크 동작 테스트, 모바일 반응형 확인"
+          },
+          {
+            "id": 4,
+            "title": "클라이언트 사이드 성능 최적화 및 가상 스크롤링 구현",
+            "description": "포스트 목록 페이지의 성능 최적화를 위한 가상 스크롤링 및 지연 로딩 구현",
+            "dependencies": ["17.1", "17.3"],
+            "details": "대량의 포스트 목록 처리를 위한 가상 스크롤링 라이브러리 선택 및 구현. 포스트 카드 컴포넌트의 이미지 지연 로딩 적용. 스크롤 성능 최적화를 위한 디바운싱 및 스로틀링 구현. 메모리 사용량 최적화를 위한 컴포넌트 정리 로직 추가.\n<info added on 2025-08-03T16:36:53.183Z>\n클라이언트 사이드 성능 최적화 및 가상 스크롤링 구현이 성공적으로 완료되었습니다:\n\nVirtualList 컴포넌트 고도화 완료 - 60fps 스로틀링 및 디바운싱을 통한 스크롤 이벤트 최적화, 성능 모니터링 기반 적응형 버퍼 크기 조정, requestIdleCallback을 활용한 자동 메모리 정리, Intersection Observer를 통한 화면 밖 이미지 최적화 적용.\n\nLazyImage 컴포넌트 성능 개선 - rootMargin을 200px로 확대하여 더 빠른 로딩 구현, fetchPriority 최적화를 통한 캐시 성능 향상, 원본 URL 저장을 통한 메모리 관리 강화.\n\nPostsList 컴포넌트 최적화 - 가상 스크롤링 임계값을 20개에서 15개로 낮춰 더 빠른 활성화, 아이템 높이 및 컨테이너 크기 조정으로 표시 개선, post.slug 기반 키 반응성 최적화, 메모이제이션 키를 통한 효율적 재렌더링 구현.\n\n성능 유틸리티 라이브러리 구축 - debounce, throttle, memoize 함수, 레이아웃 스래싱 방지를 위한 batchDOMOperations, 패시브 리스너를 사용한 optimizedScrollHandler, 타이밍 측정용 PerformanceTimer, 지연 로딩용 createOptimizedIntersectionObserver 포함.\n\n빌드 검증 완료 - 모든 최적화가 오류 없이 컴파일되며, 가상 스크롤링이 더 빠르게 활성화되어 부드러운 성능을 제공하고, 전략적 정리 및 캐싱을 통한 메모리 사용량 최적화 달성.\n</info added on 2025-08-03T16:36:53.183Z>",
+            "status": "done",
+            "testStrategy": "대량 포스트 목록에서 스크롤 성능 측정, 메모리 사용량 모니터링, 다양한 디바이스에서 성능 확인"
+          },
+          {
+            "id": 5,
+            "title": "접근성 개선 및 모바일 최적화",
+            "description": "ARIA 레이블 추가, 키보드 내비게이션 지원, 모바일 터치 인터랙션 개선",
+            "dependencies": ["17.2", "17.3"],
+            "details": "모든 인터랙티브 요소에 적절한 ARIA 레이블 및 역할 추가. 키보드만으로 전체 사이트 내비게이션 가능하도록 구현. 터치 디바이스에서 버튼 크기 최적화 (최소 44px). 포커스 인디케이터 개선 및 색상 대비 확인. 스크린 리더 호환성 테스트.\n<info added on 2025-08-03T16:40:24.977Z>\nWCAG 2.1 AA 준수 완료: CategoryFilter 최소 44px 높이, TagList 36px 터치 타겟 적용. 일관된 포커스 인디케이터 (teal 색상, ring-2) 및 키보드 내비게이션 지원. 메인 콘텐츠 바로가기 링크, 포괄적인 ARIA 레이블 (태그 버튼 컨텍스트, 브레드크럼 aria-current) 구현. 모바일 터치 성능 최적화 (touch-manipulation) 및 활성 상태 피드백 추가. accessibility.ts 유틸리티 라이브러리 생성으로 재사용 가능한 접근성 클래스 제공. 빌드 검증 완료, 브랜드 일관성 유지.\n</info added on 2025-08-03T16:40:24.977Z>",
+            "status": "done",
+            "testStrategy": "접근성 도구(axe, WAVE)로 검증, 키보드 전용 내비게이션 테스트, 스크린 리더 호환성 확인, 다양한 모바일 디바이스에서 터치 인터랙션 테스트"
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-22T05:48:25.873Z",
+      "updated": "2025-08-03T16:41:37.194Z",
+      "description": "Tasks for master context"
+    }
+  }
+}
