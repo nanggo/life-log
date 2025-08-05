@@ -230,6 +230,12 @@
     padding: 0.25rem 0.5rem; /* Mobile first: smaller padding as default */
   }
 
+  /* Make tech (italic) text have same color as bold text */
+  :global(.about td em) {
+    color: var(--tw-prose-bold);
+    font-weight: bold;
+  }
+
   @media (min-width: 640px) {
     :global(.about table) {
       font-size: 1em; /* Desktop: regular font size */
