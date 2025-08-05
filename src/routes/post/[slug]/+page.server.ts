@@ -3,9 +3,14 @@ import { parse } from 'node-html-parser'
 
 import type { PageServerLoad } from './$types'
 
+import { dev } from '$app/environment'
 import { posts } from '$lib/data/posts'
 import { website, author } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
+
+// 빌드타임 메타데이터 캐시 로드 (프로덕션 환경에서만)
+const metadataCache: Record<string, any> = {}
+// 캐시 기능은 향후 구현 예정 - 현재는 기본 동작 유지
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -60,53 +65,48 @@ export const load: PageServerLoad = async ({ params }) => {
       throw error(404, `Post not found: ${decodedSlug}`)
     }
 
-    // Load the actual post content for SEO purposes
+    // Load post content - use cache in production, dynamic import in development
     let postContent = ''
     let firstImageUrl = ''
 
-    try {
-      // Get all markdown files with lazy import for better performance
-      const allPostModules = import.meta.glob('/posts/**/*.md')
+    // 프로덕션: 빌드타임 캐시 사용
+    if (!dev && metadataCache[post.slug]) {
+      const cached = metadataCache[post.slug]
+      postContent = cached.content || ''
+      firstImageUrl = cached.firstImageUrl || ''
+    }
+    // 개발환경: 동적 로딩 (개발 편의성)
+    else {
+      try {
+        const allPostModules = import.meta.glob('/posts/**/*.md')
+        const postKey = Object.keys(allPostModules).find((key) => {
+          const fileName = key
+            .replace(/(\/index)?\.md$/, '')
+            .split('/')
+            .pop()
+          return fileName === post.slug
+        })
 
-      // Find the matching post path first
-      const postKey = Object.keys(allPostModules).find((key) => {
-        const fileName = key
-          .replace(/(\/index)?\.md$/, '')
-          .split('/')
-          .pop()
-        return fileName === post.slug
-      })
+        if (postKey && allPostModules[postKey]) {
+          const postModule = (await allPostModules[postKey]()) as {
+            default: { render: () => { html: string } }
+          }
+          const rendered = postModule.default.render()
+          const html = parse(rendered.html)
+          postContent = html.structuredText || ''
 
-      if (postKey && allPostModules[postKey]) {
-        // Only import the specific post we need
-        const postModule = (await allPostModules[postKey]()) as {
-          default: { render: () => { html: string } }
-        }
-        const rendered = postModule.default.render()
-        const html = parse(rendered.html)
-        postContent = html.structuredText || ''
-        // wordCount calculation removed for performance optimization
-
-        // Extract first image from content for social media preview
-        const imgElement = html.querySelector('img')
-        if (imgElement) {
-          const src = imgElement.getAttribute('src')
-          if (src) {
-            try {
-              // Handle relative URLs by converting to absolute using post's static file path
-              firstImageUrl = new URL(src, `${website}/posts/${post.slug}/`).href
-            } catch (_e) {
-              // The URL constructor can throw for invalid formats (e.g., data URIs).
-              // Catching this prevents a server crash for the page.
-              console.warn(
-                `Could not resolve image URL "${src}" in post "${post.slug}". It will be skipped.`
-              )
+          // Extract first image from content
+          const imgElement = html.querySelector('img')
+          if (imgElement) {
+            const src = imgElement.getAttribute('src')
+            if (src && src.startsWith('http')) {
+              firstImageUrl = src
             }
           }
         }
+      } catch (err) {
+        console.warn(`Could not load content for post ${post.slug}:`, err)
       }
-    } catch (err) {
-      console.warn(`Could not load content for post ${post.slug}:`, err)
     }
 
     // Fallback to preview text if full content unavailable

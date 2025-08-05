@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node scripts/optimize-local-images.js && vite build",
+		"build": "node scripts/optimize-local-images.js && node scripts/generate-post-metadata.js && vite build",
 		"post": "vite-node scripts/create-post.ts",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -40,6 +40,7 @@
 		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-svelte": "^2.35.1",
 		"fs-extra": "^11.3.0",
+		"glob": "^11.0.3",
 		"husky": "^9.1.7",
 		"jsdom": "^26.1.0",
 		"lint-staged": "^16.1.2",

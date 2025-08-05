@@ -16,6 +16,9 @@
   }
 
   let elements: (HTMLElement | null)[] = []
+  let shouldRender = false
+  let scrollY: number
+
   const headings: ProcessedHeading[] = post.headings.map((heading) => {
     const slugger = new GithubSlugger()
     return {
@@ -24,13 +27,24 @@
     }
   })
 
+  // 지연 렌더링을 위한 스크롤 감지
+  const checkShouldRender = () => {
+    if (!shouldRender && scrollY > 200) {
+      shouldRender = true
+      updateHeadings()
+    }
+  }
+
   onMount(() => {
-    updateHeadings()
-    setActiveHeading()
+    // 초기 스크롤 위치 확인
+    if (window.scrollY > 200) {
+      shouldRender = true
+      updateHeadings()
+      setActiveHeading()
+    }
   })
 
   let activeHeading: ProcessedHeading = headings[0]
-  let scrollY: number
 
   const updateHeadings = (): void => {
     if (browser) {
@@ -42,6 +56,11 @@
 
   const setActiveHeading = (): void => {
     scrollY = window.scrollY
+
+    // 지연 렌더링 체크
+    checkShouldRender()
+
+    if (!shouldRender) return
 
     // 현재 스크롤 위치보다 위에 있는 마지막 요소를 찾음
     const visibleIndex: number = elements.reduce(
@@ -71,26 +90,31 @@
 
 <svelte:window on:scroll={setActiveHeading} on:hashchange={setActiveHeading} />
 
-<Card>
-  <slot slot="description">
-    <ul class="flex flex-col gap-2">
-      {#each headings as heading}
-        <li
-          class="pl-2 transition-colors border-teal-500 heading text-zinc-500 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100"
-          class:active={activeHeading === heading}
-          style={`--depth: ${
-            // consider h1 and h2 at the same depth, as h1 will only be used for page title
-            Math.max(0, heading.depth - 1)
-          }`}
-        >
-          <a href="#{heading.slug}">
-            {heading.value}
-          </a>
-        </li>
-      {/each}
-    </ul>
-  </slot>
-</Card>
+{#if shouldRender}
+  <Card>
+    <slot slot="description">
+      <ul class="flex flex-col gap-2">
+        {#each headings as heading}
+          <li
+            class="pl-2 transition-colors border-teal-500 heading text-zinc-500 dark:text-zinc-600 hover:text-zinc-900 dark:hover:text-zinc-100"
+            class:active={activeHeading === heading}
+            style={`--depth: ${
+              // consider h1 and h2 at the same depth, as h1 will only be used for page title
+              Math.max(0, heading.depth - 1)
+            }`}
+          >
+            <a href="#{heading.slug}">
+              {heading.value}
+            </a>
+          </li>
+        {/each}
+      </ul>
+    </slot>
+  </Card>
+{:else}
+  <!-- placeholder to prevent layout shift -->
+  <div class="w-48 h-32 opacity-0" aria-hidden="true"></div>
+{/if}
 
 <style lang="postcss">
   .heading {
