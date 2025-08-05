@@ -4,27 +4,13 @@ import { parse } from 'node-html-parser'
 import type { PageServerLoad } from './$types'
 
 import { posts } from '$lib/data/posts'
-import {
-  website,
-  author,
-  bio,
-  techTags,
-  techArticleSection,
-  generalArticleSection,
-  jobTitle,
-  licenseUrl,
-  avatar,
-  github,
-  linkedin,
-  email
-} from '$lib/info'
+import { website, author } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
 
-// 성능 최적화를 위해 techRegex를 모듈 레벨에서 한 번만 생성
-const techRegex = new RegExp(techTags.map((t) => t.toLowerCase()).join('|'))
+// Technical article detection removed for performance optimization
 
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
@@ -76,14 +62,14 @@ export const load: PageServerLoad = async ({ params }) => {
 
     // Load the actual post content for SEO purposes
     let postContent = ''
-    let wordCount = 0
     let firstImageUrl = ''
 
     try {
-      // Get all markdown files and find the matching one
-      const allPosts: Record<string, { default: { render: () => { html: string } } }> =
-        import.meta.glob('/posts/**/*.md', { eager: true })
-      const postKey = Object.keys(allPosts).find((key) => {
+      // Get all markdown files with lazy import for better performance
+      const allPostModules = import.meta.glob('/posts/**/*.md')
+
+      // Find the matching post path first
+      const postKey = Object.keys(allPostModules).find((key) => {
         const fileName = key
           .replace(/(\/index)?\.md$/, '')
           .split('/')
@@ -91,11 +77,15 @@ export const load: PageServerLoad = async ({ params }) => {
         return fileName === post.slug
       })
 
-      if (postKey && allPosts[postKey]) {
-        const rendered = allPosts[postKey].default.render()
+      if (postKey && allPostModules[postKey]) {
+        // Only import the specific post we need
+        const postModule = (await allPostModules[postKey]()) as {
+          default: { render: () => { html: string } }
+        }
+        const rendered = postModule.default.render()
         const html = parse(rendered.html)
         postContent = html.structuredText || ''
-        wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
+        // wordCount calculation removed for performance optimization
 
         // Extract first image from content for social media preview
         const imgElement = html.querySelector('img')
@@ -122,7 +112,6 @@ export const load: PageServerLoad = async ({ params }) => {
     // Fallback to preview text if full content unavailable
     if (!postContent) {
       postContent = post.preview.text || ''
-      wordCount = postContent.split(/\s+/).filter((word) => word.length > 0).length
     }
 
     // Choose social media image with priority: post image > generated OG image
@@ -144,73 +133,32 @@ export const load: PageServerLoad = async ({ params }) => {
     const dynamicDescription =
       previewText.length > 160 ? `${previewText.substring(0, 157)}...` : previewText
 
-    // Determine if this is a technical article based on tags
-    const isTechArticle = post.tags.some((tag: string) => techRegex.test(tag.toLowerCase()))
+    // Technical article detection removed for performance optimization
 
+    // Simplified JSON-LD for better mobile performance
     const jsonLd = {
       '@context': 'https://schema.org',
-      '@type': isTechArticle ? ['BlogPosting', 'TechArticle'] : 'BlogPosting',
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': url
-      },
+      '@type': 'BlogPosting',
       headline: post.title,
-      image: {
-        '@type': 'ImageObject',
-        url: ogImage,
-        width: firstImageUrl ? undefined : 1200,
-        height: firstImageUrl ? undefined : 630,
-        caption: post.title,
-        description: `${post.title}에 관련된 이미지`
-      },
+      image: ogImage,
       datePublished: safeToISOString(post.date),
       dateModified: safeToISOString(post.updated || post.date),
       author: {
         '@type': 'Person',
         name: author,
-        url: website,
-        image: {
-          '@type': 'ImageObject',
-          url: avatar,
-          width: 460,
-          height: 460
-        },
-        jobTitle,
-        description: bio,
-        email,
-        sameAs: [`https://github.com/${github}`, `https://www.linkedin.com/in/${linkedin}`]
+        url: website
       },
       publisher: {
-        '@id': website
+        '@type': 'Organization',
+        name: author,
+        url: website
       },
       description: dynamicDescription,
-      articleBody: postContent,
-      articleSection: isTechArticle ? techArticleSection : generalArticleSection,
-      keywords: post.tags.join(', '),
       url,
-      inLanguage: 'ko-KR',
-      wordCount,
-      genre: isTechArticle ? ['Technology', 'Programming'] : ['Personal', 'Blog'],
-      about:
-        post.tags.length > 0
-          ? post.tags.map((tag: string) => ({
-              '@type': 'Thing',
-              name: tag
-            }))
-          : undefined,
-      isAccessibleForFree: true,
-      copyrightYear: new Date(safeToISOString(post.date)).getFullYear(),
-      copyrightHolder: {
-        '@type': 'Person',
-        name: author
-      },
-      license: licenseUrl,
-      ...(isTechArticle && {
-        proficiencyLevel: post.proficiencyLevel || 'Beginner',
-        dependencies: post.dependencies || '기본적인 웹 개발 지식'
-      })
+      inLanguage: 'ko-KR'
     }
 
+    // Simplified breadcrumb for better performance
     const breadcrumbLd = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -218,18 +166,12 @@ export const load: PageServerLoad = async ({ params }) => {
         {
           '@type': 'ListItem',
           position: 1,
-          name: 'Home',
-          item: website
-        },
-        {
-          '@type': 'ListItem',
-          position: 2,
           name: 'Posts',
           item: `${website}/posts`
         },
         {
           '@type': 'ListItem',
-          position: 3,
+          position: 2,
           name: post.title,
           item: url
         }
