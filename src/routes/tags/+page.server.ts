@@ -16,8 +16,8 @@ function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>)
   }
 
   const counts = tagInfos.map((info) => info.count)
-  const maxCount = counts.reduce((max, current) => Math.max(max, current), 0)
-  const minCount = counts.reduce((min, current) => Math.min(min, current), counts[0])
+  const maxCount = Math.max(...counts)
+  const minCount = Math.min(...counts)
   const totalTags = tagInfos.length
   const totalPosts = counts.reduce((sum, count) => sum + count, 0)
   const avgCount = Math.round((totalPosts / totalTags) * 10) / 10 // 소수점 첫째 자리까지
