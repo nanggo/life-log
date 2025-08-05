@@ -186,48 +186,81 @@
     }
   }
 
-  /* Override default prose table styles for the about page to implement a word-wrapping strategy */
+  /* Enhanced responsive table styles for the about page */
   :global(.about .prose table) {
     margin-top: 15px;
     margin-bottom: 13px;
     width: 100%;
     word-break: break-word;
     overflow-wrap: break-word;
-    font-size: 0.9em; /* Mobile first: smaller font size as default */
+    font-size: 0.875rem; /* Mobile: slightly larger than before for better readability */
     table-layout: fixed !important; /* Enforce fixed layout for consistent column widths */
     display: table !important; /* Override prose default */
     white-space: normal !important; /* Override prose default */
-    /* Remove custom styling to use global prose table styles with mobile optimization */
+    border-collapse: collapse; /* Ensure clean borders */
   }
 
-  /* Use nth-child to target columns more specifically */
+  /* Mobile-optimized column ratios */
   :global(.about .prose tbody td:nth-child(1)) {
     text-align: right;
     font-weight: bold;
-    width: 25% !important; /* 1:3 ratio - first column takes 25% */
+    width: 30% !important; /* Mobile: slightly wider first column for better readability */
     min-width: 0;
-    max-width: 25% !important;
+    max-width: 30% !important;
     white-space: nowrap; /* Prevent text wrapping in first column */
+    vertical-align: top; /* Align content to top for better layout */
   }
 
   :global(.about .prose tbody td:nth-child(2)) {
-    width: 75% !important; /* 1:3 ratio - second column takes 75% */
-    max-width: 75% !important;
+    width: 70% !important; /* Mobile: adjusted second column width */
+    max-width: 70% !important;
+    word-break: break-all; /* More aggressive word breaking for URLs */
+    overflow-wrap: anywhere; /* Enhanced text wrapping */
+    vertical-align: top; /* Align content to top */
+    line-height: 1.4; /* Better line spacing for mobile */
+  }
+
+  /* Desktop optimized ratios - return to 1:3 ratio */
+  @media (min-width: 768px) {
+    :global(.about .prose tbody td:nth-child(1)) {
+      width: 25% !important; /* Desktop: original 1:3 ratio */
+      max-width: 25% !important;
+    }
+
+    :global(.about .prose tbody td:nth-child(2)) {
+      width: 75% !important; /* Desktop: original 1:3 ratio */
+      max-width: 75% !important;
+      word-break: break-word; /* Less aggressive breaking on desktop */
+      line-height: 1.5; /* Standard line height for desktop */
+    }
   }
 
   /* Also apply to thead if present */
   :global(.about .prose thead th:nth-child(1)) {
-    width: 25% !important;
-    max-width: 25% !important;
+    width: 30% !important; /* Mobile */
+    max-width: 30% !important;
   }
 
   :global(.about .prose thead th:nth-child(2)) {
-    width: 75% !important;
-    max-width: 75% !important;
+    width: 70% !important; /* Mobile */
+    max-width: 70% !important;
   }
 
+  @media (min-width: 768px) {
+    :global(.about .prose thead th:nth-child(1)) {
+      width: 25% !important; /* Desktop */
+      max-width: 25% !important;
+    }
+
+    :global(.about .prose thead th:nth-child(2)) {
+      width: 75% !important; /* Desktop */
+      max-width: 75% !important;
+    }
+  }
+
+  /* Responsive padding and spacing */
   :global(.about table td) {
-    padding: 0.25rem 0.5rem; /* Mobile first: smaller padding as default */
+    padding: 0.375rem 0.5rem; /* Mobile: increased padding for better touch targets */
   }
 
   /* Make tech (italic) text have same color as bold text */
@@ -236,9 +269,9 @@
     font-weight: bold;
   }
 
-  @media (min-width: 640px) {
-    :global(.about table) {
-      font-size: 1em; /* Desktop: regular font size */
+  @media (min-width: 768px) {
+    :global(.about .prose table) {
+      font-size: 1rem; /* Desktop: regular font size */
     }
 
     :global(.about table td) {
