@@ -11,22 +11,26 @@ function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>)
       maxCount: 0,
       minCount: 0,
       avgCount: 0,
-      totalPosts: 0
+      totalTagApplications: 0
     }
   }
 
   const counts = tagInfos.map((info) => info.count)
-  const maxCount = Math.max(...counts)
-  const minCount = Math.min(...counts)
+
+  // Use reduce to avoid potential stack overflow with large arrays
+  const maxCount = counts.reduce((a, b) => Math.max(a, b))
+  const minCount = counts.reduce((a, b) => Math.min(a, b))
+
   const totalTags = tagInfos.length
-  const totalPosts = counts.reduce((sum, count) => sum + count, 0)
-  const avgCount = Math.round((totalPosts / totalTags) * 10) / 10 // 소수점 첫째 자리까지
+  // This is the total number of tag usages, not total posts. Renamed for clarity.
+  const totalTagApplications = counts.reduce((sum, count) => sum + count, 0)
+  const avgCount = Math.round((totalTagApplications / totalTags) * 10) / 10 // 소수점 첫째 자리까지
 
   return {
     maxCount,
     minCount,
     avgCount,
-    totalPosts
+    totalTagApplications
   }
 }
 

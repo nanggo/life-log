@@ -99,9 +99,9 @@
             class="text-center p-4 bg-zinc-50 dark:bg-zinc-700/50 rounded-lg border border-zinc-200 dark:border-zinc-600"
           >
             <div class="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              {statistics.totalPosts}
+              {statistics.totalTagApplications}
             </div>
-            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">총 포스트</div>
+            <div class="text-sm text-zinc-600 dark:text-zinc-400 mt-1">총 태그 사용</div>
           </div>
         </div>
       </div>
