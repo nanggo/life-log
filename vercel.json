@@ -120,10 +120,5 @@
         }
       ]
     }
-  ],
-  "functions": {
-    "src/routes/api/images/+server.js": {
-      "maxDuration": 10
-    }
-  }
+  ]
 }
