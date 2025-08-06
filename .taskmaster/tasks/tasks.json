@@ -1006,15 +1006,15 @@
         "testStrategy": "번들 크기 분석 리포트 생성, 빌드 시간 측정, Tree shaking 효과 확인, 런타임 오류 없는지 전체 기능 테스트",
         "priority": "medium",
         "dependencies": [13],
-        "status": "pending",
+        "status": "done",
         "subtasks": [
           {
             "id": 1,
             "title": "Vite 설정 파일 개선 및 Rollup 옵션 구성",
             "description": "vite.config.js 파일에서 build.rollupOptions를 설정하고 Tree shaking과 청크 분할을 위한 기본 설정을 구성",
             "dependencies": [],
-            "details": "vite.config.js 파일 수정:\n1. build.rollupOptions.output.manualChunks 설정으로 vendor 라이브러리 분리\n2. build.rollupOptions.treeshake 옵션 활성화\n3. package.json에 sideEffects: false 추가하여 Tree shaking 최적화\n4. build.chunkSizeWarningLimit 조정\n5. build.assetsInlineLimit 설정으로 작은 에셋 인라인화",
-            "status": "pending",
+            "details": "vite.config.js 파일 수정:\n1. build.rollupOptions.output.manualChunks 설정으로 vendor 라이브러리 분리\n2. build.rollupOptions.treeshake 옵션 활성화\n3. package.json에 sideEffects: false 추가하여 Tree shaking 최적화\n4. build.chunkSizeWarningLimit 조정\n5. build.assetsInlineLimit 설정으로 작은 에셋 인라인화\n<info added on 2025-08-06T12:50:22.618Z>\n**구현 완료 상세 사항:**\n\nTree shaking 최적화가 성공적으로 적용되었습니다. package.json에 sideEffects: false를 추가하고, rollupOptions에서 propertyReadSideEffects: false로 더 강력한 Tree shaking을 활성화했습니다.\n\n빌드 타겟을 es2020으로 설정하여 최신 브라우저에서 불필요한 polyfill 제거로 번들 크기를 줄였습니다.\n\n청크 분할 전략을 개선하여 Vercel Analytics를 별도 청크로 분리하고, 마크다운 관련 라이브러리들을 통합 관리하도록 구성했습니다. 파일명 해싱 최적화로 브라우저 캐싱 효율성도 향상시켰습니다.\n\n다음 14.2 단계에서 번들 분석 도구를 통해 이러한 최적화의 실제 효과를 정량적으로 측정할 예정입니다.\n</info added on 2025-08-06T12:50:22.618Z>",
+            "status": "done",
             "testStrategy": "설정 변경 후 빌드 실행하여 오류 없는지 확인, 생성된 청크 파일 구조 분석"
           },
           {
@@ -1022,8 +1022,8 @@
             "title": "번들 분석 도구 설치 및 dependency 분석",
             "description": "rollup-plugin-visualizer를 사용하여 번들 크기를 분석하고 큰 dependency를 식별",
             "dependencies": ["14.1"],
-            "details": "번들 분석 환경 구축:\n1. rollup-plugin-visualizer 설치\n2. vite.config.js에 visualizer 플러그인 추가\n3. 빌드 후 생성되는 stats.html로 번들 구성 분석\n4. 큰 dependency 식별 및 문서화\n5. 불필요한 import 제거 가능한 라이브러리 목록 작성\n6. package.json에서 사용하지 않는 dependency 제거",
-            "status": "pending",
+            "details": "번들 분석 환경 구축:\n1. rollup-plugin-visualizer 설치\n2. vite.config.js에 visualizer 플러그인 추가\n3. 빌드 후 생성되는 stats.html로 번들 구성 분석\n4. 큰 dependency 식별 및 문서화\n5. 불필요한 import 제거 가능한 라이브러리 목록 작성\n6. package.json에서 사용하지 않는 dependency 제거\n<info added on 2025-08-06T12:52:08.264Z>\n번들 분석 작업 완료:\n\n- rollup-plugin-visualizer 성공적으로 설치 및 구성\n- 427KB 크기의 상세한 bundle-analysis.html 리포트 생성\n- 효과적인 청크 분리 달성: vercel-vendor (4KB), markdown-vendor (12KB), svelte-vendor (40KB), utils-vendor (28KB), main-vendor (4KB)\n- 최대 청크 크기 분석: solid-principles-frontend-guide (100KB - 개별 포스트로 정상), svelte-vendor (40KB - 프레임워크 핵심으로 적정), utils-vendor (28KB - 유틸리티로 적정)\n- 프로덕션 의존성 10개 모두 필수 패키지로 확인\n- 불필요한 dev dependency(@fullhuman/postcss-purgecss) 제거 완료\n- Tree shaking 및 청크 분리 최적화 확인 완료, 다음 단계(14.3) 진행 준비됨\n</info added on 2025-08-06T12:52:08.264Z>",
+            "status": "done",
             "testStrategy": "번들 분석 리포트 생성 확인, 각 청크별 크기 측정, dependency 크기 순위 확인"
           },
           {
@@ -1032,7 +1032,7 @@
             "description": "불필요한 polyfill 제거하고 최종 빌드 결과물 크기를 측정하여 최적화 효과 검증",
             "dependencies": ["14.2"],
             "details": "빌드 결과 최적화:\n1. vite.config.js에서 build.target을 최신 브라우저로 설정하여 polyfill 최소화\n2. legacy 브라우저 지원이 필요없는 polyfill 제거\n3. 빌드 전후 번들 크기 비교 스크립트 작성\n4. gzip 압축 후 크기도 측정\n5. 빌드 시간 측정 및 성능 개선 효과 문서화\n6. CI/CD에서 번들 크기 모니터링을 위한 설정 추가",
-            "status": "pending",
+            "status": "done",
             "testStrategy": "빌드 전후 크기 비교, gzip 압축 크기 측정, 프로덕션 빌드에서 런타임 오류 없는지 전체 기능 테스트, Lighthouse 성능 점수 측정"
           }
         ]
@@ -1118,7 +1118,7 @@
     ],
     "metadata": {
       "created": "2025-08-06T03:12:36.427Z",
-      "updated": "2025-08-06T06:23:28.864Z",
+      "updated": "2025-08-06T12:53:30.148Z",
       "description": "Tasks for performance-optimization context"
     }
   }
