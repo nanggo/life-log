@@ -61,6 +61,11 @@ export default defineConfig(({ mode }) => ({
             return 'svelte-vendor'
           }
 
+          // 마크다운 관련 라이브러리
+          if (['gray-matter', 'reading-time'].includes(packageMatch)) {
+            return 'markdown-vendor'
+          }
+
           // 유틸리티 라이브러리 (실제 번들에 포함된 것만)
           if (['date-fns', 'github-slugger', 'heroicons-svelte'].includes(packageMatch)) {
             return 'utils-vendor'
