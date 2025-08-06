@@ -1,7 +1,12 @@
 {
 	"name": "sveltekit-blog-template",
 	"version": "0.0.1",
-	"sideEffects": false,
+	"sideEffects": [
+		"**/*.css",
+		"**/*.scss",
+		"**/*.sass",
+		"**/*.less"
+	],
 	"scripts": {
 		"dev": "vite dev",
 		"build": "node scripts/optimize-local-images.js && node scripts/generate-post-metadata.js && vite build",
