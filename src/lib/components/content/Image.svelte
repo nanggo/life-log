@@ -1,4 +1,16 @@
 <script lang="ts">
+  import imageMetadataJson from '$lib/data/image-metadata.json'
+
+  // Type the metadata
+  type ImageMetadata = {
+    [key: string]: {
+      width: number
+      height: number
+      aspectRatio: string
+    }
+  }
+  const imageMetadata = imageMetadataJson as ImageMetadata
+
   export let src: string
   export let alt: string
   export let width: number | string | undefined = undefined
@@ -22,20 +34,23 @@
     return url
   }
 
-  // Extract dimensions from filename to prevent layout shift
-  // Supports format: image@<width>x<height>.jpg for local images only
+  // Extract dimensions from filename or metadata to prevent layout shift
+  // Priority: 1. Filename pattern, 2. Metadata lookup, 3. Aspect ratio fallback
   if (width === undefined && height === undefined && !src.startsWith('http')) {
+    // 1. Check filename for @widthxheight pattern
     const dimensionMatch = src.match(/@(\d+)x(\d+)\./)
     if (dimensionMatch) {
       width = dimensionMatch[1]
       height = dimensionMatch[2]
     } else {
-      // 알려진 이미지들의 기본 크기 설정 (CLS 방지)
-      if (src.includes('radish.png')) {
-        width = '590'
-        height = '295'
+      // 2. Look up dimensions in build-time generated metadata
+      const metadataKey = src.startsWith('/') ? src : `/${src}`
+      const metadata = imageMetadata[metadataKey]
+      if (metadata) {
+        width = String(metadata.width)
+        height = String(metadata.height)
       }
-      // GitHub Assets 이미지는 크기를 고정하지 않고 CSS aspect-ratio로 처리
+      // 3. For unknown images, CSS aspect-ratio will be used as fallback
     }
   }
 

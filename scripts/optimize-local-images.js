@@ -19,6 +19,9 @@ async function optimizeLocalImages() {
   // Ensure static/posts directory exists
   fs.ensureDirSync(STATIC_PATH)
 
+  // 이미지 메타데이터를 저장할 객체
+  const imageMetadata = {}
+
   // Get all subdirectories in posts
   const postDirs = fs
     .readdirSync(POSTS_PATH, { withFileTypes: true })
@@ -48,6 +51,18 @@ async function optimizeLocalImages() {
           fs.copyFileSync(sourcePath, originalDestPath)
           console.log(`Copied original: ${slug}/${imageFile}`)
 
+          // 원본 이미지의 메타데이터 수집
+          const image = sharp(sourcePath)
+          const metadata = await image.metadata()
+
+          // 메타데이터 저장 (static 경로 기준)
+          const imagePath = `/posts/${slug}/${imageFile}`
+          imageMetadata[imagePath] = {
+            width: metadata.width,
+            height: metadata.height,
+            aspectRatio: (metadata.width / metadata.height).toFixed(2)
+          }
+
           // Generate optimized versions
           await generateOptimizedVersions(sourcePath, destDir, name)
 
@@ -60,6 +75,14 @@ async function optimizeLocalImages() {
   }
 
   console.log(`Image optimization completed. ${processedCount} images processed.`)
+
+  // 메타데이터를 JSON 파일로 저장
+  if (Object.keys(imageMetadata).length > 0) {
+    const metadataPath = path.join(CWD, 'src/lib/data/image-metadata.json')
+    fs.ensureDirSync(path.dirname(metadataPath))
+    fs.writeJsonSync(metadataPath, imageMetadata, { spaces: 2 })
+    console.log(`Image metadata saved to: ${metadataPath}`)
+  }
 }
 
 /**
