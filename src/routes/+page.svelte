@@ -33,6 +33,10 @@
           src={avatar}
           alt={name}
           class="mx-auto rounded-full w-36 h-36 ring-2 ring-zinc-200 dark:ring-zinc-700"
+          loading="eager"
+          decoding="async"
+          width="144"
+          height="144"
         />
       </a>
       <div class="flex gap-6">

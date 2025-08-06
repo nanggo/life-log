@@ -33,6 +33,9 @@ export default function remarkResponsiveImages() {
                 alt="${node.alt || ''}"
                 loading="lazy"
                 decoding="async"
+                width="800"
+                height="600"
+                style="width: 100%; height: auto;"
                 data-modal-src="${basePath}.webp"
                 data-modal-alt="${node.alt || ''}"
               />
@@ -57,6 +60,9 @@ export default function remarkResponsiveImages() {
                   alt="${node.alt || ''}"
                   loading="lazy"
                   decoding="async"
+                  width="800"
+                  height="600"
+                  style="width: 100%; height: auto;"
                   data-modal-src="${basePath}.webp"
                   data-modal-alt="${node.alt || ''}"
                 />

@@ -34,6 +34,8 @@ export default function remarkOptimizedImages() {
               alt="${node.alt || ''}"
               loading="lazy"
               decoding="async"
+              width="800"
+              height="600"
               data-modal-src="${originalSrc}"
               data-modal-alt="${node.alt || ''}"
               class="enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto block"

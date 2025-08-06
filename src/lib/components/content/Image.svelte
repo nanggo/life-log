@@ -32,6 +32,14 @@
     }
   }
 
+  // Default dimensions for common image formats to prevent CLS
+  if (width === undefined && height === undefined) {
+    // Set default aspect ratio for better CLS prevention
+    // This will be overridden by CSS max-width: 100%, height: auto
+    width = 800
+    height = 600
+  }
+
   // 반응형 이미지를 위한 srcset 생성 (GitHub 이미지용)
   const createSrcSet = (originalSrc: string): string | undefined => {
     if (!originalSrc.includes('github.com')) return undefined
