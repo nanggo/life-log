@@ -2,6 +2,11 @@ import { json } from '@sveltejs/kit'
 
 import type { RequestHandler } from './$types'
 
+// Use Node.js runtime due to reading-time dependency on Node.js streams
+export const config = {
+  runtime: 'nodejs18.x'
+}
+
 import { posts, allTags } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
 
@@ -21,6 +26,7 @@ export const GET: RequestHandler = () => {
       lastUpdated: new Date().toISOString()
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching posts metadata:', error)
     return json({ error: 'Failed to fetch posts metadata' }, { status: 500 })
   }

@@ -9,7 +9,7 @@
 	],
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node scripts/optimize-local-images.js && node scripts/generate-post-metadata.js && vite build",
+		"build": "node scripts/vercel-build-optimize.js && node scripts/optimize-local-images.js && node scripts/generate-post-metadata.js && vite build",
 		"post": "vite-node scripts/create-post.ts",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",

@@ -11,6 +11,11 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
+// Optimize for Edge Runtime - sitemap generation is lightweight and stateless
+export const config = {
+  runtime: 'edge'
+}
+
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 

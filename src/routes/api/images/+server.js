@@ -1,5 +1,12 @@
 import sharp from 'sharp'
 
+// Optimize for Node.js runtime - Sharp requires Node.js environment
+export const config = {
+  runtime: 'nodejs18.x',
+  memory: 1024, // 1GB for image processing
+  maxDuration: 10 // 10 seconds max for image optimization
+}
+
 export const GET = async ({ url }) => {
   const imageUrl = url.searchParams.get('url')
   const widthParam = url.searchParams.get('w') || '800'
@@ -51,6 +58,7 @@ export const GET = async ({ url }) => {
       }
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error optimizing image:', error)
     return new Response('Error optimizing image', { status: 500 })
   }

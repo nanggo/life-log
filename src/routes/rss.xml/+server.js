@@ -9,6 +9,11 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
+// Optimize for Edge Runtime - RSS generation is lightweight and stateless
+export const config = {
+  runtime: 'edge'
+}
+
 // update this to something more appropriate for your website
 const websiteDescription = `${name}'s blog`
 

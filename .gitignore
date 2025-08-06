@@ -43,6 +43,9 @@ google-search-analysis.md
 # Test Coverage Reports (auto-generated)
 coverage/
 
+# Bundle Analysis Reports (auto-generated)
+bundle-analysis.html
+
 # Task files
 # tasks.json
 # tasks/ 
