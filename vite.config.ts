@@ -40,35 +40,31 @@ export default defineConfig(({ mode }) => ({
         // tryCatchDeoptimization도 기본값 유지
       },
       output: {
-        // 정확한 node_modules 경로 기반 청크 분리 (간소화)
+        // 코드 리뷰 반영: 설정 기반 청크 분리로 유지보수성 개선
         manualChunks: (id) => {
-          // node_modules 패키지만 처리
           if (!id.includes('/node_modules/')) {
             return undefined
+          }
+
+          // 청크 매핑 설정 객체 - 유지보수성 개선
+          const vendorChunks = {
+            'vercel-vendor': ['@vercel/'],
+            'svelte-vendor': ['@sveltejs/', 'svelte'],
+            'markdown-vendor': ['gray-matter', 'reading-time', 'github-slugger', 'node-html-parser'],
+            'utils-vendor': ['date-fns', 'clsx', 'js-yaml', 'heroicons-svelte']
           }
 
           // 스코프 패키지를 포함한 정확한 패키지 매칭
           const packageMatch = id.match(/\/node_modules\/((?:@[^/]+\/)?[^/]+)/)?.[1]
           if (!packageMatch) return 'main-vendor'
 
-          // Vercel Analytics 패키지 (스코프 패키지 전체 매칭)
-          if (packageMatch.startsWith('@vercel/')) {
-            return 'vercel-vendor'
-          }
-
-          // Svelte 관련 패키지 (스코프 패키지 전체 매칭)
-          if (packageMatch.startsWith('@sveltejs/') || packageMatch === 'svelte') {
-            return 'svelte-vendor'
-          }
-
-          // 마크다운 관련 라이브러리
-          if (['gray-matter', 'reading-time'].includes(packageMatch)) {
-            return 'markdown-vendor'
-          }
-
-          // 유틸리티 라이브러리 (실제 번들에 포함된 것만)
-          if (['date-fns', 'github-slugger', 'heroicons-svelte'].includes(packageMatch)) {
-            return 'utils-vendor'
+          // 설정 객체를 순회하여 매칭되는 청크 찾기
+          for (const [chunkName, patterns] of Object.entries(vendorChunks)) {
+            if (patterns.some(pattern => 
+              pattern.endsWith('/') ? packageMatch.startsWith(pattern) : packageMatch === pattern
+            )) {
+              return chunkName
+            }
           }
 
           // 기타 모든 vendor 패키지
