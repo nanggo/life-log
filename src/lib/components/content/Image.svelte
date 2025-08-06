@@ -12,7 +12,32 @@
       aspectRatio: string
     }
   }
-  const imageMetadata = imageMetadataJson as ImageMetadata
+
+  // Type guard for runtime validation
+  function isValidImageMetadata(data: unknown): data is ImageMetadata {
+    if (!data || typeof data !== 'object') return false
+
+    const metadata = data as Record<string, unknown>
+
+    return Object.entries(metadata).every(([key, value]) => {
+      if (typeof key !== 'string' || !value || typeof value !== 'object') return false
+
+      const item = value as Record<string, unknown>
+      return (
+        typeof item.width === 'number' &&
+        typeof item.height === 'number' &&
+        typeof item.aspectRatio === 'string' &&
+        item.width > 0 &&
+        item.height > 0 &&
+        parseFloat(item.aspectRatio) > 0
+      )
+    })
+  }
+
+  // Safe metadata loading with fallback
+  const imageMetadata: ImageMetadata = isValidImageMetadata(imageMetadataJson)
+    ? imageMetadataJson
+    : {}
 
   export let src: string
   export let alt: string
@@ -42,42 +67,74 @@
     return null
   }
 
-  // 캐시에서 비율 로드
+  // 캐시에서 비율 로드 (안전한 접근)
   onMount(() => {
     if (!browser || !src.startsWith('http')) return
 
     try {
-      const cache = JSON.parse(localStorage.getItem(IMAGE_RATIO_CACHE_KEY) || '{}')
+      const cacheData = localStorage.getItem(IMAGE_RATIO_CACHE_KEY)
+      if (!cacheData) return
+
+      const cache = JSON.parse(cacheData)
+      if (!cache || typeof cache !== 'object') return
+
       const cached = cache[src]
-      if (cached && typeof cached === 'number' && cached > 0) {
+      if (typeof cached === 'number' && cached > 0 && isFinite(cached)) {
         cachedRatio = cached
       }
     } catch (error) {
       console.warn('Failed to load image ratio cache:', error)
+      // 캐시 손상 시 초기화
+      try {
+        localStorage.removeItem(IMAGE_RATIO_CACHE_KEY)
+      } catch {
+        // localStorage 접근 실패 시 무시
+      }
     }
   })
 
-  // 이미지 로드 후 비율 캐싱
+  // 이미지 로드 후 비율 캐싱 (안전한 저장)
   const handleImageLoad = (event: Event) => {
     if (!browser || !src.startsWith('http')) return
 
     const img = event.target as HTMLImageElement
-    if (!img.naturalWidth || !img.naturalHeight) return
+    if (
+      !img?.naturalWidth ||
+      !img?.naturalHeight ||
+      img.naturalWidth <= 0 ||
+      img.naturalHeight <= 0
+    ) {
+      return
+    }
 
     const ratio = img.naturalWidth / img.naturalHeight
+    if (!isFinite(ratio) || ratio <= 0) return
+
     cachedRatio = ratio
 
     try {
-      const cache = JSON.parse(localStorage.getItem(IMAGE_RATIO_CACHE_KEY) || '{}')
+      const cacheData = localStorage.getItem(IMAGE_RATIO_CACHE_KEY)
+      let cache: Record<string, number>
+
+      if (cacheData) {
+        const parsed = JSON.parse(cacheData)
+        cache = parsed && typeof parsed === 'object' ? parsed : {}
+      } else {
+        cache = {}
+      }
+
       cache[src] = ratio
 
       // 캐시 크기 제한 (최대 200개, 오래된 것부터 삭제)
-      const entries = Object.entries(cache)
+      const entries = Object.entries(cache).filter(
+        ([, value]) => typeof value === 'number' && isFinite(value) && value > 0
+      )
+
       if (entries.length > 200) {
         const trimmed = Object.fromEntries(entries.slice(-200))
         localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(trimmed))
       } else {
-        localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(cache))
+        localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)))
       }
     } catch (error) {
       console.warn('Failed to save image ratio to cache:', error)
@@ -112,7 +169,7 @@
       // 2. Look up dimensions in build-time generated metadata
       const metadataKey = src.startsWith('/') ? src : `/${src}`
       const metadata = imageMetadata[metadataKey]
-      if (metadata) {
+      if (metadata && metadata.width > 0 && metadata.height > 0) {
         width = String(metadata.width)
         height = String(metadata.height)
       }
