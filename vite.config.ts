@@ -48,7 +48,7 @@ export default defineConfig(({ mode }) => ({
     },
     // CSS 코드 분할 및 최적화
     cssCodeSplit: true,
-    cssMinify: true,
+    cssMinify: false, // cssnano가 처리하므로 비활성화
     // 소스맵 최적화 (프로덕션에서는 hidden)
     sourcemap: mode === 'development' ? true : 'hidden',
     // 압축 최적화

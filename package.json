@@ -19,7 +19,6 @@
 		"prepare": "husky"
 	},
 	"devDependencies": {
-		"@fullhuman/postcss-purgecss": "^7.0.2",
 		"@sveltejs/adapter-vercel": "^5.7.2",
 		"@sveltejs/kit": "2.5.0",
 		"@sveltejs/vite-plugin-svelte": "^3.0.0",
