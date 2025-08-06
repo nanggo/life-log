@@ -1,7 +1,7 @@
-import { unified } from 'unified'
+import rehypeStringify from 'rehype-stringify'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
-import rehypeStringify from 'rehype-stringify'
+import { unified } from 'unified'
 import { visit } from 'unist-util-visit'
 
 export interface SectionContent {
@@ -25,10 +25,7 @@ interface ASTNode {
  * Parse markdown content and extract sections based on headings
  */
 export async function parseMarkdownSections(markdownContent: string): Promise<SectionContent[]> {
-  const processor = unified()
-    .use(remarkParse)
-    .use(remarkRehype)
-    .use(rehypeStringify)
+  const processor = unified().use(remarkParse).use(remarkRehype).use(rehypeStringify)
 
   const tree = processor.parse(markdownContent)
   const sections: SectionContent[] = []
@@ -88,8 +85,8 @@ function generateSectionId(title: string): string {
 }
 
 async function finalizeSectionContent(
-  section: Partial<SectionContent>, 
-  contentNodes: ASTNode[], 
+  section: Partial<SectionContent>,
+  contentNodes: ASTNode[],
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   processor: any
 ): Promise<void> {
@@ -103,11 +100,11 @@ async function finalizeSectionContent(
     // Convert to HTML
     const htmlResult = await processor.run(sectionTree)
     const htmlString = processor.stringify(htmlResult)
-    
+
     // Extract plain text for word counting
     const plainText = extractPlainText(contentNodes)
     const wordCount = countWords(plainText)
-    
+
     section.content = plainText
     section.htmlContent = htmlString
     section.wordCount = wordCount
@@ -124,7 +121,7 @@ async function finalizeSectionContent(
 
 function extractPlainText(nodes: ASTNode[]): string {
   let text = ''
-  
+
   function extractFromNode(node: ASTNode) {
     if (node.type === 'text') {
       text += (node.value || '') + ' '
@@ -132,16 +129,13 @@ function extractPlainText(nodes: ASTNode[]): string {
       node.children.forEach(extractFromNode)
     }
   }
-  
+
   nodes.forEach(extractFromNode)
   return text.trim()
 }
 
 function countWords(text: string): number {
-  return text
-    .split(/\s+/)
-    .filter(word => word.length > 0)
-    .length
+  return text.split(/\s+/).filter((word) => word.length > 0).length
 }
 
 interface SectionComponent {
@@ -186,6 +180,6 @@ export function extractSectionsFromFrontmatter(post: PostWithSections): SectionC
       readingTime: section.readingTime || 1
     }))
   }
-  
+
   return []
 }

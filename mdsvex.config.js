@@ -12,13 +12,16 @@ const config = {
     dashes: 'oldschool'
   },
   remarkPlugins: [
-    videos, 
-    remarkOptimizedImages, 
-    [remarkSplitSections, { 
-      sizeThreshold: 10240, // 10KB threshold for splitting
-      headingLevels: [2, 3], // Split on H2 and H3 headings
-      generateIds: true 
-    }], 
+    videos,
+    remarkOptimizedImages,
+    [
+      remarkSplitSections,
+      {
+        sizeThreshold: 10240, // 10KB threshold for splitting
+        headingLevels: [2, 3], // Split on H2 and H3 headings
+        generateIds: true
+      }
+    ],
     headings
   ],
   rehypePlugins: [

@@ -1,28 +1,27 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte'
-  import { browser } from '$app/environment'
 
   export let section: any
   export let index: number
   export let isVisible: boolean = false
-  export let isLoaded: boolean = false
-  export let postSlug: string
-  
+  export const isLoaded: boolean = false
+  export const postSlug: string = ''
+
   const dispatch = createEventDispatcher()
-  
+
   let sectionElement: HTMLElement
   let sectionContent: string = ''
   let loading = false
-  let error: string | null = null
+  const error: string | null = null
 
   // Use the pre-processed HTML content for immediate rendering
   $: sectionContent = section?.htmlContent || generateFallbackHtml(section)
 
   function generateFallbackHtml(sectionData: any): string {
     if (!sectionData) return '<p>Section data not available</p>'
-    
+
     const { title, content, level, slug } = sectionData
-    
+
     return `
       <div class="section-inner">
         <h${level} id="heading-${slug || sectionData.id}" class="section-heading text-${level === 2 ? '2xl' : 'xl'} font-bold mb-4">
@@ -42,15 +41,15 @@
 
   function loadSection() {
     if (loading) return
-    
+
     loading = true
-    dispatch('loaded', { 
-      index, 
-      success: true, 
+    dispatch('loaded', {
+      index,
+      success: true,
       fromCache: !!sectionContent,
-      sectionId: section?.id 
+      sectionId: section?.id
     })
-    
+
     // Simulate async loading for demonstration
     // In the real implementation, this could fetch additional resources
     setTimeout(() => {
@@ -78,7 +77,7 @@
   }
 </script>
 
-<div 
+<div
   bind:this={sectionElement}
   class="section-container"
   data-section-index={index}
@@ -88,8 +87,8 @@
 >
   {#if isVisible}
     <!-- Render the section content -->
-    <div 
-      class="section-content fade-in" 
+    <div
+      class="section-content fade-in"
       data-section-loaded="true"
       data-section-slug={section?.slug}
     >
@@ -108,14 +107,14 @@
         </div>
       {:else if error}
         <!-- Error state -->
-        <div class="section-error p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-          <h3 class="text-lg font-medium text-red-800 dark:text-red-200 mb-2">
-            섹션 로딩 실패
-          </h3>
+        <div
+          class="section-error p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800"
+        >
+          <h3 class="text-lg font-medium text-red-800 dark:text-red-200 mb-2">섹션 로딩 실패</h3>
           <p class="text-red-600 dark:text-red-300 text-sm mb-3">
             {error}
           </p>
-          <button 
+          <button
             on:click={() => loadSection()}
             class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors"
           >
@@ -131,8 +130,8 @@
     </div>
   {:else}
     <!-- Placeholder for unloaded sections -->
-    <div 
-      class="section-placeholder" 
+    <div
+      class="section-placeholder"
       data-section-index={index}
       style="min-height: {Math.max(200, (section?.wordCount || 100) * 0.3)}px"
       aria-hidden="true"
@@ -225,7 +224,7 @@
     .section-placeholder {
       @apply hidden;
     }
-    
+
     .section-content {
       @apply opacity-100 transform translate-y-0;
       animation: none;

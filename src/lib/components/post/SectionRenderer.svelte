@@ -1,14 +1,15 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte'
+
   import { browser } from '$app/environment'
 
   export let section: any
   export let index: number
   export let isVisible: boolean = false
-  export let isLoaded: boolean = false
-  
+  export const isLoaded: boolean = false
+
   const dispatch = createEventDispatcher()
-  
+
   let sectionElement: HTMLElement
   let dynamicComponent: any = null
   let loading = false
@@ -17,10 +18,10 @@
   // Dynamic import for section content
   async function loadSectionContent() {
     if (loading || dynamicComponent || !browser) return
-    
+
     loading = true
     error = null
-    
+
     try {
       // Use pre-generated HTML content for this section
       dynamicComponent = createSectionComponent(section)
@@ -36,7 +37,7 @@
   function createSectionComponent(sectionData: any) {
     // Create a component that renders the pre-processed HTML content
     const htmlContent = sectionData.htmlContent || generateFallbackHtml(sectionData)
-    
+
     return {
       render: () => htmlContent,
       $$render: () => htmlContent
@@ -46,7 +47,7 @@
   function generateFallbackHtml(sectionData: any): string {
     // Fallback HTML generation for sections without pre-processed content
     const { title, content, level } = sectionData
-    
+
     return `
       <div class="section-inner">
         <h${level} id="heading-${sectionData.slug || sectionData.id}" class="section-heading text-${level === 2 ? '2xl' : 'xl'} font-bold mb-4">
@@ -71,7 +72,7 @@
   })
 </script>
 
-<div 
+<div
   bind:this={sectionElement}
   class="section-container"
   data-section-index={index}
@@ -101,14 +102,14 @@
     </div>
   {:else if isVisible && error}
     <!-- Error state -->
-    <div class="section-error p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800">
-      <h3 class="text-lg font-medium text-red-800 dark:text-red-200 mb-2">
-        섹션 로딩 실패
-      </h3>
+    <div
+      class="section-error p-6 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-200 dark:border-red-800"
+    >
+      <h3 class="text-lg font-medium text-red-800 dark:text-red-200 mb-2">섹션 로딩 실패</h3>
       <p class="text-red-600 dark:text-red-300 text-sm">
         {error}
       </p>
-      <button 
+      <button
         on:click={loadSectionContent}
         class="mt-3 px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700"
       >
@@ -117,8 +118,8 @@
     </div>
   {:else}
     <!-- Placeholder for unloaded sections -->
-    <div 
-      class="section-placeholder" 
+    <div
+      class="section-placeholder"
       data-section-index={index}
       style="min-height: {Math.max(200, section.wordCount * 0.3)}px"
       aria-hidden="true"
@@ -195,7 +196,7 @@
     .section-placeholder {
       @apply hidden;
     }
-    
+
     .section-content {
       @apply opacity-100 transform translate-y-0;
       animation: none;
