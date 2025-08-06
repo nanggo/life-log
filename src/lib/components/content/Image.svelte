@@ -35,6 +35,7 @@
         width = '590'
         height = '295'
       }
+      // GitHub Assets 이미지는 크기를 고정하지 않고 CSS aspect-ratio로 처리
     }
   }
 
@@ -64,13 +65,27 @@
   $: srcset = createSrcSet(src)
   $: localSources = getOptimizedSources(src)
   $: defaultSizes = sizes || '(max-width: 768px) 400px, (max-width: 1200px) 800px, 1200px'
+
+  // GitHub 이미지 CLS 방지용 스타일 (크기 고정 대신 aspect-ratio 사용)
+  $: dynamicStyle = src.includes('github.com/user-attachments/assets')
+    ? `aspect-ratio: 2/1; width: 100%; height: auto; ${style || ''}`
+    : style
 </script>
 
 {#if localSources}
   <picture>
     <source srcset={localSources.avif} sizes={defaultSizes} type="image/avif" />
     <source srcset={localSources.webp} sizes={defaultSizes} type="image/webp" />
-    <img {src} {alt} {width} {height} {style} loading="lazy" decoding="async" {...$$restProps} />
+    <img
+      {src}
+      {alt}
+      {width}
+      {height}
+      style={dynamicStyle}
+      loading="lazy"
+      decoding="async"
+      {...$$restProps}
+    />
   </picture>
 {:else}
   <img
@@ -80,7 +95,7 @@
     {alt}
     {width}
     {height}
-    {style}
+    style={dynamicStyle}
     loading="lazy"
     decoding="async"
     {...$$restProps}

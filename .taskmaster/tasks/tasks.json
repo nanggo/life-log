@@ -953,7 +953,7 @@
             "title": "이미지 컴포넌트 width/height 속성 및 최적화 적용",
             "description": "모든 이미지에 명시적인 width, height 속성을 추가하여 레이아웃 시프트 방지 및 최종 최적화 검증",
             "dependencies": ["12.1", "12.2"],
-            "details": "이미지 컴포넌트와 태그에 다음 최적화 적용: 1) 모든 이미지에 실제 크기에 맞는 width, height 속성 명시적으로 추가하여 CLS(Cumulative Layout Shift) 방지 2) CSS에서 responsive 이미지를 위한 max-width: 100%, height: auto 스타일 적용 3) 이미지 컴포넌트가 있다면 aspect-ratio CSS 속성 활용 고려 4) 모든 변경사항 적용 후 Lighthouse 성능 측정으로 개선 효과 검증 5) 필요시 이미지 관련 유틸리티 함수나 컴포넌트 개선",
+            "details": "이미지 컴포넌트와 태그에 다음 최적화 적용: 1) 모든 이미지에 실제 크기에 맞는 width, height 속성 명시적으로 추가하여 CLS(Cumulative Layout Shift) 방지 2) CSS에서 responsive 이미지를 위한 max-width: 100%, height: auto 스타일 적용 3) 이미지 컴포넌트가 있다면 aspect-ratio CSS 속성 활용 고려 4) 모든 변경사항 적용 후 Lighthouse 성능 측정으로 개선 효과 검증 5) 필요시 이미지 관련 유틸리티 함수나 컴포넌트 개선\n<info added on 2025-08-06T14:24:32.034Z>\na-developers-journey-through-ai-subscriptions.md 게시물에서 GitHub Assets 이미지(https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)가 Image.svelte 컴포넌트로 렌더링되지만 명시적인 width/height 속성이 누락되어 있음을 확인했습니다. 이 GitHub 호스팅 이미지는 기존 최적화 로직에서 처리되지 않았으며, CLS 발생 위험이 있습니다. GitHub Assets 이미지에 대해서도 적절한 크기 정보를 설정하거나, 동적으로 크기를 감지할 수 있는 방법을 구현해야 합니다.\n</info added on 2025-08-06T14:24:32.034Z>",
             "status": "done",
             "testStrategy": "Lighthouse Performance와 Accessibility 점수 측정, CLS 점수 개선 확인, 다양한 화면 크기에서 이미지 반응형 동작 테스트"
           }
