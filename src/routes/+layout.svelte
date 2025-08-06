@@ -253,9 +253,8 @@
 
   <!-- Performance optimization hints -->
   <link rel="preconnect" href="https://avatars.githubusercontent.com" />
-  <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
+  <link rel="preconnect" href="https://vitals.vercel-insights.com" crossorigin />
   <link rel="dns-prefetch" href="https://og-image-korean.vercel.app" />
-  <link rel="preconnect" href="https://vercel.com" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#14b8a6" />
   <meta name="color-scheme" content="light dark" />
