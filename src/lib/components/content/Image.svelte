@@ -204,7 +204,7 @@
   function sanitizeStyle(styleString: string | undefined): string {
     if (!styleString || typeof styleString !== 'string') return ''
 
-    // 안전한 CSS 속성만 허용 (이미지 관련 속성들)
+    // 안전한 CSS 속성만 허용 (XSS 위험 속성 제외)
     const allowedProperties = [
       'width',
       'height',
@@ -219,9 +219,10 @@
       'object-fit',
       'object-position',
       'opacity',
-      'filter',
-      'transform',
-      'transition',
+      // 'filter' 제거 - url("javascript:...") XSS 공격 가능
+      // 'transform' 제거 - 복잡한 값으로 인한 잠재적 위험
+      'transition-duration',
+      'transition-timing-function',
       'box-shadow',
       'outline',
       'aspect-ratio',
@@ -229,19 +230,45 @@
       'vertical-align'
     ]
 
-    // CSS 블록 종료자나 새로운 선택자 패턴 차단
-    if (styleString.includes('}') || styleString.includes('{') || styleString.includes('@')) {
+    // 위험한 패턴들 차단 (XSS 방지)
+    const dangerousPatterns = [
+      '}',
+      '{',
+      '@', // CSS injection
+      'javascript:',
+      'data:', // Script execution
+      'url(',
+      'expression(', // Code execution
+      '<',
+      '>' // HTML injection
+    ]
+
+    if (dangerousPatterns.some((pattern) => styleString.toLowerCase().includes(pattern))) {
       console.warn('Potentially unsafe CSS detected, ignoring style prop')
       return ''
     }
 
-    // 각 속성을 개별적으로 검증
+    // 각 속성을 개별적으로 검증하고 값도 검사
     const properties = styleString.split(';').filter((prop) => prop.trim())
     const safeProperties = properties.filter((prop) => {
-      const [property] = prop.split(':').map((p) => p.trim().toLowerCase())
-      return allowedProperties.some(
+      const [property, value] = prop.split(':').map((p) => p.trim().toLowerCase())
+
+      // 속성명 검증
+      const isAllowedProperty = allowedProperties.some(
         (allowed) => property === allowed || property.startsWith(allowed + '-')
       )
+
+      // 값 검증 - 위험한 함수나 키워드 차단
+      const hasUnsafeValue =
+        value &&
+        (value.includes('javascript:') ||
+          value.includes('data:') ||
+          value.includes('url(') ||
+          value.includes('expression(') ||
+          value.includes('<') ||
+          value.includes('>'))
+
+      return isAllowedProperty && !hasUnsafeValue
     })
 
     return safeProperties.join('; ')
