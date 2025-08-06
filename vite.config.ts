@@ -50,7 +50,12 @@ export default defineConfig(({ mode }) => ({
           const vendorChunks = {
             'vercel-vendor': ['@vercel/'],
             'svelte-vendor': ['@sveltejs/', 'svelte'],
-            'markdown-vendor': ['gray-matter', 'reading-time', 'github-slugger', 'node-html-parser'],
+            'markdown-vendor': [
+              'gray-matter',
+              'reading-time',
+              'github-slugger',
+              'node-html-parser'
+            ],
             'utils-vendor': ['date-fns', 'clsx', 'js-yaml', 'heroicons-svelte']
           }
 
@@ -60,9 +65,11 @@ export default defineConfig(({ mode }) => ({
 
           // 설정 객체를 순회하여 매칭되는 청크 찾기
           for (const [chunkName, patterns] of Object.entries(vendorChunks)) {
-            if (patterns.some(pattern => 
-              pattern.endsWith('/') ? packageMatch.startsWith(pattern) : packageMatch === pattern
-            )) {
+            if (
+              patterns.some((pattern) =>
+                pattern.endsWith('/') ? packageMatch.startsWith(pattern) : packageMatch === pattern
+              )
+            ) {
               return chunkName
             }
           }
