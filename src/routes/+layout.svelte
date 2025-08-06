@@ -10,6 +10,7 @@
 
   import { browser, dev } from '$app/environment'
   import { page } from '$app/stores'
+  import PerformanceDebugPanel from '$lib/components/performance/PerformanceDebugPanel.svelte'
   import {
     name,
     description,
@@ -36,6 +37,9 @@
   let isDarkMode: boolean = browser
     ? Boolean(document.documentElement.classList.contains('dark'))
     : true
+  
+  // Performance debug panel state
+  let showDebugPanel = false
 
   // JSON-LD schemas
   // @ts-ignore - used in JSON-LD script tags below
@@ -240,6 +244,18 @@
 
     // Maintain backward compatibility for any remaining inline calls
     window.openImageModal = openImageModal
+    
+    // Performance debug panel keyboard shortcut (Ctrl+Shift+P)
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      // Only enable in development or when perf-debug query param is present
+      const urlParams = new URLSearchParams(window.location.search)
+      const isDebugEnabled = dev || urlParams.get('perf-debug') === 'true'
+      
+      if (isDebugEnabled && e.ctrlKey && e.shiftKey && e.key === 'P') {
+        e.preventDefault()
+        showDebugPanel = !showDebugPanel
+      }
+    })
   }
 </script>
 
@@ -344,3 +360,6 @@
     </main>
   </div>
 </div>
+
+<!-- Performance Debug Panel -->
+<PerformanceDebugPanel bind:visible={showDebugPanel} />

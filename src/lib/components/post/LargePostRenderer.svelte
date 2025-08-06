@@ -1,9 +1,13 @@
 <script lang="ts">
   import { onMount, tick, onDestroy } from 'svelte'
 
+  import PerformanceOverlay from '../performance/PerformanceOverlay.svelte'
+
   import DynamicSectionRenderer from './DynamicSectionRenderer.svelte'
 
   import { browser } from '$app/environment'
+  import { shouldShowOverlay } from '$lib/stores/performanceStore'
+  import { trackPostPerformance, trackSectionVisibility } from '$lib/utils/performanceMonitor'
   import { extractSectionsFromFrontmatter } from '$lib/utils/sectionParser'
 
 
@@ -39,6 +43,11 @@
 
   onMount(async () => {
     loadingStats.totalSections = sectionCount
+
+    // Initialize performance tracking for the post
+    if (browser && post?.slug) {
+      trackPostPerformance(post.slug, isLargePost, sectionCount)
+    }
 
     // Only enable progressive enhancement in browser with JavaScript
     if (browser && 'IntersectionObserver' in window && isLargePost) {
@@ -80,6 +89,12 @@
     if (!visibleSections.has(index)) {
       visibleSections.add(index)
       loadingStats.sectionsVisible++
+      
+      // Track section visibility for performance monitoring
+      if (browser && post?.slug && sections[index]) {
+        trackSectionVisibility(sections[index].id || `section-${index}`)
+      }
+      
       // Trigger reactivity
       visibleSections = new Set(visibleSections)
     }
@@ -324,6 +339,11 @@
           </div>
         </div>
       {/if}
+    {/if}
+    
+    <!-- Performance Overlay for Development -->
+    {#if $shouldShowOverlay}
+      <PerformanceOverlay show={true} />
     {/if}
   </div>
 {/if}

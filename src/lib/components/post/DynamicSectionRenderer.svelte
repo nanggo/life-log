@@ -1,6 +1,9 @@
 <script lang="ts">
   import { onMount, createEventDispatcher } from 'svelte'
 
+  import { browser } from '$app/environment'
+  import { trackSectionLoad, completeSectionLoad } from '$lib/utils/performanceMonitor'
+
   export let section: any
   export let index: number
   export let isVisible: boolean = false
@@ -13,6 +16,7 @@
   let sectionContent: string = ''
   let loading = false
   const error: string | null = null
+  let performanceTrackingId: string = ''
 
   // Use the pre-processed HTML content for immediate rendering
   $: sectionContent = section?.htmlContent || generateFallbackHtml(section)
@@ -43,6 +47,13 @@
     if (loading) return
 
     loading = true
+    
+    // Start performance tracking
+    if (browser && section?.id) {
+      const contentSize = new Blob([sectionContent]).size
+      performanceTrackingId = trackSectionLoad(section.id, index, contentSize, !!sectionContent)
+    }
+
     dispatch('loaded', {
       index,
       success: true,
@@ -54,6 +65,12 @@
     // In the real implementation, this could fetch additional resources
     setTimeout(() => {
       loading = false
+      
+      // Complete performance tracking
+      if (browser && section?.id && performanceTrackingId) {
+        const contentSize = new Blob([sectionContent]).size
+        completeSectionLoad(performanceTrackingId, section.id, index, contentSize, !!sectionContent)
+      }
     }, 50)
   }
 
