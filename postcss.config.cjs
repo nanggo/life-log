@@ -16,7 +16,7 @@ module.exports = {
                 colormin: true,
                 // 중복된 CSS 규칙 병합
                 mergeRules: true,
-                // 사용하지 않는 폰트 웨이트 제거
+                // unused @font-face, @keyframes, @counter-style 규칙 제거
                 discardUnused: true,
                 // CSS 정렬 및 최소화
                 normalizeWhitespace: true
