@@ -69,16 +69,25 @@
       ]
     },
     {
-      "source": "/**/*.@(png|jpg|jpeg|gif|webp|avif|svg)",
+      "source": "/favicon.png",
       "headers": [
         {
           "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
+          "value": "public, max-age=86400"
         }
       ]
     },
     {
-      "source": "/**/*.@(css|js|woff|woff2)",
+      "source": "/favicon-original.png",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/posts/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
