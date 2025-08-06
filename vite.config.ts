@@ -47,36 +47,23 @@ export default defineConfig(({ mode }) => ({
             return undefined
           }
 
-          // 정규식을 사용한 더 정확한 패키지 매칭
-          const packageMatch = id.match(/\/node_modules\/([^/]+)/)?.[1]
+          // 스코프 패키지를 포함한 정확한 패키지 매칭
+          const packageMatch = id.match(/\/node_modules\/((?:@[^/]+\/)?[^/]+)/)?.[1]
           if (!packageMatch) return 'main-vendor'
 
-          // Vercel Analytics 패키지
-          if (packageMatch.startsWith('@vercel')) {
+          // Vercel Analytics 패키지 (스코프 패키지 전체 매칭)
+          if (packageMatch.startsWith('@vercel/')) {
             return 'vercel-vendor'
           }
 
-          // Svelte 관련 패키지
-          if (packageMatch.startsWith('@sveltejs') || packageMatch === 'svelte') {
+          // Svelte 관련 패키지 (스코프 패키지 전체 매칭)
+          if (packageMatch.startsWith('@sveltejs/') || packageMatch === 'svelte') {
             return 'svelte-vendor'
           }
 
-          // 유틸리티 라이브러리
-          if (['date-fns', 'clsx', 'js-yaml'].includes(packageMatch)) {
+          // 유틸리티 라이브러리 (실제 번들에 포함된 것만)
+          if (['date-fns', 'github-slugger', 'heroicons-svelte'].includes(packageMatch)) {
             return 'utils-vendor'
-          }
-
-          // 마크다운 관련 패키지
-          if (
-            [
-              'mdsvex',
-              'gray-matter',
-              'reading-time',
-              'github-slugger',
-              'node-html-parser'
-            ].includes(packageMatch)
-          ) {
-            return 'markdown-vendor'
           }
 
           // 기타 모든 vendor 패키지
