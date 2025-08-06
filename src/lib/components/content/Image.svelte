@@ -29,6 +29,12 @@
     if (dimensionMatch) {
       width = dimensionMatch[1]
       height = dimensionMatch[2]
+    } else {
+      // 알려진 이미지들의 기본 크기 설정 (CLS 방지)
+      if (src.includes('radish.png')) {
+        width = '590'
+        height = '295'
+      }
     }
   }
 
@@ -40,21 +46,43 @@
     return sizes.map((size) => `${optimizeGitHubImage(originalSrc, size)} ${size}w`).join(', ')
   }
 
+  // 로컬 이미지의 WebP/AVIF 변환 지원
+  const getOptimizedSources = (originalSrc: string) => {
+    if (originalSrc.startsWith('http')) return null
+
+    const basePath = originalSrc.replace(/\.[^/.]+$/, '') // 확장자 제거
+    const sizes = [400, 800, 1200]
+
+    return {
+      avif: sizes.map((size) => `${basePath}-${size}w.avif ${size}w`).join(', '),
+      webp: sizes.map((size) => `${basePath}-${size}w.webp ${size}w`).join(', ')
+    }
+  }
+
   // 최적화된 src와 srcset
   $: optimizedSrc = optimizeGitHubImage(src, 800)
   $: srcset = createSrcSet(src)
+  $: localSources = getOptimizedSources(src)
   $: defaultSizes = sizes || '(max-width: 768px) 400px, (max-width: 1200px) 800px, 1200px'
 </script>
 
-<img
-  src={optimizedSrc}
-  {srcset}
-  sizes={srcset ? defaultSizes : sizes}
-  {alt}
-  {width}
-  {height}
-  {style}
-  loading="lazy"
-  decoding="async"
-  {...$$restProps}
-/>
+{#if localSources}
+  <picture>
+    <source srcset={localSources.avif} sizes={defaultSizes} type="image/avif" />
+    <source srcset={localSources.webp} sizes={defaultSizes} type="image/webp" />
+    <img {src} {alt} {width} {height} {style} loading="lazy" decoding="async" {...$$restProps} />
+  </picture>
+{:else}
+  <img
+    src={optimizedSrc}
+    {srcset}
+    sizes={srcset ? defaultSizes : sizes}
+    {alt}
+    {width}
+    {height}
+    {style}
+    loading="lazy"
+    decoding="async"
+    {...$$restProps}
+  />
+{/if}
