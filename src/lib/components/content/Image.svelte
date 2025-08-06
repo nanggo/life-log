@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { writable } from 'svelte/store'
 
   import { browser } from '$app/environment'
   import imageMetadataJson from '$lib/data/image-metadata.json'
@@ -46,9 +47,34 @@
   export let sizes: string | undefined = undefined
   export let style: string | undefined = undefined
 
-  // 이미지 비율 캐싱 시스템
+  // 이미지 비율 캐싱 시스템 (race condition 방지)
   const IMAGE_RATIO_CACHE_KEY = 'life-log-image-ratios-v1'
   let cachedRatio: number | undefined = undefined
+
+  // 전역 메모리 캐시 store (race condition 방지)
+  const imageRatioCache = writable<Record<string, number>>({})
+  let cacheData: Record<string, number> = {}
+
+  // Debounced localStorage 저장
+  let saveTimeoutId: ReturnType<typeof setTimeout> | null = null
+  const debouncedSave = (cache: Record<string, number>) => {
+    if (saveTimeoutId) clearTimeout(saveTimeoutId)
+    saveTimeoutId = setTimeout(() => {
+      try {
+        const entries = Object.entries(cache)
+        // 최대 200개 유지 (메모리 효율성)
+        const trimmed = Object.fromEntries(entries.slice(-200))
+        localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(trimmed))
+      } catch (error) {
+        console.warn('Failed to save image ratio cache:', error)
+      }
+    }, 500) // 500ms debounce
+  }
+
+  // 캐시 store 구독
+  imageRatioCache.subscribe((value) => {
+    cacheData = value
+  })
 
   // 도메인별 기본 설정
   const getDefaultsForUrl = (url: string) => {
@@ -67,24 +93,34 @@
     return null
   }
 
-  // 캐시에서 비율 로드 (안전한 접근)
+  // 캐시에서 비율 로드 (race condition 방지)
   onMount(() => {
     if (!browser || !src.startsWith('http')) return
 
+    // 1. 먼저 메모리 캐시에서 확인
+    const memoryCached = cacheData[src]
+    if (typeof memoryCached === 'number' && memoryCached > 0 && isFinite(memoryCached)) {
+      cachedRatio = memoryCached
+      return
+    }
+
+    // 2. localStorage에서 초기 로드 (한 번만)
     try {
-      const cacheData = localStorage.getItem(IMAGE_RATIO_CACHE_KEY)
-      if (!cacheData) return
+      const stored = localStorage.getItem(IMAGE_RATIO_CACHE_KEY)
+      if (stored) {
+        const cache = JSON.parse(stored)
+        if (cache && typeof cache === 'object') {
+          // 메모리 캐시에 로드
+          imageRatioCache.set(cache)
 
-      const cache = JSON.parse(cacheData)
-      if (!cache || typeof cache !== 'object') return
-
-      const cached = cache[src]
-      if (typeof cached === 'number' && cached > 0 && isFinite(cached)) {
-        cachedRatio = cached
+          const cached = cache[src]
+          if (typeof cached === 'number' && cached > 0 && isFinite(cached)) {
+            cachedRatio = cached
+          }
+        }
       }
     } catch (error) {
       console.warn('Failed to load image ratio cache:', error)
-      // 캐시 손상 시 초기화
       try {
         localStorage.removeItem(IMAGE_RATIO_CACHE_KEY)
       } catch {
@@ -93,7 +129,7 @@
     }
   })
 
-  // 이미지 로드 후 비율 캐싱 (안전한 저장)
+  // 이미지 로드 후 비율 캐싱 (race condition 방지)
   const handleImageLoad = (event: Event) => {
     if (!browser || !src.startsWith('http')) return
 
@@ -112,29 +148,15 @@
 
     cachedRatio = ratio
 
-    try {
-      const cacheData = localStorage.getItem(IMAGE_RATIO_CACHE_KEY)
-      let cache: Record<string, number>
+    // 메모리 캐시 업데이트 (즉시 반영, race condition 방지)
+    imageRatioCache.update((cache) => {
+      const newCache = { ...cache, [src]: ratio }
 
-      if (cacheData) {
-        const parsed = JSON.parse(cacheData)
-        cache = parsed && typeof parsed === 'object' ? parsed : {}
-      } else {
-        cache = {}
-      }
+      // debounced localStorage 저장
+      debouncedSave(newCache)
 
-      cache[src] = ratio
-
-      // 캐시 크기 제한 (최대 200개, 오래된 것부터 삭제)
-      const entries = Object.entries(cache).filter(
-        ([, value]) => typeof value === 'number' && isFinite(value) && value > 0
-      )
-
-      const trimmed = Object.fromEntries(entries.slice(-200))
-      localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(trimmed))
-    } catch (error) {
-      console.warn('Failed to save image ratio to cache:', error)
-    }
+      return newCache
+    })
   }
 
   // GitHub 이미지 최적화 함수
