@@ -4,13 +4,23 @@ import slugPlugin from 'rehype-slug'
 import { visit } from 'unist-util-visit'
 
 import remarkOptimizedImages from './scripts/remark-optimized-images.js'
+import remarkSplitSections from './scripts/remark-split-sections.js'
 
 const config = {
   extensions: ['.svx', '.md'],
   smartypants: {
     dashes: 'oldschool'
   },
-  remarkPlugins: [videos, remarkOptimizedImages, headings],
+  remarkPlugins: [
+    videos, 
+    remarkOptimizedImages, 
+    [remarkSplitSections, { 
+      sizeThreshold: 10240, // 10KB threshold for splitting
+      headingLevels: [2, 3], // Split on H2 and H3 headings
+      generateIds: true 
+    }], 
+    headings
+  ],
   rehypePlugins: [
     slugPlugin,
     [

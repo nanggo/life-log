@@ -6,7 +6,7 @@
   import { afterNavigate } from '$app/navigation'
   import { Image, ToC } from '$lib/components/content'
   import { Breadcrumb, SocialLinks } from '$lib/components/layout'
-  import { PostDate, TagList } from '$lib/components/post'
+  import { PostDate, TagList, LargePostRenderer } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar, twitterHandle } from '$lib/info'
 
@@ -139,9 +139,12 @@
         <TagList tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
       </header>
 
-      <!-- render the post -->
+      <!-- render the post with progressive enhancement -->
       <div class="prose dark:prose-invert">
-        <svelte:component this={data.component} />
+        <LargePostRenderer 
+          post={data.post} 
+          component={data.component} 
+        />
       </div>
     </article>
 
