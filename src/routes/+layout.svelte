@@ -252,7 +252,7 @@
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
 
   <!-- Performance optimization hints -->
-  <link rel="preconnect" href="https://avatars.githubusercontent.com" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://avatars.githubusercontent.com" />
   <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
   <link rel="dns-prefetch" href="https://og-image-korean.vercel.app" />
   <link rel="dns-prefetch" href="https://vercel.com" />
