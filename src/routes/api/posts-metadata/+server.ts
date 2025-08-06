@@ -4,7 +4,7 @@ import type { RequestHandler } from './$types'
 
 // Use Node.js runtime due to reading-time dependency on Node.js streams
 export const config = {
-  runtime: 'nodejs' // Version-agnostic, uses Vercel's default
+  runtime: 'nodejs20.x' // Using stable Node.js 20 LTS
 }
 
 import { posts, allTags } from '$lib/data/posts'

@@ -13,7 +13,7 @@ export const prerender = true
 
 // Use Node.js runtime due to node-html-parser dependency
 export const config = {
-  runtime: 'nodejs' // Version-agnostic, uses Vercel's default
+  runtime: 'nodejs20.x' // Using stable Node.js 20 LTS
 }
 
 // make sure this matches your post route
