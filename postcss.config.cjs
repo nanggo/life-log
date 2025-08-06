@@ -19,7 +19,7 @@ module.exports = {
                 // 사용하지 않는 폰트 웨이트 제거
                 discardUnused: true,
                 // CSS 정렬 및 최소화
-                normalizeWhitespace: { exclude: false }
+                normalizeWhitespace: true
               }
             ]
           })

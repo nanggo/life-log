@@ -47,17 +47,19 @@ export default defineConfig(({ mode }) => ({
       }
     },
     // CSS 코드 분할 및 최적화
-    cssCodeSplit: true,
-    cssMinify: false, // cssnano가 처리하므로 비활성화
+    css: {
+      codeSplit: true,
+      minify: false, // cssnano가 처리하므로 비활성화
+      target: 'esnext' // 최신 CSS 기능 사용 허용
+    },
     // 소스맵 최적화 (프로덕션에서는 hidden)
     sourcemap: mode === 'development' ? true : 'hidden',
     // 압축 최적화
     minify: 'esbuild',
     // 청크 크기 경고 임계값 증가
     chunkSizeWarningLimit: 1000,
-    // CSS 관련 최적화
-    assetsInlineLimit: 4096, // 4KB 미만 asset은 base64 인라인화
-    cssTarget: 'esnext' // 최신 CSS 기능 사용 허용
+    // 에셋 관련 최적화
+    assetsInlineLimit: 4096 // 4KB 미만 asset은 base64 인라인화
   },
   optimizeDeps: {
     // Tree shaking 최적화를 위한 pre-bundling
