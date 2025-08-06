@@ -40,36 +40,47 @@ export default defineConfig(({ mode }) => ({
         // tryCatchDeoptimization도 기본값 유지
       },
       output: {
-        // 더 세밀한 청크 분리
+        // 정확한 node_modules 경로 기반 청크 분리 (간소화)
         manualChunks: (id) => {
-          if (id.includes('/node_modules/')) {
-            // Vercel Analytics 분리 (큰 라이브러리)
-            if (id.includes('@vercel/analytics') || id.includes('@vercel/speed-insights')) {
-              return 'vercel-vendor'
-            }
-            // Svelte 관련 패키지
-            if (id.includes('@sveltejs') || id.includes('svelte')) {
-              return 'svelte-vendor'
-            }
-            // 유틸리티 라이브러리
-            if (id.includes('date-fns') || id.includes('clsx') || id.includes('js-yaml')) {
-              return 'utils-vendor'
-            }
-            // 마크다운 관련 (큰 번들)
-            if (
-              id.includes('mdsvex') ||
-              id.includes('gray-matter') ||
-              id.includes('reading-time') ||
-              id.includes('github-slugger') ||
-              id.includes('node-html-parser')
-            ) {
-              return 'markdown-vendor'
-            }
-            // 기타 모든 vendor 패키지
-            return 'main-vendor'
+          // node_modules 패키지만 처리
+          if (!id.includes('/node_modules/')) {
+            return undefined
           }
-          // 앱 코드는 기본 청킹 사용
-          return undefined
+
+          // 정규식을 사용한 더 정확한 패키지 매칭
+          const packageMatch = id.match(/\/node_modules\/([^/]+)/)?.[1]
+          if (!packageMatch) return 'main-vendor'
+
+          // Vercel Analytics 패키지
+          if (packageMatch.startsWith('@vercel')) {
+            return 'vercel-vendor'
+          }
+
+          // Svelte 관련 패키지
+          if (packageMatch.startsWith('@sveltejs') || packageMatch === 'svelte') {
+            return 'svelte-vendor'
+          }
+
+          // 유틸리티 라이브러리
+          if (['date-fns', 'clsx', 'js-yaml'].includes(packageMatch)) {
+            return 'utils-vendor'
+          }
+
+          // 마크다운 관련 패키지
+          if (
+            [
+              'mdsvex',
+              'gray-matter',
+              'reading-time',
+              'github-slugger',
+              'node-html-parser'
+            ].includes(packageMatch)
+          ) {
+            return 'markdown-vendor'
+          }
+
+          // 기타 모든 vendor 패키지
+          return 'main-vendor'
         },
         // 청크 파일명 최적화 - 더 설명적인 네이밍
         chunkFileNames: (chunkInfo) => {
