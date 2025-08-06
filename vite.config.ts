@@ -33,11 +33,11 @@ export default defineConfig(({ mode }) => ({
     // 최신 브라우저 타겟으로 polyfill 최소화
     target: 'es2020',
     rollupOptions: {
-      // Tree shaking 명시적 활성화
+      // Tree shaking 안전성 우선 설정
       treeshake: {
-        preset: 'recommended',
-        propertyReadSideEffects: false,
-        tryCatchDeoptimization: false
+        preset: 'recommended'
+        // propertyReadSideEffects는 기본값(true) 유지로 안전성 확보
+        // tryCatchDeoptimization도 기본값 유지
       },
       output: {
         // 더 세밀한 청크 분리
@@ -71,12 +71,10 @@ export default defineConfig(({ mode }) => ({
           // 앱 코드는 기본 청킹 사용
           return undefined
         },
-        // 파일명 최적화
+        // 청크 파일명 최적화 - 더 설명적인 네이밍
         chunkFileNames: (chunkInfo) => {
-          const facadeModuleId = chunkInfo.facadeModuleId
-            ? chunkInfo.facadeModuleId.split('/').pop()
-            : 'chunk'
-          return `${facadeModuleId}-[hash].js`
+          const name = chunkInfo.name || 'chunk'
+          return `chunks/${name}-[hash].js`
         }
       }
     },
