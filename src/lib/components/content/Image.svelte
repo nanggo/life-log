@@ -200,10 +200,59 @@
   $: localSources = getOptimizedSources(src)
   $: defaultSizes = sizes || '(max-width: 768px) 400px, (max-width: 1200px) 800px, 1200px'
 
+  // CSS 속성 안전 파싱 (CSS injection 방지)
+  function sanitizeStyle(styleString: string | undefined): string {
+    if (!styleString || typeof styleString !== 'string') return ''
+
+    // 안전한 CSS 속성만 허용 (이미지 관련 속성들)
+    const allowedProperties = [
+      'width',
+      'height',
+      'max-width',
+      'max-height',
+      'min-width',
+      'min-height',
+      'border',
+      'border-radius',
+      'margin',
+      'padding',
+      'object-fit',
+      'object-position',
+      'opacity',
+      'filter',
+      'transform',
+      'transition',
+      'box-shadow',
+      'outline',
+      'aspect-ratio',
+      'display',
+      'vertical-align'
+    ]
+
+    // CSS 블록 종료자나 새로운 선택자 패턴 차단
+    if (styleString.includes('}') || styleString.includes('{') || styleString.includes('@')) {
+      console.warn('Potentially unsafe CSS detected, ignoring style prop')
+      return ''
+    }
+
+    // 각 속성을 개별적으로 검증
+    const properties = styleString.split(';').filter((prop) => prop.trim())
+    const safeProperties = properties.filter((prop) => {
+      const [property] = prop.split(':').map((p) => p.trim().toLowerCase())
+      return allowedProperties.some(
+        (allowed) => property === allowed || property.startsWith(allowed + '-')
+      )
+    })
+
+    return safeProperties.join('; ')
+  }
+
   // 동적 스타일 계산 (점진적 개선)
   $: dynamicStyle = (() => {
-    // 로컬 이미지는 기존 스타일 유지
-    if (!src.startsWith('http')) return style
+    const safeStyle = sanitizeStyle(style)
+
+    // 로컬 이미지는 안전한 스타일만 적용
+    if (!src.startsWith('http')) return safeStyle
 
     const defaults = getDefaultsForUrl(src)
 
@@ -211,12 +260,13 @@
     const ratio = cachedRatio || defaults?.ratio
 
     if (ratio && ratio > 0) {
-      const aspectRatioStyle = `aspect-ratio: ${ratio.toFixed(3)}; width: 100%; height: auto;`
-      return `${aspectRatioStyle} ${style || ''}`
+      const aspectRatioStyle = `aspect-ratio: ${ratio.toFixed(3)}; width: 100%; height: auto`
+      return safeStyle ? `${aspectRatioStyle}; ${safeStyle}` : aspectRatioStyle
     }
 
     // 비율 정보가 없으면 기본 스타일만 적용
-    return `width: 100%; height: auto; ${style || ''}`
+    const baseStyle = 'width: 100%; height: auto'
+    return safeStyle ? `${baseStyle}; ${safeStyle}` : baseStyle
   })()
 </script>
 
