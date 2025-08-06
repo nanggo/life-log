@@ -11,9 +11,9 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
-// Optimize for Edge Runtime - sitemap generation is lightweight and stateless
+// Use Node.js runtime due to node-html-parser dependency
 export const config = {
-  runtime: 'edge'
+  runtime: 'nodejs' // Version-agnostic, uses Vercel's default
 }
 
 // make sure this matches your post route

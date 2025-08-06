@@ -225,13 +225,7 @@ const config = {
   ],
 
   kit: {
-    adapter: adapter({
-      // Vercel specific optimizations for blog performance
-      runtime: 'nodejs18.x', // Default runtime for compatibility
-      memory: 1024, // 1GB memory allocation for image processing
-      maxDuration: 15 // 15 seconds max duration for heavy operations
-      // ISR disabled globally - will be configured per-route as needed
-    }),
+    adapter: adapter(),
     alias: {
       $lib: 'src/lib'
     },
