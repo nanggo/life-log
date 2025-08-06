@@ -130,12 +130,8 @@
         ([, value]) => typeof value === 'number' && isFinite(value) && value > 0
       )
 
-      if (entries.length > 200) {
-        const trimmed = Object.fromEntries(entries.slice(-200))
-        localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(trimmed))
-      } else {
-        localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(Object.fromEntries(entries)))
-      }
+      const trimmed = Object.fromEntries(entries.slice(-200))
+      localStorage.setItem(IMAGE_RATIO_CACHE_KEY, JSON.stringify(trimmed))
     } catch (error) {
       console.warn('Failed to save image ratio to cache:', error)
     }
