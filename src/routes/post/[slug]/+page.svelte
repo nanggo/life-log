@@ -49,8 +49,7 @@
   // Breadcrumb items for post page
   $: breadcrumbItems = [
     { label: '포스트', href: '/posts' },
-    { label: data.post.category, href: `/posts/category/${data.post.category}` },
-    { label: data.post.title, current: true }
+    { label: data.post.category, href: `/posts/category/${data.post.category}`, current: true }
   ]
 </script>
 
