@@ -24,7 +24,7 @@ export default function remarkOptimizedImages() {
           const imageName = path.basename(src)
 
           // Create image path - use static folder path for SvelteKit
-          const originalSrc = `/posts/${postSlug}/${imageName}`
+          const originalSrc = `/${postSlug}/${imageName}`
 
           // Create simple img element with modal support and fallback to original
           // Use data attributes instead of inline onclick to prevent XSS
