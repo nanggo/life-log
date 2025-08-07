@@ -1,8 +1,7 @@
 import sharp from 'sharp'
 
-// Optimize for Node.js runtime - Sharp requires Node.js environment
+// Sharp requires Node.js environment
 export const config = {
-  runtime: 'nodejs18.x', // Using Node.js 18 per Vercel recommendation
   maxDuration: 10 // 10 seconds max for image optimization
 }
 

@@ -2,11 +2,6 @@ import { json } from '@sveltejs/kit'
 
 import type { RequestHandler } from './$types'
 
-// Use Node.js runtime due to reading-time dependency on Node.js streams
-export const config = {
-  runtime: 'nodejs18.x' // Using Node.js 18 per Vercel recommendation
-}
-
 import { posts, allTags } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
 

@@ -11,11 +11,6 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
-// Use Node.js runtime due to node-html-parser dependency
-export const config = {
-  runtime: 'nodejs18.x' // Using Node.js 18 per Vercel recommendation
-}
-
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 

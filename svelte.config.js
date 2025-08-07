@@ -225,7 +225,9 @@ const config = {
   ],
 
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      runtime: 'nodejs18.x'
+    }),
     alias: {
       $lib: 'src/lib'
     },

@@ -2,11 +2,6 @@ import { json } from '@sveltejs/kit'
 
 import { globalCacheManager, CACHE_TAGS } from '$lib/utils/cache-manager'
 
-// Use Node.js runtime for compatibility with ISR
-export const config = {
-  runtime: 'nodejs18.x'
-}
-
 export async function POST({ request }) {
   try {
     const { tags, keys } = await request.json()
