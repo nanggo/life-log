@@ -133,6 +133,6 @@ export const buildInfo = {
 console.log('✅ Build optimization script initialized')
 
 // Only run the build if this script is executed directly (not imported)
-if (import.meta.url === fileURLToPath(`file://${process.argv[1]}`)) {
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
   runFullBuild()
 }
