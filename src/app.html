@@ -7,7 +7,7 @@
     <meta name="googlebot" content="index, follow" />
     <meta name="format-detection" content="telephone=no" />
     %sveltekit.head%
-    <script>
+    <script %sveltekit.nonce%>
       let darkModeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
 
       updateMode()
