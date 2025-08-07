@@ -27,7 +27,7 @@ function shouldInvalidateCache() {
   return Date.now() - routeCache.lastBuildTime > 5 * 60 * 1000
 }
 
-// Phase 3: 점진적 포스트 프리렌더링 확장 - 15개로 증가
+// Phase 3: 점진적 포스트 프리렌더링 확장 - 최신 15개 포스트
 function generatePostRoutes(limit = 15) {
   // 캐시된 결과가 있고 유효하다면 반환 (limit 고려)
   if (routeCache.postRoutes && routeCache.postRoutes.length <= limit && !shouldInvalidateCache()) {
@@ -69,7 +69,17 @@ function generatePostRoutes(limit = 15) {
               .replace(/(\/index)?\.md$/, '')
               .split('/')
               .pop()
-            mdFiles.push(`/post/${slug}`)
+
+            // 날짜 추출 (최신 순 정렬을 위해)
+            const dateMatch = frontmatter.match(/date:\s*['"]?([^'"]+)['"]?/)
+            const dateStr = dateMatch ? dateMatch[1] : '1970-01-01'
+            const postDate = new Date(dateStr)
+
+            mdFiles.push({
+              route: `/post/${slug}`,
+              date: postDate,
+              dateStr
+            })
           }
         }
       }
@@ -77,12 +87,14 @@ function generatePostRoutes(limit = 15) {
       return mdFiles
     }
 
-    const allRoutes = getAllMdFiles(postsDir)
-    // Phase 2: 처음 N개만 선택 (최신 포스트 우선)
-    const routes = allRoutes.slice(0, limit)
+    const allPosts = getAllMdFiles(postsDir)
+    // 날짜별 최신순으로 정렬 (최신 포스트 우선)
+    const sortedPosts = allPosts.sort((a, b) => b.date - a.date)
+    // 처음 N개만 선택하여 route만 추출
+    const routes = sortedPosts.slice(0, limit).map((post) => post.route)
 
     console.log(
-      `Phase 3: Generated ${routes.length} of ${allRoutes.length} post routes for prerendering`
+      `Phase 3: Generated ${routes.length} of ${allPosts.length} post routes for prerendering (latest first)`
     )
 
     // 캐시에 저장
@@ -123,7 +135,7 @@ const config = {
       $lib: 'src/lib'
     },
 
-    // Progressive prerendering re-enablement - Phase 3: Basic pages + first 15 blog posts
+    // Progressive prerendering re-enablement - Phase 3: Basic pages + latest 15 blog posts
     prerender: {
       entries: [
         '/',
@@ -132,7 +144,7 @@ const config = {
         '/tags',
         '/sitemap.xml',
         '/rss.xml',
-        ...generatePostRoutes(15) // Phase 3: Add first 15 blog posts
+        ...generatePostRoutes(15) // Phase 3: Add latest 15 blog posts
       ],
       handleMissingId: 'warn',
       handleHttpError: ({ status, path, referrer, message }) => {
