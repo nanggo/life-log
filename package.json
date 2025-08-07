@@ -9,7 +9,7 @@
 	],
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node scripts/optimize-local-images.js && node scripts/generate-post-metadata.js && vite build",
+		"build": "node scripts/copy-images.js && vite build",
 		"post": "vite-node scripts/create-post.ts",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
@@ -67,6 +67,7 @@
 		"tailwindcss": "^3.1.8",
 		"typescript": "^5.3.3",
 		"unist-util-visit": "^3.1.0",
+		"vercel": "^44.7.3",
 		"vite": "^5.0.3",
 		"vite-bundle-analyzer": "^1.1.0",
 		"vite-node": "^3.2.4",
@@ -74,6 +75,9 @@
 		"vitest": "^3.2.4"
 	},
 	"type": "module",
+	"engines": {
+		"node": "22.x"
+	},
 	"lint-staged": {
 		"*.{js,ts}": [
 			"prettier --write",

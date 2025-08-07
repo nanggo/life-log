@@ -21,6 +21,7 @@ export const GET: RequestHandler = () => {
       lastUpdated: new Date().toISOString()
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching posts metadata:', error)
     return json({ error: 'Failed to fetch posts metadata' }, { status: 500 })
   }

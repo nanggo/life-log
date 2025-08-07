@@ -10,35 +10,76 @@ import mdsvexConfig from './mdsvex.config.js'
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
-// 모든 포스트 경로를 생성하는 함수
-function generatePostRoutes() {
+// 캐시된 파일 정보로 성능 최적화
+const fileCache = new Map()
+
+// 빌드 시점 라우트 캐시 (중복 계산 방지)
+const routeCache = {
+  postRoutes: null,
+  tags: null,
+  lastBuildTime: null
+}
+
+// 캐시 무효화 검사 (개발 환경에서만)
+function shouldInvalidateCache() {
+  if (!routeCache.lastBuildTime) return true
+  // 5분 이상 지났으면 캐시 무효화 (개발 편의성)
+  return Date.now() - routeCache.lastBuildTime > 5 * 60 * 1000
+}
+
+// Phase 3: 점진적 포스트 프리렌더링 확장 - 최신 15개 포스트
+function generatePostRoutes(limit = 15) {
+  // 캐시된 결과가 있고 유효하다면 반환 (limit 고려)
+  if (routeCache.postRoutes && routeCache.postRoutes.length <= limit && !shouldInvalidateCache()) {
+    return routeCache.postRoutes
+  }
+
   try {
-    // posts 폴더의 모든 .md 파일을 읽어서 경로 생성
     const postsDir = join(__dirname, 'posts')
 
     const getAllMdFiles = (dir) => {
       const files = readdirSync(dir)
-      let mdFiles = []
+      const mdFiles = []
 
+      // 병렬 처리를 위해 파일별 작업을 분리
       for (const file of files) {
         const fullPath = join(dir, file)
-        const stat = statSync(fullPath)
+
+        // 캐시에서 파일 상태 확인 (성능 최적화)
+        let stat
+        if (fileCache.has(fullPath)) {
+          stat = fileCache.get(fullPath).stat
+        } else {
+          stat = statSync(fullPath)
+          fileCache.set(fullPath, { stat, lastChecked: Date.now() })
+        }
 
         if (stat.isDirectory()) {
-          mdFiles = mdFiles.concat(getAllMdFiles(fullPath))
+          mdFiles.push(...getAllMdFiles(fullPath))
         } else if (file.endsWith('.md')) {
-          // 파일 내용을 읽어서 draft 상태 확인
+          // 더 효율적인 draft 상태 확인 - frontmatter만 읽기
           const content = readFileSync(fullPath, 'utf8')
-          const isDraft = content.includes('draft: true')
+          const frontmatterEnd = content.indexOf('\n---', 4)
+          const frontmatter =
+            frontmatterEnd !== -1 ? content.slice(0, frontmatterEnd) : content.slice(0, 500)
 
-          // draft가 아닌 포스트만 route 생성
-          if (!isDraft) {
+          if (!frontmatter.includes('draft: true')) {
             const relativePath = relative(postsDir, fullPath)
             const slug = relativePath
               .replace(/(\/index)?\.md$/, '')
               .split('/')
               .pop()
-            mdFiles.push(`/post/${slug}`)
+
+            // 날짜 추출 (최신 순 정렬을 위해)
+            const dateMatch = frontmatter.match(/date:\s*['"]?([^'"]+)['"]?/)
+            const dateStr = dateMatch ? dateMatch[1] : '1970-01-01'
+            const postDate = new Date(dateStr)
+
+            mdFiles.push({
+              route: `/post/${slug}`,
+              date: postDate,
+              dateStr
+            })
           }
         }
       }
@@ -46,119 +87,32 @@ function generatePostRoutes() {
       return mdFiles
     }
 
-    return getAllMdFiles(postsDir)
+    const allPosts = getAllMdFiles(postsDir)
+    // 날짜별 최신순으로 정렬 (최신 포스트 우선)
+    const sortedPosts = allPosts.sort((a, b) => b.date - a.date)
+    // 처음 N개만 선택하여 route만 추출
+    const routes = sortedPosts.slice(0, limit).map((post) => post.route)
+
+    console.log(
+      `Phase 3: Generated ${routes.length} of ${allPosts.length} post routes for prerendering (latest first)`
+    )
+
+    // 캐시에 저장
+    routeCache.postRoutes = routes
+    routeCache.lastBuildTime = Date.now()
+
+    return routes
   } catch (error) {
     console.warn('Could not generate post routes:', error)
     return []
   }
 }
 
-// 실제 포스트에서 태그를 추출하는 함수
-function extractTagsFromPosts() {
-  try {
-    const postsDir = join(__dirname, 'posts')
-    const tags = new Set()
+// 통합된 prerender entries 생성 함수 - Phase 2에서 재활성화 예정
+// function _generateAllPrerenderEntries() { ... }
+// Phase 1에서는 수동으로 정의된 기본 페이지만 사용
 
-    const extractFromDirectory = (dir) => {
-      const files = readdirSync(dir)
-
-      for (const file of files) {
-        const fullPath = join(dir, file)
-        const stat = statSync(fullPath)
-
-        if (stat.isDirectory()) {
-          extractFromDirectory(fullPath)
-        } else if (file.endsWith('.md')) {
-          const content = readFileSync(fullPath, 'utf8')
-
-          // draft인 포스트는 제외
-          if (content.includes('draft: true')) continue
-
-          // frontmatter에서 tags 추출
-          const frontmatterMatch = content.match(/^---\s*\n([\s\S]*?)\n---/)
-          if (frontmatterMatch) {
-            const frontmatter = frontmatterMatch[1]
-            const tagsMatch = frontmatter.match(/tags:\s*\n((?:\s*-\s*.+\n?)+)/)
-
-            if (tagsMatch) {
-              const tagLines = tagsMatch[1].match(/^\s*-\s*(.+)$/gm)
-              if (tagLines) {
-                tagLines.forEach((line) => {
-                  const tag = line.replace(/^\s*-\s*/, '').trim()
-                  if (tag && tag.length < 50) {
-                    // 너무 긴 태그는 제외
-                    tags.add(tag)
-                  }
-                })
-              }
-            }
-          }
-        }
-      }
-    }
-
-    extractFromDirectory(postsDir)
-    return Array.from(tags)
-  } catch (error) {
-    console.warn('Could not extract tags from posts:', error)
-    return []
-  }
-}
-
-// Posts 목록 페이지들을 생성하는 함수
-function generatePostsListRoutes() {
-  try {
-    const routes = ['/posts'] // 기본 posts 페이지
-
-    // 실제 포스트 수 계산
-    const postsDir = join(__dirname, 'posts')
-    let postCount = 0
-
-    const countPosts = (dir) => {
-      const files = readdirSync(dir)
-      for (const file of files) {
-        const fullPath = join(dir, file)
-        const stat = statSync(fullPath)
-
-        if (stat.isDirectory()) {
-          countPosts(fullPath)
-        } else if (file.endsWith('.md')) {
-          const content = readFileSync(fullPath, 'utf8')
-          if (!content.includes('draft: true')) {
-            postCount++
-          }
-        }
-      }
-    }
-
-    countPosts(postsDir)
-
-    // 페이지네이션 페이지 생성
-    const postsPerPage = 10
-    const totalPages = Math.ceil(postCount / postsPerPage)
-
-    for (let i = 2; i <= totalPages; i++) {
-      routes.push(`/posts/${i}`)
-    }
-
-    // 실제 태그들을 추출해서 태그별 페이지도 생성
-    const tags = extractTagsFromPosts()
-    console.log('Extracted tags for prerendering:', tags)
-
-    tags.forEach((tag) => {
-      routes.push(`/posts?tag=${encodeURIComponent(tag)}`)
-      // 태그별 페이지네이션도 일부 생성 (태그별로는 최대 2페이지까지만)
-      for (let i = 2; i <= 2; i++) {
-        routes.push(`/posts/${i}?tag=${encodeURIComponent(tag)}`)
-      }
-    })
-
-    return routes
-  } catch (error) {
-    console.warn('Could not generate posts list routes:', error)
-    return ['/posts']
-  }
-}
+// Posts 목록 페이지 생성 함수는 generateAllPrerenderEntries()로 통합되어 더 이상 사용되지 않음
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -174,19 +128,23 @@ const config = {
   ],
 
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      runtime: 'nodejs22.x'
+    }),
     alias: {
       $lib: 'src/lib'
     },
 
-    // remove this if you don't want prerendering
+    // Progressive prerendering re-enablement - Phase 3: Basic pages + latest 15 blog posts
     prerender: {
       entries: [
-        '*',
+        '/',
+        '/about',
+        '/posts',
+        '/tags',
         '/sitemap.xml',
         '/rss.xml',
-        ...generatePostRoutes(),
-        ...generatePostsListRoutes()
+        ...generatePostRoutes(15) // Phase 3: Add latest 15 blog posts
       ],
       handleMissingId: 'warn',
       handleHttpError: ({ status, path, referrer, message }) => {

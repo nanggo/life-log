@@ -1,5 +1,10 @@
 import sharp from 'sharp'
 
+// Sharp requires Node.js environment
+export const config = {
+  maxDuration: 10 // 10 seconds max for image optimization
+}
+
 export const GET = async ({ url }) => {
   const imageUrl = url.searchParams.get('url')
   const widthParam = url.searchParams.get('w') || '800'
@@ -21,7 +26,8 @@ export const GET = async ({ url }) => {
       'avatars.githubusercontent.com',
       'camo.githubusercontent.com',
       'private-user-images.githubusercontent.com',
-      'user-images.githubusercontent.com'
+      'user-images.githubusercontent.com',
+      'user-attachments.githubusercontent.com'
     ]
 
     if (!allowedDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))) {
@@ -51,6 +57,7 @@ export const GET = async ({ url }) => {
       }
     })
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error optimizing image:', error)
     return new Response('Error optimizing image', { status: 500 })
   }
