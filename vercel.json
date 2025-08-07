@@ -1,6 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "sveltekit",
+  "buildCommand": "pnpm build",
+  "outputDirectory": "",
+  "installCommand": "pnpm install",
   "headers": [
     {
       "source": "/_app/immutable/(.*)",
