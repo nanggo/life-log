@@ -56,72 +56,65 @@ export default defineConfig(({ mode }) => ({
 
     // 캐시 버스팅을 위한 파일명 해시 전략
     rollupOptions: {
-      ...(() => {
-        const config = {
-          // Tree shaking 안전성 우선 설정
-          treeshake: {
-            preset: 'recommended'
-          },
-          output: {
-            // 기존 manualChunks 설정은 유지...
-            manualChunks: (id) => {
-              if (!id.includes('/node_modules/')) {
-                return undefined
-              }
+      // Tree shaking 안전성 우선 설정
+      treeshake: {
+        preset: 'recommended'
+      },
+      output: {
+        // 기존 manualChunks 설정은 유지...
+        manualChunks: (id) => {
+          if (!id.includes('/node_modules/')) {
+            return undefined
+          }
 
-              // 청크 매핑 설정 객체 - 유지보수성 개선
-              const vendorChunks = {
-                'vercel-vendor': ['@vercel/'],
-                'svelte-vendor': ['@sveltejs/', 'svelte'],
-                'markdown-vendor': [
-                  'gray-matter',
-                  'reading-time',
-                  'github-slugger',
-                  'node-html-parser'
-                ],
-                'utils-vendor': ['date-fns', 'clsx', 'js-yaml', 'heroicons-svelte']
-              }
+          // 청크 매핑 설정 객체 - 유지보수성 개선
+          const vendorChunks = {
+            'vercel-vendor': ['@vercel/'],
+            'svelte-vendor': ['@sveltejs/', 'svelte'],
+            'markdown-vendor': [
+              'gray-matter',
+              'reading-time',
+              'github-slugger',
+              'node-html-parser'
+            ],
+            'utils-vendor': ['date-fns', 'clsx', 'js-yaml', 'heroicons-svelte']
+          }
 
-              // 스코프 패키지를 포함한 정확한 패키지 매칭
-              const packageMatch = id.match(/\/node_modules\/((?:@[^/]+\/)?[^/]+)/)?.[1]
-              if (!packageMatch) return 'main-vendor'
+          // 스코프 패키지를 포함한 정확한 패키지 매칭
+          const packageMatch = id.match(/\/node_modules\/((?:@[^/]+\/)?[^/]+)/)?.[1]
+          if (!packageMatch) return 'main-vendor'
 
-              // 설정 객체를 순회하여 매칭되는 청크 찾기
-              for (const [chunkName, patterns] of Object.entries(vendorChunks)) {
-                if (
-                  patterns.some((pattern) =>
-                    pattern.endsWith('/')
-                      ? packageMatch.startsWith(pattern)
-                      : packageMatch === pattern
-                  )
-                ) {
-                  return chunkName
-                }
-              }
-
-              // 기타 모든 vendor 패키지
-              return 'main-vendor'
-            },
-            // Vercel 캐싱 전략에 최적화된 파일명 구조
-            chunkFileNames: (chunkInfo) => {
-              const name = chunkInfo.name || 'chunk'
-              return `assets/js/${name}-[hash].js`
-            },
-            entryFileNames: 'assets/[name]-[hash].js',
-            assetFileNames: (assetInfo) => {
-              const extType = assetInfo.name?.split('.').pop()
-              if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg'].includes(extType || '')) {
-                return 'assets/images/[name]-[hash].[ext]'
-              }
-              if (['woff', 'woff2', 'ttf', 'otf'].includes(extType || '')) {
-                return 'assets/fonts/[name]-[hash].[ext]'
-              }
-              return 'assets/[name]-[hash].[ext]'
+          // 설정 객체를 순회하여 매칭되는 청크 찾기
+          for (const [chunkName, patterns] of Object.entries(vendorChunks)) {
+            if (
+              patterns.some((pattern) =>
+                pattern.endsWith('/') ? packageMatch.startsWith(pattern) : packageMatch === pattern
+              )
+            ) {
+              return chunkName
             }
           }
+
+          // 기타 모든 vendor 패키지
+          return 'main-vendor'
+        },
+        // Vercel 캐싱 전략에 최적화된 파일명 구조
+        chunkFileNames: (chunkInfo) => {
+          const name = chunkInfo.name || 'chunk'
+          return `assets/js/${name}-[hash].js`
+        },
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: (assetInfo) => {
+          const extType = assetInfo.name?.split('.').pop()
+          if (['png', 'jpg', 'jpeg', 'gif', 'webp', 'avif', 'svg'].includes(extType || '')) {
+            return 'assets/images/[name]-[hash].[ext]'
+          }
+          if (['woff', 'woff2', 'ttf', 'otf'].includes(extType || '')) {
+            return 'assets/fonts/[name]-[hash].[ext]'
+          }
+          return 'assets/[name]-[hash].[ext]'
         }
-        return config
-      })()
+      }
     }
   },
   optimizeDeps: {
