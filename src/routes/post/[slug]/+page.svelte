@@ -94,10 +94,10 @@
   />
 
   <script type="application/ld+json">
-{@html data.jsonLd}
+    {data.jsonLd}
   </script>
   <script type="application/ld+json">
-{@html data.breadcrumbLd}
+    {data.breadcrumbLd}
   </script>
 </svelte:head>
 

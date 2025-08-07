@@ -181,8 +181,8 @@ export const load: PageServerLoad = async ({ params }) => {
     return {
       post,
       dynamicDescription,
-      jsonLd: JSON.stringify(jsonLd),
-      breadcrumbLd: JSON.stringify(breadcrumbLd),
+      jsonLd: JSON.stringify(jsonLd, null, 0),
+      breadcrumbLd: JSON.stringify(breadcrumbLd, null, 0),
       socialMediaImage: ogImage,
       isPostImage: !!firstImageUrl,
       publishedDate: safeToISOString(post.date),
