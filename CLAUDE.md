@@ -20,8 +20,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 1. `pnpm build` - Ensure the project builds without errors
 2. `pnpm lint` - Check code formatting and linting rules
 3. `pnpm check` - Verify TypeScript/Svelte type checking
+4. `npx vercel build` - Verify Vercel deployment compatibility
 
 **Build and lint checks are mandatory** - Never commit code that fails these checks. If lint fails, run `pnpm format` first to auto-fix formatting issues, then address any remaining ESLint errors manually.
+
+**Pre-commit checklist:**
+
+- Run lint checks and formatting
+- Run type checking
+- Verify build succeeds
+- Test Vercel CLI deployment compatibility
 
 ## SEO Validation
 
