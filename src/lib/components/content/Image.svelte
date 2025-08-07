@@ -309,11 +309,27 @@
     const ratio = cachedRatio || defaults?.ratio
 
     if (ratio && ratio > 0) {
-      const aspectRatioStyle = `aspect-ratio: ${ratio.toFixed(3)}; width: 100%; height: auto`
-      return safeStyle ? `${aspectRatioStyle}; ${safeStyle}` : aspectRatioStyle
+      // 프로필 이미지처럼 고정 크기가 필요한 경우 width: 100% 적용하지 않음
+      // Tailwind w-* 클래스나 고정 width/height 속성이 있는 경우 체크
+      const hasFixedSize =
+        (width && height) || ($$restProps.class && /\bw-\d+/.test($$restProps.class))
+
+      if (hasFixedSize) {
+        const aspectRatioStyle = `aspect-ratio: ${ratio.toFixed(3)}`
+        return safeStyle ? `${aspectRatioStyle}; ${safeStyle}` : aspectRatioStyle
+      } else {
+        const aspectRatioStyle = `aspect-ratio: ${ratio.toFixed(3)}; width: 100%; height: auto`
+        return safeStyle ? `${aspectRatioStyle}; ${safeStyle}` : aspectRatioStyle
+      }
     }
 
-    // 비율 정보가 없으면 기본 스타일만 적용
+    // 비율 정보가 없으면 기본 스타일만 적용 (고정 크기인 경우 제외)
+    const hasFixedSize =
+      (width && height) || ($$restProps.class && /\bw-\d+/.test($$restProps.class))
+    if (hasFixedSize) {
+      return safeStyle || ''
+    }
+
     const baseStyle = 'width: 100%; height: auto'
     return safeStyle ? `${baseStyle}; ${safeStyle}` : baseStyle
   })()
