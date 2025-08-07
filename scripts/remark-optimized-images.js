@@ -23,7 +23,7 @@ export default function remarkOptimizedImages() {
           // Extract filename
           const imageName = path.basename(src)
 
-          // Create image path - use original image as fallback
+          // Create image path - use static folder path for SvelteKit
           const originalSrc = `/posts/${postSlug}/${imageName}`
 
           // Create simple img element with modal support and fallback to original
@@ -45,7 +45,7 @@ export default function remarkOptimizedImages() {
           node.type = 'html'
           node.value = imgHtml
 
-          console.log(`Processed image: ${src} -> ${originalSrc}`)
+          console.log(`✓ Processed local image: ${src} -> ${originalSrc}`)
         } else {
           // Fallback for cases where file path is not available
           console.warn(`File path not available for image: ${src}`)
