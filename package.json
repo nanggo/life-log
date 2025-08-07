@@ -9,7 +9,7 @@
 	],
 	"scripts": {
 		"dev": "vite dev",
-		"build": "node scripts/vercel-build-optimize.js",
+		"build": "vite build",
 		"post": "vite-node scripts/create-post.ts",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
