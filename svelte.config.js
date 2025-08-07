@@ -27,8 +27,8 @@ function shouldInvalidateCache() {
   return Date.now() - routeCache.lastBuildTime > 5 * 60 * 1000
 }
 
-// Phase 2: 점진적 포스트 프리렌더링 - 처음 5개만 테스트
-function generatePostRoutes(limit = 5) {
+// Phase 3: 점진적 포스트 프리렌더링 확장 - 15개로 증가
+function generatePostRoutes(limit = 15) {
   // 캐시된 결과가 있고 유효하다면 반환 (limit 고려)
   if (routeCache.postRoutes && routeCache.postRoutes.length <= limit && !shouldInvalidateCache()) {
     return routeCache.postRoutes
@@ -82,7 +82,7 @@ function generatePostRoutes(limit = 5) {
     const routes = allRoutes.slice(0, limit)
 
     console.log(
-      `Phase 2: Generated ${routes.length} of ${allRoutes.length} post routes for prerendering`
+      `Phase 3: Generated ${routes.length} of ${allRoutes.length} post routes for prerendering`
     )
 
     // 캐시에 저장
@@ -123,7 +123,7 @@ const config = {
       $lib: 'src/lib'
     },
 
-    // Progressive prerendering re-enablement - Phase 2: Basic pages + first 5 blog posts
+    // Progressive prerendering re-enablement - Phase 3: Basic pages + first 15 blog posts
     prerender: {
       entries: [
         '/',
@@ -132,7 +132,7 @@ const config = {
         '/tags',
         '/sitemap.xml',
         '/rss.xml',
-        ...generatePostRoutes(5) // Phase 2: Add first 5 blog posts
+        ...generatePostRoutes(15) // Phase 3: Add first 15 blog posts
       ],
       handleMissingId: 'warn',
       handleHttpError: ({ status, path, referrer, message }) => {
