@@ -26,7 +26,8 @@ export const GET = async ({ url }) => {
       'avatars.githubusercontent.com',
       'camo.githubusercontent.com',
       'private-user-images.githubusercontent.com',
-      'user-images.githubusercontent.com'
+      'user-images.githubusercontent.com',
+      'user-attachments.githubusercontent.com'
     ]
 
     if (!allowedDomains.some((domain) => hostname === domain || hostname.endsWith(`.${domain}`))) {

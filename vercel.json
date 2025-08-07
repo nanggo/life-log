@@ -94,7 +94,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: github.com avatars.githubusercontent.com user-images.githubusercontent.com user-attachments.githubusercontent.com; font-src 'self'; connect-src 'self' vitals.vercel-insights.com; frame-ancestors 'none';"
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' va.vercel-scripts.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: github.com avatars.githubusercontent.com user-images.githubusercontent.com user-attachments.githubusercontent.com private-user-images.githubusercontent.com camo.githubusercontent.com; font-src 'self'; connect-src 'self' vitals.vercel-insights.com; frame-ancestors 'none';"
         }
       ]
     }

@@ -45,10 +45,10 @@ function optimizeExternalImages() {
           node.properties.decoding = 'async'
           node.properties.sizes = '(max-width: 800px) 100vw, 800px'
 
-          // Add modal functionality - show original image in modal
+          // Add modal functionality - use optimized image API for modal too
           node.properties.class =
             'enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto'
-          node.properties['data-modal-src'] = src
+          node.properties['data-modal-src'] = `/api/images?url=${encodedUrl}&w=1200`
           node.properties['data-modal-alt'] = node.properties.alt || ''
         }
       }
