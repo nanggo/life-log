@@ -1,5 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "routes": [
+    {
+      "src": "/posts/(.*\\.(png|jpg|jpeg|gif|webp|avif|svg))",
+      "dest": "/posts/$1"
+    }
+  ],
   "headers": [
     {
       "source": "/_app/immutable/(.*)",
