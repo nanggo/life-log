@@ -45,6 +45,7 @@ coverage/
 
 # Bundle Analysis Reports (auto-generated)
 bundle-analysis.html
+*.report.html
 
 # Task files
 # tasks.json
