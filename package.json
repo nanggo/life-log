@@ -74,6 +74,9 @@
 		"vitest": "^3.2.4"
 	},
 	"type": "module",
+	"engines": {
+		"node": "22.x"
+	},
 	"lint-staged": {
 		"*.{js,ts}": [
 			"prettier --write",
