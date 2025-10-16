@@ -20,11 +20,11 @@ title: About NANGGO | NANGGO's LIFELOG
 <br/>
 
 |              |                                      |
-| :----------: | ------------------------------------ |
-|  **GitHub**  | <https://github.com/nanggo>          |
-|   **Blog**   | <https://blog.nanggo.net>            |
+| -----------: | ------------------------------------ |
+|   **GitHub** | <https://github.com/nanggo>          |
+|     **Blog** | <https://blog.nanggo.net>            |
 | **LinkedIn** | <https://linkedin.com/in/jisung-yoo> |
-|  **Email**   | <yamsiri@gmail.com>                  |
+|    **Email** | <yamsiri@gmail.com>                  |
 
 # Experiences
 
