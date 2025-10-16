@@ -37,6 +37,11 @@
     ? Boolean(document.documentElement.classList.contains('dark'))
     : true
 
+  // Default OG image for non-post pages (1200x630)
+  $: defaultOgImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+    data.title
+  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+
   // JSON-LD schemas
   // @ts-ignore - used in JSON-LD script tags below
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
@@ -250,6 +255,7 @@
   {/if}
   <meta name="author" content={author} />
   <link rel="canonical" href={new URL($page.url.pathname, website).href} />
+  <link rel="alternate" type="application/rss+xml" title={`${name} life log`} href="/rss.xml" />
 
   <!-- Performance optimization hints -->
   <link rel="preconnect" href="https://avatars.githubusercontent.com" />
@@ -260,14 +266,14 @@
   <meta name="color-scheme" content="light dark" />
 
   <!-- Open Graph / Facebook -->
-  {#if !$page.data.post && !$page.route.id?.includes('/about')}
+  {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={new URL($page.url.pathname, website).href} />
     <meta property="og:title" content={data.title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={`${website}/favicon.png`} />
-    <meta property="og:image:width" content="192" />
-    <meta property="og:image:height" content="192" />
+    <meta property="og:image" content={defaultOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
     <meta property="og:site_name" content={name} />
     <meta property="og:locale" content="ko_KR" />
@@ -278,7 +284,7 @@
     <meta name="twitter:creator" content={twitterHandle} />
     <meta name="twitter:title" content={data.title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={`${website}/favicon.png`} />
+    <meta name="twitter:image" content={defaultOgImage} />
     <meta name="twitter:image:alt" content={`${name} 로고`} />
   {/if}
 

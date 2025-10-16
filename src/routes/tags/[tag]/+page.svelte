@@ -29,11 +29,11 @@
 <svelte:head>
   <title>{data.seo.title} - {name}'s life log</title>
   <meta name="description" content={data.seo.description} />
-  <meta property="og:title" content="{data.seo.title} - {name}'s life log" />
+  <meta property="og:title" content={`${data.seo.title} - ${name}'s life log`} />
   <meta property="og:description" content={data.seo.description} />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="twitter:title" content="{data.seo.title} - {name}'s life log" />
+  <meta name="twitter:title" content={`${data.seo.title} - ${name}'s life log`} />
   <meta name="twitter:description" content={data.seo.description} />
 </svelte:head>
 

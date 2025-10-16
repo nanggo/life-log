@@ -31,27 +31,32 @@ if (!existsSync(reportsDir)) {
 }
 
 /**
- * Find first available post for testing
+ * Discover testable pages from build output (after build).
+ * Falls back to static choices if build output is unavailable.
  */
-function getFirstAvailablePost() {
+function discoverTestPages() {
+  const defaults = [
+    { path: '/', name: 'Homepage' },
+    { path: '/about', name: 'About Page' }
+  ]
+
   try {
-    const postsDir = join(projectRoot, 'posts')
-    const files = readdirSync(postsDir)
-
-    // Look for .md files (excluding directories)
-    const markdownFiles = files.filter((file) => file.endsWith('.md'))
-    if (markdownFiles.length > 0) {
-      // Remove .md extension to get slug
-      const firstPostSlug = markdownFiles[0].replace('.md', '')
-      return { path: `/post/${firstPostSlug}`, name: 'Sample Post Page' }
+    const postsDir = join(buildDir, 'prerendered/pages/post')
+    if (existsSync(postsDir)) {
+      const files = readdirSync(postsDir)
+      const htmlFiles = files.filter((f) => f.endsWith('.html'))
+      if (htmlFiles.length > 0) {
+        // Pick the first prerendered post
+        const slug = htmlFiles[0].replace(/\.html$/, '')
+        return [...defaults, { path: `/post/${slug}`, name: 'Sample Post Page' }]
+      }
     }
-
-    // Fallback to hardcoded post
-    return { path: '/post/why-i-became-developer', name: 'Sample Post Page' }
-  } catch (_error) {
-    // Fallback to hardcoded post if directory reading fails
-    return { path: '/post/why-i-became-developer', name: 'Sample Post Page' }
+  } catch (_e) {
+    // ignore and fall back to defaults
   }
+
+  // Fallback: try a common posts listing page if available
+  return [...defaults, { path: '/posts', name: 'Posts Listing' }]
 }
 
 /**
@@ -71,12 +76,8 @@ const config = {
     'twitter:image',
     'canonical'
   ],
-  requiredStructuralTags: ['title', 'description', 'canonical'],
-  testPages: [
-    { path: '/', name: 'Homepage' },
-    { path: '/about', name: 'About Page' },
-    getFirstAvailablePost()
-  ]
+  requiredStructuralTags: ['title', 'description', 'canonical']
+  // Pages to test are discovered after build to match prerendered output
 }
 
 /**
@@ -523,8 +524,11 @@ async function main() {
 
     const pageResults = []
 
-    // Test each configured page
-    for (const { path, name } of config.testPages) {
+    // Determine pages to test from build output
+    const pagesToTest = discoverTestPages()
+
+    // Test each discovered page
+    for (const { path, name } of pagesToTest) {
       log(`Validating page: ${name} (${path})`)
 
       const htmlContent = getBuiltPageHTML(path)

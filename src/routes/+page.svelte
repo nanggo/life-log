@@ -4,11 +4,10 @@
   import { SocialLinks } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
   import { ArrowRightIcon } from '$lib/components/ui/Icon'
-  import { avatar, bio, name, website } from '$lib/info'
+  import { avatar, bio, name } from '$lib/info'
 
   export let data: PageData
 
-  const url: string = website
   const title: string = `${name} - life log`
 </script>
 
@@ -16,8 +15,7 @@
   <title>{title}</title>
   <!-- description과 author는 +layout.svelte에서 관리됨 -->
 
-  <!-- 표준 메타 태그 -->
-  <link rel="canonical" href={url} />
+  <!-- 표준 메타 태그는 +layout.svelte에서 관리됨 (canonical 포함) -->
 
   <!-- Open Graph은 +layout.svelte에서 처리됨 -->
 

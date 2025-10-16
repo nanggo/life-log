@@ -4,7 +4,7 @@
   import { CategoryFilter } from '$lib/components'
   import { Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
-  import { detail, name, topic, website } from '$lib/info'
+  import { detail, name, topic } from '$lib/info'
 
   export let data: PageData
 
@@ -23,9 +23,6 @@
   // URL 생성 로직
   const getPageUrl = (p: number) => (p === 1 ? '/posts' : `/posts/${p}`)
 
-  // 현재 페이지 URL 생성
-  $: currentUrl = `${website}${getPageUrl(currentPage)}`
-
   // 페이지 타이틀
   $: pageTitle = `${name}'s life log | Posts`
 
@@ -36,8 +33,7 @@
   <title>{pageTitle}</title>
   <!-- description과 author는 +layout.svelte에서 관리됨 -->
 
-  <!-- 표준 메타 태그 -->
-  <link rel="canonical" href={currentUrl} />
+  <!-- 표준 메타 태그는 +layout.svelte에서 관리됨 (canonical 포함) -->
 
   <!-- Open Graph과 Twitter 메타태그는 +layout.svelte에서 처리됨 -->
 </svelte:head>
