@@ -7,9 +7,6 @@ export async function load({ data }) {
 
   return {
     aboutData: data.aboutData,
-    component: component.default,
-    layout: {
-      fullWidth: true
-    }
+    component: component.default
   }
 }

@@ -67,7 +67,7 @@
   </script>
 </svelte:head>
 
-<main class="about max-w-2xl mx-auto lg:max-w-none">
+<main class="about max-w-2xl mx-auto">
   <div class="hidden lg:block pt-8">
     <div class="sticky top-0 w-full flex justify-end pt-11 pr-8"></div>
   </div>
