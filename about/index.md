@@ -4,19 +4,18 @@ title: About NANGGO | NANGGO's LIFELOG
 
 # 유지성
 
-<div align="right"><sub><i>Last updated: 2025.05.28</i></sub></div>
+<div align="right"><sub><i>Last updated: 2025.10.16</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
 1. 도전을 좋아하는
-2. 효율적으로 일하는
-3. 커뮤니케이션을 좋아하는
+2. 효율을 추구하는
+3. 명확하게 소통하는
 
 **저는 `______` 조직을 선호합니다.**
 
-1. 자유로운
-2. 수평적인
-3. 투명한
+1. 자율과 책임이 균형 잡힌
+2. 의사결정이 합리적이고 투명한
 
 <br/>
 
@@ -25,18 +24,32 @@ title: About NANGGO | NANGGO's LIFELOG
 |  **GitHub**  | <https://github.com/nanggo>          |
 |   **Blog**   | <https://blog.nanggo.net>            |
 | **LinkedIn** | <https://linkedin.com/in/jisung-yoo> |
-| **Contact**  | <yamsiri@gmail.com>                  |
+|  **Email**   | <yamsiri@gmail.com>                  |
 
 # Experiences
+
+## [OTS Korea](https://ots.one-line.com/kr)
+
+|              |                                           |
+| -----------: | ----------------------------------------- |
+|   **period** | 2025.08 ~ 현재                            |
+| **position** | Frontend Developer (freelance)            |
+| **projects** | Shipment Instruction 개발                 |
+|       _tech_ | TypeScript, Next.js (React), Tailwind CSS |
+
+#### Shipment Instruction 개발
+
+- 선적 지시서 작성 및 관리 기능 개발
+- Micro Frontend 아키텍처 적용
 
 ## [SK Telecom](https://www.sktelecom.com/)
 
 |              |                                                                                                     |
 | -----------: | --------------------------------------------------------------------------------------------------- |
-|   **period** | 2025.02 ~ 2025. 04                                                                                  |
+|   **period** | 2025.02 ~ 2025.04                                                                                   |
 | **position** | Frontend Developer (freelance)                                                                      |
 | **projects** | FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발 |
-|       _tech_ | React, Redux, Redux-saga                                                                            |
+|       _tech_ | React, Redux, Redux-Saga                                                                            |
 
 #### FIMS(Facility Information Management System)/NAMS(Network Assets Management System) 통합시스템 개발
 
@@ -50,7 +63,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2024.05 ~ 2024.10                                                         |
 | **position** | Lead Frontend Developer (freelance)                                       |
 | **projects** | SOC(Security Operation Center) Web Console Renewal                        |
-|       _tech_ | TypeScript, Next.js(React), Zustand, React-Query, Tailwind CSS, Mono Repo |
+|       _tech_ | TypeScript, Next.js (React), Zustand, React Query, Tailwind CSS, Monorepo |
 
 #### SOC(Security Operation Center) Web Console
 
@@ -94,7 +107,7 @@ title: About NANGGO | NANGGO's LIFELOG
 | -----------: | ------------------------------------------------------------------------------------------- |
 |   **period** | 2022.01 ~ 2023.03                                                                           |
 | **position** | Frontend Engineer (full-time)                                                               |
-| **projects** | Audio Book, Geo Block, Series Linking, Share Web                                            |
+| **projects** | Audiobook, Geo Block, Series Linking, Share Web                                             |
 |       _tech_ | TypeScript, Next.js(React), React-Query, Tailwind CSS, Material UI, AWS(CloudFront), Docker |
 
 > 카카오엔터테인먼트에 인수된 북미 웹소설 플랫폼
@@ -108,7 +121,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 #### Geo Block (2023.01)
 
-- 유저의 접속 국가에 따라 판매 가능 컨텐츠 관리 기능 개발
+- 유저의 접속 국가에 따라 판매 가능 콘텐츠 관리 기능 개발
 
 #### Series Linking (2022.12)
 
@@ -119,20 +132,20 @@ title: About NANGGO | NANGGO's LIFELOG
 - Minimum Guarantee 정산을 위한 로직 추가
 - 정산 결과 추가
 
-#### Audio Book (2022.02 ~ 2022.06)
+#### Audiobook (2022.02 ~ 2022.06)
 
-- AudioBook 관리 프론트엔드 개발 (컨텐츠, 큐레이션, 정산)
+- Audiobook 관리 프론트엔드 개발 (콘텐츠, 큐레이션, 정산)
 
 ## 현대두산인프라코어
 
-|              |                                           |
-| -----------: | ----------------------------------------- |
-|   **period** | 2021.09 ~ 2021.11                         |
-| **position** | Frontend Developer (freelance)            |
-| **projects** | Doosan CONNECT                            |
-|       _tech_ | TypeScript, Vue, Google Map API, chart.js |
+|              |                                            |
+| -----------: | ------------------------------------------ |
+|   **period** | 2021.09 ~ 2021.11                          |
+| **position** | Frontend Developer (freelance)             |
+| **projects** | Doosan CONNECT                             |
+|       _tech_ | TypeScript, Vue, Google Maps API, Chart.js |
 
-#### Doosan CONNECT(중장비 관리 앱)
+#### Doosan CONNECT (중장비 관리 앱)
 
 - 장비 상세 개발
 
@@ -156,7 +169,7 @@ title: About NANGGO | NANGGO's LIFELOG
 |   **period** | 2020.05 ~ 2021.01                                         |
 | **position** | Frontend Developer (freelance)                            |
 | **projects** | Stove TV, [인디게임 상점](https://page.onstove.com/indie) |
-|       _tech_ | TypeScript, Nuxt.js(Vue.js), RxJS                         |
+|       _tech_ | TypeScript, Nuxt.js (Vue.js), RxJS                        |
 
 #### [인디게임 상점](https://page.onstove.com/indie) (2020.08 ~ 2021.01)
 
