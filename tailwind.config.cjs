@@ -97,8 +97,8 @@ module.exports = {
             marginBottom: theme('spacing.10')
           },
           p: {
-            marginTop: theme('spacing.7'),
-            marginBottom: theme('spacing.7')
+            marginTop: theme('spacing.5'),
+            marginBottom: theme('spacing.5')
           },
 
           // Headings
@@ -107,18 +107,28 @@ module.exports = {
             fontWeight: theme('fontWeight.semibold')
           },
           h2: {
-            fontSize: theme('fontSize.xl')[0],
-            lineHeight: theme('lineHeight.7'),
-            marginTop: theme('spacing.20'),
-            marginBottom: theme('spacing.4')
-          },
-          h3: {
-            fontSize: theme('fontSize.base')[0],
+            fontSize: theme('fontSize.2xl')[0],
             lineHeight: theme('lineHeight.7'),
             marginTop: theme('spacing.16'),
+            marginBottom: theme('spacing.4'),
+            '@screen md': {
+              marginTop: theme('spacing.20')
+            }
+          },
+          h3: {
+            fontSize: theme('fontSize.xl')[0],
+            lineHeight: theme('lineHeight.7'),
+            marginTop: theme('spacing.12'),
             marginBottom: theme('spacing.4')
           },
-          ':is(h2, h3) + *': {
+          h4: {
+            fontSize: theme('fontSize.lg')[0],
+            lineHeight: theme('lineHeight.7'),
+            fontWeight: theme('fontWeight.medium'),
+            marginTop: theme('spacing.6'),
+            marginBottom: theme('spacing.3')
+          },
+          ':is(h2, h3, h4) + *': {
             marginTop: 0
           },
 
@@ -231,7 +241,9 @@ module.exports = {
             listStyleType: 'decimal'
           },
           'ul, ol': {
-            paddingLeft: theme('spacing.6')
+            paddingLeft: theme('spacing.6'),
+            marginTop: theme('spacing.5'),
+            marginBottom: theme('spacing.5')
           },
           li: {
             marginTop: theme('spacing.1'),
