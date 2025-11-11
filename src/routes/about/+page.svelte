@@ -291,6 +291,22 @@
     text-decoration: none;
   }
 
+  /* Tighten spacing between h1 and the next h2 (About page only) */
+  :global(.about h1) {
+    margin-bottom: 0.5rem; /* reduce collapsed gap driver from prose default */
+  }
+  :global(.about h1 + h2) {
+    margin-top: 1.25rem; /* ~20px on mobile */
+  }
+  @media (min-width: 640px) {
+    :global(.about h1) {
+      margin-bottom: 0.75rem; /* ~12px on sm+ */
+    }
+    :global(.about h1 + h2) {
+      margin-top: 1.5rem; /* ~24px on sm+ */
+    }
+  }
+
   @media print {
     :global(*::-webkit-scrollbar) {
       display: none;
