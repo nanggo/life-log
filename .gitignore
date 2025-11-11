@@ -50,3 +50,6 @@ bundle-analysis.html
 # Task files
 # tasks.json
 # tasks/ 
+
+# Agent tooling cache
+.serena/
