@@ -155,7 +155,11 @@ export const load: PageServerLoad = async ({ params }) => {
       },
       description: dynamicDescription,
       url,
-      inLanguage: 'ko-KR'
+      inLanguage: 'ko-KR',
+      mainEntityOfPage: url,
+      keywords: post.tags,
+      articleSection: post.category,
+      timeRequired: `PT${post.readingTime}M`
     }
 
     // Simplified breadcrumb for better performance

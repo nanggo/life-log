@@ -27,6 +27,8 @@
   $: pageTitle = `${name}'s life log | Posts`
 
   // 메타 설명은 +layout.svelte에서 기본 description 사용
+
+  // no-op
 </script>
 
 <svelte:head>
@@ -36,6 +38,26 @@
   <!-- 표준 메타 태그는 +layout.svelte에서 관리됨 (canonical 포함) -->
 
   <!-- Open Graph과 Twitter 메타태그는 +layout.svelte에서 처리됨 -->
+
+  <script type="application/ld+json">
+{JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: pageTitle,
+    // url 필드는 생략 가능
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: ((paginatedPosts || []) as Array<{ slug: string; title: string }>).map(
+        (p, idx) => ({
+          '@type': 'ListItem',
+          position: idx + 1,
+          url: `/post/${encodeURIComponent(p.slug)}`,
+          name: p.title
+        })
+      )
+    }
+  })}
+  </script>
 </svelte:head>
 
 <div class="flex flex-col flex-grow">

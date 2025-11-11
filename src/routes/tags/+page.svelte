@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
+  import { page } from '$app/stores'
   import { TagCloud } from '$lib/components'
+  import { website, name } from '$lib/info'
 
   export let data: PageData
 
@@ -12,17 +14,30 @@
 
   $: tagInfos = data.tagInfos
   $: statistics = data.statistics
+
+  // 페이지 URL 및 기본 OG 이미지
+  $: pageUrl = new URL($page.url.pathname, website).href
+  $: ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+    data.seo.title
+  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 </script>
 
 <svelte:head>
   <title>{data.seo.title}</title>
   <meta name="description" content={data.seo.description} />
+  <meta property="og:url" content={pageUrl} />
   <meta property="og:title" content={data.seo.title} />
   <meta property="og:description" content={data.seo.description} />
   <meta property="og:type" content="website" />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={data.seo.title} />
   <meta name="twitter:description" content={data.seo.description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${name} 태그 목록`} />
 </svelte:head>
 
 <div class="max-w-2xl mx-auto w-full px-4 sm:px-6 lg:px-8">
