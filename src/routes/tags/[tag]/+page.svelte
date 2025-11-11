@@ -76,10 +76,12 @@
 
     <!-- Tag Header -->
     <header class="flex flex-col mt-8">
-      <h1 class="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+      <h1
+        class="text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl mb-3 md:mb-4"
+      >
         #{data.tagName}
       </h1>
-      <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
+      <p class="mt-2 md:mt-3 text-base text-zinc-600 dark:text-zinc-400">
         총 {data.postCount}개의 포스트
       </p>
     </header>

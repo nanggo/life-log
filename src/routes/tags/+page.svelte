@@ -43,10 +43,12 @@
 <div class="max-w-2xl mx-auto w-full px-4 sm:px-6 lg:px-8">
   <!-- Tags Header -->
   <header class="flex flex-col text-center">
-    <h1 class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl">
+    <h1
+      class="mt-6 text-4xl font-bold tracking-tight text-zinc-800 dark:text-zinc-100 sm:text-5xl mb-3 md:mb-4"
+    >
       모든 태그
     </h1>
-    <p class="mt-2 text-base text-zinc-600 dark:text-zinc-400">
+    <p class="mt-2 md:mt-3 text-base text-zinc-600 dark:text-zinc-400">
       총 {data.totalTags}개의 태그
     </p>
     <p class="mt-1 text-sm text-zinc-500 dark:text-zinc-500">
