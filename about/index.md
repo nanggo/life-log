@@ -87,12 +87,12 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## [SK C&C](https://www.skcc.co.kr)
 
-|              |                                                                                                                     |
-| -----------: | ------------------------------------------------------------------------------------------------------------------- |
-|   **period** | 2023.10 ~ 2023.12                                                                                                   |
-| **position** | Frontend Developer (freelance)                                                                                      |
-| **projects** | [tok.AI](https://www.skcc.co.kr/ai-data/ai-report-automation) - Generative AI based app platform - Report Generator |
-|       _tech_ | Next.js(React), Redux                                                                                               |
+|              |                                                                                                                            |
+| -----------: | -------------------------------------------------------------------------------------------------------------------------- |
+|   **period** | 2023.10 ~ 2023.12                                                                                                          |
+| **position** | Frontend Developer (freelance)                                                                                             |
+| **projects** | [tok.AI](https://www.aitimes.com/news/articleView.html?idxno=154322) - Generative AI based app platform - Report Generator |
+|       _tech_ | Next.js(React), Redux                                                                                                      |
 
 #### tok.AI - Report Generator
 
@@ -136,7 +136,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - Audiobook 관리 프론트엔드 개발 (콘텐츠, 큐레이션, 정산)
 
-## 현대두산인프라코어
+## [현대인프라코어](https://www.hd-infracore.com/)
 
 |              |                                            |
 | -----------: | ------------------------------------------ |
@@ -149,7 +149,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 장비 상세 개발
 
-## 아모레퍼시픽
+## [아모레퍼시픽](https://www.amorepacific.com)
 
 |              |                                               |
 | -----------: | --------------------------------------------- |
@@ -162,7 +162,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 홈, BEST, 브랜드, 브랜드 전체보기 개발
 
-## 스마일게이트 스토브
+## [스마일게이트 스토브](https://www.onstove.com/)
 
 |              |                                                           |
 | -----------: | --------------------------------------------------------- |
@@ -179,7 +179,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 방송 설정 및 업로드 화면 개발
 
-## ezCaretech
+## [ezCaretech](https://www.ezcaretech.com)
 
 |              |                                                                        |
 | -----------: | ---------------------------------------------------------------------- |
