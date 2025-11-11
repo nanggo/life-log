@@ -4,7 +4,13 @@
 
 import { parse } from 'node-html-parser'
 
-import { posts } from '$lib/data/posts'
+import {
+  posts,
+  getCategoryInfos,
+  getPostsByCategory,
+  getAllTagsWithCounts,
+  getPostsByTag
+} from '$lib/data/posts'
 import { website } from '$lib/info'
 import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
@@ -13,6 +19,8 @@ export const prerender = true
 
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
+const getCategoryUrl = (name) => `${website}/posts/category/${encodeURIComponent(name)}`
+const getTagUrl = (tag) => `${website}/tags/${encodeURIComponent(tag)}`
 
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
@@ -126,6 +134,52 @@ export async function GET({ setHeaders }) {
           </url>`
         })
         .join('')}
+      
+      ${(() => {
+        try {
+          const categories = getCategoryInfos()
+          return categories
+            .map((info) => {
+              const catPosts = getPostsByCategory(info.category)
+              const latest = catPosts && catPosts.length > 0 ? catPosts[0] : null
+              const lastmod = latest
+                ? safeToISOString(latest.updated || latest.date)
+                : safeToISOString(new Date())
+              return `<url>
+                <loc>${getCategoryUrl(info.category)}</loc>
+                <lastmod>${lastmod}</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.6</priority>
+              </url>`
+            })
+            .join('')
+        } catch (_e) {
+          return ''
+        }
+      })()}
+
+      ${(() => {
+        try {
+          const tags = getAllTagsWithCounts()
+          return tags
+            .map(({ tag }) => {
+              const tagPosts = getPostsByTag(tag)
+              const latest = tagPosts && tagPosts.length > 0 ? tagPosts[0] : null
+              const lastmod = latest
+                ? safeToISOString(latest.updated || latest.date)
+                : safeToISOString(new Date())
+              return `<url>
+                <loc>${getTagUrl(tag)}</loc>
+                <lastmod>${lastmod}</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.5</priority>
+              </url>`
+            })
+            .join('')
+        } catch (_e) {
+          return ''
+        }
+      })()}
     </urlset>`
 
   return new Response(xml)

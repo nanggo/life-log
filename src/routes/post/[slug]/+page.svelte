@@ -22,8 +22,19 @@
 
   export let data: PageData
 
-  // Use the social media image determined by the server (post image or generated OG image)
-  const ogImage: string = data.socialMediaImage
+  // 소셜 이미지가 비어 있을 경우에도 기본 OG 이미지를 보장
+  const defaultOgImageForPost = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+    data.post.title
+  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  const ogImage: string =
+    data.socialMediaImage && data.socialMediaImage.trim()
+      ? data.socialMediaImage
+      : defaultOgImageForPost
+
+  // 퍼블리시/수정 시간이 비어 있지 않도록 보강
+  const published: string = data.publishedDate || new Date(data.post.date).toISOString()
+  const modified: string =
+    data.modifiedDate || new Date(data.post.updated || data.post.date).toISOString()
 
   const url: string = `${website}/post/${data.post.slug}`
 
@@ -73,8 +84,14 @@
   <meta property="og:site_name" content={name} />
   <meta property="og:locale" content="ko_KR" />
   <meta property="article:author" content={name} />
-  <meta property="article:published_time" content={data.publishedDate} />
-  <meta property="article:modified_time" content={data.modifiedDate} />
+  <meta property="article:published_time" content={published} />
+  <meta property="article:modified_time" content={modified} />
+  <meta property="og:updated_time" content={modified} />
+  <meta property="article:section" content={data.post.category} />
+  <meta
+    property="og:image:alt"
+    content={data.isPostImage ? `${data.post.title}의 관련 이미지` : `${data.post.title} - ${name}`}
+  />
   {#if data.post.tags && data.post.tags.length > 0}
     {#each data.post.tags as tag}
       <meta property="article:tag" content={tag} />

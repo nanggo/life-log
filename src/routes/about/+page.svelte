@@ -9,6 +9,11 @@
 
   const url: string = `${website}/about`
 
+  // 기본 OG 이미지 (1200x630)
+  $: ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+    data.aboutData.title
+  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+
   // Used in template JSON-LD script tag below
   // @ts-ignore: Used in Svelte template
   // eslint-disable-next-line no-unused-vars
@@ -49,6 +54,10 @@
   <meta property="og:title" content={data.aboutData.title} />
   <meta property="og:description" content={data.aboutData.description} />
   <meta property="og:site_name" content={name} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -57,6 +66,8 @@
   <meta name="twitter:title" content={data.aboutData.title} />
   <meta name="twitter:description" content={data.aboutData.description} />
   <meta name="twitter:creator" content="@nanggo" />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${name} 소개`} />
 
   <!-- Additional SEO Meta Tags -->
   <!-- robots and googlebot are handled globally in src/app.html -->
