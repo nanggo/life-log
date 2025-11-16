@@ -170,6 +170,13 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
 
   const html = parse(post.default.render().html)
 
+  // 본문에서 첫 번째 이미지를 추출 (OG 이미지 등으로 재사용)
+  const firstImageElement = html.querySelector('img')
+  const firstImageUrl =
+    firstImageElement?.getAttribute('src') != null
+      ? convertToGitHubThumbnail(firstImageElement.getAttribute('src') as string, 1200)
+      : undefined
+
   const rawPreview = post.metadata.preview
     ? parse(post.metadata.preview)
     : createEnhancedPreview(html)
@@ -226,7 +233,8 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     },
     readingTime: calculateReadingTime(html, filepath),
     isIndexFile: filepath.endsWith('/index.md'),
-    headings
+    headings,
+    firstImageUrl
   }
 
   return result

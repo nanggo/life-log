@@ -6,6 +6,7 @@
 
   import { browser } from '$app/environment'
   import type { Post } from '$lib/types'
+  import { optimizedScrollHandler } from '$lib/utils/performance'
 
   export let post: Post
 
@@ -18,6 +19,7 @@
   let elements: (HTMLElement | null)[] = []
   let shouldRender = false
   let scrollY: number
+  let cleanupScroll: (() => void) | null = null
 
   const headings: ProcessedHeading[] = post.headings.map((heading) => {
     const slugger = new GithubSlugger()
@@ -32,15 +34,34 @@
     if (!shouldRender && scrollY > 200) {
       shouldRender = true
       updateHeadings()
+      setActiveHeading()
     }
   }
 
   onMount(() => {
-    // 초기 스크롤 위치 확인
-    if (window.scrollY > 200) {
-      shouldRender = true
-      updateHeadings()
-      setActiveHeading()
+    if (browser) {
+      // 초기 스크롤 위치 확인
+      if (window.scrollY > 200) {
+        shouldRender = true
+        updateHeadings()
+        setActiveHeading()
+      }
+
+      // 스크롤 이벤트를 최적화된 핸들러로 처리 (throttle + passive)
+      cleanupScroll = optimizedScrollHandler(() => {
+        setActiveHeading()
+      }, 50)
+
+      window.addEventListener('hashchange', setActiveHeading)
+    }
+
+    return () => {
+      if (cleanupScroll) {
+        cleanupScroll()
+      }
+      if (browser) {
+        window.removeEventListener('hashchange', setActiveHeading)
+      }
     }
   })
 
@@ -87,8 +108,6 @@
     }
   }
 </script>
-
-<svelte:window on:scroll={setActiveHeading} on:hashchange={setActiveHeading} />
 
 {#if shouldRender}
   <Card>

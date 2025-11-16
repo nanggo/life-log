@@ -1,16 +1,10 @@
 import { error } from '@sveltejs/kit'
-import { parse } from 'node-html-parser'
 
 import type { PageServerLoad } from './$types'
 
-import { dev } from '$app/environment'
 import { posts } from '$lib/data/posts'
 import { website, author } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
-
-// 빌드타임 메타데이터 캐시 로드 (프로덕션 환경에서만)
-const metadataCache: Record<string, any> = {}
-// 캐시 기능은 향후 구현 예정 - 현재는 기본 동작 유지
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -65,68 +59,26 @@ export const load: PageServerLoad = async ({ params }) => {
       throw error(404, `Post not found: ${decodedSlug}`)
     }
 
-    // Load post content - use cache in production, dynamic import in development
-    let postContent = ''
-    let firstImageUrl = ''
-
-    // 프로덕션: 빌드타임 캐시 사용
-    if (!dev && metadataCache[post.slug]) {
-      const cached = metadataCache[post.slug]
-      postContent = cached.content || ''
-      firstImageUrl = cached.firstImageUrl || ''
-    }
-    // 개발환경: 동적 로딩 (개발 편의성)
-    else {
-      try {
-        const allPostModules = import.meta.glob('/posts/**/*.md')
-        const postKey = Object.keys(allPostModules).find((key) => {
-          const fileName = key
-            .replace(/(\/index)?\.md$/, '')
-            .split('/')
-            .pop()
-          return fileName === post.slug
-        })
-
-        if (postKey && allPostModules[postKey]) {
-          const postModule = (await allPostModules[postKey]()) as {
-            default: { render: () => { html: string } }
-          }
-          const rendered = postModule.default.render()
-          const html = parse(rendered.html)
-          postContent = html.structuredText || ''
-
-          // Extract first image from content
-          const imgElement = html.querySelector('img')
-          if (imgElement) {
-            const src = imgElement.getAttribute('src')
-            if (src && src.startsWith('http')) {
-              firstImageUrl = src
-            }
-          }
-        }
-      } catch (err) {
-        console.warn(`Could not load content for post ${post.slug}:`, err)
-      }
-    }
-
-    // Fallback to preview text if full content unavailable
-    if (!postContent) {
-      postContent = post.preview.text || ''
-    }
-
-    // Choose social media image with priority: post image > generated OG image
+    // Choose social media image with priority:
+    // 1) frontmatter image, 2) 본문에서 추출한 첫 번째 이미지, 3) 생성형 OG 이미지
+    const configuredImage = post.image?.trim()
+    const contentFirstImage = post.firstImageUrl?.trim()
     const ogImage =
-      firstImageUrl ||
+      (configuredImage && configuredImage.length > 0 && configuredImage) ||
+      (contentFirstImage && contentFirstImage.length > 0 && contentFirstImage) ||
       `https://og-image-korean.vercel.app/**${encodeURIComponent(
         post.title
       )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+    const usedPostImage =
+      (configuredImage && configuredImage.length > 0) ||
+      (contentFirstImage && contentFirstImage.length > 0)
 
     const url = `${website}/post/${post.slug}`
 
     // Create a more SEO-friendly description with simplified fallback logic
     const previewText =
       post.preview?.text?.trim() ||
-      postContent?.trim().split('\n')[0]?.trim() ||
+      post.description?.trim() ||
       post.title?.trim() ||
       '낭고넷 블로그 포스트'
 
@@ -188,7 +140,7 @@ export const load: PageServerLoad = async ({ params }) => {
       jsonLd: JSON.stringify(jsonLd, null, 0),
       breadcrumbLd: JSON.stringify(breadcrumbLd, null, 0),
       socialMediaImage: ogImage,
-      isPostImage: !!firstImageUrl,
+      isPostImage: usedPostImage,
       publishedDate: safeToISOString(post.date),
       modifiedDate: safeToISOString(post.updated || post.date)
     }
