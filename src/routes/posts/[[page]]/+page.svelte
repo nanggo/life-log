@@ -8,17 +8,10 @@
 
   export let data: PageData
 
-  // layout 데이터에서 전체 포스트와 카테고리 정보 가져오기
-  $: ({ allPosts, categoryInfos } = data)
-
   // 페이지네이션 로직
-  const postsPerPage = data.limit
   $: currentPage = data.page
-  $: totalPosts = allPosts.length
-  $: totalPages = Math.ceil(totalPosts / postsPerPage)
-  $: startIndex = (currentPage - 1) * postsPerPage
-  $: endIndex = startIndex + postsPerPage
-  $: paginatedPosts = allPosts.slice(startIndex, endIndex)
+  $: totalPages = data.totalPages
+  $: paginatedPosts = data.posts
 
   // URL 생성 로직
   const getPageUrl = (p: number) => (p === 1 ? '/posts' : `/posts/${p}`)
@@ -70,7 +63,7 @@
 
   <!-- Category Filter -->
   <div class="mt-6">
-    <CategoryFilter {categoryInfos} variant="compact" />
+    <CategoryFilter categoryInfos={data.categoryInfos} variant="compact" />
   </div>
 
   <!-- Tags Navigation Link -->

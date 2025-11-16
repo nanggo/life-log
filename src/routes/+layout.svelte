@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { inject } from '@vercel/analytics'
-  import { injectSpeedInsights } from '@vercel/speed-insights/sveltekit'
   import '../app.css'
   import '../prism.css'
   import MoonIcon from 'heroicons-svelte/solid/MoonIcon.svelte'
@@ -170,8 +168,20 @@
   if (browser) {
     // Wait for page to be fully loaded before injecting analytics
     const loadAnalytics = () => {
-      inject({ mode: dev ? 'development' : 'production' })
-      injectSpeedInsights()
+      // Dynamically import analytics to avoid bloating the initial bundle
+      Promise.all([
+        import('@vercel/analytics').then((mod) => mod.inject),
+        import('@vercel/speed-insights/sveltekit').then((mod) => mod.injectSpeedInsights)
+      ])
+        .then(([inject, injectSpeedInsights]) => {
+          inject({ mode: dev ? 'development' : 'production' })
+          injectSpeedInsights()
+        })
+        .catch((error) => {
+          if (dev) {
+            console.error('Failed to load analytics modules', error)
+          }
+        })
     }
 
     // Load analytics after initial render is complete

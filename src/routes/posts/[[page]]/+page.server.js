@@ -1,17 +1,16 @@
 import { error } from '@sveltejs/kit'
 
+import { posts as allPosts } from '$lib/data/posts'
+import { extractPostMetadata } from '$lib/util'
 import { globalCacheManager, generateCacheKey, CACHE_TAGS } from '$lib/utils/cache-manager'
 
-// Statically generate all post list pages, with tag filtering handled on the client.
+// Statically generate all post list pages
 export const prerender = true
 
 /** @type {import('./$types').PageServerLoad} */
-export async function load({ params, parent }) {
+export async function load({ params }) {
   const page = params.page ? parseInt(params.page) : 1
   const limit = 10
-
-  // 레이아웃에서 전체 포스트 데이터 가져오기
-  const { allPosts } = await parent()
 
   // 캐시 키 생성 (페이지별 캐싱)
   const cacheKey = generateCacheKey.posts(undefined, page, limit)
@@ -29,10 +28,19 @@ export async function load({ params, parent }) {
     throw error(404, 'Page not found')
   }
 
+  const startIndex = (page - 1) * limit
+  const endIndex = startIndex + limit
+  const paginatedPosts = allPosts.slice(startIndex, endIndex)
+
+  // 목록 페이지에 필요한 메타데이터만 포함
+  const posts = extractPostMetadata(paginatedPosts)
+
   const result = {
-    // 페이지네이션 정보만 제공 (클라이언트에서 필터링 및 페이지네이션 처리)
     page,
-    limit
+    limit,
+    totalPosts,
+    totalPages,
+    posts
   }
 
   // 결과 캐싱 (개발 환경에서는 캐시 비활성화)
