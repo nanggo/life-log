@@ -172,9 +172,10 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
 
   // 본문에서 첫 번째 이미지를 추출 (OG 이미지 등으로 재사용)
   const firstImageElement = html.querySelector('img')
+  const firstImageSrc = firstImageElement?.getAttribute('src')
   const firstImageUrl =
-    firstImageElement?.getAttribute('src') != null
-      ? convertToGitHubThumbnail(firstImageElement.getAttribute('src') as string, 1200)
+    firstImageSrc && firstImageSrc.trim()
+      ? convertToGitHubThumbnail(firstImageSrc, 1200)
       : undefined
 
   const rawPreview = post.metadata.preview

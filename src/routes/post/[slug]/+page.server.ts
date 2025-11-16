@@ -64,14 +64,12 @@ export const load: PageServerLoad = async ({ params }) => {
     const configuredImage = post.image?.trim()
     const contentFirstImage = post.firstImageUrl?.trim()
     const ogImage =
-      (configuredImage && configuredImage.length > 0 && configuredImage) ||
-      (contentFirstImage && contentFirstImage.length > 0 && contentFirstImage) ||
+      configuredImage ||
+      contentFirstImage ||
       `https://og-image-korean.vercel.app/**${encodeURIComponent(
         post.title
       )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
-    const usedPostImage =
-      (configuredImage && configuredImage.length > 0) ||
-      (contentFirstImage && contentFirstImage.length > 0)
+    const usedPostImage = !!(configuredImage || contentFirstImage)
 
     const url = `${website}/post/${post.slug}`
 
