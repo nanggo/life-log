@@ -91,6 +91,8 @@ export interface Post extends PostMetadata {
   isIndexFile: boolean
   /** 헤딩 목록 */
   headings: Heading[]
+  /** 본문에서 추출한 첫 번째 이미지 URL (OG 이미지 등용, 선택사항) */
+  firstImageUrl?: string
   /** 이전 포스트 */
   previous?: LinkedPost
   /** 다음 포스트 */
