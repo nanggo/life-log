@@ -167,21 +167,21 @@
   // Defer analytics loading for better initial performance
   if (browser) {
     // Wait for page to be fully loaded before injecting analytics
-    const loadAnalytics = () => {
-      // Dynamically import analytics to avoid bloating the initial bundle
-      Promise.all([
-        import('@vercel/analytics').then((mod) => mod.inject),
-        import('@vercel/speed-insights/sveltekit').then((mod) => mod.injectSpeedInsights)
-      ])
-        .then(([inject, injectSpeedInsights]) => {
-          inject({ mode: dev ? 'development' : 'production' })
-          injectSpeedInsights()
-        })
-        .catch((error) => {
-          if (dev) {
-            console.error('Failed to load analytics modules', error)
-          }
-        })
+    const loadAnalytics = async () => {
+      try {
+        // Dynamically import analytics to avoid bloating the initial bundle
+        const [{ inject }, { injectSpeedInsights }] = await Promise.all([
+          import('@vercel/analytics'),
+          import('@vercel/speed-insights/sveltekit')
+        ])
+
+        inject({ mode: dev ? 'development' : 'production' })
+        injectSpeedInsights()
+      } catch (error) {
+        if (dev) {
+          console.error('Failed to load analytics modules', error)
+        }
+      }
     }
 
     // Load analytics after initial render is complete
