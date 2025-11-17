@@ -26,7 +26,12 @@
   <!-- bio -->
   <section class="flex flex-col items-center gap-16 pt-8 pb-16">
     <div class="flex flex-col items-center w-full gap-6 rounded-lg">
-      <a href="/about" class="inline-block rounded-full">
+      <a
+        href="/about"
+        class="inline-block rounded-full"
+        data-sveltekit-preload-data="viewport"
+        data-sveltekit-preload-code="viewport"
+      >
         <img
           src={avatar}
           alt={name}

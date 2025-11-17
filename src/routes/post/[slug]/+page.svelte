@@ -169,7 +169,12 @@
           <SocialLinks />
         </div>
         <div class="flex justify-center order-2 md:order-1 col-span-2">
-          <a href="/about" class="inline-block rounded-full">
+          <a
+            href="/about"
+            class="inline-block rounded-full"
+            data-sveltekit-preload-data="viewport"
+            data-sveltekit-preload-code="viewport"
+          >
             <Image
               src={avatar}
               alt={name}
