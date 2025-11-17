@@ -1,30 +1,28 @@
 /**
- * Dynamically loads the svelte component for the post (only possible in +page.js)
- * and pass on the data from +page.server.js
+ * Eagerly loads all post components at build time for instant navigation.
+ * Trade-off: Larger bundle size, but eliminates delay when clicking posts.
  *
  * @type {import('@sveltejs/kit').PageLoad}
  */
 export const prerender = true
 
-// Pre-load all posts using import.meta.glob
-const allPosts = import.meta.glob('/posts/**/*.md')
+// Eagerly load all posts at build time - no lazy loading delay on navigation
+const allPosts = import.meta.glob('/posts/**/*.md', { eager: true })
 
-export async function load({ data }) {
+export function load({ data }) {
   // Find the correct post file
   const postKey = data.post.isIndexFile
     ? `/posts/${data.post.slug}/index.md`
     : `/posts/${data.post.slug}.md`
 
-  const postLoader = allPosts[postKey]
-  if (!postLoader) {
+  const post = allPosts[postKey]
+  if (!post) {
     throw new Error(`Post not found: ${postKey}`)
   }
 
-  const component = await postLoader()
-
   return {
     post: data.post,
-    component: component.default,
+    component: post.default,
     dynamicDescription: data.dynamicDescription,
     jsonLd: data.jsonLd,
     breadcrumbLd: data.breadcrumbLd,
