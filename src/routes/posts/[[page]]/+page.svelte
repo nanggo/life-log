@@ -4,7 +4,7 @@
   import { CategoryFilter } from '$lib/components'
   import { Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
-  import { detail, name, topic } from '$lib/info'
+  import { detail, name, topic, website } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
@@ -33,7 +33,7 @@
       itemListElement: (paginatedPosts || []).map((p: PostMetadata, idx: number) => ({
         '@type': 'ListItem',
         position: idx + 1,
-        url: `/post/${encodeURIComponent(p.slug)}`,
+        url: `${website}/post/${encodeURIComponent(p.slug)}`,
         name: p.title
       }))
     }
