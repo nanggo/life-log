@@ -3,6 +3,7 @@
   import { Breadcrumb, Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
   import { website } from '$lib/info'
+  import type { PostMetadata } from '$lib/types'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
   /** @type {import('./$types').PageData} */
@@ -33,14 +34,12 @@
     url: pageUrl,
     mainEntity: {
       '@type': 'ItemList',
-      itemListElement: (data.posts || []).map(
-        (p: { slug: string; title: string }, idx: number) => ({
-          '@type': 'ListItem',
-          position: idx + 1,
-          url: `${website}/post/${encodeURIComponent(p.slug)}`,
-          name: p.title
-        })
-      )
+      itemListElement: (data.posts || []).map((p: PostMetadata, idx: number) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `${website}/post/${encodeURIComponent(p.slug)}`,
+        name: p.title
+      }))
     }
   }
 </script>
