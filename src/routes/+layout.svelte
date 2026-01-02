@@ -28,6 +28,7 @@
     linkedin,
     email
   } from '$lib/info'
+  import { jsonLdScript } from '$lib/utils/json-ld'
 
   export let data: LayoutData
 
@@ -40,9 +41,6 @@
     data.title
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 
-  // JSON-LD schemas
-  // @ts-ignore - used in JSON-LD script tags below
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const _organizationSchema = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
@@ -88,8 +86,6 @@
     inLanguage: 'ko-KR'
   }
 
-  // @ts-ignore - used in JSON-LD script tags below
-  // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   const _websiteSchema = {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
@@ -299,14 +295,10 @@
   {/if}
 
   <!-- Organization Schema -->
-  <script type="application/ld+json">
-    {JSON.stringify(_organizationSchema)}
-  </script>
+  {@html jsonLdScript(_organizationSchema)}
 
   <!-- WebSite Schema -->
-  <script type="application/ld+json">
-    {JSON.stringify(_websiteSchema)}
-  </script>
+  {@html jsonLdScript(_websiteSchema)}
 </svelte:head>
 
 <div class="flex flex-col min-h-screen">
