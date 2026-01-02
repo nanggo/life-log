@@ -4,6 +4,7 @@
   import { PostsList, TagList } from '$lib/components/post'
   import { name, website } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
+  import { jsonLdScript } from '$lib/utils/json-ld'
 
   /** @type {import('./$types').PageData} */
   export let data
@@ -31,6 +32,22 @@
     { label: '태그', href: '/tags' },
     { label: `#${data.tagName}`, current: true }
   ]
+
+  $: collectionPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: `${data.seo.title} - ${name}'s life log`,
+    url: pageUrl,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: (data.posts || []).map((p: PostMetadata, idx: number) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `${website}/post/${encodeURIComponent(p.slug)}`,
+        name: p.title
+      }))
+    }
+  }
 </script>
 
 <svelte:head>
@@ -48,23 +65,7 @@
   <meta name="twitter:title" content={`${data.seo.title} - ${name}'s life log`} />
   <meta name="twitter:description" content={data.seo.description} />
 
-  <script type="application/ld+json">
-    {JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'CollectionPage',
-      name: `${data.seo.title} - ${name}'s life log`,
-      url: pageUrl,
-      mainEntity: {
-        '@type': 'ItemList',
-        itemListElement: (data.posts || []).map((p: { slug: string; title: string }, idx: number) => ({
-          '@type': 'ListItem',
-          position: idx + 1,
-          url: `${website}/post/${encodeURIComponent(p.slug)}`,
-          name: p.title
-        }))
-      }
-    })}
-  </script>
+  {@html jsonLdScript(collectionPageJsonLd)}
 </svelte:head>
 
 <div class="flex flex-col flex-grow">

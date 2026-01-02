@@ -5,6 +5,8 @@
   import { Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
   import { detail, name, topic } from '$lib/info'
+  import type { PostMetadata } from '$lib/types'
+  import { jsonLdScript } from '$lib/utils/json-ld'
 
   export let data: PageData
 
@@ -21,7 +23,21 @@
 
   // 메타 설명은 +layout.svelte에서 기본 description 사용
 
-  // no-op
+  $: collectionPageJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: pageTitle,
+    // url 필드는 생략 가능
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: (paginatedPosts || []).map((p: PostMetadata, idx: number) => ({
+        '@type': 'ListItem',
+        position: idx + 1,
+        url: `/post/${encodeURIComponent(p.slug)}`,
+        name: p.title
+      }))
+    }
+  }
 </script>
 
 <svelte:head>
@@ -32,25 +48,7 @@
 
   <!-- Open Graph과 Twitter 메타태그는 +layout.svelte에서 처리됨 -->
 
-  <script type="application/ld+json">
-{JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: pageTitle,
-    // url 필드는 생략 가능
-    mainEntity: {
-      '@type': 'ItemList',
-      itemListElement: ((paginatedPosts || []) as Array<{ slug: string; title: string }>).map(
-        (p, idx) => ({
-          '@type': 'ListItem',
-          position: idx + 1,
-          url: `/post/${encodeURIComponent(p.slug)}`,
-          name: p.title
-        })
-      )
-    }
-  })}
-  </script>
+  {@html jsonLdScript(collectionPageJsonLd)}
 </svelte:head>
 
 <div class="flex flex-col flex-grow">

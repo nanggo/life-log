@@ -9,6 +9,7 @@
   import { PostDate, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar, twitterHandle } from '$lib/info'
+  import { jsonLdScript } from '$lib/utils/json-ld'
 
   interface PageData extends BasePageData {
     dynamicDescription: string
@@ -110,12 +111,8 @@
     content={data.isPostImage ? `${data.post.title}의 관련 이미지` : `${data.post.title} - ${name}`}
   />
 
-  <script type="application/ld+json">
-    {data.jsonLd}
-  </script>
-  <script type="application/ld+json">
-    {data.breadcrumbLd}
-  </script>
+  {@html jsonLdScript(data.jsonLd)}
+  {@html jsonLdScript(data.breadcrumbLd)}
 </svelte:head>
 
 <div class="root max-w-2xl mx-auto lg:max-w-none">

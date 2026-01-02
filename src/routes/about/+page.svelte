@@ -4,6 +4,7 @@
   import type { PageData } from './$types'
 
   import { website, name } from '$lib/info'
+  import { jsonLdScript } from '$lib/utils/json-ld'
 
   export let data: PageData
 
@@ -14,9 +15,6 @@
     data.aboutData.title
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
 
-  // Used in template JSON-LD script tag below
-  // @ts-ignore: Used in Svelte template
-  // eslint-disable-next-line no-unused-vars
   const _jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -73,9 +71,7 @@
   <!-- robots and googlebot are handled globally in src/app.html -->
   <!-- canonical is handled globally in +layout.svelte -->
 
-  <script type="application/ld+json">
-{@html JSON.stringify(_jsonLd)}
-  </script>
+  {@html jsonLdScript(_jsonLd)}
 </svelte:head>
 
 <main class="about max-w-2xl mx-auto">
