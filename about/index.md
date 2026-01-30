@@ -30,17 +30,20 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## [OTS Korea](https://ots.one-line.com/kr)
 
-|              |                                           |
-| -----------: | ----------------------------------------- |
-|   **period** | 2025.08 ~ 현재                            |
-| **position** | Frontend Developer (freelance)            |
-| **projects** | Shipment Instruction 개발                 |
-|       _tech_ | TypeScript, Next.js (React), Tailwind CSS |
+|              |                                                       |
+| -----------: | ----------------------------------------------------- |
+|   **period** | 2025.08 ~ 현재                                        |
+| **position** | Frontend Developer 겸 Technical Architect (freelance) |
+| **projects** | Shipping Instruction 개발                             |
+|       _tech_ | TypeScript, Next.js (React), Tailwind CSS             |
 
-#### Shipment Instruction 개발
+#### Shipping Instruction 개발
 
 - 선적 지시서 작성 및 관리 기능 개발
 - Micro Frontend 아키텍처 적용
+- Cookie Consent 구현
+- GitOps 관리
+- CI/CD 파이프라인 구축 및 운영
 
 ## [SK Telecom](https://www.sktelecom.com/)
 
