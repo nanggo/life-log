@@ -19,8 +19,14 @@ export const prerender = true
 
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
+const getPostsPageUrl = (page) => (page === 1 ? `${website}/posts` : `${website}/posts/${page}`)
 const getCategoryUrl = (name) => `${website}/posts/category/${encodeURIComponent(name)}`
+const getCategoryPageUrl = (name, page) =>
+  page === 1
+    ? getCategoryUrl(name)
+    : `${website}/posts/category/${encodeURIComponent(name)}/${page}`
 const getTagUrl = (tag) => `${website}/tags/${encodeURIComponent(tag)}`
+const POSTS_PER_PAGE = 10
 
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
@@ -113,6 +119,25 @@ export async function GET({ setHeaders }) {
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
       </url>
+      ${(() => {
+        const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+        if (totalPages <= 1) return ''
+        return Array.from({ length: totalPages - 1 }, (_, idx) => {
+          const page = idx + 2
+          return `<url>
+            <loc>${getPostsPageUrl(page)}</loc>
+            <lastmod>${safeToISOString(posts[0]?.updated || posts[0]?.date || new Date())}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.8</priority>
+          </url>`
+        }).join('')
+      })()}
+      <url>
+        <loc>${website}/tags</loc>
+        <lastmod>${safeToISOString(posts[0]?.updated || posts[0]?.date || new Date())}</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+      </url>
 
       ${posts
         .map((post) => {
@@ -145,12 +170,26 @@ export async function GET({ setHeaders }) {
               const lastmod = latest
                 ? safeToISOString(latest.updated || latest.date)
                 : safeToISOString(new Date())
+              const totalPages = Math.ceil((catPosts?.length || 0) / POSTS_PER_PAGE)
+              const pageEntries =
+                totalPages > 1
+                  ? Array.from({ length: totalPages - 1 }, (_, idx) => {
+                      const page = idx + 2
+                      return `<url>
+                <loc>${getCategoryPageUrl(info.category, page)}</loc>
+                <lastmod>${lastmod}</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.55</priority>
+              </url>`
+                    }).join('')
+                  : ''
+
               return `<url>
                 <loc>${getCategoryUrl(info.category)}</loc>
                 <lastmod>${lastmod}</lastmod>
                 <changefreq>weekly</changefreq>
                 <priority>0.6</priority>
-              </url>`
+              </url>${pageEntries}`
             })
             .join('')
         } catch (_e) {

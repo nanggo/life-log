@@ -14,7 +14,7 @@
 
 import { execSync } from 'child_process'
 import { writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync } from 'fs'
-import { join, dirname } from 'path'
+import { join, dirname, relative } from 'path'
 import { fileURLToPath } from 'url'
 
 import { parse } from 'node-html-parser'
@@ -31,32 +31,67 @@ if (!existsSync(reportsDir)) {
 }
 
 /**
+ * Recursively collect prerendered HTML files.
+ */
+function collectPrerenderedHtmlFiles(dirPath) {
+  const entries = readdirSync(dirPath, { withFileTypes: true })
+  const htmlFiles = []
+
+  for (const entry of entries) {
+    const fullPath = join(dirPath, entry.name)
+    if (entry.isDirectory()) {
+      htmlFiles.push(...collectPrerenderedHtmlFiles(fullPath))
+    } else if (entry.isFile() && entry.name.endsWith('.html')) {
+      htmlFiles.push(fullPath)
+    }
+  }
+
+  return htmlFiles
+}
+
+/**
+ * Convert a prerendered HTML file path to a route path.
+ */
+function toRoutePathFromBuiltFile(filePath) {
+  const pagesDir = join(buildDir, 'prerendered/pages')
+  const rel = relative(pagesDir, filePath).replace(/\\/g, '/')
+  if (rel === 'index.html') return '/'
+  return `/${rel.replace(/\.html$/, '')}`
+}
+
+/**
  * Discover testable pages from build output (after build).
- * Falls back to static choices if build output is unavailable.
+ * Falls back to minimal static choices if build output is unavailable.
  */
 function discoverTestPages() {
   const defaults = [
     { path: '/', name: 'Homepage' },
-    { path: '/about', name: 'About Page' }
+    { path: '/about', name: 'About Page' },
+    { path: '/posts', name: 'Posts Listing' }
   ]
 
   try {
-    const postsDir = join(buildDir, 'prerendered/pages/post')
-    if (existsSync(postsDir)) {
-      const files = readdirSync(postsDir)
-      const htmlFiles = files.filter((f) => f.endsWith('.html'))
-      if (htmlFiles.length > 0) {
-        // Pick the first prerendered post
-        const slug = htmlFiles[0].replace(/\.html$/, '')
-        return [...defaults, { path: `/post/${slug}`, name: 'Sample Post Page' }]
-      }
+    const pagesDir = join(buildDir, 'prerendered/pages')
+    if (!existsSync(pagesDir)) {
+      return defaults
     }
+
+    const htmlFiles = collectPrerenderedHtmlFiles(pagesDir)
+    if (htmlFiles.length === 0) {
+      return defaults
+    }
+
+    return htmlFiles
+      .map((filePath) => {
+        const path = toRoutePathFromBuiltFile(filePath)
+        const name = path === '/' ? 'Homepage' : path === '/about' ? 'About Page' : `Page ${path}`
+        return { path, name, filePath }
+      })
+      .sort((a, b) => a.path.localeCompare(b.path))
   } catch (_e) {
     // ignore and fall back to defaults
+    return defaults
   }
-
-  // Fallback: try a common posts listing page if available
-  return [...defaults, { path: '/posts', name: 'Posts Listing' }]
 }
 
 /**
@@ -76,7 +111,9 @@ const config = {
     'twitter:image',
     'canonical'
   ],
-  requiredStructuralTags: ['title', 'description', 'canonical']
+  requiredStructuralTags: ['title', 'description', 'canonical'],
+  // Some meta tags are intentionally repeatable by spec/content model.
+  allowDuplicateMetaTags: ['article:tag']
   // Pages to test are discovered after build to match prerendered output
 }
 
@@ -155,6 +192,10 @@ function validatePageSEO(htmlContent, pageName) {
 
   // Check for duplicates
   Object.entries(duplicates).forEach(([key, values]) => {
+    if (config.allowDuplicateMetaTags.includes(key)) {
+      return
+    }
+
     issues.push({
       type: 'duplicate',
       tag: key,
@@ -528,10 +569,11 @@ async function main() {
     const pagesToTest = discoverTestPages()
 
     // Test each discovered page
-    for (const { path, name } of pagesToTest) {
+    for (const { path, name, filePath } of pagesToTest) {
       log(`Validating page: ${name} (${path})`)
 
-      const htmlContent = getBuiltPageHTML(path)
+      const htmlContent =
+        filePath && existsSync(filePath) ? readFileSync(filePath, 'utf-8') : getBuiltPageHTML(path)
       if (!htmlContent) {
         log(`  ⚠️  Could not read built HTML for ${path}`, 'warn')
         pageResults.push({

@@ -256,7 +256,7 @@
 
 <svelte:head>
   <title>{data.title}</title>
-  {#if !$page.data.post && !$page.route.id?.includes('/about')}
+  {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
     <meta name="description" content={description} />
   {/if}
   <meta name="author" content={author} />

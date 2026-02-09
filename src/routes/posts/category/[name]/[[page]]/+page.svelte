@@ -58,6 +58,8 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={data.seo.title} />
   <meta name="twitter:description" content={data.seo.description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${data.category} 카테고리 대표 이미지`} />
 
   {@html jsonLdScript(collectionPageJsonLd)}
 </svelte:head>
