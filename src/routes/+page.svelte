@@ -42,6 +42,7 @@
           decoding="async"
         />
       </a>
+      <h1 class="sr-only">{name} - life log</h1>
       <div class="flex gap-6">
         <SocialLinks />
       </div>

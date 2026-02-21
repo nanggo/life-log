@@ -349,5 +349,10 @@
     >
       <slot />
     </main>
+    <footer
+      class="w-full max-w-2xl mx-auto py-8 text-center text-sm text-zinc-500 dark:text-zinc-400"
+    >
+      <p>&copy; {new Date().getFullYear()} {name}. All rights reserved.</p>
+    </footer>
   </div>
 </div>

@@ -61,9 +61,13 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:site_name" content={name} />
+  <meta property="og:locale" content="ko_KR" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={`${data.seo.title} - ${name}'s life log`} />
   <meta name="twitter:description" content={data.seo.description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${data.tagName} 태그 - ${name}`} />
 
   {@html jsonLdScript(collectionPageJsonLd)}
 </svelte:head>

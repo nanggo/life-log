@@ -3,7 +3,7 @@
 // credit: https://scottspence.com/posts/make-an-rss-feed-with-sveltekit#add-posts-for-the-rss-feed
 
 import { posts } from '$lib/data/posts'
-import { name, website } from '$lib/info'
+import { name, author, website } from '$lib/info'
 import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
 
@@ -28,11 +28,21 @@ export async function GET({ setHeaders }) {
     'Last-Modified': lastModified
   })
 
+  const escapeXml = (str) =>
+    str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+
   const xml = `<rss xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
       <channel>
         <title>${name}'s life log</title>
         <link>${website}</link>
         <description>${websiteDescription}</description>
+        <language>ko</language>
+        <managingEditor>${author}</managingEditor>
         <atom:link href="${website}/rss.xml" rel="self" type="application/rss+xml" />
         ${posts
           .map(
@@ -40,10 +50,21 @@ export async function GET({ setHeaders }) {
               `
               <item>
                 <guid>${getPostUrl(post.slug)}</guid>
-                <title>${post.title}</title>
-                <description>${post.preview.text}</description>
+                <title>${escapeXml(post.title)}</title>
+                <description>${escapeXml(post.preview.text)}</description>
                 <link>${getPostUrl(post.slug)}</link>
-                <pubDate>${new Date(post.date).toUTCString()}</pubDate>
+                <dc:creator>${author}</dc:creator>
+                <pubDate>${new Date(post.date).toUTCString()}</pubDate>${
+                  post.category
+                    ? `
+                <category>${escapeXml(post.category)}</category>`
+                    : ''
+                }${(post.tags || [])
+                  .map(
+                    (tag) => `
+                <category>${escapeXml(tag)}</category>`
+                  )
+                  .join('')}
             </item>
           `
           )
