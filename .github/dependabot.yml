@@ -1,39 +1,39 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: 'weekly'
+      day: 'monday'
     open-pull-requests-limit: 10
     labels:
-      - "dependencies"
+      - 'dependencies'
     groups:
       svelte:
         patterns:
-          - "svelte*"
-          - "@sveltejs/*"
+          - 'svelte*'
+          - '@sveltejs/*'
       testing:
         patterns:
-          - "vitest*"
-          - "@vitest/*"
-          - "@testing-library/*"
+          - 'vitest*'
+          - '@vitest/*'
+          - '@testing-library/*'
       linting:
         patterns:
-          - "eslint*"
-          - "prettier*"
-          - "@typescript-eslint/*"
+          - 'eslint*'
+          - 'prettier*'
+          - '@typescript-eslint/*'
       tailwind:
         patterns:
-          - "tailwindcss*"
-          - "@tailwindcss/*"
-          - "autoprefixer"
-          - "postcss*"
+          - 'tailwindcss*'
+          - '@tailwindcss/*'
+          - 'autoprefixer'
+          - 'postcss*'
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      day: "monday"
+      interval: 'weekly'
+      day: 'monday'
     labels:
-      - "ci"
+      - 'ci'
