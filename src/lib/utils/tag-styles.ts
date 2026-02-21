@@ -7,6 +7,8 @@ export const TAG_STYLES = {
   selected: 'bg-teal-100 text-teal-800 dark:bg-teal-800 dark:text-teal-100',
   unselected:
     'bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600',
+  muted:
+    'bg-zinc-50 text-zinc-500 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:active:bg-zinc-700',
   clickable:
     'cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1',
   nonClickable: 'cursor-default'

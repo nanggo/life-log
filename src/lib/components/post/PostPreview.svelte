@@ -2,23 +2,19 @@
   import { Card } from '../ui/Card'
   import { ArrowRightIcon } from '../ui/Icon'
 
-  import { goto } from '$app/navigation'
   import type { Post } from '$lib/types'
   import { createSafeSlug } from '$lib/utils/posts'
+  import { TAG_STYLES } from '$lib/utils/tag-styles'
 
   export let post: Post
   // 프리뷰에서 최대로 표시할 태그 개수 (기본값: 3개)
   export let maxTagsToShow: number = 3
 
-  // 태그 클릭 시 필터링
-  const handleTagClick = (tag: string): void => {
-    goto(`/tags/${encodeURIComponent(tag)}`)
-  }
-
-  // 더보기 클릭 시 포스트 페이지로 이동
-  const handleMoreTagsClick = (): void => {
-    goto(getSafeUrl(post.slug))
-  }
+  // Card 내부 태그 링크용 기본 클래스 (compact 사이즈 + z-index for Card overlay)
+  const tagBase =
+    'relative z-30 flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap no-underline'
+  const tagClass = `${tagBase} ${TAG_STYLES.unselected} ${TAG_STYLES.clickable}`
+  const tagMutedClass = `${tagBase} ${TAG_STYLES.muted} ${TAG_STYLES.clickable}`
 
   // 태그 제한 처리
   $: visibleTags = post.tags ? post.tags.slice(0, maxTagsToShow) : []
@@ -39,29 +35,31 @@
   }
 </script>
 
-<Card href={getSafeUrl(post.slug)} data-sveltekit-prefetch>
+<Card href={getSafeUrl(post.slug)}>
   <slot slot="eyebrow" name="eyebrow" />
   <slot slot="title">{post.title}</slot>
   <div slot="description" class="prose dark:prose-invert">
     {@html post.preview.html ?? ''}
     <div class="flex flex-wrap gap-2 mt-2">
       {#each visibleTags as tag}
-        <button
-          class="flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap bg-zinc-100 text-zinc-800 hover:bg-zinc-200 active:bg-zinc-300 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600 cursor-pointer touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1"
-          on:click|stopPropagation|preventDefault={() => handleTagClick(tag)}
+        <a
+          href="/tags/{encodeURIComponent(tag)}"
+          class={tagClass}
+          data-sveltekit-preload-data="viewport"
           aria-label={`View posts tagged with ${tag}`}
         >
           #{tag}
-        </button>
+        </a>
       {/each}
       {#if hasMoreTags}
-        <button
-          class="flex-shrink-0 px-3 py-2 min-h-[36px] text-xs font-medium rounded-full transition-all duration-200 whitespace-nowrap bg-zinc-50 text-zinc-500 hover:bg-zinc-100 active:bg-zinc-200 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 dark:active:bg-zinc-700 cursor-pointer touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1"
-          on:click|stopPropagation|preventDefault={handleMoreTagsClick}
+        <a
+          href={getSafeUrl(post.slug)}
+          class={tagMutedClass}
+          data-sveltekit-preload-data="viewport"
           aria-label={`View ${hiddenTagsCount} more tags for this post`}
         >
           +{hiddenTagsCount}개
-        </button>
+        </a>
       {/if}
     </div>
   </div>

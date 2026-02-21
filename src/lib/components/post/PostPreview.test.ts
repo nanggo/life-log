@@ -1,16 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/svelte'
+import { render, screen } from '@testing-library/svelte'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import PostPreview from './PostPreview.svelte'
 
-import { goto } from '$app/navigation'
 import type { Post } from '$lib/types'
 import { Category } from '$lib/types/blog'
-
-// Mock goto function
-vi.mock('$app/navigation', () => ({
-  goto: vi.fn()
-}))
 
 // Mock createSafeSlug function
 vi.mock('$lib/utils/posts', () => ({
@@ -79,41 +73,29 @@ describe('PostPreview 컴포넌트', () => {
     expect(screen.queryByText(/\+\d+개/)).not.toBeInTheDocument()
   })
 
-  it('태그 클릭 시 필터 페이지로 이동한다', async () => {
+  it('태그가 올바른 링크를 가진다', () => {
     render(PostPreview, { post: mockPost })
 
     const jsTag = screen.getByText('#JavaScript')
-    await fireEvent.click(jsTag)
-
-    expect(goto).toHaveBeenCalledWith('/tags/JavaScript')
+    expect(jsTag.closest('a')).toHaveAttribute('href', '/tags/JavaScript')
   })
 
-  it('더보기 태그 버튼 클릭 시 포스트 페이지로 이동한다', async () => {
+  it('더보기 버튼이 포스트 페이지 링크를 가진다', () => {
     render(PostPreview, { post: mockPost, maxTagsToShow: 2 })
 
     const moreButton = screen.getByText('+2개')
-    await fireEvent.click(moreButton)
-
-    expect(goto).toHaveBeenCalledWith('/post/test-post-slug')
+    expect(moreButton.closest('a')).toHaveAttribute('href', '/post/test-post-slug')
   })
 
-  it('태그 클릭 시 이벤트 전파가 차단된다', async () => {
-    const cardClickHandler = vi.fn()
-    const { container } = render(PostPreview, { post: mockPost })
-
-    // 카드 링크에 클릭 이벤트 리스너 추가
-    const cardLink = container.querySelector('a')
-    cardLink?.addEventListener('click', cardClickHandler)
+  it('태그 링크에 preload 속성이 있다', () => {
+    render(PostPreview, { post: mockPost })
 
     const jsTag = screen.getByText('#JavaScript')
-    await fireEvent.click(jsTag)
-
-    // 태그 클릭 시 goto가 호출되지만 카드 클릭 이벤트는 호출되지 않아야 함
-    expect(goto).toHaveBeenCalledWith('/tags/JavaScript')
-    expect(cardClickHandler).not.toHaveBeenCalled()
+    const link = jsTag.closest('a')
+    expect(link).toHaveAttribute('data-sveltekit-preload-data', 'viewport')
   })
 
-  it('특수 문자가 포함된 태그가 올바르게 인코딩된다', async () => {
+  it('특수 문자가 포함된 태그가 올바르게 인코딩된다', () => {
     const postWithSpecialTags: Post = {
       ...mockPost,
       tags: ['C++', 'React.js', '한글태그']
@@ -122,19 +104,16 @@ describe('PostPreview 컴포넌트', () => {
     render(PostPreview, { post: postWithSpecialTags })
 
     const cppTag = screen.getByText('#C++')
-    await fireEvent.click(cppTag)
-
-    expect(goto).toHaveBeenCalledWith('/tags/C%2B%2B')
+    expect(cppTag.closest('a')).toHaveAttribute('href', '/tags/C%2B%2B')
 
     const reactTag = screen.getByText('#React.js')
-    await fireEvent.click(reactTag)
-
-    expect(goto).toHaveBeenCalledWith('/tags/React.js')
+    expect(reactTag.closest('a')).toHaveAttribute('href', '/tags/React.js')
 
     const koreanTag = screen.getByText('#한글태그')
-    await fireEvent.click(koreanTag)
-
-    expect(goto).toHaveBeenCalledWith('/tags/%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8')
+    expect(koreanTag.closest('a')).toHaveAttribute(
+      'href',
+      '/tags/%ED%95%9C%EA%B8%80%ED%83%9C%EA%B7%B8'
+    )
   })
 
   it('Read 액션 버튼이 올바르게 렌더링된다', () => {

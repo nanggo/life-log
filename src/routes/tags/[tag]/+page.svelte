@@ -15,13 +15,6 @@
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
   $: pageUrl = new URL($page.url.pathname, website).href
 
-  // Handle tag click - navigate to that tag's page
-  const handleTagClick = (tag: string) => {
-    if (tag !== data.tagName) {
-      window.location.href = `/tags/${encodeURIComponent(tag)}`
-    }
-  }
-
   // Extract unique tags from posts (excluding current tag)
   $: allTagsFromPosts = [...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))]
     .filter((tag) => tag !== data.tagName)
@@ -95,12 +88,7 @@
     {#if allTagsFromPosts && allTagsFromPosts.length > 0}
       <div class="mt-8">
         <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4">관련 태그</h2>
-        <TagList
-          tags={allTagsFromPosts}
-          clickable={true}
-          selectedTag={data.tagName}
-          {handleTagClick}
-        />
+        <TagList tags={allTagsFromPosts} clickable={true} selectedTag={data.tagName} />
       </div>
     {/if}
 
