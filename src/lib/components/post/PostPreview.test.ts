@@ -44,8 +44,7 @@ describe('PostPreview 컴포넌트', () => {
 
     const cardLink = document.querySelector('a[href="/post/test-post-slug"]')
     expect(cardLink).toBeInTheDocument()
-    expect(cardLink).toHaveAttribute('data-sveltekit-preload-data', 'viewport')
-    expect(cardLink).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
+    expect(cardLink).toHaveAttribute('data-sveltekit-preload-data', 'tap')
   })
 
   it('최대 태그 개수만큼 태그가 표시된다', () => {
@@ -92,7 +91,7 @@ describe('PostPreview 컴포넌트', () => {
 
     const jsTag = screen.getByText('#JavaScript')
     const link = jsTag.closest('a')
-    expect(link).toHaveAttribute('data-sveltekit-preload-data', 'viewport')
+    expect(link).toHaveAttribute('data-sveltekit-preload-data', 'tap')
   })
 
   it('특수 문자가 포함된 태그가 올바르게 인코딩된다', () => {

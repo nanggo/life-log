@@ -45,7 +45,7 @@
         <a
           href="/tags/{encodeURIComponent(tag)}"
           class={tagClass}
-          data-sveltekit-preload-data="viewport"
+          data-sveltekit-preload-data="tap"
           aria-label={`View posts tagged with ${tag}`}
         >
           #{tag}
@@ -55,7 +55,7 @@
         <a
           href={getSafeUrl(post.slug)}
           class={tagMutedClass}
-          data-sveltekit-preload-data="viewport"
+          data-sveltekit-preload-data="tap"
           aria-label={`View ${hiddenTagsCount} more tags for this post`}
         >
           +{hiddenTagsCount}개
