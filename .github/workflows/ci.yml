@@ -55,7 +55,7 @@ jobs:
 
       - name: 커버리지 결과 아티팩트 저장
         if: github.event_name == 'pull_request'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: coverage-summary
           path: coverage/coverage-summary.json
