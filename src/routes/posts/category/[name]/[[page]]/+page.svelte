@@ -2,7 +2,7 @@
   import { page } from '$app/stores'
   import { Breadcrumb, Pagination } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
-  import { website } from '$lib/info'
+  import { name as siteName, website } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
@@ -55,9 +55,13 @@
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:type" content="image/png" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:site_name" content={siteName} />
+  <meta property="og:locale" content="ko_KR" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content={data.seo.title} />
   <meta name="twitter:description" content={data.seo.description} />
+  <meta name="twitter:image" content={ogImage} />
+  <meta name="twitter:image:alt" content={`${data.category} 카테고리 - ${siteName}`} />
 
   {@html jsonLdScript(collectionPageJsonLd)}
 </svelte:head>
