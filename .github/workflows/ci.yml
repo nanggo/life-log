@@ -103,7 +103,7 @@ jobs:
           name: coverage-summary
 
       - name: PR에 커버리지 코멘트
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         continue-on-error: true
         with:
           script: |
