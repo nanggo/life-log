@@ -7,7 +7,7 @@ describe('generateCacheHeaders', () => {
     { slug: 'post-1', date: '2024-06-01', updated: '2024-06-15' },
     { slug: 'post-2', date: '2024-05-01' },
     { slug: 'post-3', date: '2024-07-01' }
-  ]
+  ] as any
 
   it('returns etag and lastModified', () => {
     const headers = generateCacheHeaders(posts)
@@ -35,7 +35,7 @@ describe('generateCacheHeaders', () => {
 
   it('produces different etags for different content', () => {
     const headers1 = generateCacheHeaders(posts)
-    const headers2 = generateCacheHeaders([{ slug: 'other', date: '2024-01-01' }])
+    const headers2 = generateCacheHeaders([{ slug: 'other', date: '2024-01-01' }] as any)
     expect(headers1.etag).not.toBe(headers2.etag)
   })
 
