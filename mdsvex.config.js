@@ -33,11 +33,16 @@ function optimizeExternalImages() {
   const GITHUB_HOSTS = [
     'github.com/user-attachments/assets/',
     'avatars.githubusercontent.com/',
-    'user-images.githubusercontent.com/',
-    'private-user-images.githubusercontent.com/'
+    'user-images.githubusercontent.com/'
   ]
 
+  // Signed URLs break when query params are modified
+  const SIGNED_HOSTS = ['private-user-images.githubusercontent.com/']
+
   const optimizeUrl = (url, width) => {
+    if (SIGNED_HOSTS.some((host) => url.includes(host))) {
+      return url
+    }
     if (GITHUB_HOSTS.some((host) => url.includes(host))) {
       const parsed = new URL(url)
       parsed.searchParams.set('s', String(width))
