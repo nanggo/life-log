@@ -94,6 +94,7 @@ jobs:
     if: github.event_name == 'pull_request'
     permissions:
       pull-requests: write
+      issues: write
 
     steps:
       - name: 커버리지 아티팩트 다운로드
