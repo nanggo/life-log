@@ -39,8 +39,9 @@ function optimizeExternalImages() {
 
   const optimizeUrl = (url, width) => {
     if (GITHUB_HOSTS.some((host) => url.includes(host))) {
-      const baseUrl = url.split('?')[0]
-      return `${baseUrl}?s=${width}`
+      const parsed = new URL(url)
+      parsed.searchParams.set('s', String(width))
+      return parsed.toString()
     }
     return url
   }
