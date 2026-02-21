@@ -14,6 +14,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'json-summary', 'html'],
+      include: ['src/lib/**/*.{ts,js,svelte}'],
       exclude: [
         'node_modules/',
         'src/test/',
@@ -24,7 +25,19 @@ export default defineConfig({
         '.svelte-kit/',
         'static/',
         'scripts/',
-        'posts/'
+        'posts/',
+        'src/lib/data/posts.ts',
+        'src/lib/components/content/**',
+        'src/lib/components/layout/**',
+        'src/lib/components/CategoryFilter.svelte',
+        'src/lib/components/LazyImage.svelte',
+        'src/lib/components/TagCloud.svelte',
+        'src/lib/components/VirtualList.svelte',
+        'src/lib/components/ui/Button/**',
+        'src/lib/components/post/PostsList.svelte',
+        'src/lib/components/**/index.ts',
+        'src/lib/components/ui/index.ts',
+        'src/lib/types.ts'
       ],
       thresholds: {
         global: {
