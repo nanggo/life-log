@@ -44,7 +44,7 @@ describe('PostPreview 컴포넌트', () => {
 
     const cardLink = document.querySelector('a[href="/post/test-post-slug"]')
     expect(cardLink).toBeInTheDocument()
-    expect(cardLink).toHaveAttribute('data-sveltekit-preload-data', 'tap')
+    expect(cardLink).toHaveAttribute('data-sveltekit-preload-data', 'hover')
   })
 
   it('최대 태그 개수만큼 태그가 표시된다', () => {
