@@ -11,6 +11,7 @@
 		"dev": "vite dev",
 		"build": "node scripts/copy-images.js && vite build",
 		"post": "vite-node scripts/create-post.ts",
+		"generate-post": "vite-node scripts/generate-post.ts",
 		"preview": "vite preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
