@@ -3,9 +3,10 @@ updates:
   - package-ecosystem: 'npm'
     directory: '/'
     schedule:
-      interval: 'weekly'
-      day: 'monday'
-    open-pull-requests-limit: 10
+      interval: 'monthly'
+    # Keep npm dependency noise out of the PR queue.
+    # Security updates are managed separately by GitHub security settings.
+    open-pull-requests-limit: 0
     labels:
       - 'dependencies'
     groups:
@@ -13,27 +14,62 @@ updates:
         patterns:
           - 'svelte*'
           - '@sveltejs/*'
+        update-types:
+          - 'minor'
+          - 'patch'
       testing:
         patterns:
           - 'vitest*'
           - '@vitest/*'
           - '@testing-library/*'
+        update-types:
+          - 'minor'
+          - 'patch'
       linting:
         patterns:
           - 'eslint*'
           - 'prettier*'
           - '@typescript-eslint/*'
+        update-types:
+          - 'minor'
+          - 'patch'
       tailwind:
         patterns:
           - 'tailwindcss*'
           - '@tailwindcss/*'
           - 'autoprefixer'
           - 'postcss*'
+        update-types:
+          - 'minor'
+          - 'patch'
+      misc-dev:
+        dependency-type: 'development'
+        exclude-patterns:
+          - 'svelte*'
+          - '@sveltejs/*'
+          - 'vitest*'
+          - '@vitest/*'
+          - '@testing-library/*'
+          - 'eslint*'
+          - 'prettier*'
+          - '@typescript-eslint/*'
+          - 'tailwindcss*'
+          - '@tailwindcss/*'
+          - 'autoprefixer'
+          - 'postcss*'
+        update-types:
+          - 'minor'
+          - 'patch'
 
   - package-ecosystem: 'github-actions'
     directory: '/'
     schedule:
       interval: 'weekly'
       day: 'monday'
+    open-pull-requests-limit: 3
     labels:
       - 'ci'
+    groups:
+      github-actions:
+        patterns:
+          - '*'
