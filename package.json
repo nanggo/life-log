@@ -77,6 +77,11 @@
 	"engines": {
 		"node": "24.x"
 	},
+	"pnpm": {
+		"overrides": {
+			"rollup": "4.60.3"
+		}
+	},
 	"lint-staged": {
 		"*.{js,ts}": [
 			"prettier --write",
