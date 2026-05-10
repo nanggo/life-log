@@ -52,7 +52,7 @@
 		"lint-staged": "^16.1.2",
 		"mdsvex": "^0.11.0",
 		"mdsvex-relative-images": "^1.0.3",
-		"postcss": "^8.4.16",
+		"postcss": "^8.5.10",
 		"postcss-load-config": "^4.0.1",
 		"prettier": "^3.1.1",
 		"prettier-plugin-svelte": "^3.1.2",
