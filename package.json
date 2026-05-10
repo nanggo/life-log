@@ -90,15 +90,6 @@
 			"prettier --write"
 		]
 	},
-	"pnpm": {
-		"onlyBuiltDependencies": [
-			"@vercel/speed-insights",
-			"esbuild",
-			"sharp",
-			"svelte-preprocess",
-			"unrs-resolver"
-		]
-	},
 	"dependencies": {
 		"@vercel/analytics": "^1.3.1",
 		"@vercel/speed-insights": "^1.0.12",
