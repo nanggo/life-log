@@ -8,7 +8,7 @@ draft: false
 category: 리뷰
 ---
 
-![A conceptual image representing AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)
+![Conceptual representation of AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)
 
 얼리어답터 기질 덕에 ChatGPT-4 출시 직후부터 유료 구독을 시작했다. 그 후 Claude, Cursor, Gemini까지 여러 AI 서비스를 거쳐, 현재는 Gemini와 Claude를 구독하고 있다. 처음 LLM을 접했을 때만 해도 '업그레이드된 심심이' 정도로 생각했지만, 간단한 알고리즘은 물론 실제 동작하는 코드를 짜내는 것을 보고 큰 충격을 받았다.
 

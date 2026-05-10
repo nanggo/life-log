@@ -1,5 +1,7 @@
 import { parse, type HTMLElement } from 'node-html-parser'
 import readingTime from 'reading-time'
+import type { Component } from 'svelte'
+import { render as renderComponent } from 'svelte/server'
 
 import { browser, dev } from '$app/environment'
 import type { PostMetadata } from '$lib/types'
@@ -9,9 +11,7 @@ import { formatDate } from '$lib/utils/date'
 
 // import.meta.glob의 타입 정의
 type PostModule = {
-  default: {
-    render: () => { html: string }
-  }
+  default: Component
   metadata: Omit<PostMetadata, 'tags' | 'preview' | 'slug' | 'readingTime' | 'category'> & {
     tags?: string[] | string
     category?: string // frontmatter에서는 문자열로 입력됨
@@ -168,7 +168,7 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
       .split('/')
       .pop() || ''
 
-  const html = parse(post.default.render().html)
+  const html = parse(renderComponent(post.default).body)
 
   // 본문에서 첫 번째 이미지를 추출 (OG 이미지 등으로 재사용)
   const firstImageElement = html.querySelector('img')

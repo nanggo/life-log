@@ -16,7 +16,7 @@ const config = {
     [
       autolinkHeadings,
       {
-        behavior: 'wrap'
+        behavior: 'append'
       }
     ],
     optimizeExternalImages
