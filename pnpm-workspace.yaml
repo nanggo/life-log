@@ -1,5 +1,8 @@
 packages: []
 
+overrides:
+  rollup: 4.60.3
+
 allowBuilds:
   '@vercel/speed-insights': true
   esbuild: true
