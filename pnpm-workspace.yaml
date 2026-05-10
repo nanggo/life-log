@@ -1,0 +1,8 @@
+packages: []
+
+allowBuilds:
+  '@vercel/speed-insights': true
+  esbuild: true
+  sharp: true
+  svelte-preprocess: true
+  unrs-resolver: true

@@ -1,8 +1,7 @@
 <script lang="ts">
   import '../app.css'
   import '../prism.css'
-  import MoonIcon from 'heroicons-svelte/solid/MoonIcon.svelte'
-  import SunIcon from 'heroicons-svelte/solid/SunIcon.svelte'
+  import { MoonIcon, SunIcon } from 'heroicons-svelte/20/solid'
 
   import type { LayoutData } from './$types'
 
