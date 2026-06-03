@@ -20,15 +20,39 @@ Object.defineProperty(window, 'matchMedia', {
 })
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}))
+class MockIntersectionObserver {
+  observe() {
+    return undefined
+  }
+
+  unobserve() {
+    return undefined
+  }
+
+  disconnect() {
+    return undefined
+  }
+
+  takeRecords() {
+    return []
+  }
+}
+
+global.IntersectionObserver = MockIntersectionObserver as unknown as typeof IntersectionObserver
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn()
-}))
+class MockResizeObserver {
+  observe() {
+    return undefined
+  }
+
+  unobserve() {
+    return undefined
+  }
+
+  disconnect() {
+    return undefined
+  }
+}
+
+global.ResizeObserver = MockResizeObserver as unknown as typeof ResizeObserver
