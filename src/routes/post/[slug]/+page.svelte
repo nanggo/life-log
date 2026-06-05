@@ -46,6 +46,7 @@
   $: url = `${website}/post/${data.post.slug}`
   $: seoTitle = data.post.seoTitle || data.post.title
   $: fullSeoTitle = `${seoTitle} - ${name}`
+  $: fullPostTitle = `${data.post.title} - ${name}`
 
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination
@@ -82,7 +83,7 @@
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content={fullSeoTitle} />
+  <meta property="og:title" content={fullPostTitle} />
   <meta property="og:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta property="og:image" content={ogImage} />
   {#if !isUsingPostImage}
@@ -100,7 +101,7 @@
   <meta
     property="og:image:alt"
     content={data.post.imageAlt ||
-      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullSeoTitle)}
+      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullPostTitle)}
   />
   {#if data.post.tags && data.post.tags.length > 0}
     {#each data.post.tags as tag}
@@ -114,13 +115,13 @@
     <meta name="twitter:site" content={twitterHandle} />
     <meta name="twitter:creator" content={twitterHandle} />
   {/if}
-  <meta name="twitter:title" content={fullSeoTitle} />
+  <meta name="twitter:title" content={fullPostTitle} />
   <meta name="twitter:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="twitter:image" content={ogImage} />
   <meta
     name="twitter:image:alt"
     content={data.post.imageAlt ||
-      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullSeoTitle)}
+      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullPostTitle)}
   />
 
   {@html jsonLdScript(data.jsonLd)}
