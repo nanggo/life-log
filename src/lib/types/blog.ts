@@ -33,6 +33,8 @@ export interface PostMetadata {
   slug: string
   /** 포스트 제목 */
   title: string
+  /** 검색 결과/공유용 제목 (선택사항) */
+  seoTitle?: string
   /** 포스트 설명 */
   description: string
   /** 발행일 */
@@ -49,6 +51,8 @@ export interface PostMetadata {
   preview: PostPreview
   /** 커버 이미지 (선택사항) */
   image?: string
+  /** 커버 이미지 대체 텍스트 */
+  imageAlt?: string
   /** 작성자 정보 (선택사항) */
   author?: string
   /** 읽기 시간 (분) */

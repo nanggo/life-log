@@ -28,6 +28,7 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
     return {
       slug: post.slug,
       title: post.title,
+      seoTitle: post.seoTitle,
       description: post.description,
       date: post.date,
       category: post.category,
@@ -39,7 +40,8 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
       },
       author: post.author,
       readingTime: post.readingTime,
-      image: post.image
+      image: post.image,
+      imageAlt: post.imageAlt
     }
   })
 }

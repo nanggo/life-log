@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types'
 
-import { posts } from '$lib/data/posts'
+import { posts, getCategoryInfos } from '$lib/data/posts'
 import { globalCacheManager, generateCacheKey, CACHE_TAGS } from '$lib/utils/cache-manager'
 
 export const load: PageServerLoad = async () => {
@@ -12,7 +12,8 @@ export const load: PageServerLoad = async () => {
   }
 
   const result = {
-    posts: posts.slice(0, 5)
+    posts: posts.slice(0, 5),
+    categoryInfos: getCategoryInfos()
   }
 
   // 캐싱 (개발 환경에서는 캐시 비활성화)

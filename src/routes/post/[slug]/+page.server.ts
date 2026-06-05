@@ -26,6 +26,27 @@ const safeToISOString = (dateValue: string | Date): string => {
   }
 }
 
+const toPublicImageUrl = (imageUrl: string, slug: string): string => {
+  if (imageUrl.startsWith('http')) {
+    return imageUrl
+  }
+
+  if (imageUrl.startsWith('/')) {
+    return imageUrl
+  }
+
+  if (imageUrl.startsWith('./')) {
+    return `/${slug}/${imageUrl.slice(2)}`
+  }
+
+  return `/${imageUrl}`
+}
+
+const toAbsoluteImageUrl = (imageUrl: string, slug: string): string => {
+  const publicImageUrl = toPublicImageUrl(imageUrl, slug)
+  return publicImageUrl.startsWith('http') ? publicImageUrl : `${website}${publicImageUrl}`
+}
+
 export const load: PageServerLoad = async ({ params }) => {
   const { slug } = params
 
@@ -61,8 +82,14 @@ export const load: PageServerLoad = async ({ params }) => {
 
     // Choose social media image with priority:
     // 1) frontmatter image, 2) 본문에서 추출한 첫 번째 이미지, 3) 생성형 OG 이미지
-    const configuredImage = post.image?.trim()
-    const contentFirstImage = post.firstImageUrl?.trim()
+    const rawConfiguredImage = post.image?.trim()
+    const rawContentFirstImage = post.firstImageUrl?.trim()
+    const configuredImage = rawConfiguredImage
+      ? toAbsoluteImageUrl(rawConfiguredImage, post.slug)
+      : undefined
+    const contentFirstImage = rawContentFirstImage
+      ? toAbsoluteImageUrl(rawContentFirstImage, post.slug)
+      : undefined
     const ogImage =
       configuredImage ||
       contentFirstImage ||
@@ -70,8 +97,16 @@ export const load: PageServerLoad = async ({ params }) => {
         post.title
       )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
     const usedPostImage = !!(configuredImage || contentFirstImage)
+    const publicPost = {
+      ...post,
+      image: rawConfiguredImage ? toPublicImageUrl(rawConfiguredImage, post.slug) : post.image,
+      firstImageUrl: rawContentFirstImage
+        ? toPublicImageUrl(rawContentFirstImage, post.slug)
+        : post.firstImageUrl
+    }
 
     const url = `${website}/post/${post.slug}`
+    const seoTitle = post.seoTitle || post.title
 
     // Create a more SEO-friendly description with simplified fallback logic
     const previewText =
@@ -89,7 +124,7 @@ export const load: PageServerLoad = async ({ params }) => {
     const jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
-      headline: post.title,
+      headline: seoTitle,
       image: ogImage,
       datePublished: safeToISOString(post.date),
       dateModified: safeToISOString(post.updated || post.date),
@@ -133,7 +168,7 @@ export const load: PageServerLoad = async ({ params }) => {
     }
 
     return {
-      post,
+      post: publicPost,
       dynamicDescription,
       jsonLd: JSON.stringify(jsonLd, null, 0),
       breadcrumbLd: JSON.stringify(breadcrumbLd, null, 0),

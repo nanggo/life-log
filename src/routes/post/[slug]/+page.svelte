@@ -6,7 +6,7 @@
   import { afterNavigate } from '$app/navigation'
   import { Image, ToC } from '$lib/components/content'
   import { Breadcrumb, SocialLinks } from '$lib/components/layout'
-  import { PostDate, TagList } from '$lib/components/post'
+  import { PostDate, PostHeroVisual, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar, twitterHandle } from '$lib/info'
   import { jsonLdScript } from '$lib/utils/json-ld'
@@ -24,20 +24,28 @@
   export let data: PageData
 
   // 소셜 이미지가 비어 있을 경우에도 기본 OG 이미지를 보장
-  const defaultOgImageForPost = `https://og-image-korean.vercel.app/**${encodeURIComponent(
+  $: defaultOgImageForPost = `https://og-image-korean.vercel.app/**${encodeURIComponent(
     data.post.title
   )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
-  const ogImage: string =
-    data.socialMediaImage && data.socialMediaImage.trim()
-      ? data.socialMediaImage
-      : defaultOgImageForPost
+  $: postImageUrl = (data.post.image || data.post.firstImageUrl || '').trim()
+  $: postSocialImage = postImageUrl
+    ? postImageUrl.startsWith('http')
+      ? postImageUrl
+      : `${website}${postImageUrl.startsWith('/') ? postImageUrl : `/${postImageUrl}`}`
+    : ''
+  $: ogImage =
+    postSocialImage ||
+    (data.socialMediaImage && data.socialMediaImage.trim()) ||
+    defaultOgImageForPost
+  $: isUsingPostImage = Boolean(postSocialImage)
 
   // 퍼블리시/수정 시간이 비어 있지 않도록 보강
-  const published: string = data.publishedDate || new Date(data.post.date).toISOString()
-  const modified: string =
-    data.modifiedDate || new Date(data.post.updated || data.post.date).toISOString()
+  $: published = data.publishedDate || new Date(data.post.date).toISOString()
+  $: modified = data.modifiedDate || new Date(data.post.updated || data.post.date).toISOString()
 
-  const url: string = `${website}/post/${data.post.slug}`
+  $: url = `${website}/post/${data.post.slug}`
+  $: seoTitle = data.post.seoTitle || data.post.title
+  $: fullSeoTitle = `${seoTitle} - ${name}`
 
   // if we came from /posts, we will use history to go back to preserve
   // posts pagination
@@ -66,7 +74,7 @@
 </script>
 
 <svelte:head>
-  <title>{data.post.title} - {name}</title>
+  <title>{fullSeoTitle}</title>
   <meta name="description" content={data.dynamicDescription?.trim() || data.post.title} />
   <!-- author는 +layout.svelte에서 관리됨 -->
   <link rel="canonical" href={url} />
@@ -74,10 +82,10 @@
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content={data.post.title} />
+  <meta property="og:title" content={fullSeoTitle} />
   <meta property="og:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta property="og:image" content={ogImage} />
-  {#if !data.isPostImage}
+  {#if !isUsingPostImage}
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:image:type" content="image/png" />
@@ -91,7 +99,8 @@
   <meta property="article:section" content={data.post.category} />
   <meta
     property="og:image:alt"
-    content={data.isPostImage ? `${data.post.title}의 관련 이미지` : `${data.post.title} - ${name}`}
+    content={data.post.imageAlt ||
+      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullSeoTitle)}
   />
   {#if data.post.tags && data.post.tags.length > 0}
     {#each data.post.tags as tag}
@@ -101,14 +110,17 @@
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:site" content={twitterHandle} />
-  <meta name="twitter:creator" content={twitterHandle} />
-  <meta name="twitter:title" content={data.post.title} />
+  {#if twitterHandle}
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:creator" content={twitterHandle} />
+  {/if}
+  <meta name="twitter:title" content={fullSeoTitle} />
   <meta name="twitter:description" content={data.dynamicDescription?.trim() || data.post.title} />
   <meta name="twitter:image" content={ogImage} />
   <meta
     name="twitter:image:alt"
-    content={data.isPostImage ? `${data.post.title}의 관련 이미지` : `${data.post.title} - ${name}`}
+    content={data.post.imageAlt ||
+      (isUsingPostImage ? `${data.post.title}의 관련 이미지` : fullSeoTitle)}
   />
 
   {@html jsonLdScript(data.jsonLd)}
@@ -150,6 +162,7 @@
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
         <TagList tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
+        <PostHeroVisual post={data.post} />
       </header>
 
       <!-- render the post -->
