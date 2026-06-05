@@ -1,5 +1,7 @@
 ---
 title: docker-compose 서비스 업데이트 및 실행
+seoTitle: 'docker-compose 서비스 업데이트 스크립트'
+description: '오라클 클라우드 인스턴스에서 Docker Compose로 운영 중인 개인 서비스를 업데이트하는 스크립트를 정리했다. 이미지 pull, 컨테이너 재시작, docker system prune까지 반복 작업을 줄이기 위한 간단한 운영 기록이다.'
 date: 2024-07-19T17:00:00.000Z
 tags:
   - devops

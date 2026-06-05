@@ -1,5 +1,7 @@
 ---
 title: gatsby에 vercel audience analytics 설정하기
+seoTitle: 'Gatsby에 Vercel Audience Analytics 설정하기'
+description: 'Gatsby 블로그 배포를 Netlify에서 Vercel로 옮긴 뒤 Audience Analytics를 붙인 기록이다. 공식 가이드의 others 예시를 참고해 설정하고, 개인 블로그에서도 방문자 수와 Core Web Vitals 지표가 정상 수집되는지 확인했다.'
 date: 2023-04-12T01:05:11.000Z
 tags:
   - frontend

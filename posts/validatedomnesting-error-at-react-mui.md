@@ -1,5 +1,7 @@
 ---
 title: react mui에서 validateDOMNesting 에러
+seoTitle: 'React MUI validateDOMNesting 에러 해결'
+description: 'React Material UI TableCell 사용 중 validateDOMNesting 오류가 발생한 원인과 해결 방법을 정리했다. 올바른 table, thead, tbody, tr 구조 안에 th와 td를 배치해야 하는 이유를 설명한다.'
 date: 2023-03-25T14:03:27.000Z
 tags:
   - frontend
