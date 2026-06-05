@@ -1,5 +1,6 @@
 ---
 title: 'tmux 입문: SSH가 끊겨도 작업이 유지되는 원격 개발 환경 세팅 (+ 내 설정/치트시트)'
+seoTitle: 'tmux 원격 개발 환경 세팅 가이드'
 date: '2025-12-29'
 category: 개발
 tags:
@@ -10,7 +11,7 @@ tags:
   - 개발환경
   - 생산성
 draft: false
-description: '맥미니를 개발 머신으로 쓰면서 tmux로 dev 서버와 작업을 끊김 없이 유지하는 방법. 바로 쓸 수 있는 ~/.tmux.conf 설정과 필수 단축키 정리.'
+description: '맥미니를 원격 개발 머신으로 쓰는 환경에서 tmux로 세션을 유지하고 화면을 나누는 방법을 정리했다. SSH가 끊겨도 dev 서버와 작업 공간을 살리는 설정, detach와 attach 흐름, 자주 쓰는 단축키를 함께 담았다.'
 ---
 
 ## tmux 소개

@@ -1,5 +1,7 @@
 ---
 title: Google domain에서 cloudflare로
+seoTitle: 'Google Domains에서 Cloudflare로 이전하기'
+description: 'Google Domains 종료를 계기로 도메인을 Cloudflare로 이전한 경험을 정리했다. DDNS 구현, Cloudflare API, 허용 포트 확인, nginx-proxy-manager 활용까지 개인 인프라 운영 관점에서 다룬다.'
 date: 2023-06-22T00:06:44.000Z
 tags:
   - devops

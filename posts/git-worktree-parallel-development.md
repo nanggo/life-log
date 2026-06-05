@@ -1,5 +1,7 @@
 ---
 title: Git Worktree로 Claude Code 병렬 개발하기
+seoTitle: 'Git Worktree로 AI 개발 세션 병렬 관리하기'
+description: 'Claude Code로 작업할 때 브랜치 전환으로 컨텍스트가 끊기는 문제를 Git worktree로 줄이는 방법이다. 여러 작업 디렉터리에서 기능 개발, 핫픽스, 리뷰를 병렬로 진행하는 흐름과 주의사항을 정리한 글이다.'
 slug: git-worktree-parallel-development
 date: '2025-07-10'
 tags:

@@ -106,12 +106,11 @@ export const load: PageServerLoad = async ({ params }) => {
     }
 
     const url = `${website}/post/${post.slug}`
-    const seoTitle = post.seoTitle || post.title
 
     // Create a more SEO-friendly description with simplified fallback logic
     const previewText =
-      post.preview?.text?.trim() ||
       post.description?.trim() ||
+      post.preview?.text?.trim() ||
       post.title?.trim() ||
       '낭고넷 블로그 포스트'
 
@@ -124,7 +123,7 @@ export const load: PageServerLoad = async ({ params }) => {
     const jsonLd = {
       '@context': 'https://schema.org',
       '@type': 'BlogPosting',
-      headline: seoTitle,
+      headline: post.title,
       image: ogImage,
       datePublished: safeToISOString(post.date),
       dateModified: safeToISOString(post.updated || post.date),
