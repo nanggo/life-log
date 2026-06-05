@@ -1,12 +1,16 @@
 ---
 title: Docker Compose에서 alias 설정하기
+seoTitle: 'Docker Compose dc alias 설정 방법'
+description: 'OCI 인스턴스에서 Docker Compose 명령을 자주 입력하는 번거로움을 줄이기 위해 dc alias를 설정한 기록이다. zshrc에 별칭을 추가하고 설정을 반영한 뒤 컨테이너 실행 명령을 짧게 쓰는 간단한 개발 환경 팁을 정리했다.'
 date: 2023-05-21T19:05:50.000Z
 tags:
+  - docker
+  - docker-compose
   - devops
+  - tip
 draft: false
 slug: setting-up-alias-in-docker-compose
 category: 개발
-image: ''
 ---
 
 Oracle Cloud Infrastructure(OCI)에서 Docker를 다룰 때, 매번 `docker-compose`를 길게 입력하는 게 은근 귀찮을 때가 있다. 이럴 때 `dc`라는 alias를 설정해두면 훨씬 편하게 쓸 수 있다.

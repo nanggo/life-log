@@ -1,12 +1,15 @@
 ---
 title: 깊은 복사
+seoTitle: 'JavaScript 깊은 복사 방법 비교'
+description: 'JavaScript에서 깊은 복사를 구현하는 방법을 정리한다. JSON 변환, 재귀 복사, structuredClone의 차이와 한계를 비교하고 면접이나 실무에서 순환 참조, Map, Set 같은 자료형을 다룰 때 주의할 점을 함께 다룬다.'
 date: 2023-06-15T10:07:04.000Z
 tags:
+  - javascript
   - frontend
+  - structuredClone
 draft: false
 slug: deep-copy
 category: 개발
-image: ''
 ---
 
 깊은 복사는 항상 라이브러리를 이용해서 썼었다. 최근에 면접에서 깊은 복사에 대한 질문을 받고 직접 구현해보는 라이브 코딩 시간을 가졌었는데 나는 recursion을 이용해서 구현했었다. Recursion 외에도 방법이 존재하기에 생각나는 김에 정리해본다.

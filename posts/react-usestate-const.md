@@ -1,9 +1,13 @@
 ---
 title: 'React의 useState, 어떻게 const 상수를 변경할까?'
+seoTitle: 'React useState와 const 동작 원리'
+description: 'React에서 const로 선언한 useState 값이 어떻게 바뀌는지 설명한다. setState가 변수를 직접 수정하는 것이 아니라 새 렌더링을 요청한다는 점, 매 렌더링마다 새 상수가 생기는 구조, 클로저 기반 상태 보관 방식을 풀어쓴 글이다.'
 slug: react-usestate-const
 date: '2025-07-23 20:08:41'
 tags:
   - react
+  - frontend
+  - state
 draft: false
 category: 개발
 ---

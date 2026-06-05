@@ -1,10 +1,15 @@
 ---
 title: '안녕 레디쉬'
+seoTitle: '레디쉬 프론트엔드 개발자 회고'
+description: '레디쉬에서 프론트엔드 엔지니어로 일하며 만난 사람, 자율적인 문화, 제주 워케이션, 합병과 작별의 시간을 기록한 회고다. 좋은 팀과 제품을 떠나보내며 남은 고마움과 아쉬움, 커리어에서 오래 남은 회사 경험을 정리했다.'
 date: 2023-04-01T15:04:11.000Z
 tags:
   - 회고
+  - 레디쉬
+  - 커리어
 draft: false
 image: ./radish.png
+imageAlt: '레디쉬에서의 시간을 떠올리게 하는 무 이미지'
 slug: 'goodbye-radish-fiction'
 category: 일상
 ---

@@ -1,14 +1,16 @@
 ---
 title: 'Next.js에서 MFE 환경의 경로 이슈를 우회하는 법'
+seoTitle: 'Next.js MFE 내부 경로 이슈 우회하기'
+description: 'Next.js 14.2 Pages Router 앱을 MFE 구조로 전환하며 /_next/data와 /_next/image 경로가 게이트웨이 정책과 충돌한 문제를 분석한다. basePath, assetPrefix, rewrites, 번들 치환 우회까지 검증한 사례다.'
 slug: 'nextjs-mfe-internal-path-workaround'
 date: '2025-11-11 23:58:43'
-category: '개발'
 tags:
   - nextjs
   - micro-frontend
   - frontend
+  - mfe
+category: '개발'
 draft: false
-description: 'Next.js 14.2 Pages Router 기반 단일 앱을 MFE로 전환하는 과정에서 /_next/data, /_next/image 등의 내부 경로가 게이트웨이 정책과 충돌해 404가 발생하는 문제를 basePath/assetPrefix/rewrites/번들 치환으로 우회한 사례.'
 ---
 
 > **환경**: 본 글은 **Next.js 14.2 · Pages Router 기준**으로 재현/검증했습니다.<br />

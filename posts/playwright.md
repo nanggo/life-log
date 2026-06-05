@@ -1,9 +1,13 @@
 ---
 title: playwright
+seoTitle: 'Playwright로 반복 작업 자동화하기'
+description: 'Playwright를 E2E 테스트뿐 아니라 반복 작업 자동화 도구로 사용해본 기록이다. Telegram Bot, GitHub Actions, Node 버전 이슈를 겪으며 TypeScript 기반 자동화 환경을 구성한 경험과 배운 점을 정리했다.'
 date: '2025-01-07 14:14:33'
 tags:
-  - frontend
+  - playwright
   - testing
+  - automation
+  - frontend
 draft: false
 slug: playwright
 category: 개발

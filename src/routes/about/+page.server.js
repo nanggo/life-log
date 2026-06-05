@@ -33,7 +33,7 @@ export async function load() {
       title,
       lastUpdated,
       description:
-        '도전을 좋아하고, 효율적으로 일하며, 커뮤니케이션을 좋아하는 Frontend Engineer입니다.'
+        '유지성은 TypeScript, React, Next.js, Svelte를 다루는 프론트엔드 엔지니어다. 자율과 책임, 효율적인 협업, 명확한 커뮤니케이션을 바탕으로 제품과 팀에 필요한 웹 경험을 만들며, 여러 도메인의 프로젝트를 프리랜서로 수행한 경험도 함께 소개한다.'
     }
 
     return {

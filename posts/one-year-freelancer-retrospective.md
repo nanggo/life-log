@@ -1,8 +1,13 @@
 ---
 title: 프리랜서 1년 회고
+seoTitle: '프리랜서 1년 회고와 재택근무에 대한 생각'
+description: '프리랜서 생활 1년을 돌아보며 SI 프로젝트, 재택근무, 클라이언트와의 협업, 자유와 불확실성의 균형을 정리했다. SK, 빗썸, 안랩 프로젝트에서 느낀 점과 앞으로 어떤 방식으로 일하고 싶은지, 독립적으로 일하는 감각도 기록했다.'
 date: '2024-10-17'
 tags:
   - 회고
+  - 프리랜서
+  - 재택근무
+  - 커리어
 draft: false
 slug: one-year-freelancer-retrospective
 category: 생각

@@ -1,12 +1,15 @@
 ---
 title: HTML input의 accept 속성 이해하기
+seoTitle: 'HTML input accept 속성 사용법'
+description: 'HTML input accept 속성으로 업로드 가능한 파일 유형을 제한하는 방법을 정리했다. 이미지, 비디오, 확장자 필터 예시와 사용자 경험, 서버 처리, 보안 관점의 주의점, 서버 검증이 여전히 필요하다는 점을 함께 다룬다.'
 date: 2023-11-14T16:11:45.000Z
 tags:
+  - html
   - frontend
+  - file-upload
 draft: false
 slug: understanding-html-input-accept-attribute
 category: 개발
-image: ''
 ---
 
 웹 기술이 발전함에 따라 사용자 경험과 효율적인 데이터 처리의 중요성이 커지고 있다. 이런 맥락에서 HTML 폼의 `accept` 속성은 중요한 역할을 한다. 사용자가 업로드할 파일 유형을 제어하는데 있어 이 속성은 종종 간과되지만, 매우 강력한 기능을 제공하여 사용자 경험과 백엔드 처리 효율성을 향상시킨다.

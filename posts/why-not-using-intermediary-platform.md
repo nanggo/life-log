@@ -1,8 +1,12 @@
 ---
 title: 중계 플랫폼을 쓰지 않는 이유
+seoTitle: '프리랜서가 중계 플랫폼을 쓰지 않는 이유'
+description: '프리랜서 개발자가 중계 플랫폼을 쓰지 않게 된 이유를 정리했다. 중복 수수료, 낮은 피드백 책임감, 짧은 체험 계약 구조, 양보다 질이 부족한 매칭 경험을 바탕으로 직접 계약을 선호하게 된 배경과 실제 매칭 과정의 피로감을 설명한다.'
 date: '2024-12-12'
 tags:
-  - 생각
+  - 프리랜서
+  - 중계플랫폼
+  - SI
 draft: false
 slug: why-not-using-intermediary-platform
 category: 생각

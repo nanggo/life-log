@@ -1,12 +1,15 @@
 ---
 title: 근황2
+seoTitle: 'Rust, Svelte 공부와 블로그 이전 근황'
+description: 'Rust와 Svelte를 공부하며 느낀 점, 블로그 프레임워크 이전 고민, 독서와 운동, 알고리즘 풀이 같은 루틴을 정리한 근황 글이다. 당시 개발 공부 방향과 개인 블로그를 어떻게 옮길지에 대한 생각을 함께 기록했다.'
 date: 2023-07-07T15:08:37.000Z
 tags:
   - 일상
+  - 개발공부
+  - 근황
 draft: false
 slug: recent-status-2
 category: 일상
-image: ''
 ---
 
 ### 공부

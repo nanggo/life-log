@@ -27,7 +27,7 @@
       'https://blog.nanggo.net'
     ],
     jobTitle: 'Frontend Engineer',
-    description: '도전을 좋아하고, 효율적으로 일하며, 커뮤니케이션을 좋아하는 엔지니어입니다.',
+    description: data.aboutData.description,
     email: 'yamsiri@gmail.com',
     knowsAbout: ['Frontend Development', 'React', 'Vue.js', 'TypeScript', 'Next.js'],
     workLocation: {

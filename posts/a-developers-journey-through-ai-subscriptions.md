@@ -1,11 +1,18 @@
 ---
 title: 'AI 구독 유목민의 기록: 더 나은 도구를 찾아서'
+seoTitle: 'AI 구독 서비스 비교와 개발자 사용기'
+description: 'ChatGPT, Claude, Cursor, Gemini를 유료로 써보며 느낀 장단점과 코딩 생산성 변화를 정리한다. 벤치마크보다 실제 개발 흐름과 구독 비용, 컨텍스트 창, 도구 신뢰도를 기준으로 AI 구독 선택을 돌아본 기록.'
 slug: a-developers-journey-through-ai-subscriptions
 date: '2025-07-08 11:46:55'
 tags:
-  - 생각
+  - AI
+  - 개발도구
+  - 구독
+  - 리뷰
 draft: false
 category: 리뷰
+image: 'https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100?s=1200'
+imageAlt: 'AI 구독 서비스와 개발 도구 사용 경험을 보여주는 이미지'
 ---
 
 ![Conceptual representation of AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)

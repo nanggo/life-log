@@ -1,8 +1,13 @@
 ---
 title: AWS ECR CannotPullContainerError 해결
+seoTitle: 'AWS ECR CannotPullContainerError 해결 방법'
+description: 'AWS CLI v2 전환 이후 ECR 로그인 방식이 바뀌며 발생한 CannotPullContainerError를 해결한 기록이다. get-login에서 get-login-password와 password-stdin으로 바꾸는 핵심 절차를 정리했다.'
 date: 2023-03-16T16:03:34.000Z
 tags:
+  - aws
+  - ecr
   - devops
+  - docker
 draft: false
 slug: resolve-aws-ecr-cannotpullcontainererror
 category: 개발

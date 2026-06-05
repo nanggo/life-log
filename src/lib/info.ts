@@ -9,7 +9,8 @@ export const website: string = 'https://blog.nanggo.net'
 // export const lastName = 'Yoo'
 export const name: string = `낭고넷`
 export const title: string = '낭고넷'
-export const description: string = '순간이 모여 이뤄지는 삶의 궤적'
+export const description: string =
+  '낭고넷은 프론트엔드 개발자 낭고가 기술, 프리랜서 생활, 커리어, 가족과 일상의 생각을 기록하는 개인 블로그다. 순간이 모여 삶의 궤적이 된다는 마음으로 개발 경험과 회고를 남기며, 검색보다 기록의 정확성과 개인적인 맥락을 우선한다.'
 export const author: string = '낭고'
 
 // Used for the landing page & footer of posts

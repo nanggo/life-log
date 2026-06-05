@@ -1,9 +1,14 @@
 ---
 title: 'Zed 에디터: 가장 빠른 코드 편집기'
+seoTitle: 'Zed 에디터 사용 후기와 장단점'
+description: 'Zed 에디터를 설치해 사용해본 뒤 속도와 사용감을 중심으로 장단점을 정리한 리뷰다. VS Code나 Cursor와 비교해 가볍고 빠른 장점, 아직 부족한 디버깅과 테스트 기능, 새로운 도구를 써보는 즐거움을 함께 적었다.'
 slug: zed-editor-review-fastest-code-editor
 date: '2025-05-26 14:35:55'
 tags:
-  - 경험
+  - zed
+  - editor
+  - 개발도구
+  - 리뷰
 draft: false
 category: 리뷰
 ---
