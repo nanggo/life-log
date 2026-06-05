@@ -37,7 +37,7 @@
     postSocialImage ||
     (data.socialMediaImage && data.socialMediaImage.trim()) ||
     defaultOgImageForPost
-  $: isUsingPostImage = Boolean(postSocialImage || (data.isPostImage && data.socialMediaImage))
+  $: isUsingPostImage = Boolean(postSocialImage)
 
   // 퍼블리시/수정 시간이 비어 있지 않도록 보강
   $: published = data.publishedDate || new Date(data.post.date).toISOString()

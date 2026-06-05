@@ -97,9 +97,13 @@ export const load: PageServerLoad = async ({ params }) => {
         post.title
       )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
     const usedPostImage = !!(configuredImage || contentFirstImage)
-    const publicPost = rawConfiguredImage
-      ? { ...post, image: toPublicImageUrl(rawConfiguredImage, post.slug) }
-      : post
+    const publicPost = {
+      ...post,
+      image: rawConfiguredImage ? toPublicImageUrl(rawConfiguredImage, post.slug) : post.image,
+      firstImageUrl: rawContentFirstImage
+        ? toPublicImageUrl(rawContentFirstImage, post.slug)
+        : post.firstImageUrl
+    }
 
     const url = `${website}/post/${post.slug}`
     const seoTitle = post.seoTitle || post.title
