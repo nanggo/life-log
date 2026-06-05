@@ -115,13 +115,13 @@ describe('PostPreview 컴포넌트', () => {
     )
   })
 
-  it('Read 액션 버튼이 올바르게 렌더링된다', () => {
+  it('읽기 액션 버튼이 올바르게 렌더링된다', () => {
     render(PostPreview, { post: mockPost })
 
-    expect(screen.getByText('Read')).toBeInTheDocument()
+    expect(screen.getByText('읽기')).toBeInTheDocument()
 
     // ArrowRightIcon이 함께 렌더링되는지 확인
-    const readSection = screen.getByText('Read').closest('div')
+    const readSection = screen.getByText('읽기').closest('div')
     expect(readSection).toHaveClass('flex', 'items-center', 'text-teal-500')
   })
 

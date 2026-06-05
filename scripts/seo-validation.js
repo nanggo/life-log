@@ -46,9 +46,12 @@ function discoverTestPages() {
       const files = readdirSync(postsDir)
       const htmlFiles = files.filter((f) => f.endsWith('.html'))
       if (htmlFiles.length > 0) {
-        // Pick the first prerendered post
-        const slug = htmlFiles[0].replace(/\.html$/, '')
-        return [...defaults, { path: `/post/${slug}`, name: 'Sample Post Page' }]
+        const postPages = htmlFiles.sort().map((file) => {
+          const slug = file.replace(/\.html$/, '')
+          return { path: `/post/${slug}`, name: `Post Page: ${slug}` }
+        })
+
+        return [...defaults, ...postPages]
       }
     }
   } catch (_e) {
@@ -64,6 +67,7 @@ function discoverTestPages() {
  */
 const config = {
   productionDomain: 'https://blog.nanggo.net',
+  allowedDuplicateMetaTags: ['article:tag'],
   metaTagsToCheck: [
     'title',
     'description',
@@ -155,6 +159,10 @@ function validatePageSEO(htmlContent, pageName) {
 
   // Check for duplicates
   Object.entries(duplicates).forEach(([key, values]) => {
+    if (config.allowedDuplicateMetaTags.includes(key)) {
+      return
+    }
+
     issues.push({
       type: 'duplicate',
       tag: key,

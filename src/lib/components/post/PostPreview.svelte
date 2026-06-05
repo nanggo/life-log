@@ -46,7 +46,7 @@
           href="/tags/{encodeURIComponent(tag)}"
           class={tagClass}
           data-sveltekit-preload-data="tap"
-          aria-label={`View posts tagged with ${tag}`}
+          aria-label={`${tag} 태그 글 보기`}
         >
           #{tag}
         </a>
@@ -56,7 +56,7 @@
           href={getSafeUrl(post.slug)}
           class={tagMutedClass}
           data-sveltekit-preload-data="tap"
-          aria-label={`View ${hiddenTagsCount} more tags for this post`}
+          aria-label={`태그 ${hiddenTagsCount}개 더 보기`}
         >
           +{hiddenTagsCount}개
         </a>
@@ -65,7 +65,7 @@
   </div>
   <div slot="actions">
     <div class="flex items-center text-teal-500">
-      <span class="text-sm font-medium">Read</span>
+      <span class="text-sm font-medium">읽기</span>
       <ArrowRightIcon class="w-4 h-4 ml-1" />
     </div>
   </div>

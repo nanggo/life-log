@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
+  import { CategoryFilter } from '$lib/components'
   import { SocialLinks } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
   import { ArrowRightIcon } from '$lib/components/ui/Icon'
@@ -49,15 +50,14 @@
       <p class="text-base text-zinc-600 dark:text-zinc-400">
         {bio}
       </p>
+      <CategoryFilter categoryInfos={data.categoryInfos} variant="compact" />
     </div>
   </section>
   <section class="w-full">
     <div class="flex items-center justify-between gap-4 mb-8">
-      <h2 class="text-sm font-medium sm:text-base text-zinc-500 dark:text-zinc-400">
-        Recently Published
-      </h2>
+      <h2 class="text-sm font-medium sm:text-base text-zinc-500 dark:text-zinc-400">최근 글</h2>
       <a href="/posts" class="flex items-center gap-1 text-sm font-medium text-teal-500"
-        >View All <ArrowRightIcon class="w-4 h-4" /></a
+        >전체 보기 <ArrowRightIcon class="w-4 h-4" /></a
       >
     </div>
     <PostsList posts={data.posts} />

@@ -22,6 +22,27 @@ const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 const getCategoryUrl = (name) => `${website}/posts/category/${encodeURIComponent(name)}`
 const getTagUrl = (tag) => `${website}/tags/${encodeURIComponent(tag)}`
 
+const toPublicImageUrl = (imageUrl, slug) => {
+  if (imageUrl.startsWith('http')) {
+    return imageUrl
+  }
+
+  if (imageUrl.startsWith('/')) {
+    return imageUrl
+  }
+
+  if (imageUrl.startsWith('./')) {
+    return `/${slug}/${imageUrl.slice(2)}`
+  }
+
+  return `/${imageUrl}`
+}
+
+const toAbsoluteImageUrl = (imageUrl, slug) => {
+  const publicImageUrl = toPublicImageUrl(imageUrl, slug)
+  return publicImageUrl.startsWith('http') ? publicImageUrl : `${website}${publicImageUrl}`
+}
+
 /**
  * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
  * @param {string|Date} dateValue - 변환할 날짜 값
@@ -44,6 +65,15 @@ const safeToISOString = (dateValue) => {
  */
 const extractFirstImage = (post) => {
   try {
+    if (post.image) {
+      const imageUrl = toAbsoluteImageUrl(post.image, post.slug)
+      return {
+        url: imageUrl,
+        title: post.imageAlt || post.title,
+        alt: post.imageAlt || post.title
+      }
+    }
+
     // 포스트의 preview HTML에서 이미지 찾기
     if (post.preview?.html) {
       const previewHtml = parse(post.preview.html)
@@ -53,7 +83,7 @@ const extractFirstImage = (post) => {
         const alt = img.getAttribute('alt') || post.title
         if (src) {
           // 상대 경로를 절대 URL로 변환
-          const imageUrl = src.startsWith('http') ? src : `${website}${src}`
+          const imageUrl = toAbsoluteImageUrl(src, post.slug)
           return {
             url: imageUrl,
             title: alt,
