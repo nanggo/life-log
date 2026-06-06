@@ -43,6 +43,21 @@ const convertToGitHubThumbnail = (url: string, size: number = 300): string => {
   return url
 }
 
+const toPublicPostImageUrl = (imageUrl: string | undefined, slug: string): string | undefined => {
+  const image = imageUrl?.trim()
+  if (!image) return image
+
+  if (image.startsWith('http') || image.startsWith('/')) {
+    return image
+  }
+
+  if (image.startsWith('./')) {
+    return `/${slug}/${image.slice(2)}`
+  }
+
+  return `/${image}`
+}
+
 /**
  * preview HTML에서 이미지 태그들을 썸네일 버전으로 최적화합니다.
  */
@@ -235,7 +250,8 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
     readingTime: calculateReadingTime(html, filepath),
     isIndexFile: filepath.endsWith('/index.md'),
     headings,
-    firstImageUrl
+    firstImageUrl,
+    image: toPublicPostImageUrl(post.metadata.image, slug)
   }
 
   return result
