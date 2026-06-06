@@ -7,6 +7,8 @@ tags:
   - devops
 slug: updating-and-running-docker-compose-services
 category: 개발
+image: ./cover.webp
+imageAlt: '개인 서버에서 컨테이너 서비스를 업데이트하는 일러스트'
 ---
 
 무료로 쓰고 있는 오라클 클라우드 인스턴스에서 도커 컴포즈로 개인적인 서비스들을 실행하고 있다. 가끔 생각날 때 이미지 업데이트를 해주는데, 명령어 치는 것도 귀찮아서 스크립트를 간단하게 만들었다. 사실 명령어를 치나, 스크립트를 실행하나 거기서 거기지만 심심해서 만들었다.

@@ -8,7 +8,8 @@ tags:
 draft: false
 slug: deep-copy
 category: 개발
-image: ''
+image: ./cover.webp
+imageAlt: '중첩된 데이터 구조가 정확히 복제되는 추상 일러스트'
 ---
 
 깊은 복사는 항상 라이브러리를 이용해서 썼었다. 최근에 면접에서 깊은 복사에 대한 질문을 받고 직접 구현해보는 라이브 코딩 시간을 가졌었는데 나는 recursion을 이용해서 구현했었다. Recursion 외에도 방법이 존재하기에 생각나는 김에 정리해본다.

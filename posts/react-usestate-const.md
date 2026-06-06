@@ -8,6 +8,8 @@ tags:
   - react
 draft: false
 category: 개발
+image: ./cover.webp
+imageAlt: '렌더링마다 새 상태가 이어지는 React 상태 흐름 일러스트'
 ---
 
 **"const로 선언했는데 어떻게 값이 바뀌는 거죠?"**

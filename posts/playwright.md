@@ -9,6 +9,8 @@ tags:
 draft: false
 slug: playwright
 category: 개발
+image: ./cover.webp
+imageAlt: '반복 브라우저 작업을 자동화하는 조용한 개발 환경 일러스트'
 ---
 
 요즘 [playwright](https://playwright.dev/)를 가지고 놀고 있다. 원래는 E2E 테스트용 도구인데, 반복적인 작업을 자동화하기에도 꽤 괜찮아 보였다. 기존에 셀레니움을 써서 자동화한 서비스를 플레이라이트로 바꾸면서, 훨씬 쉽고 직관적이고 VSCode나 GitHub Actions 환경과도 궁합이 잘 맞는다는 느낌을 받았다.

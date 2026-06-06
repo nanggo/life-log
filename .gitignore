@@ -36,6 +36,7 @@ node_modules/
 
 # Auto-generated optimized images (created during build)
 static/posts/
+static/*/cover.webp
 
 # SEO Analysis Report
 google-search-analysis.md

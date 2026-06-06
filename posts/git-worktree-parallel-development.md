@@ -8,6 +8,8 @@ tags:
   - git
 draft: false
 category: 개발
+image: ./cover.webp
+imageAlt: '여러 작업 트리가 나란히 열린 개발 책상 일러스트'
 ---
 
 Claude Code를 사용하다 보면 이런 상황을 맞닥뜨린다. 메인 기능 개발 중인데 갑자기 긴급 버그가 생겨서 핫픽스를 해야 하는 상황. 브랜치를 전환하면 Claude Code의 컨텍스트가 날아가고, 다시 돌아와서 작업 흐름을 복구하는 데 시간이 오래 걸린다.

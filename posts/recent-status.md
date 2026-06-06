@@ -8,7 +8,8 @@ tags:
 draft: false
 slug: recent-status
 category: 일상
-image: ''
+image: ./cover.webp
+imageAlt: '휴식기 일상과 구직 준비가 함께 놓인 집 안 책상 일러스트'
 ---
 
 ### 가족과 시간 보내기

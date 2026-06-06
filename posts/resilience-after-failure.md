@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: resilience-after-failure
 category: 생각
+image: ./cover.webp
+imageAlt: '면접 실패 후 다시 일상을 세우는 회복의 일러스트'
 ---
 
 얼마 전 정말 가고 싶었던 회사의 면접을 보았다. 나름 괜찮게 봤다고 생각했지만, 결과는 내 기대와 달랐다. 욕심이 컸던 만큼 실망도 컸다.
