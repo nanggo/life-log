@@ -8,7 +8,8 @@ tags:
 draft: false
 slug: setting-up-alias-in-docker-compose
 category: 개발
-image: ''
+image: ./cover.webp
+imageAlt: '긴 명령을 짧은 별칭으로 바꾸는 컨테이너 작업 일러스트'
 ---
 
 Oracle Cloud Infrastructure(OCI)에서 Docker를 다룰 때, 매번 `docker-compose`를 길게 입력하는 게 은근 귀찮을 때가 있다. 이럴 때 `dc`라는 alias를 설정해두면 훨씬 편하게 쓸 수 있다.

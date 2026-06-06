@@ -8,7 +8,8 @@ tags:
 draft: false
 slug: migrating-from-google-domains-to-cloudflare
 category: 개발
-image: ''
+image: ./cover.webp
+imageAlt: '도메인과 DNS 경로를 새 인프라로 옮기는 일러스트'
 ---
 
 구글이 도메인 등록 서비스를 종료한다고 한다[^1]. 공유기나 NAS에서 구글 DDNS를 지원해주고 있어서 이용하고 있었는데, 옮겨야 하는 명분이 생겼다. [Porkbun](https://porkbun.com)과 [Cloudflare](https://cloudflare.com) 중에서 고민을 했는데, Cloudflare가 무료로 이용할 수 있는 여러 부가 서비스가 있어서 Cloudflare로 옮겼다.

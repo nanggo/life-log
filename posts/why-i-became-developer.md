@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: why-i-became-developer
 category: 생각
+image: ./cover.webp
+imageAlt: '문제 해결과 창작의 즐거움을 담은 개발자 책상 일러스트'
 ---
 
 면접에서 간혹 이런 질문을 받는다.

@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: blog-update-tag-feature
 category: 개발
+image: ./cover.webp
+imageAlt: '블로그 글을 태그별로 정리하는 책상 위 카드와 실 일러스트'
 ---
 
 블로그 글이 점점 쌓이다 보니 원하는 글을 찾기가 어려워졌다. 처음에는 검색 기능을 추가할까 고민했지만, 너무 복잡해질 것 같아 태그 기능을 도입했다.

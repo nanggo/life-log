@@ -8,6 +8,8 @@ tags:
   - 생각
 draft: false
 category: 리뷰
+image: ./cover.webp
+imageAlt: '여러 AI 도구를 비교하며 작업 흐름을 정리하는 개발자 책상 일러스트'
 ---
 
 ![Conceptual representation of AI subscriptions](https://github.com/user-attachments/assets/69f71474-7f68-4939-bb5b-c9141feae100)

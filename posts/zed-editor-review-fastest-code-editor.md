@@ -8,6 +8,8 @@ tags:
   - 경험
 draft: false
 category: 리뷰
+image: ./cover.webp
+imageAlt: '빠른 코드 편집기의 가벼운 사용감을 표현한 개발 책상 일러스트'
 ---
 
 [GeekNews](https://news.hada.io/topic?id=20775)에서 관련 아티클을 읽고 Zed 에디터를 바로 설치해봤다. `가장 빠르다`는 문구에 끌렸는데, 실제로 사용해보니 꽤 마음에 든다. VS Code나 Cursor에 비해 부족한 기능도 있고 아직 손에 익숙하진 않지만, 현재는 Zed 에디터의 가장 큰 장점인 속도에 중점을 두고 사용하고 있다.

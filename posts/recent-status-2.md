@@ -8,7 +8,8 @@ tags:
 draft: false
 slug: recent-status-2
 category: 일상
-image: ''
+image: ./cover.webp
+imageAlt: '새로운 기술 공부와 일상 루틴을 정리한 책상 일러스트'
 ---
 
 ### 공부

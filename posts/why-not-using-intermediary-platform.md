@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: why-not-using-intermediary-platform
 category: 생각
+image: ./cover.webp
+imageAlt: '복잡한 중계 구조를 지나 직접 계약을 선택하는 일러스트'
 ---
 
 가장 큰 문제는 이중으로 부과되는 수수료다. 단순히 '갑 - 플랫폼 - 개발자' 구조라면 큰 부담은 아닐 수도 있다. 하지만 실제로는 '갑 - 원청 - (하청이 있다면 하청) - 플랫폼 - 개발자' 형태로 이어지며, 이 과정에서 수수료가 중복으로 붙게 된다.

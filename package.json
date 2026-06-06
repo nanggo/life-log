@@ -8,7 +8,7 @@
 		"**/*.less"
 	],
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "node scripts/copy-images.js && vite dev",
 		"build": "node scripts/copy-images.js && vite build",
 		"post": "vite-node scripts/create-post.ts",
 		"preview": "vite preview",

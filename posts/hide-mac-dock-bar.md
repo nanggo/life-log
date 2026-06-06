@@ -9,7 +9,8 @@ tags:
 draft: false
 slug: hide-mac-dock-bar
 category: 개발
-image: ''
+image: ./cover.webp
+imageAlt: '화면 아래 공간이 비워진 미니멀한 노트북 일러스트'
 ---
 
 맥북을 쓰면서 화면을 더 넓게 이용하고자 평소에는 독바를 숨겨두고 이용중이다. 숨기고 나타내는 딜레이가 유려하긴 하지만 개인적으로는 답답하다 생각했다. 그러다가 클리앙[^1]에서 팁을 보고 정리해 둔다.

@@ -8,6 +8,8 @@ tags:
 description: '프론트엔드 컴포넌트가 복잡해지는 문제를 SOLID 원칙으로 풀어보는 글이다. 단일 책임, 개방 폐쇄, 리스코프 치환, 인터페이스 분리, 의존성 역전을 React 예시와 함께 살펴보고 바로 적용할 수 있는 기준을 정리했다.'
 draft: false
 category: 개발
+image: ./cover.webp
+imageAlt: '프론트엔드 컴포넌트를 SOLID 원칙으로 정리한 모듈 일러스트'
 ---
 
 **"이 컴포넌트 좀 수정해주세요."**

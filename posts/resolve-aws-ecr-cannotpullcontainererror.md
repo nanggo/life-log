@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: resolve-aws-ecr-cannotpullcontainererror
 category: 개발
+image: ./cover.webp
+imageAlt: '컨테이너 이미지 인증 문제를 해결하는 개발 인프라 일러스트'
 ---
 
 # 문제 발생 및 원인

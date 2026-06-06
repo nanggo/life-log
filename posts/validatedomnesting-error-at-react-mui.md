@@ -8,6 +8,8 @@ tags:
 draft: false
 slug: validatedomnesting-error-at-react-mui
 category: 개발
+image: ./cover.webp
+imageAlt: '잘못 놓인 테이블 구조를 바로잡는 HTML 중첩 일러스트'
 ---
 
 # 현상
