@@ -30,7 +30,7 @@
   }
 
   function getCategoryUrl(category: Category): string {
-    return `/posts/category/${category}`
+    return `/posts/category/${encodeURIComponent(category)}`
   }
 
   function getCategoryIcon(category: Category): string {

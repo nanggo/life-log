@@ -70,7 +70,11 @@
   // Breadcrumb items for post page
   $: breadcrumbItems = [
     { label: '포스트', href: '/posts' },
-    { label: data.post.category, href: `/posts/category/${data.post.category}`, current: true }
+    {
+      label: data.post.category,
+      href: `/posts/category/${encodeURIComponent(data.post.category)}`,
+      current: true
+    }
   ]
 </script>
 
@@ -139,7 +143,6 @@
         href={canGoBack ? undefined : '/posts'}
         aria-label="Go back to posts"
         on:click={goBack}
-        on:keydown={goBack}
       >
         <ArrowLeftIcon
           class="w-4 h-4 transition stroke-zinc-500 group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"
