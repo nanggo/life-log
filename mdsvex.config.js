@@ -26,48 +26,24 @@ const config = {
 export default config
 
 /**
- * Rehype plugin to optimize external images
- * Uses direct URLs instead of runtime API proxy for static blog performance
+ * Rehype plugin to enhance external images with lazy loading and modal support.
+ * No srcset is generated: GitHub asset URLs (user-attachments 등) ignore resize
+ * params like `?s=`, so size variants would all serve the same original file.
+ * Prefer downloading external images into the post directory instead.
  */
 function optimizeExternalImages() {
-  const GITHUB_HOSTS = [
-    'github.com/user-attachments/assets/',
-    'avatars.githubusercontent.com/',
-    'user-images.githubusercontent.com/'
-  ]
-
-  // Signed URLs break when query params are modified
-  const SIGNED_HOSTS = ['private-user-images.githubusercontent.com/']
-
-  const optimizeUrl = (url, width) => {
-    if (SIGNED_HOSTS.some((host) => url.includes(host))) {
-      return url
-    }
-    if (GITHUB_HOSTS.some((host) => url.includes(host))) {
-      const parsed = new URL(url)
-      parsed.searchParams.set('s', String(width))
-      return parsed.toString()
-    }
-    return url
-  }
-
   return function transformer(tree) {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'img') {
         const src = node.properties.src
         if (src && src.startsWith('http')) {
-          // Use direct URL with size hints instead of runtime API proxy
-          node.properties.src = optimizeUrl(src, 800)
-          const widths = [480, 800, 1280]
-          node.properties.srcset = widths.map((w) => `${optimizeUrl(src, w)} ${w}w`).join(', ')
           node.properties.loading = 'lazy'
           node.properties.decoding = 'async'
-          node.properties.sizes = '(max-width: 800px) 100vw, 800px'
 
-          // Add modal functionality - use direct URL for modal
+          // Add modal functionality
           node.properties.class =
             'enhanced-image w-full md:w-4/5 rounded-3xl shadow-lg cursor-pointer transition-transform hover:scale-105 mb-8 md:mx-auto'
-          node.properties['data-modal-src'] = optimizeUrl(src, 1200)
+          node.properties['data-modal-src'] = src
           node.properties['data-modal-alt'] = node.properties.alt || ''
         }
       }
