@@ -1,6 +1,7 @@
 import { error } from '@sveltejs/kit'
 
 import { posts as allPosts } from '$lib/data/posts'
+import { description } from '$lib/info'
 import { extractPostMetadata } from '$lib/util'
 
 // Statically generate all post list pages
@@ -31,6 +32,8 @@ export async function load({ params }) {
     limit,
     totalPosts,
     totalPages,
-    posts
+    posts,
+    // 페이지네이션 페이지는 중복 메타를 피하기 위해 페이지 번호가 들어간 설명 사용
+    seo: page > 1 ? { description: `${description} (${page}페이지)` } : undefined
   }
 }

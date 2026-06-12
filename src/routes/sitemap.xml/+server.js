@@ -17,6 +17,9 @@ import { createSafeSlug } from '$lib/utils/posts'
 
 export const prerender = true
 
+// 목록 라우트들의 페이지당 포스트 수와 일치해야 함
+const POSTS_PER_PAGE = 10
+
 // make sure this matches your post route
 const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 const getCategoryUrl = (name) => `${website}/posts/category/${encodeURIComponent(name)}`
@@ -151,6 +154,21 @@ export async function GET({ setHeaders }) {
         <priority>0.9</priority>
       </url>
 
+      ${(() => {
+        // 페이지네이션 페이지 (/posts/2 이후)도 크롤링 대상에 포함
+        const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE)
+        const pages = []
+        for (let p = 2; p <= totalPages; p++) {
+          pages.push(`<url>
+            <loc>${website}/posts/${p}</loc>
+            <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
+            <changefreq>daily</changefreq>
+            <priority>0.6</priority>
+          </url>`)
+        }
+        return pages.join('')
+      })()}
+
       ${posts
         .map((post) => {
           const image = extractFirstImage(post)
@@ -182,12 +200,25 @@ export async function GET({ setHeaders }) {
               const lastmod = latest
                 ? safeToISOString(latest.updated || latest.date)
                 : safeToISOString(new Date())
-              return `<url>
+              const urls = [
+                `<url>
                 <loc>${getCategoryUrl(info.category)}</loc>
                 <lastmod>${lastmod}</lastmod>
                 <changefreq>weekly</changefreq>
                 <priority>0.6</priority>
               </url>`
+              ]
+              // 카테고리 페이지네이션 (2페이지 이후)
+              const catTotalPages = Math.ceil((catPosts?.length || 0) / POSTS_PER_PAGE)
+              for (let p = 2; p <= catTotalPages; p++) {
+                urls.push(`<url>
+                <loc>${getCategoryUrl(info.category)}/${p}</loc>
+                <lastmod>${lastmod}</lastmod>
+                <changefreq>weekly</changefreq>
+                <priority>0.5</priority>
+              </url>`)
+              }
+              return urls.join('')
             })
             .join('')
         } catch (_e) {

@@ -3,7 +3,7 @@
 
   import { page } from '$app/stores'
   import { TagCloud } from '$lib/components'
-  import { website, name } from '$lib/info'
+  import { website, name, defaultOgImage } from '$lib/info'
 
   export let data: PageData
 
@@ -17,9 +17,7 @@
 
   // 페이지 URL 및 기본 OG 이미지
   $: pageUrl = new URL($page.url.pathname, website).href
-  $: ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.seo.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  const ogImage = defaultOgImage
 </script>
 
 <svelte:head>

@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
 import { posts } from '$lib/data/posts'
-import { website, author, name as siteName } from '$lib/info'
+import { website, author, defaultOgImage, name as siteName } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
@@ -90,12 +90,7 @@ export const load: PageServerLoad = async ({ params }) => {
     const contentFirstImage = rawContentFirstImage
       ? toAbsoluteImageUrl(rawContentFirstImage, post.slug)
       : undefined
-    const ogImage =
-      configuredImage ||
-      contentFirstImage ||
-      `https://og-image-korean.vercel.app/**${encodeURIComponent(
-        post.title
-      )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+    const ogImage = configuredImage || contentFirstImage || defaultOgImage
     const usedPostImage = !!(configuredImage || contentFirstImage)
     const publicPost = {
       ...post,

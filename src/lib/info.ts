@@ -5,6 +5,9 @@
 // URL of your website
 export const website: string = 'https://blog.nanggo.net'
 
+// 기본 OG 이미지 (1200x630, 셀프 호스팅 정적 파일)
+export const defaultOgImage: string = `${website}/og-default.png`
+
 // export const firstName = 'Jisung'
 // export const lastName = 'Yoo'
 export const name: string = `낭고넷`
