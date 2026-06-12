@@ -159,16 +159,10 @@
     })
   }
 
-  // GitHub 이미지 최적화 함수
+  // GitHub 이미지 리사이즈 — `?s=`는 avatars 호스트에서만 동작하고
+  // user-attachments 등 asset URL에서는 무시되어 원본이 그대로 내려온다
   const optimizeGitHubImage = (url: string, targetWidth: number = 800): string => {
-    const GITHUB_HOSTS = [
-      'github.com/user-attachments/assets/',
-      'avatars.githubusercontent.com/',
-      'user-images.githubusercontent.com/',
-      'private-user-images.githubusercontent.com/'
-    ]
-
-    if (GITHUB_HOSTS.some((host) => url.includes(host))) {
+    if (url.includes('avatars.githubusercontent.com/')) {
       const baseUrl = url.split('?')[0]
       return `${baseUrl}?s=${targetWidth}`
     }
@@ -195,12 +189,19 @@
     }
   }
 
-  // 반응형 이미지를 위한 srcset 생성 (GitHub 이미지용)
+  // 반응형 이미지를 위한 srcset 생성 (리사이즈 가능한 원격 이미지용)
   const createSrcSet = (originalSrc: string): string | undefined => {
-    if (!originalSrc.includes('github.com')) return undefined
+    if (optimizeGitHubImage(originalSrc, 400) === originalSrc) return undefined
 
     const sizes = [400, 800, 1200]
     return sizes.map((size) => `${optimizeGitHubImage(originalSrc, size)} ${size}w`).join(', ')
+  }
+
+  // 고정 표시 크기가 주어진 경우 1x/2x 변형만 요청
+  const createFixedSrcSet = (originalSrc: string, targetWidth: number): string | undefined => {
+    const oneX = optimizeGitHubImage(originalSrc, targetWidth)
+    if (oneX === originalSrc) return undefined
+    return `${oneX} 1x, ${optimizeGitHubImage(originalSrc, targetWidth * 2)} 2x`
   }
 
   // 로컬 이미지의 WebP/AVIF 변환 지원
@@ -216,9 +217,10 @@
     }
   }
 
-  // 최적화된 src와 srcset
-  $: optimizedSrc = optimizeGitHubImage(src, 800)
-  $: srcset = createSrcSet(src)
+  // 최적화된 src와 srcset — width prop이 있으면 표시 크기(2x)에 맞춰 요청
+  $: numericWidth = Number(width) > 0 ? Number(width) : undefined
+  $: optimizedSrc = optimizeGitHubImage(src, numericWidth ? numericWidth * 2 : 800)
+  $: srcset = numericWidth ? createFixedSrcSet(src, numericWidth) : createSrcSet(src)
   $: localSources = getOptimizedSources(src)
   $: defaultSizes = sizes || '(max-width: 768px) 400px, (max-width: 1200px) 800px, 1200px'
 
@@ -355,7 +357,7 @@
   <img
     src={optimizedSrc}
     {srcset}
-    sizes={srcset ? defaultSizes : sizes}
+    sizes={srcset && !numericWidth ? defaultSizes : sizes}
     {alt}
     {width}
     {height}

@@ -34,7 +34,8 @@
         data-sveltekit-preload-code="viewport"
       >
         <img
-          src={avatar}
+          src="{avatar}?s=288"
+          srcset="{avatar}?s=144 1x, {avatar}?s=288 2x"
           alt={name}
           class="mx-auto rounded-full w-36 h-36 ring-2 ring-zinc-200 dark:ring-zinc-700"
           width="144"
