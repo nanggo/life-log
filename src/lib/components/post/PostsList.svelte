@@ -2,9 +2,9 @@
   import PostDate from './PostDate.svelte'
   import PostPreview from './PostPreview.svelte'
 
-  import type { Post } from '$lib/types'
+  import type { PostMetadata } from '$lib/types'
 
-  export let posts: Post[]
+  export let posts: PostMetadata[]
 
   // VirtualList는 제거 - 38개 포스트 정도는 성능 문제 없음
   // 추후 100개 이상일 때 페이지네이션으로 해결

@@ -1,26 +1,10 @@
 import { render, screen } from '@testing-library/svelte'
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 import PostDate from './PostDate.svelte'
 
 import type { Post } from '$lib/types'
 import { Category } from '$lib/types/blog'
-
-// Mock date-fns functions
-vi.mock('date-fns', () => ({
-  format: vi.fn((date: Date, formatString: string) => {
-    if (formatString === 'MMMM d, yyyy') {
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric'
-      })
-    }
-    return date.toString()
-  }),
-  parseISO: vi.fn((dateString: string) => new Date(dateString)),
-  isValid: vi.fn((date: Date) => !isNaN(date.getTime()))
-}))
 
 describe('PostDate 컴포넌트', () => {
   const mockPost: Post = {
@@ -29,16 +13,13 @@ describe('PostDate 컴포넌트', () => {
     slug: 'test-post',
     tags: ['JavaScript'],
     date: '2024-01-15',
+    displayDate: 'January 15, 2024',
     readingTime: 5,
     preview: { html: '', text: '' },
     headings: [],
     isIndexFile: false,
     category: Category.DEVELOPMENT
   }
-
-  beforeEach(() => {
-    vi.clearAllMocks()
-  })
 
   it('날짜와 읽기 시간이 올바르게 렌더링된다', () => {
     render(PostDate, { post: mockPost, decorate: false, class: '' })
@@ -51,6 +32,18 @@ describe('PostDate 컴포넌트', () => {
     render(PostDate, { post: mockPost, decorate: false, class: '' })
 
     const timeElement = screen.getByText('January 15, 2024')
+    expect(timeElement).toHaveAttribute('datetime', '2024-01-15')
+  })
+
+  it('displayDate가 없으면 date 문자열로 폴백한다', () => {
+    const postWithoutDisplayDate = {
+      ...mockPost,
+      displayDate: undefined
+    } as unknown as Post
+
+    render(PostDate, { post: postWithoutDisplayDate, decorate: false, class: '' })
+
+    const timeElement = screen.getByText('2024-01-15')
     expect(timeElement).toHaveAttribute('datetime', '2024-01-15')
   })
 
@@ -118,72 +111,6 @@ describe('PostDate 컴포넌트', () => {
 
     const containerElement = container.querySelector('.relative.z-10.order-first.mb-3')
     expect(containerElement).toHaveClass('custom-class', 'another-class')
-  })
-
-  it('빈 날짜 문자열이 주어질 때 현재 날짜를 사용한다', () => {
-    const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
-
-    // Vitest 내장 time-mocking 사용
-    vi.useFakeTimers()
-    vi.setSystemTime(MOCK_NOW)
-
-    const postWithEmptyDate: Post = {
-      ...mockPost,
-      date: ''
-    }
-
-    render(PostDate, { post: postWithEmptyDate, decorate: false, class: '' })
-
-    // 모킹된 현재 날짜가 렌더링되는지 확인
-    const expectedDateString = MOCK_NOW.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-
-    expect(screen.getByText(expectedDateString)).toBeInTheDocument()
-
-    // 실제 타이머로 복원
-    vi.useRealTimers()
-  })
-
-  it('잘못된 날짜 형식이 주어질 때 현재 날짜를 사용한다', () => {
-    const MOCK_NOW = new Date('2023-10-27T10:00:00Z')
-
-    // Vitest 내장 time-mocking 사용
-    vi.useFakeTimers()
-    vi.setSystemTime(MOCK_NOW)
-
-    const postWithInvalidDate: Post = {
-      ...mockPost,
-      date: 'invalid-date-string'
-    }
-
-    render(PostDate, { post: postWithInvalidDate, decorate: false, class: '' })
-
-    // 모킹된 현재 날짜가 렌더링되는지 확인
-    const expectedDateString = MOCK_NOW.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-
-    expect(screen.getByText(expectedDateString)).toBeInTheDocument()
-
-    // 실제 타이머로 복원
-    vi.useRealTimers()
-  })
-
-  it('ISO 8601 형식의 날짜가 올바르게 파싱된다', () => {
-    const postWithISODate: Post = {
-      ...mockPost,
-      date: '2024-01-15T10:30:00Z'
-    }
-
-    render(PostDate, { post: postWithISODate, decorate: false, class: '' })
-
-    const timeElement = screen.getByText('January 15, 2024')
-    expect(timeElement).toHaveAttribute('datetime', '2024-01-15T10:30:00Z')
   })
 
   it('기본 텍스트 색상 클래스가 적용된다', () => {

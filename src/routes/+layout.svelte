@@ -9,6 +9,7 @@
   import { page } from '$app/stores'
   import {
     name,
+    defaultOgImage,
     description,
     author,
     bio,
@@ -35,10 +36,8 @@
     ? Boolean(document.documentElement.classList.contains('dark'))
     : true
 
-  // Default OG image for non-post pages (1200x630)
-  $: defaultOgImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  // 페이지가 자체 seo.description을 내려주면 우선 사용 (예: 포스트 목록 페이지네이션)
+  $: metaDescription = $page.data.seo?.description ?? description
 
   const _organizationSchema = {
     '@context': 'https://schema.org',
@@ -256,7 +255,7 @@
 <svelte:head>
   <title>{data.title}</title>
   {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
-    <meta name="description" content={description} />
+    <meta name="description" content={metaDescription} />
   {/if}
   <meta name="author" content={author} />
   {#if !$page.data.post}
@@ -267,7 +266,6 @@
   <!-- Performance optimization hints -->
   <link rel="preconnect" href="https://avatars.githubusercontent.com" />
   <link rel="dns-prefetch" href="https://vitals.vercel-insights.com" />
-  <link rel="dns-prefetch" href="https://og-image-korean.vercel.app" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#14b8a6" />
   <meta name="color-scheme" content="light dark" />
@@ -277,7 +275,7 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content={new URL($page.url.pathname, website).href} />
     <meta property="og:title" content={data.title} />
-    <meta property="og:description" content={description} />
+    <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={defaultOgImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
@@ -290,7 +288,7 @@
     <meta name="twitter:site" content={twitterHandle} />
     <meta name="twitter:creator" content={twitterHandle} />
     <meta name="twitter:title" content={data.title} />
-    <meta name="twitter:description" content={description} />
+    <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={defaultOgImage} />
     <meta name="twitter:image:alt" content={`${name} 로고`} />
   {/if}

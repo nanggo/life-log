@@ -8,7 +8,7 @@
   import { Breadcrumb, SocialLinks } from '$lib/components/layout'
   import { PostDate, PostHeroVisual, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
-  import { website, name, bio, avatar, twitterHandle } from '$lib/info'
+  import { website, name, bio, avatar, twitterHandle, defaultOgImage } from '$lib/info'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
   interface PageData extends BasePageData {
@@ -23,20 +23,15 @@
 
   export let data: PageData
 
-  // 소셜 이미지가 비어 있을 경우에도 기본 OG 이미지를 보장
-  $: defaultOgImageForPost = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.post.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
   $: postImageUrl = (data.post.image || data.post.firstImageUrl || '').trim()
   $: postSocialImage = postImageUrl
     ? postImageUrl.startsWith('http')
       ? postImageUrl
       : `${website}${postImageUrl.startsWith('/') ? postImageUrl : `/${postImageUrl}`}`
     : ''
+  // 소셜 이미지가 비어 있을 경우에도 기본 OG 이미지를 보장
   $: ogImage =
-    postSocialImage ||
-    (data.socialMediaImage && data.socialMediaImage.trim()) ||
-    defaultOgImageForPost
+    postSocialImage || (data.socialMediaImage && data.socialMediaImage.trim()) || defaultOgImage
   $: isUsingPostImage = Boolean(postSocialImage)
 
   // 퍼블리시/수정 시간이 비어 있지 않도록 보강
@@ -70,7 +65,11 @@
   // Breadcrumb items for post page
   $: breadcrumbItems = [
     { label: '포스트', href: '/posts' },
-    { label: data.post.category, href: `/posts/category/${data.post.category}`, current: true }
+    {
+      label: data.post.category,
+      href: `/posts/category/${encodeURIComponent(data.post.category)}`,
+      current: true
+    }
   ]
 </script>
 
@@ -139,7 +138,6 @@
         href={canGoBack ? undefined : '/posts'}
         aria-label="Go back to posts"
         on:click={goBack}
-        on:keydown={goBack}
       >
         <ArrowLeftIcon
           class="w-4 h-4 transition stroke-zinc-500 group-hover:stroke-zinc-700 dark:stroke-zinc-500 dark:group-hover:stroke-zinc-400"

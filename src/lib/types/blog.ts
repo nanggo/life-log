@@ -39,6 +39,8 @@ export interface PostMetadata {
   description: string
   /** 발행일 */
   date: string
+  /** 빌드 시점에 포맷된 표시용 발행일 (예: June 12, 2026) */
+  displayDate: string
   /** 업데이트일 (선택사항) */
   updated?: string
   /** 카테고리 */
@@ -85,6 +87,8 @@ export interface Heading {
   depth: number
   /** 헤딩 텍스트 */
   value: string
+  /** rehype-slug가 생성한 헤딩 id (앵커 링크용) */
+  slug: string
 }
 
 /**

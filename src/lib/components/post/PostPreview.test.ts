@@ -18,6 +18,7 @@ describe('PostPreview 컴포넌트', () => {
     slug: 'test-post-slug',
     tags: ['JavaScript', 'Svelte', 'TypeScript', 'Node.js'],
     date: '2024-01-15',
+    displayDate: 'January 15, 2024',
     category: Category.DEVELOPMENT,
     preview: {
       html: '<p>이것은 테스트 포스트의 미리보기 내용입니다.</p>',

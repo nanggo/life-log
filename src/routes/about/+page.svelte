@@ -3,7 +3,7 @@
   // import { afterNavigate } from '$app/navigation'
   import type { PageData } from './$types'
 
-  import { website, name } from '$lib/info'
+  import { website, name, defaultOgImage } from '$lib/info'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
   export let data: PageData
@@ -11,9 +11,7 @@
   const url: string = `${website}/about`
 
   // 기본 OG 이미지 (1200x630)
-  $: ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.aboutData.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  const ogImage = defaultOgImage
 
   const _jsonLd = {
     '@context': 'https://schema.org',

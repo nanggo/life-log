@@ -7,7 +7,7 @@ import { browser, dev } from '$app/environment'
 import type { PostMetadata } from '$lib/types'
 import { Category } from '$lib/types/blog'
 import type { Post } from '$lib/types/blog'
-import { formatDate } from '$lib/utils/date'
+import { formatDate, formatDisplayDate } from '$lib/utils/date'
 
 // import.meta.glob의 타입 정의
 type PostModule = {
@@ -231,16 +231,22 @@ const processPostMetadata = ([filepath, post]: [string, PostModule]): Post => {
   }
 
   // Extract headings from HTML (performance: only h2, h3 for ToC)
+  // slug은 rehype-slug가 생성한 id를 그대로 사용해 본문 앵커와 항상 일치시킴
   const headings = html.querySelectorAll('h2, h3').map((heading) => ({
     depth: parseInt(heading.tagName.substring(1)),
-    value: heading.text.trim()
+    value: heading.text.trim(),
+    slug: heading.getAttribute('id') ?? ''
   }))
+
+  const date = formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10)
 
   const result: Post = {
     ...post.metadata,
     slug,
     description: post.metadata.description || '',
-    date: formatDate(post.metadata.date) ?? new Date().toISOString().slice(0, 10),
+    date,
+    // 클라이언트에서 date-fns 없이 바로 쓰는 표시용 날짜 (빌드 시점 포맷)
+    displayDate: formatDisplayDate(date) ?? date,
     category,
     tags,
     preview: {

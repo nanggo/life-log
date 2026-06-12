@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-import { addTimezoneOffset, isValidDate, formatDate } from './date'
+import { addTimezoneOffset, isValidDate, formatDate, formatDisplayDate } from './date'
 
 describe('날짜 유틸리티 함수', () => {
   // 테스트 중 콘솔 스팸 방지를 위한 mock
@@ -135,6 +135,26 @@ describe('날짜 유틸리티 함수', () => {
         const result = formatDate(dateStr)
         expect(result).toMatch(/^\d{4}-\d{2}-\d{2}$/)
       })
+    })
+  })
+
+  describe('formatDisplayDate', () => {
+    it('falsy 값들에 대해 undefined를 반환해야 함', () => {
+      expect(formatDisplayDate(null)).toBeUndefined()
+      expect(formatDisplayDate(undefined)).toBeUndefined()
+      expect(formatDisplayDate('')).toBeUndefined()
+    })
+
+    it('날짜 문자열을 표시용 형식으로 포맷팅해야 함', () => {
+      expect(formatDisplayDate('2023-01-15')).toBe('January 15, 2023')
+    })
+
+    it('Date 객체를 표시용 형식으로 포맷팅해야 함', () => {
+      expect(formatDisplayDate(new Date('2023-06-01T12:00:00Z'))).toBe('June 1, 2023')
+    })
+
+    it('유효하지 않은 날짜에 대해 undefined를 반환해야 함', () => {
+      expect(formatDisplayDate('invalid date')).toBeUndefined()
     })
   })
 })

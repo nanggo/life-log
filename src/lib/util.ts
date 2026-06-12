@@ -31,6 +31,7 @@ export function extractPostMetadata(posts: Post[]): PostMetadata[] {
       seoTitle: post.seoTitle,
       description: post.description,
       date: post.date,
+      displayDate: post.displayDate,
       category: post.category,
       tags: post.tags,
       draft: post.draft,

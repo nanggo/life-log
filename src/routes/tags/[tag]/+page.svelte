@@ -2,7 +2,7 @@
   import { page } from '$app/stores'
   import { Breadcrumb } from '$lib/components/layout'
   import { PostsList, TagList } from '$lib/components/post'
-  import { name, website } from '$lib/info'
+  import { name, website, defaultOgImage } from '$lib/info'
   import type { PostMetadata } from '$lib/types'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
@@ -10,9 +10,7 @@
   export let data
 
   // OG defaults and page URL
-  $: ogImage = `https://og-image-korean.vercel.app/**${encodeURIComponent(
-    data.seo.title
-  )}**?theme=light&md=1&fontSize=100px&images=https%3A%2F%2Fassets.vercel.com%2Fimage%2Fupload%2Ffront%2Fassets%2Fdesign%2Fhyper-color-logo.svg`
+  const ogImage = defaultOgImage
   $: pageUrl = new URL($page.url.pathname, website).href
 
   // Extract unique tags from posts (excluding current tag)
