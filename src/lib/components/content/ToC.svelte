@@ -15,7 +15,7 @@
   let cleanupScroll: (() => void) | null = null
 
   // slug은 빌드 시점에 rehype-slug가 생성한 id 그대로 (본문 앵커와 항상 일치)
-  const headings: Heading[] = post.headings.filter((heading) => heading.slug)
+  const headings: Heading[] = (post?.headings ?? []).filter((heading) => heading.slug)
 
   // 지연 렌더링을 위한 스크롤 감지
   const checkShouldRender = () => {
@@ -53,7 +53,7 @@
     }
   })
 
-  let activeHeading: Heading = headings[0]
+  let activeHeading: Heading | undefined = headings[0]
 
   const updateHeadings = (): void => {
     if (browser) {
