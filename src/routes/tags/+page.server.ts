@@ -1,4 +1,4 @@
-import { getAllTagsWithCounts } from '$lib/data/posts'
+import { getAllTagsWithCounts, posts } from '$lib/data/posts'
 
 interface TagStatistics {
   maxCount: number
@@ -10,15 +10,19 @@ interface TagStatistics {
 /**
  * 태그별 포스트 수 데이터를 기반으로 통계를 계산합니다.
  * @param tagInfos - 태그 정보 배열
+ * @param totalPosts - 전체 포스트 수
  * @returns 통계 객체 (maxCount, minCount, avgCount, totalPosts)
  */
-function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>): TagStatistics {
+function calculateTagStatistics(
+  tagInfos: Array<{ tag: string; count: number }>,
+  totalPosts: number
+): TagStatistics {
   if (tagInfos.length === 0) {
     return {
       maxCount: 0,
       minCount: 0,
       avgCount: 0,
-      totalPosts: 0
+      totalPosts
     }
   }
 
@@ -29,8 +33,9 @@ function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>)
   const minCount = counts.reduce((a, b) => Math.min(a, b))
 
   const totalTags = tagInfos.length
-  const totalPosts = counts.reduce((sum, count) => sum + count, 0)
-  const avgCount = Math.round((totalPosts / totalTags) * 10) / 10 // 소수점 첫째 자리까지
+  // 평균은 태그 사용 횟수 합산 기준 (태그당 평균 포스트 수)
+  const totalTagUsages = counts.reduce((sum, count) => sum + count, 0)
+  const avgCount = Math.round((totalTagUsages / totalTags) * 10) / 10 // 소수점 첫째 자리까지
 
   return {
     maxCount,
@@ -42,7 +47,7 @@ function calculateTagStatistics(tagInfos: Array<{ tag: string; count: number }>)
 
 export async function load() {
   const tagInfos = getAllTagsWithCounts()
-  const statistics = calculateTagStatistics(tagInfos)
+  const statistics = calculateTagStatistics(tagInfos, posts.length)
 
   return {
     tagInfos,
