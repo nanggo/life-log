@@ -12,6 +12,8 @@ image: ./cover.webp
 imageAlt: '잘못 놓인 테이블 구조를 바로잡는 HTML 중첩 일러스트'
 ---
 
+MUI로 테이블을 구현하다 만난 에러를 기록해 둔다.
+
 # 현상
 
 Material-UI의 TableCell 컴포넌트를 사용하고 component prop을 "th" 또는 "td"로 지정했을 때 "validateDOMNesting" 오류가 발생했다.
@@ -33,12 +35,12 @@ function MyTableComponent() {
     <Table>
       <TableHead>
         <TableRow>
-          <TableCell component="th">{/* 여기에 헤더 내용을 입력하세요 */}</TableCell>
+          <TableCell component="th">{/* 헤더 내용 */}</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
         <TableRow>
-          <TableCell component="td">{/* 여기에 내용을 입력하세요 */}</TableCell>
+          <TableCell component="td">{/* 셀 내용 */}</TableCell>
         </TableRow>
       </TableBody>
     </Table>
