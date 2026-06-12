@@ -22,6 +22,14 @@ const getPostUrl = (slug) => `${website}/post/${createSafeSlug(slug)}`
 const getCategoryUrl = (name) => `${website}/posts/category/${encodeURIComponent(name)}`
 const getTagUrl = (tag) => `${website}/tags/${encodeURIComponent(tag)}`
 
+const escapeXml = (str) =>
+  String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&apos;')
+
 const toPublicImageUrl = (imageUrl, slug) => {
   if (imageUrl.startsWith('http')) {
     return imageUrl
@@ -127,13 +135,12 @@ export async function GET({ setHeaders }) {
     >
       <url>
         <loc>${website}</loc>
-        <lastmod>${safeToISOString(new Date())}</lastmod>
+        <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>
       <url>
         <loc>${website}/about</loc>
-        <lastmod>${safeToISOString(new Date())}</lastmod>
         <changefreq>monthly</changefreq>
         <priority>0.8</priority>
       </url>
@@ -150,9 +157,9 @@ export async function GET({ setHeaders }) {
           const imageXml = image
             ? `
             <image:image>
-              <image:loc>${image.url}</image:loc>
-              <image:title>${image.title}</image:title>
-              <image:caption>${image.alt}</image:caption>
+              <image:loc>${escapeXml(image.url)}</image:loc>
+              <image:title>${escapeXml(image.title)}</image:title>
+              <image:caption>${escapeXml(image.alt)}</image:caption>
             </image:image>`
             : ''
 

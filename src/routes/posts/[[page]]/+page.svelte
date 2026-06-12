@@ -19,7 +19,7 @@
   const getPageUrl = (p: number) => (p === 1 ? '/posts' : `/posts/${p}`)
 
   // 페이지 타이틀
-  $: pageTitle = `${name}'s life log | Posts`
+  $: pageTitle = `${name}'s life log | Posts${currentPage > 1 ? ` - ${currentPage}페이지` : ''}`
 
   // 메타 설명은 +layout.svelte에서 기본 description 사용
 

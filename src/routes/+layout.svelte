@@ -255,11 +255,13 @@
 
 <svelte:head>
   <title>{data.title}</title>
-  {#if !$page.data.post && !$page.route.id?.includes('/about')}
+  {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
     <meta name="description" content={description} />
   {/if}
   <meta name="author" content={author} />
-  <link rel="canonical" href={new URL($page.url.pathname, website).href} />
+  {#if !$page.data.post}
+    <link rel="canonical" href={new URL($page.url.pathname, website).href} />
+  {/if}
   <link rel="alternate" type="application/rss+xml" title={`${name} life log`} href="/rss.xml" />
 
   <!-- Performance optimization hints -->

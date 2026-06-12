@@ -3,7 +3,7 @@ import { error } from '@sveltejs/kit'
 import type { PageServerLoad } from './$types'
 
 import { posts } from '$lib/data/posts'
-import { website, author } from '$lib/info'
+import { website, author, name as siteName } from '$lib/info'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
@@ -134,7 +134,7 @@ export const load: PageServerLoad = async ({ params }) => {
       },
       publisher: {
         '@type': 'Organization',
-        name: author,
+        name: siteName,
         url: website
       },
       description: dynamicDescription,

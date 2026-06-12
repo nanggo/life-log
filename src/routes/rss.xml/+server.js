@@ -3,7 +3,7 @@
 // credit: https://scottspence.com/posts/make-an-rss-feed-with-sveltekit#add-posts-for-the-rss-feed
 
 import { posts } from '$lib/data/posts'
-import { name, author, website } from '$lib/info'
+import { name, author, email, website } from '$lib/info'
 import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
 
@@ -42,7 +42,7 @@ export async function GET({ setHeaders }) {
         <link>${website}</link>
         <description>${websiteDescription}</description>
         <language>ko</language>
-        <managingEditor>${author}</managingEditor>
+        <managingEditor>${email} (${author})</managingEditor>
         <atom:link href="${website}/rss.xml" rel="self" type="application/rss+xml" />
         ${posts
           .map(

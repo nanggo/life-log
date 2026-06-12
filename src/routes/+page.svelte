@@ -9,7 +9,7 @@
 
   export let data: PageData
 
-  const title: string = `${name} - life log`
+  const title: string = `${name} - 흔한 개발자의 일상과 기술 블로그`
 </script>
 
 <svelte:head>
