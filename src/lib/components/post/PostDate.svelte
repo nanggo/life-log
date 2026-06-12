@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Post } from '$lib/types'
+  import type { PostMetadata } from '$lib/types'
 
   export let decorate: boolean
-  export let post: Post
+  export let post: PostMetadata
   export let collapsed: boolean = false
 
   let _class: string

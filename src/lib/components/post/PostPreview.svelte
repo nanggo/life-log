@@ -2,11 +2,11 @@
   import { Card } from '../ui/Card'
   import { ArrowRightIcon } from '../ui/Icon'
 
-  import type { Post } from '$lib/types'
+  import type { PostMetadata } from '$lib/types'
   import { createSafeSlug } from '$lib/utils/posts'
   import { TAG_STYLES } from '$lib/utils/tag-styles'
 
-  export let post: Post
+  export let post: PostMetadata
   // 프리뷰에서 최대로 표시할 태그 개수 (기본값: 3개)
   export let maxTagsToShow: number = 3
 

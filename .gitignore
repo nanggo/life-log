@@ -57,3 +57,4 @@ bundle-analysis.html
 
 # Agent tooling cache
 .serena/
+.playwright-mcp/
