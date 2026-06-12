@@ -25,7 +25,7 @@
 		"prepare": "svelte-kit sync && husky"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-vercel": "^5.7.2",
+		"@sveltejs/adapter-vercel": "^6.3.2",
 		"@sveltejs/kit": "2.60.1",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
 		"@tailwindcss/typography": "^0.5.7",
@@ -46,7 +46,7 @@
 		"eslint-plugin-import": "^2.32.0",
 		"eslint-plugin-svelte": "^2.35.1",
 		"fs-extra": "^11.3.0",
-		"glob": "^11.0.3",
+		"glob": "^11.1.0",
 		"husky": "^9.1.7",
 		"jsdom": "^26.1.0",
 		"lint-staged": "^16.1.2",
@@ -81,7 +81,21 @@
 		"overrides": {
 			"lodash": "4.18.1",
 			"rollup": "4.60.3",
-			"tar": "7.5.15"
+			"tar": "7.5.15",
+			"ajv@<6.14.0": "6.14.0",
+			"brace-expansion@<1.1.13": "1.1.13",
+			"cookie@<0.7.0": "^0.7.0",
+			"flatted@<3.4.2": "3.4.2",
+			"glob@>=10.2.0 <10.5.0": "10.5.0",
+			"js-yaml@<3.14.2": "3.14.2",
+			"minimatch@<3.1.4": "3.1.4",
+			"minimatch@>=9.0.0 <9.0.7": "9.0.7",
+			"minimatch@>=10.0.0 <10.2.3": "10.2.3",
+			"picomatch@>=2.0.0 <2.3.2": "2.3.2",
+			"svgo@>=2.1.0 <2.8.1": "2.8.1",
+			"ws@>=8.0.0 <8.20.1": "8.20.1",
+			"yaml@<1.10.3": "1.10.3",
+			"yaml@>=2.0.0 <2.8.3": "2.8.3"
 		}
 	},
 	"lint-staged": {
@@ -105,7 +119,7 @@
 		"github-slugger": "^2.0.0",
 		"gray-matter": "^4.0.3",
 		"heroicons-svelte": "^2.0.2",
-		"js-yaml": "^4.1.0",
+		"js-yaml": "^4.1.1",
 		"node-html-parser": "^5.4.1",
 		"reading-time": "^1.5.0"
 	}
