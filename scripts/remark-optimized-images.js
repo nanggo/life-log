@@ -39,8 +39,7 @@ export default function remarkOptimizedImages() {
           try {
             const { width, height } = await sharp(path.join(markdownDir, src)).metadata()
             if (width && height) {
-              dimensionAttrs = `width="${width}"
-              height="${height}"`
+              dimensionAttrs = `width="${width}" height="${height}"`
             }
           } catch (error) {
             console.warn(`Could not read dimensions for image: ${src}`, error.message)
