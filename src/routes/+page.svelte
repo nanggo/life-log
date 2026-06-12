@@ -10,6 +10,9 @@
   export let data: PageData
 
   const title: string = `${name} - 흔한 개발자의 일상과 기술 블로그`
+
+  // avatar URL에 쿼리가 이미 있어도 ?s= 가 중복되지 않도록 베이스만 사용
+  const avatarBase: string = avatar.split('?')[0]
 </script>
 
 <svelte:head>
@@ -34,7 +37,8 @@
         data-sveltekit-preload-code="viewport"
       >
         <img
-          src={avatar}
+          src="{avatarBase}?s=288"
+          srcset="{avatarBase}?s=144 1x, {avatarBase}?s=288 2x"
           alt={name}
           class="mx-auto rounded-full w-36 h-36 ring-2 ring-zinc-200 dark:ring-zinc-700"
           width="144"

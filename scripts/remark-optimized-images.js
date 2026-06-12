@@ -1,5 +1,6 @@
 import path from 'path'
 
+import sharp from 'sharp'
 import { visit } from 'unist-util-visit'
 
 /**
@@ -7,8 +8,14 @@ import { visit } from 'unist-util-visit'
  * Falls back to original image if optimized versions don't exist
  */
 export default function remarkOptimizedImages() {
-  return function transformer(tree, file) {
+  return async function transformer(tree, file) {
+    // Collect first: sharp metadata reads are async, visit callbacks are sync
+    const imageNodes = []
     visit(tree, 'image', (node) => {
+      imageNodes.push(node)
+    })
+
+    for (const node of imageNodes) {
       const src = node.url
 
       // Process relative paths (local images only)
@@ -26,12 +33,25 @@ export default function remarkOptimizedImages() {
           // Create image path - use static folder path for SvelteKit
           const originalSrc = `/${postSlug}/${imageName}`
 
+          // Intrinsic dimensions let the browser reserve space before the image
+          // loads (prevents CLS); `height: auto` below keeps them ratio-only
+          let dimensionAttrs = ''
+          try {
+            const { width, height } = await sharp(path.join(markdownDir, src)).metadata()
+            if (width && height) {
+              dimensionAttrs = `width="${width}" height="${height}"`
+            }
+          } catch (error) {
+            console.warn(`Could not read dimensions for image: ${src}`, error.message)
+          }
+
           // Create simple img element with modal support and fallback to original
           // Use data attributes instead of inline onclick to prevent XSS
           const imgHtml = `
-            <img 
-              src="${originalSrc}" 
+            <img
+              src="${originalSrc}"
               alt="${node.alt || ''}"
+              ${dimensionAttrs}
               loading="lazy"
               decoding="async"
               data-modal-src="${originalSrc}"
@@ -51,6 +71,6 @@ export default function remarkOptimizedImages() {
           console.warn(`File path not available for image: ${src}`)
         }
       }
-    })
+    }
   }
 }
