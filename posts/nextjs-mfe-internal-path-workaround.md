@@ -14,8 +14,8 @@ draft: false
 description: 'Next.js 14.2 Pages Router 앱을 MFE 구조로 전환하며 /_next/data와 /_next/image 경로가 게이트웨이 정책과 충돌한 문제를 분석한다. basePath, assetPrefix, rewrites, 번들 치환 우회까지 검증한 사례다.'
 ---
 
-> **환경**: 본 글은 **Next.js 14.2 · Pages Router 기준**으로 재현/검증했습니다.<br />
-> **주의**: 본문에서 `/app`은 basePath를 뜻하며, App Router의 `app/` 디렉터리와 무관합니다.
+> **환경**: 본 글은 **Next.js 14.2 · Pages Router 기준**으로 재현/검증했다.<br />
+> **주의**: 본문에서 `/app`은 basePath를 뜻하며, App Router의 `app/` 디렉터리와는 무관하다.
 
 원래는 `/app` 아래에서 하나의 Next.js 애플리케이션(단일 프런트엔드)로 서비스가 동작하고 있었다. 이때는 게이트웨이가 `/app/*` 전체를 허용해서 `/_next/data` 요청도 문제 없이 통과했다.
 

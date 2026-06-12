@@ -73,7 +73,7 @@ function UncontrolledComponent() {
 
 단점:
 
-- DOM 직접 접근: React에서는 가상 DOM을 사용하여 최적화된 방식으로 실제 DOM과 상호 작용합니다. Uncontrolled Components에서는 ref를 통해 직접 DOM에 접근하기 때문에 React의 "Declarative" 접근 방식에서 벗어날 수 있다.
+- DOM 직접 접근: React에서는 가상 DOM을 사용하여 최적화된 방식으로 실제 DOM과 상호 작용한다. Uncontrolled Components에서는 ref를 통해 직접 DOM에 접근하기 때문에 React의 "Declarative" 접근 방식에서 벗어날 수 있다.
 - 일관성 부족: 상태가 여러 곳에 분산될 수 있으므로 양식의 일관성을 유지하기가 더 어려울 수 있다.
 - 통합 및 상호 작용 제한: 다른 컴포넌트나 상태와의 상호 작용이 필요한 경우 Uncontrolled Components 방식은 제한적일 수 있다.
 
