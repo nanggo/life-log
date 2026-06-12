@@ -88,7 +88,7 @@
     {#if allTagsFromPosts && allTagsFromPosts.length > 0}
       <div class="mt-8">
         <h2 class="text-lg font-semibold text-zinc-800 dark:text-zinc-100 mb-4">관련 태그</h2>
-        <TagList tags={allTagsFromPosts} clickable={true} selectedTag={data.tagName} />
+        <TagList tags={allTagsFromPosts} clickable={true} />
       </div>
     {/if}
 
