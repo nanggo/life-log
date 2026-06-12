@@ -1,33 +1,21 @@
 <script lang="ts">
-  import GithubSlugger from 'github-slugger'
   import { onMount } from 'svelte'
 
   import { Card } from '../ui/Card'
 
   import { browser } from '$app/environment'
-  import type { Post } from '$lib/types'
+  import type { Heading, Post } from '$lib/types'
   import { optimizedScrollHandler } from '$lib/utils/performance'
 
   export let post: Post
-
-  interface ProcessedHeading {
-    depth: number
-    value: string
-    slug: string
-  }
 
   let elements: (HTMLElement | null)[] = []
   let shouldRender = false
   let scrollY: number
   let cleanupScroll: (() => void) | null = null
 
-  const headings: ProcessedHeading[] = post.headings.map((heading) => {
-    const slugger = new GithubSlugger()
-    return {
-      ...heading,
-      slug: slugger.slug(heading.value)
-    }
-  })
+  // slug은 빌드 시점에 rehype-slug가 생성한 id 그대로 (본문 앵커와 항상 일치)
+  const headings: Heading[] = post.headings.filter((heading) => heading.slug)
 
   // 지연 렌더링을 위한 스크롤 감지
   const checkShouldRender = () => {
@@ -65,7 +53,7 @@
     }
   })
 
-  let activeHeading: ProcessedHeading = headings[0]
+  let activeHeading: Heading = headings[0]
 
   const updateHeadings = (): void => {
     if (browser) {

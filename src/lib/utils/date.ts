@@ -21,6 +21,26 @@ export const isValidDate = (date: Date | string | null | undefined): date is Dat
 /**
  * 날짜를 yyyy-MM-dd 형식의 문자열로 포맷팅합니다.
  */
+/**
+ * 날짜를 표시용 형식(MMMM d, yyyy)의 문자열로 포맷팅합니다.
+ */
+export const formatDisplayDate = (date: Date | string | null | undefined): string | undefined => {
+  if (!date) return undefined
+
+  try {
+    const dateObj = typeof date === 'string' ? new Date(date) : date
+
+    if (!isValidDate(dateObj)) {
+      return undefined
+    }
+
+    return format(addTimezoneOffset(dateObj), 'MMMM d, yyyy')
+  } catch (error) {
+    console.error(`Error formatting display date: ${date}`, error)
+    return undefined
+  }
+}
+
 export const formatDate = (date: Date | string | null | undefined): string | undefined => {
   if (!date) return undefined
 
