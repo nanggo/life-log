@@ -34,6 +34,7 @@ vi.mock('@vercel/speed-insights/sveltekit', () => ({
 
 vi.mock('$lib/info', () => ({
   name: '낭고넷',
+  defaultOgImage: 'https://nanggo.net/og-default.png',
   description: '개발자 낭고의 기술 블로그',
   author: '낭고',
   bio: '풀스택 개발자',
