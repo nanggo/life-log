@@ -1,121 +1,18 @@
-# Agent Guide (Project-Wide)
+# life-log Working Agreements
 
-This guide standardizes how AI coding agents (and contributors) should work in this repository. It applies to the entire repo. If a more deeply nested `AGENTS.md` appears, it takes precedence for files under its directory.
+Markdown 기반 SvelteKit 개인 블로그다. 런타임 버전과 명령은 `package.json`을 현재 truth로 사용하고 `pnpm`을 쓴다.
 
-## Environment & Tooling
+## Content
 
-- Node: `22.x` (see `package.json:engines`)
-- Package manager: `pnpm`
-- Framework: SvelteKit 2.x (Svelte 4)
-- Styling: Tailwind CSS (+ typography)
-- Markdown: mdsvex
-- Adapter: `@sveltejs/adapter-vercel`
-- Tests: Vitest (+ JSDOM)
+- 새 글은 기존 구조를 확인하고 가능하면 `pnpm post`로 생성한다. 이 scaffold에는 필수 `description`이 없으므로 생성 후 보완한다.
+- category 값은 `src/lib/types/blog.ts`를 truth로 사용한다.
+- 최소 frontmatter는 `title`, `description`, `date`, `category`, `tags`다.
+- frontmatter의 선택적 문자열 `preview`는 작성자 입력이다. Pipeline이 이 값이나 본문에서 최종 `{ html, text }` preview를 만들고 `readingTime`, `displayDate`를 계산하므로 이 출력 필드는 frontmatter에 수동으로 추가하지 않는다.
+- 이미지 작성 규칙은 `docs/IMAGE_GUIDELINES.md`를 참고하되 실제 build 동작은 `package.json`과 `scripts/copy-images.js`를 truth로 사용한다. 현재 build는 `posts/`의 이미지를 `static/`에 복사한다.
 
-If needed locally, copy environment variables: `.env.example` → `.env`.
+## Changes and Verification
 
-## Core Commands
-
-- `pnpm dev` – Start development server
-- `pnpm build` – Production build (runs image copy step first)
-- `pnpm preview` – Preview production build
-- `pnpm check` / `pnpm check:watch` – Svelte/TS type checking
-- `pnpm lint` – ESLint + Prettier check
-- `pnpm format` – Prettier write
-- `pnpm test` / `pnpm test:run` / `pnpm test:coverage` / `pnpm test:ui` – Tests
-- `pnpm post` – Create a new blog post from template
-- `pnpm seo:validate` – Run SEO validation checks
-- `pnpm analyze` – Bundle analysis (client output)
-- `npx vercel build` – Verify Vercel deployment compatibility (recommended before deploy)
-
-## Pre‑Commit / Pre‑PR Checklist
-
-Always ensure the following pass before committing or opening a PR:
-
-1. Clean build: `pnpm build`
-2. Lint/format: `pnpm format` if needed, then `pnpm lint`
-3. Type check: `pnpm check`
-4. Tests: `pnpm test:run` (when relevant changes are made)
-5. Vercel compatibility (recommended): `npx vercel build`
-
-Run SEO validation (`pnpm seo:validate`) when:
-
-- Adding or restructuring routes/pages
-- Changing meta tags or structured data
-- Before significant releases or template/layout changes
-
-## Architecture & Structure
-
-- `posts/` – Markdown posts (frontmatter-supported)
-- `templates/post.md` – New-post template
-- `scripts/create-post.ts` – Interactive post generator (`pnpm post`)
-- `src/routes/` – SvelteKit routes (includes RSS and sitemap endpoints)
-- `src/lib/components/` – Reusable Svelte components
-- `src/lib/utils/` – Utilities (slug normalization, date, caching, URL helpers, etc.)
-- Static generation with prerendering enabled
-- RSS and sitemap generation under `src/routes/*/+server.*`
-
-Notable utilities/components:
-
-- Post utilities: `src/lib/utils/posts.ts`
-- Date & URL helpers: `src/lib/utils/date.ts`, `src/lib/utils/url-helpers.ts`
-- Caching: `src/lib/utils/cache-manager.ts`, `src/lib/utils/ttl-cache.ts`
-- UI building blocks under `src/lib/components/ui/*`
-
-## Content Authoring Runbook
-
-Primary flow (interactive):
-
-1. Run `pnpm post`
-2. Provide: title, slug (optional; auto-suggested), category, tags
-3. The script writes a new file to `posts/` using `templates/post.md`
-
-Details:
-
-- Categories are defined in `src/lib/types/blog.ts` (`Category` enum). Values are Korean: `일상` (Daily), `개발` (Development), `생각` (Thoughts), `리뷰` (Review).
-- Slug generation is handled in `scripts/create-post.ts` and will auto-suggest; it sanitizes input and falls back to a date-time-based slug when necessary, preserving Korean where applicable.
-- Do not manually edit computed fields (e.g., reading time or preview) if the pipeline populates them.
-- Frontmatter should include at minimum: `title`, `description`, `date`, `category`, and `tags`. Optional fields include `updated`, `draft`, `image`, `author`.
-
-Images:
-
-- See `docs/IMAGE_GUIDELINES.md` for conventions.
-- The build runs `scripts/copy-images.js`; other optimization scripts are available under `scripts/` if needed.
-
-## SEO & Quality
-
-- Use `pnpm seo:validate` during structural/SEO-related changes.
-- Ensure pages expose consistent metadata; verify RSS (`src/routes/rss.xml/+server.js`) and sitemap (`src/routes/sitemap.xml/+server.js`) still work after routing/content changes.
-- Keep accessible markup; see `src/lib/utils/accessibility.ts` and component patterns.
-
-## Agent Working Rules
-
-- Keep changes minimal and tightly scoped to the request.
-- Do not add dependencies or alter build/config unless explicitly requested.
-- Follow existing patterns and code style; prefer small, surgical patches.
-- Ensure linting, type checks, build, and relevant tests pass before proposing completion.
-- Update related docs when changing scripts, commands, or notable behavior.
-- Do not commit/push unless asked. Provide diffs/patches for review.
-
-## Testing Notes
-
-- Use Vitest for unit tests. Existing examples live under `src/**/**/*.test.*`.
-- When adding tests, mirror existing test structure and utilities (e.g., `src/test/setup.ts`).
-- Prefer targeted tests close to the code you change.
-
-## Deployment Notes
-
-- Target is Vercel via `@sveltejs/adapter-vercel`.
-- Use `npx vercel build` locally to catch adapter/runtime issues before merging.
-- Analytics and performance tooling: `@vercel/analytics`, `@vercel/speed-insights` are integrated.
-
-## Quick Reference
-
-- Dev: `pnpm dev`
-- Build/Preview: `pnpm build` → `pnpm preview`
-- Lint/Format: `pnpm lint` / `pnpm format`
-- Type check: `pnpm check`
-- Tests: `pnpm test:run`
-- New post: `pnpm post`
-- SEO: `pnpm seo:validate`
-- Vercel check: `npx vercel build`
+- `pnpm check`를 실행하고, 변경된 코드와 가장 가까운 테스트 경로를 지정해 `pnpm test:run -- <path>`를 실행한다. 전체 회귀가 필요하면 `pnpm test:run`을 사용한다.
+- metadata, route, RSS, sitemap 변경에는 `pnpm seo:validate`를 추가한다. 이 명령은 내부에서 `pnpm build`를 실행하고 `static/`, `.svelte-kit/`, `.seo-reports/`를 갱신하므로 실행 후 생성 diff를 확인한다.
+- SEO와 무관한 build pipeline 변경에는 `pnpm build`를 실행하고 생성 diff를 확인한다.
+- `npx vercel build`는 배포 호환성 확인용이며 일반 검증에는 사용하지 않는다. Vercel CLI가 project dependency가 아니므로 `npx`가 CLI를 다운로드할 수 있다.
