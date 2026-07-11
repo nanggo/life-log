@@ -56,9 +56,6 @@ function parseArguments(args) {
 
   if (!keyFile) throw new Error('--key-file is required')
   if (urls.length === 0) throw new Error('At least one changed URL is required')
-  if (urls.length > MAX_URLS_PER_REQUEST) {
-    throw new Error(`A single request can contain at most ${MAX_URLS_PER_REQUEST} URLs`)
-  }
 
   return { help: false, keyFile, dryRun, urls }
 }
@@ -81,15 +78,11 @@ async function readPublicKey(keyFileArgument) {
   }
 
   const expectedFileName = `${key}.txt`
-  const actualFileName = relativeKeyPath.split(sep).at(-1)
-  if (actualFileName !== expectedFileName) {
+  if (relativeKeyPath !== expectedFileName) {
     throw new Error(`The public key filename must be ${expectedFileName}`)
   }
 
-  const encodedKeyPath = relativeKeyPath
-    .split(sep)
-    .map((segment) => encodeURIComponent(segment))
-    .join('/')
+  const encodedKeyPath = encodeURIComponent(relativeKeyPath)
 
   return {
     key,
@@ -122,7 +115,12 @@ function normalizeChangedUrls(urlArguments) {
     return url.href
   })
 
-  return [...new Set(normalizedUrls)]
+  const deduplicatedUrls = [...new Set(normalizedUrls)]
+  if (deduplicatedUrls.length > MAX_URLS_PER_REQUEST) {
+    throw new Error(`A single request can contain at most ${MAX_URLS_PER_REQUEST} URLs`)
+  }
+
+  return deduplicatedUrls
 }
 
 async function submitIndexNow(payload) {

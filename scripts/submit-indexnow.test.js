@@ -40,6 +40,15 @@ describe('IndexNow CLI input validation', () => {
     })
   })
 
+  it('enforces the request limit after removing duplicates', () => {
+    expect(normalizeChangedUrls(Array.from({ length: 10_001 }, () => '/post/example'))).toEqual([
+      'https://blog.nanggo.net/post/example'
+    ])
+
+    const uniqueUrls = Array.from({ length: 10_001 }, (_, index) => `/post/example-${index}`)
+    expect(() => normalizeChangedUrls(uniqueUrls)).toThrow('at most 10000 URLs')
+  })
+
   it('keeps the public key at the site root', async () => {
     await expect(readPublicKey('static/nested/key.txt')).rejects.toThrow('directly under static/')
   })
