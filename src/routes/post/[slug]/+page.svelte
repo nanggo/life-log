@@ -64,13 +64,16 @@
 
   // Breadcrumb items for post page
   $: breadcrumbItems = [
+    { label: '홈', href: '/' },
     { label: '포스트', href: '/posts' },
     {
       label: data.post.category,
-      href: `/posts/category/${encodeURIComponent(data.post.category)}`,
-      current: true
-    }
+      href: `/posts/category/${encodeURIComponent(data.post.category)}`
+    },
+    { label: data.post.title, current: true }
   ]
+
+  const getPostUrl = (slug: string): string => `/post/${encodeURIComponent(slug)}`
 </script>
 
 <svelte:head>
@@ -169,6 +172,44 @@
         <svelte:component this={data.component} />
       </div>
     </article>
+
+    {#if data.post.previous || data.post.next}
+      <nav class="grid grid-cols-1 gap-4 py-8 sm:grid-cols-2" aria-label="포스트 탐색">
+        {#if data.post.previous}
+          <a
+            href={getPostUrl(data.post.previous.slug)}
+            rel="prev"
+            aria-label={`이전 글: ${data.post.previous.title}`}
+            class="group rounded-lg border border-zinc-200 p-4 transition-colors hover:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:border-teal-400 dark:focus-visible:ring-teal-400 dark:focus-visible:ring-offset-zinc-900"
+            data-sveltekit-preload-data="viewport"
+          >
+            <span class="block text-sm text-zinc-500 dark:text-zinc-400">← 이전 글</span>
+            <span
+              class="mt-1 block font-medium text-zinc-800 group-hover:text-teal-600 dark:text-zinc-100 dark:group-hover:text-teal-400"
+            >
+              {data.post.previous.title}
+            </span>
+          </a>
+        {/if}
+
+        {#if data.post.next}
+          <a
+            href={getPostUrl(data.post.next.slug)}
+            rel="next"
+            aria-label={`다음 글: ${data.post.next.title}`}
+            class="group rounded-lg border border-zinc-200 p-4 text-right transition-colors hover:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:border-teal-400 dark:focus-visible:ring-teal-400 dark:focus-visible:ring-offset-zinc-900 sm:col-start-2"
+            data-sveltekit-preload-data="viewport"
+          >
+            <span class="block text-sm text-zinc-500 dark:text-zinc-400">다음 글 →</span>
+            <span
+              class="mt-1 block font-medium text-zinc-800 group-hover:text-teal-600 dark:text-zinc-100 dark:group-hover:text-teal-400"
+            >
+              {data.post.next.title}
+            </span>
+          </a>
+        {/if}
+      </nav>
+    {/if}
 
     <!-- bio -->
     <hr />
