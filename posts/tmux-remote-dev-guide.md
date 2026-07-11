@@ -2,6 +2,7 @@
 title: 'tmux 입문: SSH가 끊겨도 작업이 유지되는 원격 개발 환경 세팅 (+ 내 설정/치트시트)'
 seoTitle: 'tmux 원격 개발 환경 세팅 가이드'
 date: '2025-12-29'
+updated: '2026-06-12T17:02:12+09:00'
 category: 개발
 image: ./cover.webp
 imageAlt: '원격 개발 세션이 끊기지 않고 유지되는 터미널 패널 일러스트'

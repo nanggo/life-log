@@ -3,6 +3,7 @@ title: HTML input의 accept 속성 이해하기
 seoTitle: 'HTML input accept 속성 사용법'
 description: 'HTML input accept 속성으로 업로드 가능한 파일 유형을 제한하는 방법을 정리했다. 이미지, 비디오, 확장자 필터 예시와 사용자 경험, 서버 처리, 보안 관점의 주의점, 서버 검증이 여전히 필요하다는 점을 함께 다룬다.'
 date: 2023-11-14T16:11:45.000Z
+updated: '2026-06-12T17:03:47+09:00'
 tags:
   - frontend
 draft: false

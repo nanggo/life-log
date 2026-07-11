@@ -3,6 +3,7 @@ title: 프론트엔드 개발자를 위한 SOLID 원칙 길라잡이
 seoTitle: '프론트엔드 SOLID 원칙 적용 가이드'
 slug: solid-principles-frontend-guide
 date: '2025-07-30 10:28:51'
+updated: '2026-06-12T16:54:35+09:00'
 tags:
   - frontend
 description: '프론트엔드 컴포넌트가 복잡해지는 문제를 SOLID 원칙으로 풀어보는 글이다. 단일 책임, 개방 폐쇄, 리스코프 치환, 인터페이스 분리, 의존성 역전을 React 예시와 함께 살펴보고 바로 적용할 수 있는 기준을 정리했다.'

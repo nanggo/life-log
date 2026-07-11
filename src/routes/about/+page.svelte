@@ -66,7 +66,7 @@
   <meta name="twitter:image:alt" content={`${name} 소개`} />
 
   <!-- Additional SEO Meta Tags -->
-  <!-- robots and googlebot are handled globally in src/app.html -->
+  <!-- robots directives are handled globally -->
   <!-- canonical is handled globally in +layout.svelte -->
 
   {@html jsonLdScript(_jsonLd)}
@@ -108,7 +108,7 @@
     margin-top: 0;
     margin-bottom: 2px;
   }
-  :global(.about h1) {
+  :global(.about .prose h2) {
     border-left: 12px solid var(--tw-prose-links);
     padding-left: 8px;
     padding-bottom: 0px;
@@ -121,12 +121,12 @@
   }
 
   @media (min-width: 640px) {
-    :global(.about h1) {
+    :global(.about .prose h2) {
       font-size: 2.4em;
     }
   }
 
-  :global(.about h2) {
+  :global(.about .prose h3) {
     position: relative;
     display: inline-block;
     margin-top: 2em;
@@ -138,12 +138,12 @@
   }
 
   @media (min-width: 640px) {
-    :global(.about h2) {
+    :global(.about .prose h3) {
       font-size: 2.15em;
     }
   }
 
-  :global(.about h2::after) {
+  :global(.about .prose h3::after) {
     position: absolute;
     display: inline-block;
     top: 0;
@@ -156,37 +156,23 @@
   }
 
   @media (min-width: 640px) {
-    :global(.about h2::after) {
+    :global(.about .prose h3::after) {
       right: -12px;
       width: 12px;
       height: 12px;
     }
   }
 
-  :global(.about h3) {
-    margin-top: 1.5em;
-    margin-bottom: 0.3em;
-    font-size: 1.25em;
-    letter-spacing: -1px;
-    border-bottom: transparent;
-  }
-
-  @media (min-width: 640px) {
-    :global(.about h3) {
-      font-size: 1.5em;
-    }
-  }
-
-  :global(.about h4) {
+  :global(.about .prose h4) {
+    margin-top: 26px;
+    margin-bottom: 13px;
     font-size: 1.1em;
     font-weight: 600;
     letter-spacing: -1px;
-    margin-top: 26px;
-    margin-bottom: 13px;
   }
 
   @media (min-width: 640px) {
-    :global(.about h4) {
+    :global(.about .prose h4) {
       font-size: 1.25em;
     }
   }
@@ -274,29 +260,29 @@
     color: var(--tw-prose-links);
     border: 1.4px solid var(--tw-prose-links);
   }
-  :global(.about h2 a) {
+  :global(.about .prose h3 a) {
     color: var(--tw-prose-links);
     text-decoration: none;
     transition: color 0.15s ease-in-out;
   }
 
-  :global(.about h2 a:hover) {
+  :global(.about .prose h3 a:hover) {
     color: var(--tw-prose-links-hover);
     text-decoration: none;
   }
 
-  /* Tighten spacing between h1 and the next h2 (About page only) */
-  :global(.about h1) {
+  /* Preserve the existing spacing after shifting the content headings down one level. */
+  :global(.about .prose h2) {
     margin-bottom: 0.5rem; /* reduce collapsed gap driver from prose default */
   }
-  :global(.about h1 + h2) {
+  :global(.about .prose h2 + h3) {
     margin-top: 1.25rem; /* ~20px on mobile */
   }
   @media (min-width: 640px) {
-    :global(.about h1) {
+    :global(.about .prose h2) {
       margin-bottom: 0.75rem; /* ~12px on sm+ */
     }
-    :global(.about h1 + h2) {
+    :global(.about .prose h2 + h3) {
       margin-top: 1.5rem; /* ~24px on sm+ */
     }
   }

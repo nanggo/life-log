@@ -2,7 +2,7 @@
 title: About NANGGO | NANGGO's LIFELOG
 ---
 
-# 유지성
+## 유지성
 
 <div align="right"><sub><i>Last updated: 2025.10.16</i></sub></div>
 
@@ -26,9 +26,9 @@ title: About NANGGO | NANGGO's LIFELOG
 | **LinkedIn** | <https://linkedin.com/in/jisung-yoo> |
 |    **Email** | <yamsiri@gmail.com>                  |
 
-# Experiences
+## Experiences
 
-## [OTS Korea](https://ots.one-line.com/kr)
+### [OTS Korea](https://ots.one-line.com/kr)
 
 |              |                                                       |
 | -----------: | ----------------------------------------------------- |
@@ -45,7 +45,7 @@ title: About NANGGO | NANGGO's LIFELOG
 - GitOps 관리
 - CI/CD 파이프라인 구축 및 운영
 
-## [SK Telecom](https://www.sktelecom.com/)
+### [SK Telecom](https://www.sktelecom.com/)
 
 |              |                                                                                                     |
 | -----------: | --------------------------------------------------------------------------------------------------- |
@@ -59,7 +59,7 @@ title: About NANGGO | NANGGO's LIFELOG
 - 정산 관리 개발 (정산, 단가, 자재 관리)
 - 공정 관리 개발 (2군 공정 관리)
 
-## [AhnLab](https://www.ahnlab.com)
+### [AhnLab](https://www.ahnlab.com)
 
 |              |                                                                           |
 | -----------: | ------------------------------------------------------------------------- |
@@ -75,7 +75,7 @@ title: About NANGGO | NANGGO's LIFELOG
 - 프로젝트 구조 생성
 - 페이지 개발(모니터링, 분석설정, 공통)
 
-## [Bithumb](https://www.bithumb.com)
+### [Bithumb](https://www.bithumb.com)
 
 |              |                                   |
 | -----------: | --------------------------------- |
@@ -88,7 +88,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - Event 관리 설계 및 개발
 
-## [SK C&C](https://www.skcc.co.kr)
+### [SK C&C](https://www.skcc.co.kr)
 
 |              |                                                                                                                            |
 | -----------: | -------------------------------------------------------------------------------------------------------------------------- |
@@ -104,7 +104,7 @@ title: About NANGGO | NANGGO's LIFELOG
 - 마크다운 뷰어 개발
 - 텍스트 에디터 개발
 
-## [RadishFiction](https://radishfiction.com)
+### [RadishFiction](https://radishfiction.com)
 
 |              |                                                                                             |
 | -----------: | ------------------------------------------------------------------------------------------- |
@@ -139,7 +139,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - Audiobook 관리 프론트엔드 개발 (콘텐츠, 큐레이션, 정산)
 
-## [현대인프라코어](https://www.hd-infracore.com/)
+### [현대인프라코어](https://www.hd-infracore.com/)
 
 |              |                                            |
 | -----------: | ------------------------------------------ |
@@ -152,7 +152,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 장비 상세 개발
 
-## [아모레퍼시픽](https://www.amorepacific.com)
+### [아모레퍼시픽](https://www.amorepacific.com)
 
 |              |                                               |
 | -----------: | --------------------------------------------- |
@@ -165,7 +165,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 홈, BEST, 브랜드, 브랜드 전체보기 개발
 
-## [스마일게이트 스토브](https://www.onstove.com/)
+### [스마일게이트 스토브](https://www.onstove.com/)
 
 |              |                                                           |
 | -----------: | --------------------------------------------------------- |
@@ -182,7 +182,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 - 방송 설정 및 업로드 화면 개발
 
-## [ezCaretech](https://www.ezcaretech.com)
+### [ezCaretech](https://www.ezcaretech.com)
 
 |              |                                                                        |
 | -----------: | ---------------------------------------------------------------------- |

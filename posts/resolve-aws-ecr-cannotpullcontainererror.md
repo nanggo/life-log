@@ -3,6 +3,7 @@ title: AWS ECR CannotPullContainerError 해결
 seoTitle: 'AWS ECR CannotPullContainerError 해결 방법'
 description: 'AWS CLI v2 전환 이후 ECR 로그인 방식이 바뀌며 발생한 CannotPullContainerError를 해결한 기록이다. get-login에서 get-login-password와 password-stdin으로 바꾸는 핵심 절차를 정리했다.'
 date: 2023-03-16T16:03:34.000Z
+updated: '2026-07-10T23:56:09+09:00'
 tags:
   - devops
 draft: false
@@ -12,7 +13,7 @@ image: ./cover.webp
 imageAlt: '컨테이너 이미지 인증 문제를 해결하는 개발 인프라 일러스트'
 ---
 
-# 문제 발생 및 원인
+## 문제 발생 및 원인
 
 예전에 발생하고 해결한 문제인데, 블로그 정리하면서 생각이 나서 정리해본다.
 
@@ -24,7 +25,7 @@ STOPPED (CannotPullContainerError: "Error response from daemon:
 
 aws cli가 v1 -> v2로 업그레이드 되면서 기존 로그인 방식이 deprecated 되서 위와 같은 에러가 발생했다.
 
-# 해결 방법
+## 해결 방법
 
 1. `get-login` -> `get-login-password` 로 변경
 2. `--password-stdin` 옵션으로 패스워드를 입력받음
@@ -33,7 +34,7 @@ aws cli가 v1 -> v2로 업그레이드 되면서 기존 로그인 방식이 depr
 aws ecr get-login-password --region us-west-1 | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.us-west-1.amazonaws.com
 ```
 
-# 참고
+## 참고
 
 - [44bits](https://www.44bits.io/ko/post/amazon-ecr-login-by-awscliv2)
 - [aws document - get-login-password](https://docs.aws.amazon.com/cli/latest/reference/ecr/get-login-password.html)

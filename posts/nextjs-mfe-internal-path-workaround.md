@@ -3,6 +3,7 @@ title: 'Next.js에서 MFE 환경의 경로 이슈를 우회하는 법'
 seoTitle: 'Next.js MFE 내부 경로 이슈 우회하기'
 slug: 'nextjs-mfe-internal-path-workaround'
 date: '2025-11-11 23:58:43'
+updated: '2026-06-12T17:04:24+09:00'
 category: '개발'
 image: ./cover.webp
 imageAlt: '마이크로 프론트엔드 경로를 게이트웨이로 우회하는 구조 일러스트'
