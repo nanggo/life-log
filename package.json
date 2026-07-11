@@ -18,6 +18,7 @@
 		"format": "prettier --write .",
 		"seo:validate": "node scripts/seo-validation.js",
 		"seo:validate:built": "node scripts/seo-validation.js --no-build",
+		"indexnow:submit": "node scripts/submit-indexnow.js",
 		"test": "vitest",
 		"test:run": "vitest run",
 		"test:coverage": "vitest run --coverage",
