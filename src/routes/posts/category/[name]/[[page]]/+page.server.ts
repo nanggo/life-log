@@ -53,7 +53,10 @@ export async function load({ params }) {
     totalPages,
     seo: {
       title: `${validCategory} 포스트${page > 1 ? ` - ${page}페이지` : ''}`,
-      description: `${validCategory} 카테고리의 포스트를 확인하세요. 총 ${totalPosts}개의 포스트가 있습니다.`
+      description:
+        page > 1
+          ? `NANGGO's LIFELOG의 ${validCategory} 카테고리 ${page}페이지입니다. 전체 ${totalPosts}개의 글에서 관련 경험과 생각, 실무 기록을 이어서 살펴보세요.`
+          : `NANGGO's LIFELOG의 ${validCategory} 카테고리입니다. ${totalPosts}개의 글에서 관련 경험과 생각, 실무 기록을 한곳에서 살펴보세요.`
     }
   }
 }

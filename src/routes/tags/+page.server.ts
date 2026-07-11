@@ -55,7 +55,7 @@ export async function load() {
     statistics,
     seo: {
       title: '모든 태그',
-      description: `블로그의 모든 태그를 확인하세요. 총 ${tagInfos.length}개의 태그가 있습니다.`
+      description: `NANGGO's LIFELOG에서 주제별 글을 빠르게 탐색할 수 있는 태그 모음입니다. 총 ${tagInfos.length}개의 태그를 확인해 보세요.`
     }
   }
 }

@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit'
 
 import { posts as allPosts } from '$lib/data/posts'
-import { description } from '$lib/info'
+import { description, name } from '$lib/info'
 import { extractPostMetadata } from '$lib/util'
 
 // Statically generate all post list pages
@@ -26,6 +26,7 @@ export async function load({ params }) {
 
   // 목록 페이지에 필요한 메타데이터만 포함
   const posts = extractPostMetadata(paginatedPosts)
+  const title = `${name}'s life log | Posts${page > 1 ? ` - ${page}페이지` : ''}`
 
   return {
     page,
@@ -33,7 +34,10 @@ export async function load({ params }) {
     totalPosts,
     totalPages,
     posts,
-    // 페이지네이션 페이지는 중복 메타를 피하기 위해 페이지 번호가 들어간 설명 사용
-    seo: page > 1 ? { description: `${description} (${page}페이지)` } : undefined
+    seo: {
+      title,
+      // 페이지네이션 페이지는 중복 메타를 피하기 위해 페이지 번호가 들어간 설명 사용
+      description: page > 1 ? `${description} (${page}페이지)` : description
+    }
   }
 }

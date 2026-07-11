@@ -14,6 +14,7 @@ import {
 import { website } from '$lib/info'
 import { generateCacheHeaders } from '$lib/utils/cache'
 import { createSafeSlug } from '$lib/utils/posts'
+import { isTagIndexable } from '$lib/utils/seo'
 
 export const prerender = true
 
@@ -54,20 +55,28 @@ const toAbsoluteImageUrl = (imageUrl, slug) => {
   return publicImageUrl.startsWith('http') ? publicImageUrl : `${website}${publicImageUrl}`
 }
 
-/**
- * 유효한 날짜를 ISO 문자열로 변환하는 안전한 함수
- * @param {string|Date} dateValue - 변환할 날짜 값
- * @returns {string} - ISO 형식의 날짜 문자열
- */
-const safeToISOString = (dateValue) => {
-  try {
-    const date = new Date(dateValue)
-    // Date 객체의 valueOf()가 NaN이면 유효하지 않은 날짜
-    return !isNaN(date.valueOf()) ? date.toISOString() : new Date().toISOString() // 유효하지 않은 경우 현재 날짜 사용
-  } catch (_e) {
-    return new Date().toISOString() // 예외 발생 시 현재 날짜 사용
-  }
+const toValidTimestamp = (dateValue) => {
+  if (!dateValue) return null
+
+  const timestamp = new Date(dateValue).valueOf()
+  return Number.isNaN(timestamp) ? null : timestamp
 }
+
+const toValidISOString = (dateValue) => {
+  const timestamp = toValidTimestamp(dateValue)
+  return timestamp === null ? null : new Date(timestamp).toISOString()
+}
+
+const getLatestModifiedIso = (items) => {
+  const latestTimestamp = items.reduce((latest, item) => {
+    const timestamp = toValidTimestamp(item.updated || item.date)
+    return timestamp !== null && (latest === null || timestamp > latest) ? timestamp : latest
+  }, null)
+
+  return latestTimestamp === null ? null : new Date(latestTimestamp).toISOString()
+}
+
+const renderLastmod = (isoDate) => (isoDate ? `<lastmod>${isoDate}</lastmod>` : '')
 
 /**
  * 포스트에서 첫 번째 이미지 정보를 추출하는 함수
@@ -116,6 +125,7 @@ const extractFirstImage = (post) => {
  */
 export async function GET({ setHeaders }) {
   const { etag, lastModified } = generateCacheHeaders(posts)
+  const latestPostModified = getLatestModifiedIso(posts)
 
   setHeaders({
     'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
@@ -137,8 +147,8 @@ export async function GET({ setHeaders }) {
       xmlns:xhtml="http://www.w3.org/1999/xhtml"
     >
       <url>
-        <loc>${website}</loc>
-        <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
+        <loc>${website}/</loc>
+        ${renderLastmod(latestPostModified)}
         <changefreq>daily</changefreq>
         <priority>1.0</priority>
       </url>
@@ -149,9 +159,15 @@ export async function GET({ setHeaders }) {
       </url>
       <url>
         <loc>${website}/posts</loc>
-        <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
+        ${renderLastmod(latestPostModified)}
         <changefreq>daily</changefreq>
         <priority>0.9</priority>
+      </url>
+      <url>
+        <loc>${website}/tags</loc>
+        ${renderLastmod(latestPostModified)}
+        <changefreq>weekly</changefreq>
+        <priority>0.7</priority>
       </url>
 
       ${(() => {
@@ -161,7 +177,7 @@ export async function GET({ setHeaders }) {
         for (let p = 2; p <= totalPages; p++) {
           pages.push(`<url>
             <loc>${website}/posts/${p}</loc>
-            <lastmod>${safeToISOString(posts[0]?.date || new Date())}</lastmod>
+            ${renderLastmod(latestPostModified)}
             <changefreq>daily</changefreq>
             <priority>0.6</priority>
           </url>`)
@@ -183,7 +199,7 @@ export async function GET({ setHeaders }) {
 
           return `<url>
             <loc>${getPostUrl(post.slug)}</loc>
-            <lastmod>${safeToISOString(post.updated || post.date)}</lastmod>
+            ${renderLastmod(toValidISOString(post.updated || post.date))}
             <changefreq>weekly</changefreq>
             <priority>0.7</priority>${imageXml}
           </url>`
@@ -196,14 +212,11 @@ export async function GET({ setHeaders }) {
           return categories
             .map((info) => {
               const catPosts = getPostsByCategory(info.category)
-              const latest = catPosts && catPosts.length > 0 ? catPosts[0] : null
-              const lastmod = latest
-                ? safeToISOString(latest.updated || latest.date)
-                : safeToISOString(new Date())
+              const lastmod = getLatestModifiedIso(catPosts || [])
               const urls = [
                 `<url>
                 <loc>${getCategoryUrl(info.category)}</loc>
-                <lastmod>${lastmod}</lastmod>
+                ${renderLastmod(lastmod)}
                 <changefreq>weekly</changefreq>
                 <priority>0.6</priority>
               </url>`
@@ -213,7 +226,7 @@ export async function GET({ setHeaders }) {
               for (let p = 2; p <= catTotalPages; p++) {
                 urls.push(`<url>
                 <loc>${getCategoryUrl(info.category)}/${p}</loc>
-                <lastmod>${lastmod}</lastmod>
+                ${renderLastmod(lastmod)}
                 <changefreq>weekly</changefreq>
                 <priority>0.5</priority>
               </url>`)
@@ -230,15 +243,13 @@ export async function GET({ setHeaders }) {
         try {
           const tags = getAllTagsWithCounts()
           return tags
+            .filter(({ count }) => isTagIndexable(count))
             .map(({ tag }) => {
               const tagPosts = getPostsByTag(tag)
-              const latest = tagPosts && tagPosts.length > 0 ? tagPosts[0] : null
-              const lastmod = latest
-                ? safeToISOString(latest.updated || latest.date)
-                : safeToISOString(new Date())
+              const lastmod = getLatestModifiedIso(tagPosts || [])
               return `<url>
                 <loc>${getTagUrl(tag)}</loc>
-                <lastmod>${lastmod}</lastmod>
+                ${renderLastmod(lastmod)}
                 <changefreq>weekly</changefreq>
                 <priority>0.5</priority>
               </url>`
