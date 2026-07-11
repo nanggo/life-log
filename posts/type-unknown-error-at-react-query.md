@@ -3,6 +3,7 @@ title: react-query에서 Type "unknown" is not assignable to type 에러
 seoTitle: 'React Query unknown 타입 에러 해결 방법'
 description: 'React Query에서 Type unknown is not assignable to type 오류가 발생하는 이유와 해결 방법을 정리했다. 타입 단언과 useQuery 제네릭 지정으로 반환 데이터 타입을 명확히 다루는 흐름을 설명한다.'
 date: 2023-03-25T14:03:40.000Z
+updated: '2026-06-12T17:03:47+09:00'
 tags:
   - frontend
 draft: false
