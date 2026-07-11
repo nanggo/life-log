@@ -102,6 +102,9 @@ function normalizeChangedUrls(urlArguments) {
     if (!argument.startsWith('/') && !/^https:\/\//i.test(argument)) {
       throw new Error(`URL must be an HTTPS URL or an absolute path: ${argument}`)
     }
+    if (/%(?![a-f\d]{2})/i.test(argument)) {
+      throw new Error(`URL contains invalid percent encoding: ${argument}`)
+    }
 
     const url = new URL(argument, PRODUCTION_ORIGIN)
     if (url.origin !== PRODUCTION_ORIGIN || url.protocol !== 'https:') {
@@ -111,6 +114,9 @@ function normalizeChangedUrls(urlArguments) {
       throw new Error(
         `URL must not contain credentials, a query string, or a fragment: ${argument}`
       )
+    }
+    if (url.pathname !== '/' && url.pathname.endsWith('/')) {
+      throw new Error(`URL must not use a trailing slash: ${argument}`)
     }
 
     return url.href

@@ -19,6 +19,8 @@ describe('IndexNow CLI input validation', () => {
     )
     expect(() => normalizeChangedUrls(['/post/example?preview=true'])).toThrow('query string')
     expect(() => normalizeChangedUrls(['/post/example#section'])).toThrow('fragment')
+    expect(() => normalizeChangedUrls(['/post/example/'])).toThrow('trailing slash')
+    expect(() => normalizeChangedUrls(['/post/example%zz'])).toThrow('percent encoding')
   })
 
   it('requires an explicit public key file and at least one URL', () => {
