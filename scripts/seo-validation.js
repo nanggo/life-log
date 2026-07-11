@@ -14,7 +14,7 @@
 
 import { execSync } from 'child_process'
 import { writeFileSync, mkdirSync, existsSync, readFileSync, readdirSync } from 'fs'
-import { join, dirname } from 'path'
+import { join, dirname, relative, resolve, sep } from 'path'
 import { fileURLToPath } from 'url'
 
 import { parse } from 'node-html-parser'
@@ -24,42 +24,52 @@ const __dirname = dirname(__filename)
 const projectRoot = join(__dirname, '..')
 const reportsDir = join(projectRoot, '.seo-reports')
 const buildDir = join(projectRoot, '.svelte-kit/output')
+const prerenderedPagesDir = join(buildDir, 'prerendered/pages')
 
 // Ensure reports directory exists
 if (!existsSync(reportsDir)) {
   mkdirSync(reportsDir, { recursive: true })
 }
 
+function findHtmlFiles(directory) {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = join(directory, entry.name)
+    if (entry.isDirectory()) return findHtmlFiles(entryPath)
+    return entry.isFile() && entry.name.endsWith('.html') ? [entryPath] : []
+  })
+}
+
+export function toRoutePath(filePath) {
+  const relativePath = relative(prerenderedPagesDir, filePath).split(sep).join('/')
+  const routeWithoutExtension = relativePath.replace(/\.html$/, '')
+  const route = routeWithoutExtension === 'index' ? '' : routeWithoutExtension
+  const encodedRoute = route
+    .split('/')
+    .filter(Boolean)
+    .map((segment) => {
+      try {
+        return encodeURIComponent(decodeURIComponent(segment))
+      } catch (_error) {
+        return encodeURIComponent(segment)
+      }
+    })
+    .join('/')
+
+  return encodedRoute ? `/${encodedRoute}` : '/'
+}
+
 /**
- * Discover testable pages from build output (after build).
- * Falls back to static choices if build output is unavailable.
+ * Discover every prerendered HTML page recursively from the completed build.
  */
 function discoverTestPages() {
-  const defaults = [
-    { path: '/', name: 'Homepage' },
-    { path: '/about', name: 'About Page' }
-  ]
+  if (!existsSync(prerenderedPagesDir)) return []
 
-  try {
-    const postsDir = join(buildDir, 'prerendered/pages/post')
-    if (existsSync(postsDir)) {
-      const files = readdirSync(postsDir)
-      const htmlFiles = files.filter((f) => f.endsWith('.html'))
-      if (htmlFiles.length > 0) {
-        const postPages = htmlFiles.sort().map((file) => {
-          const slug = file.replace(/\.html$/, '')
-          return { path: `/post/${slug}`, name: `Post Page: ${slug}` }
-        })
-
-        return [...defaults, ...postPages]
-      }
-    }
-  } catch (_e) {
-    // ignore and fall back to defaults
-  }
-
-  // Fallback: try a common posts listing page if available
-  return [...defaults, { path: '/posts', name: 'Posts Listing' }]
+  return findHtmlFiles(prerenderedPagesDir)
+    .map((filePath) => {
+      const path = toRoutePath(filePath)
+      return { path, name: path === '/' ? 'Homepage' : `Page: ${path}`, filePath }
+    })
+    .sort((a, b) => a.path.localeCompare(b.path))
 }
 
 /**
@@ -67,6 +77,8 @@ function discoverTestPages() {
  */
 const config = {
   productionDomain: 'https://blog.nanggo.net',
+  minimumDescriptionLength: 50,
+  maximumDescriptionLength: 160,
   allowedDuplicateMetaTags: ['article:tag'],
   metaTagsToCheck: [
     'title',
@@ -153,7 +165,8 @@ function extractMetaTags(htmlContent) {
 /**
  * Validate SEO elements for a specific page
  */
-function validatePageSEO(htmlContent, pageName) {
+function validatePageSEO(htmlContent, pageName, pagePath = null) {
+  const root = parse(htmlContent)
   const { metaTags, duplicates } = extractMetaTags(htmlContent)
   const issues = []
 
@@ -199,15 +212,38 @@ function validatePageSEO(htmlContent, pageName) {
   // Validate canonical URL
   if (metaTags.canonical) {
     try {
-      new URL(metaTags.canonical)
-      if (!metaTags.canonical.startsWith(config.productionDomain)) {
+      const canonicalUrl = new URL(metaTags.canonical)
+      if (canonicalUrl.origin !== config.productionDomain) {
         issues.push({
           type: 'canonical_domain',
           tag: 'canonical',
           value: metaTags.canonical,
-          severity: 'warning',
+          severity: 'error',
           message: 'Canonical URL should use production domain'
         })
+      }
+
+      if (canonicalUrl.search || canonicalUrl.hash) {
+        issues.push({
+          type: 'canonical_query_or_hash',
+          tag: 'canonical',
+          value: metaTags.canonical,
+          severity: 'error',
+          message: 'Canonical URL must not contain a query string or fragment'
+        })
+      }
+
+      if (pagePath) {
+        const expectedCanonical = new URL(pagePath, config.productionDomain).href
+        if (canonicalUrl.href !== expectedCanonical) {
+          issues.push({
+            type: 'canonical_path_mismatch',
+            tag: 'canonical',
+            value: metaTags.canonical,
+            severity: 'error',
+            message: `Canonical URL must match the prerendered route (${expectedCanonical})`
+          })
+        }
       }
     } catch (_error) {
       issues.push({
@@ -219,6 +255,30 @@ function validatePageSEO(htmlContent, pageName) {
       })
     }
   }
+
+  root.querySelectorAll('script[type="application/ld+json"]').forEach((script, index) => {
+    const jsonLd = script.text.trim()
+    if (!jsonLd) {
+      issues.push({
+        type: 'json_ld_empty',
+        tag: 'script[type="application/ld+json"]',
+        severity: 'error',
+        message: `JSON-LD block ${index + 1} is empty`
+      })
+      return
+    }
+
+    try {
+      JSON.parse(jsonLd)
+    } catch (error) {
+      issues.push({
+        type: 'json_ld_invalid',
+        tag: 'script[type="application/ld+json"]',
+        severity: 'error',
+        message: `JSON-LD block ${index + 1} is invalid JSON: ${error.message}`
+      })
+    }
+  })
 
   // Validate title length
   if (metaTags.title) {
@@ -233,43 +293,204 @@ function validatePageSEO(htmlContent, pageName) {
     }
   }
 
-  // Validate description length
+  const robotsDirectives = (metaTags.robots || '')
+    .toLowerCase()
+    .split(',')
+    .map((directive) => directive.trim().split(/\s+/)[0])
+    .filter(Boolean)
+  const isIndexable = !robotsDirectives.includes('noindex')
+
+  // Treat description length as a language-dependent quality signal. Short-description
+  // warnings are only useful for pages that search engines are allowed to index.
   if (metaTags.description) {
-    if (metaTags.description.length > 160) {
+    if (metaTags.description.length > config.maximumDescriptionLength) {
       issues.push({
         type: 'description_too_long',
         tag: 'description',
         value: metaTags.description,
         severity: 'warning',
-        message: `Description is ${metaTags.description.length} characters (recommended: 150-160)`
+        message: `Description is ${metaTags.description.length} characters (recommended: ${config.minimumDescriptionLength}-${config.maximumDescriptionLength}, language-dependent)`
       })
-    } else if (metaTags.description.length < 120) {
+    } else if (isIndexable && metaTags.description.length < config.minimumDescriptionLength) {
       issues.push({
         type: 'description_too_short',
         tag: 'description',
         value: metaTags.description,
         severity: 'warning',
-        message: `Description is ${metaTags.description.length} characters (recommended: 150-160)`
+        message: `Description is ${metaTags.description.length} characters (recommended: ${config.minimumDescriptionLength}-${config.maximumDescriptionLength}, language-dependent)`
       })
     }
   }
 
   return {
     pageName,
+    pagePath,
     metaTags,
     duplicates,
     issues,
+    isIndexable,
     isValid: issues.filter((i) => i.severity === 'error').length === 0
   }
 }
 
+function validateCanonicalUniqueness(pageResults) {
+  const canonicalToPages = new Map()
+
+  pageResults
+    .filter((result) => result.metaTags.canonical)
+    .forEach((result) => {
+      let canonical
+      try {
+        canonical = new URL(result.metaTags.canonical).href
+      } catch (_error) {
+        return
+      }
+
+      const matchingPages = canonicalToPages.get(canonical) || []
+      matchingPages.push(result)
+      canonicalToPages.set(canonical, matchingPages)
+    })
+
+  canonicalToPages.forEach((matchingPages, canonical) => {
+    if (matchingPages.length < 2) return
+
+    matchingPages.forEach((result) => {
+      result.issues.push({
+        type: 'canonical_duplicate',
+        tag: 'canonical',
+        value: canonical,
+        severity: 'error',
+        message: `Canonical URL is shared by ${matchingPages.length} prerendered pages`
+      })
+      result.isValid = false
+    })
+  })
+}
+
+export function validateXmlStructure(xmlContent, issues) {
+  const stack = []
+  const rootElements = []
+  const tagPattern = /<[^>]+>/g
+  let cursor = 0
+  let match
+
+  while ((match = tagPattern.exec(xmlContent)) !== null) {
+    const textOutsideTags = xmlContent.slice(cursor, match.index)
+    if (stack.length === 0 && textOutsideTags.trim()) {
+      issues.push('Sitemap contains text outside the root element')
+      return
+    }
+
+    const tag = match[0]
+    cursor = tagPattern.lastIndex
+
+    if (tag.startsWith('<?') || tag.startsWith('<!')) continue
+
+    const closingMatch = tag.match(/^<\/\s*([A-Za-z_][\w:.-]*)\s*>$/)
+    if (closingMatch) {
+      const actualName = closingMatch[1]
+      const expectedName = stack.pop()
+      if (expectedName !== actualName) {
+        issues.push(
+          expectedName
+            ? `Sitemap XML closes ${actualName} while ${expectedName} is open`
+            : `Sitemap XML has an unexpected closing ${actualName} element`
+        )
+        return
+      }
+      continue
+    }
+
+    const openingMatch = tag.match(/^<\s*([A-Za-z_][\w:.-]*)\b[^>]*>$/)
+    if (!openingMatch) {
+      issues.push(`Sitemap XML contains an invalid tag: ${tag}`)
+      return
+    }
+
+    const elementName = openingMatch[1]
+    if (stack.length === 0) rootElements.push(elementName)
+    if (!/\/\s*>$/.test(tag)) stack.push(elementName)
+  }
+
+  if (xmlContent.slice(cursor).trim()) {
+    issues.push('Sitemap contains text outside the root element')
+  } else if (stack.length > 0) {
+    issues.push(`Sitemap XML has an unclosed ${stack.at(-1)} element`)
+  } else if (rootElements.length !== 1 || rootElements[0] !== 'urlset') {
+    issues.push('Sitemap XML must contain exactly one urlset root element')
+  }
+}
+
+export function parseSitemapUrls(sitemapContent, issues) {
+  if (!/^<\?xml\s+version=["']1\.0["']\s+encoding=["']UTF-8["']\s*\?>/i.test(sitemapContent)) {
+    issues.push('Missing or invalid XML declaration at the start of the file')
+  }
+
+  validateXmlStructure(sitemapContent, issues)
+
+  if (
+    !/<urlset\b[^>]*xmlns=["']http:\/\/www\.sitemaps\.org\/schemas\/sitemap\/0\.9["']/.test(
+      sitemapContent
+    )
+  ) {
+    issues.push('Sitemap urlset is missing the standard sitemap namespace')
+  }
+
+  if (/&(?!amp;|lt;|gt;|quot;|apos;|#\d+;|#x[\da-f]+;)/i.test(sitemapContent)) {
+    issues.push('Sitemap contains an unescaped ampersand')
+  }
+
+  const root = parse(sitemapContent)
+  const urlElements = root.querySelectorAll('url')
+  if (urlElements.length === 0) issues.push('Sitemap does not contain any URL entries')
+
+  const urls = []
+  urlElements.forEach((urlElement, index) => {
+    const locationElements = urlElement.querySelectorAll('loc')
+    if (locationElements.length === 0) {
+      issues.push(`Sitemap URL entry ${index + 1} is missing loc`)
+      return
+    }
+    if (locationElements.length > 1) {
+      issues.push(`Sitemap URL entry ${index + 1} has multiple loc values`)
+    }
+
+    const location = locationElements[0].text.trim()
+    try {
+      const url = new URL(location)
+      if (url.origin !== config.productionDomain || url.search || url.hash) {
+        issues.push(`Sitemap URL must be a clean production URL: ${location}`)
+      }
+      urls.push(url.href)
+    } catch (_error) {
+      issues.push(`Sitemap contains an invalid loc URL: ${location}`)
+    }
+
+    const lastmodElements = urlElement.querySelectorAll('lastmod')
+    if (lastmodElements.length > 1) {
+      issues.push(`Sitemap URL has multiple lastmod values: ${location}`)
+    }
+    lastmodElements.forEach((lastmodElement) => {
+      const lastmod = lastmodElement.text.trim()
+      if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(lastmod)) {
+        issues.push(`Sitemap lastmod must be a full ISO timestamp: ${location}`)
+      }
+    })
+  })
+
+  const duplicateUrls = [...new Set(urls.filter((url, index) => urls.indexOf(url) !== index))]
+  duplicateUrls.forEach((url) => issues.push(`Sitemap contains duplicate URL: ${url}`))
+
+  return [...new Set(urls)]
+}
+
 /**
- * Analyze robots.txt and sitemap.xml files
+ * Analyze robots.txt and sitemap.xml files and compare the sitemap with built pages.
  */
-function validateSEOFiles() {
+function validateSEOFiles(pageResults = []) {
   const results = {
     robotsTxt: { exists: false, valid: false, issues: [] },
-    sitemapXml: { exists: false, valid: false, issues: [] }
+    sitemapXml: { exists: false, valid: false, issues: [], urls: [] }
   }
 
   // Check robots.txt
@@ -280,9 +501,7 @@ function validateSEOFiles() {
       const robotsContent = readFileSync(robotsPath, 'utf-8')
 
       // Basic validation
-      if (robotsContent.includes('User-agent:')) {
-        results.robotsTxt.valid = true
-      } else {
+      if (!robotsContent.includes('User-agent:')) {
         results.robotsTxt.issues.push('Missing User-agent directive')
       }
 
@@ -295,6 +514,7 @@ function validateSEOFiles() {
   } catch (error) {
     results.robotsTxt.issues.push(`Error reading robots.txt: ${error.message}`)
   }
+  results.robotsTxt.valid = results.robotsTxt.exists && results.robotsTxt.issues.length === 0
 
   // Check sitemap generation (by checking actual generated file)
   try {
@@ -309,26 +529,46 @@ function validateSEOFiles() {
       // Check if the actual sitemap.xml file was generated
       if (existsSync(prerenderedSitemapPath)) {
         try {
-          // Basic validation: read and check if it's valid XML
           const sitemapContent = readFileSync(prerenderedSitemapPath, 'utf-8')
-          if (sitemapContent.includes('<urlset') && sitemapContent.includes('<url>')) {
-            results.sitemapXml.valid = true
-          } else {
-            results.sitemapXml.valid = false
-            results.sitemapXml.issues.push('Generated sitemap.xml appears to be invalid')
-          }
+          results.sitemapXml.urls = parseSitemapUrls(sitemapContent, results.sitemapXml.issues)
+
+          const sitemapUrls = new Set(results.sitemapXml.urls)
+          const indexableCanonicalUrls = new Set()
+
+          pageResults
+            .filter((result) => result.isIndexable && result.metaTags.canonical)
+            .forEach((result) => {
+              try {
+                indexableCanonicalUrls.add(new URL(result.metaTags.canonical).href)
+              } catch (_error) {
+                // The page-level canonical validator reports malformed URLs.
+              }
+            })
+
+          indexableCanonicalUrls.forEach((url) => {
+            if (!sitemapUrls.has(url)) {
+              results.sitemapXml.issues.push(`Indexable page is missing from sitemap: ${url}`)
+            }
+          })
+
+          sitemapUrls.forEach((url) => {
+            if (!indexableCanonicalUrls.has(url)) {
+              results.sitemapXml.issues.push(
+                `Sitemap URL does not map to an indexable prerendered page: ${url}`
+              )
+            }
+          })
         } catch (readError) {
-          results.sitemapXml.valid = false
           results.sitemapXml.issues.push(`Error reading generated sitemap: ${readError.message}`)
         }
       } else {
-        results.sitemapXml.valid = false
         results.sitemapXml.issues.push('Sitemap route exists but sitemap.xml was not generated')
       }
     }
   } catch (error) {
     results.sitemapXml.issues.push(`Error checking sitemap: ${error.message}`)
   }
+  results.sitemapXml.valid = results.sitemapXml.exists && results.sitemapXml.issues.length === 0
 
   return results
 }
@@ -498,13 +738,13 @@ function generateHTMLReport(data) {
 /**
  * Get built HTML content for a page
  */
-function getBuiltPageHTML(pagePath) {
+function getBuiltPageHTML(pagePath, discoveredFilePath = null) {
   // Dynamically determine the file path from the route.
   // This assumes a standard SvelteKit prerendering output structure.
   const builtFile =
     pagePath === '/' ? 'prerendered/pages/index.html' : `prerendered/pages${pagePath}.html`
 
-  const fullPath = join(buildDir, builtFile)
+  const fullPath = discoveredFilePath || join(buildDir, builtFile)
   if (!existsSync(fullPath)) {
     log(`Built file not found at ${fullPath}`, 'warn')
     return null
@@ -525,25 +765,35 @@ async function main() {
   log('🚀 Starting SEO Validation and Monitoring')
 
   try {
-    // Build the project first
-    if (!buildProject()) {
+    const shouldBuild = !process.argv.includes('--no-build')
+
+    // The default command remains self-contained; CI can reuse an existing build.
+    if (shouldBuild && !buildProject()) {
       throw new Error('Failed to build project')
+    }
+
+    if (!shouldBuild) {
+      log('Using existing build output (--no-build)')
     }
 
     const pageResults = []
 
     // Determine pages to test from build output
     const pagesToTest = discoverTestPages()
+    if (pagesToTest.length === 0) {
+      throw new Error(`No prerendered HTML pages found in ${prerenderedPagesDir}`)
+    }
 
     // Test each discovered page
-    for (const { path, name } of pagesToTest) {
+    for (const { path, name, filePath } of pagesToTest) {
       log(`Validating page: ${name} (${path})`)
 
-      const htmlContent = getBuiltPageHTML(path)
+      const htmlContent = getBuiltPageHTML(path, filePath)
       if (!htmlContent) {
         log(`  ⚠️  Could not read built HTML for ${path}`, 'warn')
         pageResults.push({
           pageName: name,
+          pagePath: path,
           metaTags: {},
           duplicates: {},
           issues: [
@@ -554,20 +804,23 @@ async function main() {
               message: 'Could not read built HTML file'
             }
           ],
+          isIndexable: false,
           isValid: false
         })
         continue
       }
 
-      const result = validatePageSEO(htmlContent, name)
+      const result = validatePageSEO(htmlContent, name, path)
       pageResults.push(result)
 
       log(`  ${result.isValid ? '✅' : '❌'} ${result.issues.length} issues found`)
     }
 
+    validateCanonicalUniqueness(pageResults)
+
     // Validate SEO files
     log('Validating SEO files...')
-    const seoFiles = validateSEOFiles()
+    const seoFiles = validateSEOFiles(pageResults)
 
     // Generate report
     log('📊 Generating SEO report...')
@@ -602,8 +855,8 @@ async function main() {
   }
 }
 
-// Run if called directly
-if (import.meta.url === `file://${__filename}`) {
+// Run only when invoked as the CLI, not when helpers are imported by tests.
+if (process.argv[1] && resolve(process.argv[1]) === __filename) {
   main().catch((error) => {
     log(`Unhandled error: ${error.message}`, 'error')
     process.exit(1)
