@@ -6,7 +6,8 @@
 export const website: string = 'https://blog.nanggo.net'
 
 // 기본 OG 이미지 (1200x630, 셀프 호스팅 정적 파일)
-export const defaultOgImage: string = `${website}/og-default.png`
+// 이미지를 교체할 때는 파일명 버전을 올릴 것 — 소셜 크롤러와 CDN이 URL 단위로 캐시함
+export const defaultOgImage: string = `${website}/og-default-v1.png`
 
 // export const firstName = 'Jisung'
 // export const lastName = 'Yoo'
