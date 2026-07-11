@@ -21,14 +21,16 @@ Verification tokens are public by design. Do not treat them as secrets.
 
 ## Current console state
 
-Checked on 2026-06-05.
+Checked on 2026-07-10.
 
 - Google Search Console: `https://blog.nanggo.net/` is verified. Google reported automatic ownership verification via domain name provider.
-- Google Search Console sitemap: `/sitemap.xml` is submitted successfully, with 67 discovered pages.
+- Google Search Console sitemap: `/sitemap.xml` was re-submitted. The console processed the current live sitemap successfully and reported 72 discovered pages (the UI displayed 2026-07-11 as the submitted/read date).
+- Google Search Console URL inspection: `/`, `/post/solid-principles-frontend-guide`, and `/post/tmux-remote-dev-guide` were added to the priority crawl queue. A request does not guarantee indexing.
 - Naver Search Advisor: `https://blog.nanggo.net` is registered.
 - Naver Search Advisor site status: SSL certificate, HTTPS redirect, and sitemap are normal/registered.
+- Naver Search Advisor RSS: `https://blog.nanggo.net/rss.xml` is ready to submit, but the console CAPTCHA still requires completion.
 - Bing Webmaster Tools: `blog.nanggo.net` is registered.
-- Bing Webmaster Tools sitemap: `https://blog.nanggo.net/sitemap.xml` is submitted successfully, with 67 discovered URLs.
+- Bing Webmaster Tools sitemap: `https://blog.nanggo.net/sitemap.xml` was re-submitted on 2026-07-10 and accepted for processing. The previous crawl reported 67 discovered URLs.
 
 ### Naver Search Advisor
 
@@ -65,6 +67,18 @@ Recommended implementation:
 7. Verify ownership in Bing.
 8. Submit `https://blog.nanggo.net/sitemap.xml`.
 
+After deployment, submit changed production URLs through IndexNow. The key file must first return HTTP 200 from its public URL:
+
+```sh
+curl -I https://blog.nanggo.net/99ba3bef6ddab64714b3cd5c8780a9da931533d650477c637f41183eb8aa746f.txt
+pnpm indexnow:submit -- --key-file static/99ba3bef6ddab64714b3cd5c8780a9da931533d650477c637f41183eb8aa746f.txt \
+  / \
+  /post/solid-principles-frontend-guide \
+  /post/tmux-remote-dev-guide
+```
+
+Only submit URLs that are new, updated, or removed. Use `--dry-run` before the real request when changing the URL list.
+
 Do not create a placeholder `BingSiteAuth.xml`; Bing requires the exact file content issued by the console.
 
 ### Google Search Console
@@ -98,3 +112,5 @@ https://blog.nanggo.net/rss.xml
 ```
 
 For file-based verification, also check the exact verification file URL.
+
+The generated sitemap intentionally excludes `noindex` singleton-tag archives. After deployment, expect the sitemap URL count to differ from the total number of prerendered HTML pages.
