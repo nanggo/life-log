@@ -38,6 +38,8 @@
 
   // 페이지가 자체 seo.description을 내려주면 우선 사용 (예: 포스트 목록 페이지네이션)
   $: metaDescription = $page.data.seo?.description ?? description
+  $: metaTitle = $page.data.seo?.title ?? data.title
+  $: robots = $page.data.seo?.robots ?? 'index, follow, max-image-preview:large'
 
   const _organizationSchema = {
     '@context': 'https://schema.org',
@@ -253,7 +255,8 @@
 </script>
 
 <svelte:head>
-  <title>{data.title}</title>
+  <title>{metaTitle}</title>
+  <meta name="robots" content={robots} />
   {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
     <meta name="description" content={metaDescription} />
   {/if}
@@ -274,7 +277,7 @@
   {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
     <meta property="og:type" content="website" />
     <meta property="og:url" content={new URL($page.url.pathname, website).href} />
-    <meta property="og:title" content={data.title} />
+    <meta property="og:title" content={metaTitle} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={defaultOgImage} />
     <meta property="og:image:width" content="1200" />
@@ -287,7 +290,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content={twitterHandle} />
     <meta name="twitter:creator" content={twitterHandle} />
-    <meta name="twitter:title" content={data.title} />
+    <meta name="twitter:title" content={metaTitle} />
     <meta name="twitter:description" content={metaDescription} />
     <meta name="twitter:image" content={defaultOgImage} />
     <meta name="twitter:image:alt" content={`${name} 로고`} />

@@ -4,6 +4,7 @@ import type { PageServerLoad } from './$types'
 
 import { getPostsByTag, getAllTagsWithCounts } from '$lib/data/posts'
 import { extractPostMetadata } from '$lib/util'
+import { isTagIndexable } from '$lib/utils/seo'
 
 export const prerender = true
 
@@ -31,6 +32,7 @@ export const load: PageServerLoad = async ({ params }) => {
   // Get tag info for count
   const tagInfo = allTagInfos.find((info) => info.tag === tagName)
   const postCount = tagInfo?.count || 0
+  const indexable = isTagIndexable(postCount)
 
   return {
     tagName,
@@ -38,7 +40,9 @@ export const load: PageServerLoad = async ({ params }) => {
     postCount,
     seo: {
       title: `${tagName} 태그`,
-      description: `'${tagName}' 태그가 포함된 ${postCount}개의 포스트를 확인하세요.`
+      description: `NANGGO's LIFELOG에서 '${tagName}' 태그로 분류된 ${postCount}개의 글을 모았습니다. 관련 개발 경험과 생각, 실무 기록을 살펴보세요.`,
+      indexable,
+      robots: `${indexable ? 'index' : 'noindex'}, follow, max-image-preview:large`
     }
   }
 }
