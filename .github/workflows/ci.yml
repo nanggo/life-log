@@ -64,6 +64,9 @@ jobs:
       - name: 빌드 테스트
         run: pnpm build
 
+      - name: SEO 생성물 검사
+        run: pnpm seo:validate:built
+
       - name: 번들 크기 검사
         run: |
           CLIENT_DIR=".svelte-kit/output/client"
