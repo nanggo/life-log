@@ -9,9 +9,9 @@
 </script>
 
 <nav aria-label="Breadcrumb">
-  <ol class="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
+  <ol class="flex flex-wrap items-center gap-y-2 text-sm text-zinc-600 dark:text-zinc-400">
     {#each processedItems as item, index}
-      <li class="flex items-center">
+      <li class="flex min-w-0 max-w-full items-center">
         {#if index > 0}
           <!-- Separator -->
           <svg
@@ -31,7 +31,7 @@
         {#if item.current || !item.href}
           <!-- Current page or non-linked item -->
           <span
-            class="text-zinc-900 dark:text-zinc-100 font-medium"
+            class="break-words text-zinc-900 dark:text-zinc-100 font-medium"
             aria-current={item.current ? 'page' : undefined}
           >
             {item.label}
@@ -40,7 +40,7 @@
           <!-- Linked item -->
           <a
             href={item.href}
-            class="hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 rounded-sm"
+            class="break-words hover:text-zinc-900 dark:hover:text-zinc-200 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-800 rounded-sm"
             aria-label={`Go to ${item.label}`}
           >
             {item.label}

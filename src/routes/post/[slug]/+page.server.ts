@@ -141,7 +141,9 @@ export const load: PageServerLoad = async ({ params }) => {
       timeRequired: `PT${post.readingTime}M`
     }
 
-    // Simplified breadcrumb for better performance
+    const categoryUrl = `${website}/posts/category/${encodeURIComponent(post.category)}`
+
+    // Keep the structured breadcrumb aligned with the visible navigation.
     const breadcrumbLd = {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
@@ -149,12 +151,24 @@ export const load: PageServerLoad = async ({ params }) => {
         {
           '@type': 'ListItem',
           position: 1,
-          name: 'Posts',
-          item: `${website}/posts`
+          name: '홈',
+          item: `${website}/`
         },
         {
           '@type': 'ListItem',
           position: 2,
+          name: '포스트',
+          item: `${website}/posts`
+        },
+        {
+          '@type': 'ListItem',
+          position: 3,
+          name: post.category,
+          item: categoryUrl
+        },
+        {
+          '@type': 'ListItem',
+          position: 4,
           name: post.title,
           item: url
         }
