@@ -12,7 +12,7 @@ Markdown 기반 SvelteKit 개인 블로그다. 런타임 버전과 명령은 `pa
 
 ## Changes and Verification
 
-- `pnpm check`와 가장 가까운 `pnpm test:run -- <path>`부터 실행하고, 전체 회귀가 필요하면 `pnpm test:run`을 사용한다.
+- `pnpm check`와 변경된 코드에 가장 가까운 `pnpm test:run -- <path>`부터 실행하고, 전체 회귀가 필요하면 `pnpm test:run`을 사용한다.
 - metadata, route, RSS, sitemap 변경에는 `pnpm seo:validate`를 추가한다. 이 명령은 내부에서 `pnpm build`를 실행하고 `static/`, `.svelte-kit/`, `.seo-reports/`를 갱신하므로 실행 후 생성 diff를 확인한다.
 - build pipeline이나 route 구조가 바뀌었지만 전체 SEO 검증이 필요하지 않으면 `pnpm build`를 실행하고 생성 diff를 확인한다.
 - `npx vercel build`는 배포 호환성 확인용이며 일반 검증에는 사용하지 않는다. Vercel CLI가 project dependency가 아니므로 `npx`가 CLI를 다운로드할 수 있다.
