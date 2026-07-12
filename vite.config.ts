@@ -77,7 +77,7 @@ export default defineConfig(({ mode }) => ({
               'github-slugger',
               'node-html-parser'
             ],
-            'utils-vendor': ['date-fns', 'clsx', 'js-yaml', 'heroicons-svelte']
+            'utils-vendor': ['date-fns', 'clsx', 'heroicons-svelte']
           }
 
           // 스코프 패키지를 포함한 정확한 패키지 매칭
@@ -119,7 +119,7 @@ export default defineConfig(({ mode }) => ({
   },
   optimizeDeps: {
     // Tree shaking 최적화를 위한 pre-bundling
-    include: ['date-fns', 'clsx', 'js-yaml', 'github-slugger', 'node-html-parser', 'reading-time'],
+    include: ['date-fns', 'clsx', 'github-slugger', 'node-html-parser', 'reading-time'],
     // 개발 시 빠른 빌드를 위한 exclude
     exclude: ['@sveltejs/kit', 'svelte']
   }
