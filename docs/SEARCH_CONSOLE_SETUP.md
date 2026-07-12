@@ -21,14 +21,14 @@ Verification tokens are public by design. Do not treat them as secrets.
 
 ## Current console state
 
-Checked on 2026-07-10.
+Checked on 2026-07-12.
 
 - Google Search Console: `https://blog.nanggo.net/` is verified. Google reported automatic ownership verification via domain name provider.
 - Google Search Console sitemap: `/sitemap.xml` was re-submitted. The console processed the current live sitemap successfully and reported 72 discovered pages (the UI displayed 2026-07-11 as the submitted/read date).
 - Google Search Console URL inspection: `/`, `/post/solid-principles-frontend-guide`, and `/post/tmux-remote-dev-guide` were added to the priority crawl queue. A request does not guarantee indexing.
 - Naver Search Advisor: `https://blog.nanggo.net` is registered.
 - Naver Search Advisor site status: SSL certificate, HTTPS redirect, and sitemap are normal/registered.
-- Naver Search Advisor RSS: `https://blog.nanggo.net/rss.xml` is ready to submit, but the console CAPTCHA still requires completion.
+- Naver Search Advisor RSS: `https://blog.nanggo.net/rss.xml` was registered successfully on 2026-07-12 at 20:21:33 KST.
 - Bing Webmaster Tools: `blog.nanggo.net` is registered.
 - Bing Webmaster Tools sitemap: `https://blog.nanggo.net/sitemap.xml` was re-submitted on 2026-07-10 and accepted for processing. The previous crawl reported 67 discovered URLs.
 
