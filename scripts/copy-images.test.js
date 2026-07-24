@@ -6,6 +6,7 @@ import {
   assertSourceImageNameAllowed,
   claimOutputPath,
   getManifestDimensions,
+  shouldOptimizeDirectory,
   shouldGenerateVariants
 } from './copy-images.js'
 
@@ -40,6 +41,12 @@ describe('copy images pipeline safeguards', () => {
 
     expect(shouldGenerateVariants('.gif', metadata)).toBe(false)
     expect(shouldGenerateVariants('.svg', metadata)).toBe(false)
+  })
+
+  it('_ 디렉터리는 원본 복사를 유지하면서 하위 변형 생성을 비활성화한다', () => {
+    expect(shouldOptimizeDirectory(true, '_assets')).toBe(false)
+    expect(shouldOptimizeDirectory(false, 'nested')).toBe(false)
+    expect(shouldOptimizeDirectory(true, 'assets')).toBe(true)
   })
 
   it('서로 다른 원본이 같은 변형본 경로를 만들면 빌드를 중단한다', () => {

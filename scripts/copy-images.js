@@ -2,6 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
+import prettier from 'prettier'
 import sharp from 'sharp'
 
 import {
@@ -39,6 +40,9 @@ export const getManifestDimensions = (metadata) => {
 export const shouldGenerateVariants = (ext, metadata) =>
   variantExtensions.includes(ext) && !(metadata.pages > 1)
 
+export const shouldOptimizeDirectory = (parentOptimized, directoryName) =>
+  parentOptimized && !directoryName.startsWith('_')
+
 export const assertSourceImageNameAllowed = (srcPath) => {
   if (isGeneratedVariant(path.basename(srcPath))) {
     throw new Error(
@@ -71,7 +75,14 @@ function ensureDirectoryExists(dirPath) {
   }
 }
 
-async function generateVariants(srcPath, destPath, publicPath, manifest, outputOwners) {
+async function generateVariants(
+  srcPath,
+  destPath,
+  publicPath,
+  manifest,
+  outputOwners,
+  optimizeImages
+) {
   const ext = path.extname(srcPath).toLowerCase()
   if (!metadataExtensions.includes(ext)) return
 
@@ -79,7 +90,8 @@ async function generateVariants(srcPath, destPath, publicPath, manifest, outputO
   const { width: sourceWidth, height: sourceHeight } = getManifestDimensions(metadata)
   if (!sourceWidth || !sourceHeight) return
 
-  const widths = shouldGenerateVariants(ext, metadata) ? getVariantWidths(sourceWidth) : []
+  const widths =
+    optimizeImages && shouldGenerateVariants(ext, metadata) ? getVariantWidths(sourceWidth) : []
 
   for (const width of widths) {
     const variantDest = path.join(
@@ -104,7 +116,14 @@ async function generateVariants(srcPath, destPath, publicPath, manifest, outputO
   }
 }
 
-async function copyPostImages(srcDir, baseDestDir, manifest, outputOwners, relativePath = '') {
+async function copyPostImages(
+  srcDir,
+  baseDestDir,
+  manifest,
+  outputOwners,
+  relativePath = '',
+  optimizeImages = true
+) {
   ensureDirectoryExists(baseDestDir)
 
   const items = fs.readdirSync(srcDir)
@@ -114,13 +133,18 @@ async function copyPostImages(srcDir, baseDestDir, manifest, outputOwners, relat
     const stat = fs.statSync(srcPath)
 
     if (stat.isDirectory()) {
-      if (item.startsWith('_')) continue
-
       // For directories, create the directory structure in static/
       const newRelativePath = relativePath ? path.join(relativePath, item) : item
       const destDir = path.join(baseDestDir, newRelativePath)
       ensureDirectoryExists(destDir)
-      await copyPostImages(srcPath, baseDestDir, manifest, outputOwners, newRelativePath)
+      await copyPostImages(
+        srcPath,
+        baseDestDir,
+        manifest,
+        outputOwners,
+        newRelativePath,
+        shouldOptimizeDirectory(optimizeImages, item)
+      )
     } else if (stat.isFile()) {
       const ext = path.extname(item).toLowerCase()
       if (imageExtensions.includes(ext)) {
@@ -139,7 +163,14 @@ async function copyPostImages(srcDir, baseDestDir, manifest, outputOwners, relat
         console.log(`✓ Copied: ${path.relative(projectRoot, srcPath)} → ${relativeDestPath}`)
 
         const publicPath = `/${path.relative(staticDir, destPath).split(path.sep).join('/')}`
-        await generateVariants(srcPath, destPath, publicPath, manifest, outputOwners)
+        await generateVariants(
+          srcPath,
+          destPath,
+          publicPath,
+          manifest,
+          outputOwners,
+          optimizeImages
+        )
       }
     }
   }
@@ -155,8 +186,13 @@ export const run = async () => {
   }
 
   const sortedManifest = sortImageManifest(manifest)
+  const prettierConfig = await prettier.resolveConfig(manifestPath)
+  const formattedManifest = await prettier.format(JSON.stringify(sortedManifest, null, 2), {
+    ...prettierConfig,
+    parser: 'json'
+  })
   ensureDirectoryExists(path.dirname(manifestPath))
-  fs.writeFileSync(manifestPath, `${JSON.stringify(sortedManifest, null, 2)}\n`)
+  fs.writeFileSync(manifestPath, formattedManifest)
 
   console.log(`✓ Image manifest: ${path.relative(projectRoot, manifestPath)}`)
   console.log('✅ Image copy and optimization complete!')
