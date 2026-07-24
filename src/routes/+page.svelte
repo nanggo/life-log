@@ -33,7 +33,7 @@
       <a
         href="/about"
         class="inline-block rounded-full"
-        data-sveltekit-preload-data="viewport"
+        data-sveltekit-preload-data="hover"
         data-sveltekit-preload-code="viewport"
       >
         <img

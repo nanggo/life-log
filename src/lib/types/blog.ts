@@ -26,6 +26,17 @@ export interface PostPreview {
 }
 
 /**
+ * 상세 페이지의 반응형 히어로 이미지 정보
+ */
+export interface HeroImage {
+  src: string
+  srcset?: string
+  sizes?: string
+  width?: number
+  height?: number
+}
+
+/**
  * 포스트 메타데이터 (frontmatter)
  */
 export interface PostMetadata {

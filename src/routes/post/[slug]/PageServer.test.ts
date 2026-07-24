@@ -1,7 +1,7 @@
 // Route-level contract tests for server-generated post metadata.
 import { describe, expect, it, vi } from 'vitest'
 
-const { mockPost } = vi.hoisted(() => ({
+const { mockPost, mockBodyImagePost } = vi.hoisted(() => ({
   mockPost: {
     slug: 'current-post',
     title: '현재 글',
@@ -12,14 +12,43 @@ const { mockPost } = vi.hoisted(() => ({
     tags: ['svelte'],
     preview: { html: '<p>현재 글 설명</p>', text: '현재 글 설명' },
     readingTime: 2,
+    image: '/current-post/cover.webp',
     isIndexFile: false,
     headings: [],
     previous: { slug: 'older-post', title: '이전 글' },
     next: { slug: 'newer-post', title: '다음 글' }
+  },
+  mockBodyImagePost: {
+    slug: 'body-image-post',
+    title: '본문 이미지 글',
+    description: '본문 이미지 글 설명',
+    date: '2026-07-11',
+    displayDate: '2026년 7월 11일',
+    category: '개발',
+    tags: ['image'],
+    preview: { html: '<p>본문 이미지 글 설명</p>', text: '본문 이미지 글 설명' },
+    readingTime: 1,
+    firstImageUrl: '/body-image-post/body.png',
+    isIndexFile: false,
+    headings: []
   }
 }))
 
-vi.mock('$lib/data/posts', () => ({ posts: [mockPost] }))
+vi.mock('$lib/data/posts', () => ({ posts: [mockPost, mockBodyImagePost] }))
+vi.mock('$lib/data/image-manifest.json', () => ({
+  default: {
+    '/current-post/cover.webp': {
+      width: 1200,
+      height: 800,
+      variants: [672, 1200]
+    },
+    '/body-image-post/body.png': {
+      width: 900,
+      height: 600,
+      variants: [672, 900]
+    }
+  }
+}))
 vi.mock('$lib/info', () => ({
   website: 'https://example.com',
   author: '낭고',
@@ -75,6 +104,36 @@ describe('포스트 상세 서버 로드', () => {
     expect(result.post).toMatchObject({
       previous: mockPost.previous,
       next: mockPost.next
+    })
+  })
+
+  it('로컬 대표 이미지의 반응형 전송 정보를 전달한다', async () => {
+    const result = await load({ params: { slug: mockPost.slug } } as never)
+
+    expect(result).toBeTruthy()
+    if (!result) throw new Error('포스트 데이터가 없습니다.')
+
+    expect(result.heroImage).toEqual({
+      src: '/current-post/cover.webp',
+      srcset: '/current-post/cover-672w.webp 672w, /current-post/cover-1200w.webp 1200w',
+      sizes: '(min-width: 704px) 672px, 100vw',
+      width: 1200,
+      height: 800
+    })
+  })
+
+  it('frontmatter 대표 이미지가 없으면 첫 본문 이미지 정보를 전달한다', async () => {
+    const result = await load({ params: { slug: mockBodyImagePost.slug } } as never)
+
+    expect(result).toBeTruthy()
+    if (!result) throw new Error('포스트 데이터가 없습니다.')
+
+    expect(result.heroImage).toEqual({
+      src: '/body-image-post/body.png',
+      srcset: '/body-image-post/body-672w.webp 672w, /body-image-post/body-900w.webp 900w',
+      sizes: '(min-width: 704px) 672px, 100vw',
+      width: 900,
+      height: 600
     })
   })
 })

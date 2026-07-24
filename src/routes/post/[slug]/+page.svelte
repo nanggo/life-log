@@ -9,6 +9,7 @@
   import { PostDate, PostHeroVisual, TagList } from '$lib/components/post'
   import { ArrowLeftIcon } from '$lib/components/ui/Icon'
   import { website, name, bio, avatar, twitterHandle, defaultOgImage } from '$lib/info'
+  import type { HeroImage } from '$lib/types/blog'
   import { jsonLdScript } from '$lib/utils/json-ld'
 
   interface PageData extends BasePageData {
@@ -17,6 +18,7 @@
     breadcrumbLd: string
     socialMediaImage: string
     isPostImage: boolean
+    heroImage: HeroImage | null
     publishedDate: string
     modifiedDate: string
   }
@@ -81,6 +83,17 @@
   <meta name="description" content={data.dynamicDescription?.trim() || data.post.title} />
   <!-- author는 +layout.svelte에서 관리됨 -->
   <link rel="canonical" href={url} />
+
+  {#if data.heroImage}
+    <link
+      rel="preload"
+      as="image"
+      href={data.heroImage.src}
+      imagesrcset={data.heroImage.srcset}
+      imagesizes={data.heroImage.sizes}
+      fetchpriority="high"
+    />
+  {/if}
 
   <!-- Facebook Meta Tags -->
   <meta property="og:url" content={url} />
@@ -164,7 +177,7 @@
         </h1>
         <PostDate class="text-sm sm:text-base" post={data.post} decorate collapsed />
         <TagList tags={data.post.tags ?? []} clickable={true} {getTagUrl} />
-        <PostHeroVisual post={data.post} />
+        <PostHeroVisual post={data.post} heroImage={data.heroImage} />
       </header>
 
       <!-- render the post -->
@@ -181,7 +194,8 @@
             rel="prev"
             aria-label={`이전 글: ${data.post.previous.title}`}
             class="group rounded-lg border border-zinc-200 p-4 transition-colors hover:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:border-teal-400 dark:focus-visible:ring-teal-400 dark:focus-visible:ring-offset-zinc-900"
-            data-sveltekit-preload-data="viewport"
+            data-sveltekit-preload-data="hover"
+            data-sveltekit-preload-code="viewport"
           >
             <span class="block text-sm text-zinc-500 dark:text-zinc-400">← 이전 글</span>
             <span
@@ -198,7 +212,8 @@
             rel="next"
             aria-label={`다음 글: ${data.post.next.title}`}
             class="group rounded-lg border border-zinc-200 p-4 text-right transition-colors hover:border-teal-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 dark:border-zinc-700 dark:hover:border-teal-400 dark:focus-visible:ring-teal-400 dark:focus-visible:ring-offset-zinc-900 sm:col-start-2"
-            data-sveltekit-preload-data="viewport"
+            data-sveltekit-preload-data="hover"
+            data-sveltekit-preload-code="viewport"
           >
             <span class="block text-sm text-zinc-500 dark:text-zinc-400">다음 글 →</span>
             <span
@@ -222,7 +237,7 @@
           <a
             href="/about"
             class="inline-block rounded-full"
-            data-sveltekit-preload-data="viewport"
+            data-sveltekit-preload-data="hover"
             data-sveltekit-preload-code="viewport"
           >
             <Image
