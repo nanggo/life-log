@@ -224,7 +224,10 @@ describe('preloadDataOnViewport', () => {
   it('데이터 절약 모드에서는 선로딩하지 않는다', () => {
     setSaveData(true)
 
-    createAction(document.createElement('a'), { href: '/post/test-post' })
+    createAction(document.createElement('a'), {
+      deviceScope: 'all',
+      href: '/about'
+    })
 
     expect(observers).toHaveLength(0)
     expect(preloadDataMock).not.toHaveBeenCalled()
@@ -237,6 +240,46 @@ describe('preloadDataOnViewport', () => {
 
     expect(observers).toHaveLength(0)
     expect(preloadDataMock).not.toHaveBeenCalled()
+  })
+
+  it('모든 기기 대상 링크는 데스크탑에서도 viewport 데이터를 선로딩한다', async () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true } as MediaQueryList))
+    const node = document.createElement('a')
+
+    createAction(node, {
+      deviceScope: 'all',
+      href: '/about'
+    })
+
+    expect(observers).toHaveLength(1)
+    intersect(observers[0], [entry(node)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/about')
+  })
+
+  it('기기 범위가 all로 갱신되면 데스크탑에서도 관찰을 시작한다', async () => {
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true } as MediaQueryList))
+    const node = document.createElement('a')
+    const action = createAction(node, {
+      deviceScope: 'mobile',
+      href: '/about'
+    })
+
+    expect(observers).toHaveLength(0)
+
+    action.update({
+      deviceScope: 'all',
+      href: '/about'
+    })
+
+    expect(observers).toHaveLength(1)
+    intersect(observers[0], [entry(node)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/about')
   })
 
   it('비활성화되거나 목적지가 없으면 관찰하지 않는다', () => {

@@ -10,6 +10,7 @@ interface NavigatorWithConnection extends Navigator {
 }
 
 export interface PreloadDataOnViewportOptions {
+  deviceScope?: 'all' | 'mobile'
   enabled?: boolean
   href?: string
   priority?: number
@@ -30,9 +31,11 @@ let observer: IntersectionObserver | null = null
 let observerGeneration = 0
 let selectionScheduled = false
 
-const shouldSkipPreload = (): boolean => {
+const shouldSkipPreload = (options: PreloadDataOnViewportOptions): boolean => {
   if (typeof window === 'undefined' || typeof navigator === 'undefined') return true
-  if (window.matchMedia('(min-width: 768px)').matches) return true
+  if (options.deviceScope !== 'all' && window.matchMedia('(min-width: 768px)').matches) {
+    return true
+  }
 
   return (navigator as NavigatorWithConnection).connection?.saveData === true
 }
@@ -125,7 +128,7 @@ const registerCandidate = (
   options: PreloadDataOnViewportOptions
 ): boolean => {
   const href = options.href?.trim()
-  if (options.enabled === false || !href || shouldSkipPreload()) return false
+  if (options.enabled === false || !href || shouldSkipPreload(options)) return false
 
   const sharedObserver = ensureObserver()
   if (!sharedObserver) return false
@@ -151,6 +154,7 @@ export const preloadDataOnViewport = (
   return {
     update(nextOptions: PreloadDataOnViewportOptions = {}): void {
       const unchanged =
+        nextOptions.deviceScope === options.deviceScope &&
         nextOptions.enabled === options.enabled &&
         nextOptions.href?.trim() === options.href?.trim() &&
         nextOptions.priority === options.priority
