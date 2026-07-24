@@ -1,21 +1,33 @@
+import fs from 'fs'
 import path from 'path'
+import { fileURLToPath } from 'url'
 
-import sharp from 'sharp'
 import { visit } from 'unist-util-visit'
+
+import { buildSrcset, POST_IMAGE_SIZES } from '../src/lib/utils/image-variants.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const manifestPath = path.join(__dirname, '..', 'src', 'lib', 'data', 'image-manifest.json')
+
+const loadManifest = () => {
+  try {
+    return JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
+  } catch (_error) {
+    return {}
+  }
+}
 
 /**
  * A remark plugin that processes local images with optimization and modal support
  * Falls back to original image if optimized versions don't exist
  */
-export default function remarkOptimizedImages() {
-  return async function transformer(tree, file) {
-    // Collect first: sharp metadata reads are async, visit callbacks are sync
-    const imageNodes = []
-    visit(tree, 'image', (node) => {
-      imageNodes.push(node)
-    })
+export function createRemarkOptimizedImages(manifest) {
+  return function transformer(tree, file) {
+    const frontmatterImage =
+      typeof file.data?.fm?.image === 'string' ? file.data.fm.image.trim() : ''
+    let firstLocalImageHandled = false
 
-    for (const node of imageNodes) {
+    visit(tree, 'image', (node) => {
       const src = node.url
 
       // Process relative paths (local images only)
@@ -33,17 +45,23 @@ export default function remarkOptimizedImages() {
           // Create image path - use static folder path for SvelteKit
           const originalSrc = `/${postSlug}/${imageName}`
 
-          // Intrinsic dimensions let the browser reserve space before the image
-          // loads (prevents CLS); `height: auto` below keeps them ratio-only
-          let dimensionAttrs = ''
-          try {
-            const { width, height } = await sharp(path.join(markdownDir, src)).metadata()
-            if (width && height) {
-              dimensionAttrs = `width="${width}" height="${height}"`
-            }
-          } catch (error) {
-            console.warn(`Could not read dimensions for image: ${src}`, error.message)
-          }
+          const entry = manifest[originalSrc]
+          const srcset = buildSrcset(originalSrc, entry)
+          const dimensionAttrs = entry ? `width="${entry.width}" height="${entry.height}"` : ''
+          const srcsetAttrs = srcset ? `srcset="${srcset}" sizes="${POST_IMAGE_SIZES}"` : ''
+
+          // frontmatter 이미지가 본문 첫 이미지와 같으면 별도 히어로가 렌더되지 않는다.
+          const isFirstLocalImage = !firstLocalImageHandled
+          const isSameAsFrontmatterHero =
+            isFirstLocalImage &&
+            frontmatterImage.startsWith('./') &&
+            path.basename(frontmatterImage) === imageName
+          const hasStandaloneHero = Boolean(frontmatterImage) && !isSameAsFrontmatterHero
+          const isLcpCandidate = isFirstLocalImage && !hasStandaloneHero
+          firstLocalImageHandled = true
+          const loadingAttrs = isLcpCandidate
+            ? 'loading="eager" fetchpriority="high"'
+            : 'loading="lazy"'
 
           // Create simple img element with modal support and fallback to original
           // Use data attributes instead of inline onclick to prevent XSS
@@ -51,8 +69,9 @@ export default function remarkOptimizedImages() {
             <img
               src="${originalSrc}"
               alt="${node.alt || ''}"
+              ${srcsetAttrs}
               ${dimensionAttrs}
-              loading="lazy"
+              ${loadingAttrs}
               decoding="async"
               data-modal-src="${originalSrc}"
               data-modal-alt="${node.alt || ''}"
@@ -71,6 +90,10 @@ export default function remarkOptimizedImages() {
           console.warn(`File path not available for image: ${src}`)
         }
       }
-    }
+    })
   }
+}
+
+export default function remarkOptimizedImages() {
+  return createRemarkOptimizedImages(loadManifest())
 }

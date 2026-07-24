@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Post } from '$lib/types/blog'
+  import type { HeroImage, Post } from '$lib/types/blog'
 
   export let post: Pick<Post, 'image' | 'imageAlt' | 'title' | 'firstImageUrl'>
+  export let heroImage: HeroImage | null = null
 
   $: alt = post.imageAlt || `${post.title} 대표 이미지`
   $: shouldRender = Boolean(post.image && post.image !== post.firstImageUrl)
@@ -14,9 +15,11 @@
     <img
       class="aspect-[3/2] w-full object-contain"
       src={post.image}
+      srcset={heroImage?.srcset}
+      sizes={heroImage?.sizes}
       {alt}
-      width="1200"
-      height="800"
+      width={heroImage?.width ?? 1200}
+      height={heroImage?.height ?? 800}
       fetchpriority="high"
       decoding="async"
     />

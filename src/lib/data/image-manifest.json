@@ -1,0 +1,202 @@
+{
+  "/a-developers-journey-through-ai-subscriptions/ai-subscriptions-concept.webp": {
+    "width": 800,
+    "height": 513,
+    "variants": [672, 800]
+  },
+  "/a-developers-journey-through-ai-subscriptions/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/as-long-as-its-not-me/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/blog-update-tag-feature/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/controlled-and-uncontrolled-component/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/dark-pattern/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/deep-copy/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/gatsby-vercel-audience-analytics-setup/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/git-bisect-interview-debugging-tool/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/git-worktree-parallel-development/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/goodbye-radish-fiction/radish.png": {
+    "width": 590,
+    "height": 295,
+    "variants": [590]
+  },
+  "/hide-mac-dock-bar/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/inertia/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/joy-of-running/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/migrating-from-google-domains-to-cloudflare/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/new-beginning/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/nextjs-mfe-internal-path-workaround/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/one-year-freelancer-retrospective/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/perfectionism/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/playwright/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/react-usestate-const/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/reality-of-si-in-korea/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/recent-status-2/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/recent-status/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/resilience-after-failure/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/resolve-aws-ecr-cannotpullcontainererror/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/self-esteem/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/setting-up-alias-in-docker-compose/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/solid-principles-frontend-guide/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/street-coder/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/tmux-remote-dev-guide/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/type-unknown-error-at-react-query/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/understanding-html-input-accept-attribute/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/updating-and-running-docker-compose-services/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/validatedomnesting-error-at-react-mui/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/weight-of-guarantee/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/why-i-became-developer/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/why-not-using-intermediary-platform/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/work-life-balance/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  },
+  "/zed-editor-review-fastest-code-editor/cover.webp": {
+    "width": 1536,
+    "height": 1024,
+    "variants": [672, 1344]
+  }
+}

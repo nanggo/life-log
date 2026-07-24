@@ -20,6 +20,8 @@ const data = {
     category: '개발',
     tags: [],
     preview: { html: '', text: '' },
+    image: '/current-post/cover.webp',
+    imageAlt: '현재 글 대표 이미지',
     readingTime: 2,
     isIndexFile: false,
     headings: [],
@@ -31,7 +33,14 @@ const data = {
   jsonLd: '{}',
   breadcrumbLd: '{}',
   socialMediaImage: 'https://blog.nanggo.net/og.png',
-  isPostImage: false,
+  isPostImage: true,
+  heroImage: {
+    src: '/current-post/cover.webp',
+    srcset: '/current-post/cover-672w.webp 672w, /current-post/cover-1200w.webp 1200w',
+    sizes: '(min-width: 704px) 672px, 100vw',
+    width: 1200,
+    height: 800
+  },
   publishedDate: '2026-07-10T00:00:00.000Z',
   modifiedDate: '2026-07-10T00:00:00.000Z',
   layout: { fullWidth: true }
@@ -61,12 +70,33 @@ describe('포스트 상세 페이지', () => {
     const nextLink = within(navigation).getByRole('link', { name: '다음 글: 다음 글' })
 
     expect(previousLink).toHaveAttribute('href', '/post/older-post')
+    expect(previousLink).toHaveAttribute('data-sveltekit-preload-data', 'hover')
+    expect(previousLink).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
     expect(previousLink).toHaveClass('focus-visible:ring-2')
     expect(nextLink).toHaveAttribute('href', '/post/newer-post')
+    expect(nextLink).toHaveAttribute('data-sveltekit-preload-data', 'hover')
+    expect(nextLink).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
     expect(nextLink).toHaveClass('focus-visible:ring-2')
     expect(document.head.querySelector('link[rel="canonical"]')).toHaveAttribute(
       'href',
       'https://blog.nanggo.net/post/current-post'
     )
+  })
+
+  it('head preload와 실제 hero에 같은 srcset과 sizes를 사용한다', () => {
+    render(Page, { data: data as never })
+
+    const preload = document.head.querySelector<HTMLLinkElement>('link[rel="preload"][as="image"]')
+    expect(preload).toHaveAttribute('href', '/current-post/cover.webp')
+    expect(preload).toHaveAttribute(
+      'imagesrcset',
+      '/current-post/cover-672w.webp 672w, /current-post/cover-1200w.webp 1200w'
+    )
+    expect(preload).toHaveAttribute('imagesizes', '(min-width: 704px) 672px, 100vw')
+    expect(preload).toHaveAttribute('fetchpriority', 'high')
+
+    const hero = screen.getByAltText('현재 글 대표 이미지')
+    expect(hero).toHaveAttribute('srcset', preload?.getAttribute('imagesrcset'))
+    expect(hero).toHaveAttribute('sizes', preload?.getAttribute('imagesizes'))
   })
 })

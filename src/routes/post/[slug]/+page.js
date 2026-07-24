@@ -28,6 +28,11 @@ export async function load({ data }) {
     dynamicDescription: data.dynamicDescription,
     jsonLd: data.jsonLd,
     breadcrumbLd: data.breadcrumbLd,
+    socialMediaImage: data.socialMediaImage,
+    isPostImage: data.isPostImage,
+    heroImage: data.heroImage,
+    publishedDate: data.publishedDate,
+    modifiedDate: data.modifiedDate,
     layout: {
       fullWidth: true
     }

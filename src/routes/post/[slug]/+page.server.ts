@@ -2,9 +2,15 @@ import { error } from '@sveltejs/kit'
 
 import type { PageServerLoad } from './$types'
 
+import imageManifestJson from '$lib/data/image-manifest.json'
 import { posts } from '$lib/data/posts'
 import { website, author, defaultOgImage, name as siteName } from '$lib/info'
+import type { HeroImage } from '$lib/types/blog'
+import { buildSrcset, POST_IMAGE_SIZES } from '$lib/utils/image-variants'
 import { normalizeSlug, compareSlug } from '$lib/utils/posts'
+
+type ImageManifestEntry = { width: number; height: number; variants: number[] }
+const imageManifest: Record<string, ImageManifestEntry> = imageManifestJson
 
 // 빌드 시점에 정적 HTML 생성을 위해 prerender 활성화
 export const prerender = true
@@ -84,20 +90,39 @@ export const load: PageServerLoad = async ({ params }) => {
     // 1) frontmatter image, 2) 본문에서 추출한 첫 번째 이미지, 3) 생성형 OG 이미지
     const rawConfiguredImage = post.image?.trim()
     const rawContentFirstImage = post.firstImageUrl?.trim()
-    const configuredImage = rawConfiguredImage
-      ? toAbsoluteImageUrl(rawConfiguredImage, post.slug)
+    const publicConfiguredImage = rawConfiguredImage
+      ? toPublicImageUrl(rawConfiguredImage, post.slug)
       : undefined
-    const contentFirstImage = rawContentFirstImage
-      ? toAbsoluteImageUrl(rawContentFirstImage, post.slug)
+    const publicContentFirstImage = rawContentFirstImage
+      ? toPublicImageUrl(rawContentFirstImage, post.slug)
+      : undefined
+    const configuredImage = publicConfiguredImage
+      ? toAbsoluteImageUrl(publicConfiguredImage, post.slug)
+      : undefined
+    const contentFirstImage = publicContentFirstImage
+      ? toAbsoluteImageUrl(publicContentFirstImage, post.slug)
       : undefined
     const ogImage = configuredImage || contentFirstImage || defaultOgImage
     const usedPostImage = !!(configuredImage || contentFirstImage)
+
+    const heroSrc = publicConfiguredImage || publicContentFirstImage
+    let heroImage: HeroImage | null = null
+    if (heroSrc && !heroSrc.startsWith('http')) {
+      const manifestEntry = imageManifest[heroSrc]
+      const srcset = buildSrcset(heroSrc, manifestEntry)
+      heroImage = {
+        src: heroSrc,
+        srcset,
+        sizes: srcset ? POST_IMAGE_SIZES : undefined,
+        width: manifestEntry?.width,
+        height: manifestEntry?.height
+      }
+    }
+
     const publicPost = {
       ...post,
-      image: rawConfiguredImage ? toPublicImageUrl(rawConfiguredImage, post.slug) : post.image,
-      firstImageUrl: rawContentFirstImage
-        ? toPublicImageUrl(rawContentFirstImage, post.slug)
-        : post.firstImageUrl
+      image: publicConfiguredImage ?? post.image,
+      firstImageUrl: publicContentFirstImage ?? post.firstImageUrl
     }
 
     const url = `${website}/post/${post.slug}`
@@ -182,6 +207,7 @@ export const load: PageServerLoad = async ({ params }) => {
       breadcrumbLd: JSON.stringify(breadcrumbLd, null, 0),
       socialMediaImage: ogImage,
       isPostImage: usedPostImage,
+      heroImage,
       publishedDate: safeToISOString(post.date),
       modifiedDate: safeToISOString(post.updated || post.date)
     }
