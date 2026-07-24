@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
+  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
   import { CategoryFilter } from '$lib/components'
   import { SocialLinks } from '$lib/components/layout'
   import { PostsList } from '$lib/components/post'
@@ -35,6 +36,7 @@
         class="inline-block rounded-full"
         data-sveltekit-preload-data="hover"
         data-sveltekit-preload-code="viewport"
+        use:preloadDataOnViewport={{ deviceScope: 'all', href: '/about', priority: 1 }}
       >
         <img
           src="{avatarBase}?s=288"
