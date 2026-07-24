@@ -2,6 +2,7 @@
   import { Card } from '../ui/Card'
   import { ArrowRightIcon } from '../ui/Icon'
 
+  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
   import type { PostMetadata } from '$lib/types'
   import { createSafeSlug } from '$lib/utils/posts'
   import { TAG_STYLES } from '$lib/utils/tag-styles'
@@ -42,10 +43,13 @@
     {@html post.preview.html ?? ''}
     <div class="flex flex-wrap gap-2 mt-2">
       {#each visibleTags as tag}
+        {@const href = `/tags/${encodeURIComponent(tag)}`}
         <a
-          href="/tags/{encodeURIComponent(tag)}"
+          {href}
           class={tagClass}
-          data-sveltekit-preload-data="tap"
+          data-sveltekit-preload-data="hover"
+          data-sveltekit-preload-code="viewport"
+          use:preloadDataOnViewport={{ href }}
           aria-label={`${tag} 태그 글 보기`}
         >
           #{tag}

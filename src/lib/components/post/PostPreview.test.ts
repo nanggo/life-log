@@ -122,7 +122,8 @@ describe('PostPreview 컴포넌트', () => {
 
     const jsTag = screen.getByText('#JavaScript')
     const link = jsTag.closest('a')
-    expect(link).toHaveAttribute('data-sveltekit-preload-data', 'tap')
+    expect(link).toHaveAttribute('data-sveltekit-preload-data', 'hover')
+    expect(link).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
   })
 
   it('특수 문자가 포함된 태그가 올바르게 인코딩된다', () => {
@@ -227,6 +228,7 @@ describe('PostPreview 컴포넌트', () => {
       'whitespace-nowrap'
     )
     expect(tagButton).toHaveClass('cursor-pointer')
+    expect(tagButton).toHaveClass('relative', 'z-30')
   })
 
   it('더보기 버튼에 올바른 스타일이 적용된다', () => {

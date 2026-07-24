@@ -2,12 +2,26 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { preloadDataOnViewport } from './preload-data-on-viewport'
 
-const { preloadDataMock } = vi.hoisted(() => ({
-  preloadDataMock: vi.fn()
-}))
+const { pageSubscribeMock, pageSubscribers, preloadDataMock } = vi.hoisted(() => {
+  const pageSubscribers = new Set<(value: { url: URL }) => void>()
+
+  return {
+    pageSubscribers,
+    pageSubscribeMock: vi.fn((subscriber: (value: { url: URL }) => void) => {
+      pageSubscribers.add(subscriber)
+      subscriber({ url: new URL(window.location.href) })
+      return () => pageSubscribers.delete(subscriber)
+    }),
+    preloadDataMock: vi.fn()
+  }
+})
 
 vi.mock('$app/navigation', () => ({
   preloadData: preloadDataMock
+}))
+
+vi.mock('$app/stores', () => ({
+  page: { subscribe: pageSubscribeMock }
 }))
 
 interface TestObserver {
@@ -32,6 +46,7 @@ type TestAction = ReturnType<typeof preloadDataOnViewport>
 const actions: TestAction[] = []
 const observers: TestObserver[] = []
 const originalConnection = Object.getOwnPropertyDescriptor(navigator, 'connection')
+const originalUrl = window.location.href
 
 class MockIntersectionObserver {
   callback: ObserverCallback
@@ -102,6 +117,8 @@ describe('preloadDataOnViewport', () => {
   beforeEach(() => {
     actions.length = 0
     observers.length = 0
+    pageSubscribers.clear()
+    pageSubscribeMock.mockClear()
     preloadDataMock.mockReset()
     preloadDataMock.mockResolvedValue({ type: 'loaded', status: 200, data: {} })
     setSaveData(false)
@@ -117,6 +134,7 @@ describe('preloadDataOnViewport', () => {
     }
 
     vi.unstubAllGlobals()
+    window.history.replaceState({}, '', originalUrl)
 
     if (originalConnection) {
       Object.defineProperty(navigator, 'connection', originalConnection)
@@ -181,6 +199,73 @@ describe('preloadDataOnViewport', () => {
     expect(preloadDataMock).toHaveBeenLastCalledWith('/post/upper')
   })
 
+  it('현재 URL은 후보에서 제외하고 다른 가시 링크를 선로딩한다', async () => {
+    window.history.replaceState({}, '', '/tags/svelte?sort=recent')
+    const currentNode = document.createElement('a')
+    const otherNode = document.createElement('a')
+    vi.spyOn(currentNode, 'getBoundingClientRect').mockReturnValue(
+      rectAt(window.innerHeight / 2 - 50)
+    )
+    vi.spyOn(otherNode, 'getBoundingClientRect').mockReturnValue(rectAt(0))
+
+    createAction(currentNode, { href: '/tags/svelte?sort=recent#posts' })
+    createAction(otherNode, { href: '/post/other' })
+
+    expect(observers).toHaveLength(1)
+    intersect(observers[0], [entry(currentNode), entry(otherNode)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/post/other')
+  })
+
+  it('같은 route 안에서 이동하면 현재 URL 후보를 다시 판정한다', async () => {
+    window.history.replaceState({}, '', '/tags/frontend')
+    const frontendNode = document.createElement('a')
+    const testingNode = document.createElement('a')
+
+    createAction(frontendNode, { href: '/tags/frontend' })
+    createAction(testingNode, { href: '/tags/testing' })
+
+    intersect(observers[0], [entry(frontendNode), entry(testingNode)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/testing')
+
+    preloadDataMock.mockClear()
+    window.history.replaceState({}, '', '/tags/testing')
+    for (const subscriber of pageSubscribers) {
+      subscriber({ url: new URL(window.location.href) })
+    }
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/frontend')
+  })
+
+  it('페이지 이동으로 SvelteKit 캐시가 바뀌면 같은 dominant 후보를 다시 선로딩한다', async () => {
+    window.history.replaceState({}, '', '/tags/frontend')
+    const node = document.createElement('a')
+
+    createAction(node, { href: '/tags/testing' })
+    intersect(observers[0], [entry(node)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/testing')
+
+    preloadDataMock.mockClear()
+    window.history.replaceState({}, '', '/tags/design')
+    for (const subscriber of pageSubscribers) {
+      subscriber({ url: new URL(window.location.href) })
+    }
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/testing')
+  })
+
   it('priority가 높은 페이지네이션 후보를 글 카드보다 우선한다', async () => {
     const postNode = document.createElement('a')
     const nextNode = document.createElement('a')
@@ -233,6 +318,20 @@ describe('preloadDataOnViewport', () => {
     expect(preloadDataMock).not.toHaveBeenCalled()
   })
 
+  it('matchMedia 결과가 없는 환경에서도 모바일 후보를 선로딩한다', async () => {
+    vi.stubGlobal('matchMedia', vi.fn())
+    const node = document.createElement('a')
+
+    createAction(node, { href: '/tags/svelte' })
+
+    expect(observers).toHaveLength(1)
+    intersect(observers[0], [entry(node)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/svelte')
+  })
+
   it('데스크탑에서는 viewport 데이터 선로딩을 추가하지 않는다', () => {
     vi.stubGlobal('matchMedia', vi.fn().mockReturnValue({ matches: true } as MediaQueryList))
 
@@ -280,6 +379,43 @@ describe('preloadDataOnViewport', () => {
 
     expect(preloadDataMock).toHaveBeenCalledOnce()
     expect(preloadDataMock).toHaveBeenCalledWith('/about')
+  })
+
+  it('화면 너비가 바뀌면 모바일 후보 등록 상태를 갱신한다', async () => {
+    const listeners = new Set<() => void>()
+    const mediaQuery = {
+      matches: false,
+      addEventListener: vi.fn((_type: string, listener: () => void) => listeners.add(listener)),
+      removeEventListener: vi.fn((_type: string, listener: () => void) =>
+        listeners.delete(listener)
+      )
+    }
+    vi.stubGlobal('matchMedia', vi.fn().mockReturnValue(mediaQuery as unknown as MediaQueryList))
+    const node = document.createElement('a')
+
+    createAction(node, { href: '/tags/svelte' })
+
+    expect(observers).toHaveLength(1)
+    expect(observers[0].observe).toHaveBeenCalledWith(node)
+    expect(mediaQuery.addEventListener).toHaveBeenCalledOnce()
+
+    mediaQuery.matches = true
+    for (const listener of listeners) listener()
+
+    expect(observers[0].unobserve).toHaveBeenCalledWith(node)
+    expect(observers[0].disconnect).toHaveBeenCalledOnce()
+
+    mediaQuery.matches = false
+    for (const listener of listeners) listener()
+
+    expect(observers).toHaveLength(2)
+    expect(observers[1].observe).toHaveBeenCalledWith(node)
+
+    intersect(observers[1], [entry(node)])
+    await Promise.resolve()
+
+    expect(preloadDataMock).toHaveBeenCalledOnce()
+    expect(preloadDataMock).toHaveBeenCalledWith('/tags/svelte')
   })
 
   it('비활성화되거나 목적지가 없으면 관찰하지 않는다', () => {

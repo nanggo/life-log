@@ -42,7 +42,7 @@
 
   {#if $$slots.description}
     <div
-      class="relative z-10 flex-1 text-sm text-zinc-600 dark:text-zinc-400"
+      class="relative flex-1 text-sm text-zinc-600 dark:text-zinc-400"
       class:mt-2={!!$$slots.title}
     >
       <slot name="description" />
