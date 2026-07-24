@@ -49,6 +49,35 @@ describe('PostPreview 컴포넌트', () => {
     expect(cardLink).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
   })
 
+  it('카드 상세 링크를 viewport 선로딩 대상으로 등록한다', () => {
+    const observedLinks: Element[] = []
+
+    class TrackingIntersectionObserver {
+      disconnect = vi.fn()
+      unobserve = vi.fn()
+      takeRecords = vi.fn(() => [])
+      root = null
+      rootMargin = ''
+      thresholds = []
+
+      observe(node: Element): void {
+        observedLinks.push(node)
+      }
+    }
+
+    vi.stubGlobal(
+      'IntersectionObserver',
+      TrackingIntersectionObserver as unknown as typeof IntersectionObserver
+    )
+
+    render(PostPreview, { post: mockPost })
+
+    const cardLink = document.querySelector('a[href="/post/test-post-slug"]')
+    expect(observedLinks).toContain(cardLink)
+
+    vi.unstubAllGlobals()
+  })
+
   it('최대 태그 개수만큼 태그가 표시된다', () => {
     render(PostPreview, { post: mockPost, maxTagsToShow: 2 })
 

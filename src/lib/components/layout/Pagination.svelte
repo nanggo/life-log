@@ -1,6 +1,8 @@
 <script lang="ts">
   import { ArrowLeftIcon, ArrowRightIcon } from '../ui/Icon'
 
+  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
+
   export let currentPage: number
   export let totalPages: number
   export let getPageUrl: (_page: number) => string
@@ -11,6 +13,10 @@
     <a
       href={getPageUrl(currentPage - 1)}
       class="flex items-center gap-1 text-sm font-medium text-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+      use:preloadDataOnViewport={{
+        href: getPageUrl(currentPage - 1),
+        enabled: currentPage >= totalPages
+      }}
     >
       <ArrowLeftIcon class="w-4 h-4" />
       Previous
@@ -28,6 +34,10 @@
     <a
       href={getPageUrl(currentPage + 1)}
       class="flex items-center gap-1 text-sm font-medium text-teal-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors"
+      use:preloadDataOnViewport={{
+        href: getPageUrl(currentPage + 1),
+        priority: 1
+      }}
     >
       Next
       <ArrowRightIcon class="w-4 h-4" />

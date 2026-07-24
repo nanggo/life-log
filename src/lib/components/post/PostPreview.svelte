@@ -35,7 +35,7 @@
   }
 </script>
 
-<Card href={getSafeUrl(post.slug)}>
+<Card href={getSafeUrl(post.slug)} preloadDataOnViewport>
   <slot slot="eyebrow" name="eyebrow" />
   <slot slot="title">{post.title}</slot>
   <div slot="description" class="prose dark:prose-invert">
