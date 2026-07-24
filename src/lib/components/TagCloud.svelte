@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
+
   export let tagInfos: Array<{ tag: string; count: number }> = []
   export let getTagUrl: (tagName: string) => string = (tagName: string) =>
     `/tags/${encodeURIComponent(tagName)}`
@@ -59,12 +61,16 @@
       <!-- 컴팩트 모드: 작은 태그들 -->
       <div class="flex flex-wrap gap-1">
         {#each tagInfos as { tag, count }}
+          {@const href = getTagUrl(tag)}
           {#if clickable}
             <a
-              href={getTagUrl(tag)}
+              {href}
               class={getCompactTagClasses(tag, count)}
               title={`${tag} (${count}개 포스트)`}
               aria-label={`${tag} 태그, ${count}개 포스트`}
+              data-sveltekit-preload-data="hover"
+              data-sveltekit-preload-code="viewport"
+              use:preloadDataOnViewport={{ href }}
             >
               #{tag}
             </a>
@@ -83,12 +89,16 @@
       <!-- 기본 모드: 태그 클라우드 -->
       <div class="flex flex-wrap justify-center items-start gap-2 px-4 py-8">
         {#each tagInfos as { tag, count }}
+          {@const href = getTagUrl(tag)}
           {#if clickable}
             <a
-              href={getTagUrl(tag)}
+              {href}
               class={getTagClasses(tag, count)}
               title={`${tag} (${count}개 포스트)`}
               aria-label={`${tag} 태그, ${count}개 포스트`}
+              data-sveltekit-preload-data="hover"
+              data-sveltekit-preload-code="viewport"
+              use:preloadDataOnViewport={{ href }}
             >
               #{tag}
               <span class="ml-1 text-xs opacity-75">({count})</span>

@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/svelte'
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import TagList from './TagList.svelte'
 
@@ -29,10 +29,6 @@ Object.defineProperty(HTMLDivElement.prototype, 'removeEventListener', {
 describe('TagList 컴포넌트', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  afterEach(() => {
-    vi.restoreAllMocks()
   })
 
   it('태그 목록이 올바르게 렌더링된다', () => {
@@ -94,7 +90,10 @@ describe('TagList 컴포넌트', () => {
     render(TagList, { tags, clickable: true })
 
     const jsTag = screen.getByTestId('tag-item-JavaScript')
-    expect(jsTag.closest('a')).toHaveAttribute('href', '/tags/JavaScript')
+    const tagLink = jsTag.closest('a')
+    expect(tagLink).toHaveAttribute('href', '/tags/JavaScript')
+    expect(tagLink).toHaveAttribute('data-sveltekit-preload-data', 'hover')
+    expect(tagLink).toHaveAttribute('data-sveltekit-preload-code', 'viewport')
   })
 
   it('clickable이 false일 때 태그가 링크로 동작하지 않는다', () => {

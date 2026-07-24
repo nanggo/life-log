@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
+  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
   import { generateTagClasses } from '$lib/utils/tag-styles'
 
   export let tags: string[] = []
@@ -43,30 +44,13 @@
     return generateTagClasses(tag, selectedTag, clickable)
   }
 
-  // 태그 엘리먼트 타입 결정
-  const getTagElementType = (clickable: boolean, hasClickHandler: boolean): string => {
-    if (hasClickHandler) return 'button'
-    if (clickable) return 'a'
-    return 'span'
-  }
-
   // 태그 엘리먼트 속성 생성
-  const getTagProps = (tag: string, clickable: boolean, hasClickHandler: boolean) => {
-    const baseProps = {
+  const getTagProps = (tag: string, clickable: boolean) => {
+    return {
       class: getTagClasses(tag, clickable),
       'aria-current': (selectedTag === tag ? 'page' : undefined) as 'page' | undefined,
       'data-testid': `tag-item-${tag}`
     }
-
-    if (hasClickHandler) {
-      return { ...baseProps, type: 'button' }
-    }
-
-    if (clickable) {
-      return { ...baseProps, href: getTagUrl(tag) }
-    }
-
-    return baseProps
   }
 </script>
 
@@ -79,22 +63,26 @@
     >
       {#each tags as tag}
         {@const hasClickHandler = !!(handleTagClick && clickable)}
-        {@const elementType = getTagElementType(clickable, hasClickHandler)}
-        {@const elementProps = getTagProps(tag, clickable, hasClickHandler)}
+        {@const elementProps = getTagProps(tag, clickable)}
 
         {#if hasClickHandler && handleTagClick}
-          <svelte:element
-            this={elementType}
+          <button {...elementProps} type="button" on:click={() => handleTagClick(tag)}>
+            #{tag}
+          </button>
+        {:else if clickable}
+          <a
             {...elementProps}
-            role={elementType === 'span' ? 'button' : undefined}
-            on:click={() => handleTagClick(tag)}
+            href={getTagUrl(tag)}
+            data-sveltekit-preload-data="hover"
+            data-sveltekit-preload-code="viewport"
+            use:preloadDataOnViewport={{ href: getTagUrl(tag) }}
           >
             #{tag}
-          </svelte:element>
+          </a>
         {:else}
-          <svelte:element this={elementType} {...elementProps}>
+          <span {...elementProps}>
             #{tag}
-          </svelte:element>
+          </span>
         {/if}
       {/each}
     </div>
