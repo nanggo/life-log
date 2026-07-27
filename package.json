@@ -28,7 +28,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^6.3.2",
-		"@sveltejs/kit": "2.60.1",
+		"@sveltejs/kit": "2.69.1",
 		"@sveltejs/vite-plugin-svelte": "^5.1.1",
 		"@tailwindcss/typography": "^0.5.7",
 		"@testing-library/jest-dom": "^6.6.4",
