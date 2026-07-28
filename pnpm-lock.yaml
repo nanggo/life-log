@@ -19,7 +19,7 @@ overrides:
   minimatch@>=10.0.0 <10.2.3: 10.2.3
   picomatch@>=2.0.0 <2.3.2: 2.3.2
   svgo@>=2.1.0 <2.8.2: 2.8.2
-  ws@>=8.0.0 <8.20.1: 8.20.1
+  ws@>=8.0.0 <8.21.1: 8.21.1
   yaml@<1.10.3: 1.10.3
   yaml@>=2.0.0 <2.8.3: 2.8.3
 
@@ -3686,8 +3686,8 @@ packages:
   wrappy@1.0.2:
     resolution: {integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==}
 
-  ws@8.20.1:
-    resolution: {integrity: sha512-It4dO0K5v//JtTXuPkfEOaI3uUN87iYPnqo/ZzqCoG3g8uhA66QUMs/SrM0YK7/NAu+r4LMh/9dq2A7k+rHs+w==}
+  ws@8.21.1:
+    resolution: {integrity: sha512-+0NTnW77fFN/DjQi6k/Sq/Yvk4Sgajw7urW8V+asjXnRgDs9gyGkdb7EzgfhA4goXsRIZKE28fzIXBHEzhuiWw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
@@ -5873,7 +5873,7 @@ snapshots:
       whatwg-encoding: 3.1.1
       whatwg-mimetype: 4.0.0
       whatwg-url: 14.2.0
-      ws: 8.20.1
+      ws: 8.21.1
       xml-name-validator: 5.0.0
     transitivePeerDependencies:
       - bufferutil
@@ -7306,7 +7306,7 @@ snapshots:
 
   wrappy@1.0.2: {}
 
-  ws@8.20.1: {}
+  ws@8.21.1: {}
 
   xml-name-validator@5.0.0: {}
 
