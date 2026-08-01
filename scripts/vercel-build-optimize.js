@@ -32,10 +32,7 @@ if (isVercelBuild) {
   buildEnv.VITE_BUILD_MODE = 'vercel'
   buildEnv.CI = 'true'
 
-  console.log('⚡ Vercel environment variables configured:')
-  console.log(`   VERCEL_ENV: ${buildEnv.VERCEL_ENV}`)
-  console.log(`   VERCEL_URL: ${buildEnv.VERCEL_URL}`)
-  console.log(`   VERCEL_REGION: ${buildEnv.VERCEL_REGION}`)
+  console.log('⚡ Vercel build environment configured')
 } else {
   console.log('🏠 Running in local environment')
   buildEnv.VITE_BUILD_MODE = 'local'
