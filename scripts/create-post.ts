@@ -7,14 +7,13 @@ import { format } from 'date-fns'
 
 import { Category } from '../src/lib/types/blog.js'
 
+import { createPostFile } from './create-post-file.js'
+
 // __dirname and __filename are not available in ES modules, so we need to define them
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-})
+const rl = readline.createInterface({ input: process.stdin, output: process.stdout })
 
 // 카테고리별 이모지 매핑 함수
 function getEmojiForCategory(categoryValue: Category): string {
@@ -48,8 +47,15 @@ const questions = [
 
 const askQuestion = (index, answers) => {
   if (index >= questions.length) {
-    createPost(answers)
-    return rl.close()
+    try {
+      createPost(answers)
+    } catch (error) {
+      console.error(error instanceof Error ? error.message : error)
+      process.exitCode = 1
+    } finally {
+      rl.close()
+    }
+    return
   }
 
   const { name, question, type, options } = questions[index]
@@ -123,8 +129,6 @@ const createPost = (answers) => {
   const { title, slug, category, tags } = answers
   const date = format(new Date(), 'yyyy-MM-dd HH:mm:ss')
   const safeSlug = createSlug(slug) // slug도 안전하게 처리
-  const fileName = `${safeSlug}.md`
-  const filePath = path.join(__dirname, '../posts', fileName)
 
   const templatePath = path.join(__dirname, '../templates/post.md')
   let content = fs.readFileSync(templatePath, 'utf-8')
@@ -148,7 +152,7 @@ const createPost = (answers) => {
     content = content.replace(/tags:[\s\S]*?(draft|---)/, `tags:\n${tagLines}\n$1`)
   }
 
-  fs.writeFileSync(filePath, content)
+  const filePath = createPostFile(path.join(__dirname, '../posts'), safeSlug, content)
   console.log(`포스트가 생성되었습니다: ${filePath}`)
   console.log(`카테고리: ${category}`)
   console.log(`태그: ${tagArray.join(', ')}`)

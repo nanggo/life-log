@@ -3,8 +3,11 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression2'
 
+import postLoaders from './scripts/post-loaders.js'
+
 export default defineConfig(({ mode }) => ({
   plugins: [
+    postLoaders(),
     sveltekit(),
     compression({
       algorithm: ['gzip', 'brotliCompress'],

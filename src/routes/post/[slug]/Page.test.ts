@@ -1,9 +1,17 @@
 // Route-level accessibility and navigation tests for the rendered post page.
-import { render, screen, within } from '@testing-library/svelte'
+import type { AfterNavigate } from '@sveltejs/kit'
+import { fireEvent, render, screen, within } from '@testing-library/svelte'
+import { tick } from 'svelte'
 import { describe, expect, it, vi } from 'vitest'
 
+const navigation = vi.hoisted(() => ({
+  callback: undefined as ((navigation: AfterNavigate) => void) | undefined
+}))
+
 vi.mock('$app/navigation', () => ({
-  afterNavigate: vi.fn()
+  afterNavigate: vi.fn((callback) => {
+    navigation.callback = callback
+  })
 }))
 
 import Page from './+page.svelte'
@@ -47,6 +55,92 @@ const data = {
 }
 
 describe('포스트 상세 페이지', () => {
+  it('글 이동 시 목차와 본문 앵커 참조를 새 글로 교체한다', async () => {
+    const oldScrollY = window.scrollY
+    Object.defineProperty(window, 'scrollY', { value: 300, writable: true, configurable: true })
+    const firstHeading = document.createElement('h2')
+    firstHeading.id = 'first-heading'
+    const secondHeading = document.createElement('h2')
+    secondHeading.id = 'second-heading'
+    document.body.append(firstHeading, secondHeading)
+    const lookup = vi.spyOn(document, 'getElementById')
+
+    try {
+      const { rerender } = render(Page, {
+        data: {
+          ...data,
+          post: {
+            ...data.post,
+            headings: [{ depth: 2, value: '첫 글 목차', slug: 'first-heading' }]
+          }
+        } as never
+      })
+      expect(screen.getByRole('link', { name: '첫 글 목차' })).toHaveAttribute(
+        'href',
+        '#first-heading'
+      )
+      lookup.mockClear()
+
+      await rerender({
+        data: {
+          ...data,
+          post: {
+            ...data.post,
+            slug: 'second-post',
+            headings: [{ depth: 2, value: '다음 글 목차', slug: 'second-heading' }]
+          }
+        } as never
+      })
+
+      expect(screen.queryByRole('link', { name: '첫 글 목차' })).not.toBeInTheDocument()
+      expect(screen.getByRole('link', { name: '다음 글 목차' })).toHaveAttribute(
+        'href',
+        '#second-heading'
+      )
+      expect(lookup).toHaveBeenCalledWith('second-heading')
+      expect(lookup).not.toHaveBeenCalledWith('first-heading')
+    } finally {
+      lookup.mockRestore()
+      firstHeading.remove()
+      secondHeading.remove()
+      window.scrollY = oldScrollY
+    }
+  })
+
+  it('목록에서 진입한 경우에만 history로 복귀하고 글 사이 이동 후에는 목록 링크를 쓴다', async () => {
+    const { rerender } = render(Page, { data: data as never })
+    const back = vi.spyOn(window.history, 'back').mockImplementation(() => {})
+    const navigateFrom = async (pathname: string) => {
+      navigation.callback?.({
+        from: { url: new URL(pathname, 'https://blog.nanggo.net') }
+      } as AfterNavigate)
+      await tick()
+    }
+
+    try {
+      await navigateFrom('/posts/2')
+      await fireEvent.click(screen.getByRole('button', { name: 'Go back to posts' }))
+      expect(back).toHaveBeenCalledOnce()
+
+      await rerender({ data: { ...data, post: { ...data.post, slug: 'second-post' } } as never })
+      await navigateFrom('/post/current-post')
+      expect(screen.getByRole('button', { name: 'Go back to posts' })).toHaveAttribute(
+        'href',
+        '/posts'
+      )
+
+      await navigateFrom('/posts/category/개발/2')
+      expect(screen.getByRole('button', { name: 'Go back to posts' }).tagName).toBe('BUTTON')
+      await navigateFrom('/posts-unrelated')
+      expect(screen.getByRole('button', { name: 'Go back to posts' })).toHaveAttribute(
+        'href',
+        '/posts'
+      )
+    } finally {
+      back.mockRestore()
+    }
+  })
+
   it('홈부터 현재 글까지 breadcrumb을 노출한다', () => {
     render(Page, { data: data as never })
 

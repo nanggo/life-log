@@ -49,9 +49,7 @@
   // posts pagination
   let canGoBack: boolean = false
   afterNavigate(({ from }: AfterNavigate) => {
-    if (from && from.url.pathname.startsWith('/posts')) {
-      canGoBack = true
-    }
+    canGoBack = from?.url.pathname === '/posts' || Boolean(from?.url.pathname.startsWith('/posts/'))
   })
 
   const goBack = (): void => {
@@ -261,7 +259,9 @@
   <!-- table of contents -->
   <div class="hidden xl:block pt-10">
     <aside class="sticky hidden w-48 ml-8 xl:block top-8" aria-label="Table of Contents">
-      <ToC post={data.post} />
+      {#key data.post.slug}
+        <ToC post={data.post} />
+      {/key}
     </aside>
   </div>
 </div>
