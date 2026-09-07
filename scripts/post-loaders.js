@@ -7,6 +7,14 @@ import matter from 'gray-matter'
 const moduleId = 'virtual:post-loaders'
 const resolvedModuleId = '\0' + moduleId
 
+export function toModuleStringLiteral(value) {
+  // Also escape HTML delimiters and line separators in generated JavaScript.
+  return JSON.stringify(value).replace(
+    /[<>\u2028\u2029]/g,
+    (character) => `\\u${character.charCodeAt(0).toString(16).padStart(4, '0')}`
+  )
+}
+
 /** Keep draft Markdown out of the client import graph, including its source maps. */
 export default function postLoaders() {
   let root
@@ -35,7 +43,7 @@ export default function postLoaders() {
           return !matter(fs.readFileSync(filename, 'utf8')).data.draft
         })
         .map((file) => {
-          const specifier = JSON.stringify('/' + file.split(path.sep).join('/'))
+          const specifier = toModuleStringLiteral('/' + file.split(path.sep).join('/'))
           return `${specifier}: () => import(${specifier})`
         })
 

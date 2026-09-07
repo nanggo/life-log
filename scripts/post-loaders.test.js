@@ -6,7 +6,7 @@ import path from 'node:path'
 import { build, createServer } from 'vite'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 
-import postLoaders from './post-loaders.js'
+import postLoaders, { toModuleStringLiteral } from './post-loaders.js'
 
 let root
 beforeEach(() => {
@@ -23,6 +23,14 @@ afterEach(() => {
 })
 
 describe('post loader import graph', () => {
+  it('생성 코드에서 특수문자를 이스케이프하고 원래 파일 경로를 보존한다', () => {
+    const filename = '/posts/"한글"</script>\\name\n\u2028\u2029.md'
+    const literal = toModuleStringLiteral(filename)
+
+    expect(literal).not.toMatch(/[<>\u2028\u2029]/)
+    expect(JSON.parse(literal)).toBe(filename)
+  })
+
   it('프로덕션 JS와 소스맵에서 초안을 제외하고 공개 글의 지연 로딩을 유지한다', async () => {
     const result = await build({
       root,
