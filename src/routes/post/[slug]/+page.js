@@ -4,10 +4,9 @@
  *
  * @type {import('@sveltejs/kit').PageLoad}
  */
-export const prerender = true
+import allPosts from 'virtual:post-loaders'
 
-// Pre-load all posts using import.meta.glob
-const allPosts = import.meta.glob('/posts/**/*.md')
+export const prerender = true
 
 export async function load({ data }) {
   // Find the correct post file
