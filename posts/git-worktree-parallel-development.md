@@ -1,7 +1,7 @@
 ---
 title: Git Worktree로 Claude Code 병렬 개발하기
 seoTitle: 'Git Worktree로 AI 개발 세션 병렬 관리하기'
-description: 'Claude Code로 작업하다 브랜치를 바꿀 때마다 컨텍스트가 끊기는 문제를 Git worktree로 풀어 본 기록이다. 기본 명령어와 핫픽스, 리뷰를 따로 띄워 병렬로 작업하는 흐름, 주의할 점을 적었다.'
+description: 'Claude Code로 작업하다 브랜치를 바꿀 때마다 컨텍스트가 끊기는 문제를 Git worktree로 풀어 본 기록이다. 기본 명령어와 핫픽스, 리뷰를 따로 띄워 병렬로 작업하는 흐름과 주의할 점을 담았다.'
 slug: git-worktree-parallel-development
 date: '2025-07-10'
 updated: '2026-09-29T14:13:13+09:00'
@@ -62,7 +62,7 @@ git worktree remove ../project-hotfix
 # 새 터미널에서
 git worktree add ../my-project-hotfix -b hotfix/login-error main
 cd ../my-project-hotfix
-claude-code  # 새로운 Claude Code 세션 시작
+claude  # 새로운 Claude Code 세션 시작
 ```
 
 이렇게 하면 각 세션이 독립적인 컨텍스트를 유지하면서 병렬 개발이 가능하다.
@@ -81,7 +81,7 @@ git worktree add ../my-react-app-hotfix -b hotfix/api-fix main
 
 # 3. 핫픽스 디렉토리로 이동해서 Claude Code 실행
 cd ../my-react-app-hotfix
-claude-code
+claude
 
 # 4. 핫픽스 완료 후 정리
 git worktree remove ../my-react-app-hotfix
