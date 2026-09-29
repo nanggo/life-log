@@ -1,9 +1,9 @@
 ---
 title: 제어 컴포넌트와 비제어 컴포넌트
 seoTitle: 'React 제어 컴포넌트와 비제어 컴포넌트 차이'
-description: 'React의 제어 컴포넌트와 비제어 컴포넌트 차이를 면접 질문을 계기로 정리한 글이다. state와 ref 기반 입력 처리 방식, 장단점, 성능과 복잡도 차이, 상황별 선택 기준, 실무 폼 구현에서 어떤 방식이 더 적절한지도 함께 비교한다.'
+description: '면접 질문을 계기로 React의 제어 컴포넌트와 비제어 컴포넌트 차이를 정리했다. state와 ref로 입력값을 다루는 방식, 각각의 장단점, 언제 어느 쪽을 쓰는지 적었다.'
 date: 2023-08-28T20:08:56.000Z
-updated: '2026-06-12T17:04:24+09:00'
+updated: '2026-09-29T14:13:13+09:00'
 tags:
   - frontend
 draft: false
@@ -13,7 +13,7 @@ image: ./cover.webp
 imageAlt: '두 가지 입력 상태 관리 방식을 비교하는 추상 폼 일러스트'
 ---
 
-얼마 전 면접에서 질문을 받은 기억이 나서 리마인드 할 겸 정리한다. React에서 컴포넌트를 다룰 때, 이를 "Controlled" 및 "Uncontrolled"로 나누어 생각할 수 있다. 두 방식 간의 주요 차이점을 이해하는 것은 React와 상태 관리를 제대로 다루기 위해 중요하다.
+얼마 전 면접에서 질문을 받은 기억이 나서 리마인드 할 겸 정리한다. React에서 입력 컴포넌트는 값을 누가 들고 있느냐에 따라 "Controlled"와 "Uncontrolled"로 나눌 수 있다.
 
 ### Controlled Components
 
@@ -85,4 +85,4 @@ function UncontrolledComponent() {
 
 ### 결론
 
-Controlled와 Uncontrolled Component는 각각의 장점이 있다. 프로젝트의 요구사항과 개발자의 선호도에 따라 적절한 방법을 선택해야 한다.
+결국 차이는 입력값을 React state가 들고 있느냐, DOM이 들고 있느냐다. 값이 바뀔 때마다 다른 UI에 반영해야 하면 Controlled를, 제출할 때 한 번만 값을 읽으면 되는 단순한 폼이면 Uncontrolled를 쓰는 편이 코드가 짧다.
