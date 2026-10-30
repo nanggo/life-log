@@ -1,4 +1,4 @@
-import { allTags, getCategoryInfos } from '$lib/data/posts'
+import { allTags, getCategoryInfos } from '#lib/data/posts.js'
 
 // Statically generate shared post layout data
 export const prerender = true

@@ -1,8 +1,8 @@
 import type { PageServerLoad } from './$types'
 
-import { posts, getCategoryInfos } from '$lib/data/posts'
-import { name } from '$lib/info'
-import { extractPostMetadata } from '$lib/util'
+import { posts, getCategoryInfos } from '#lib/data/posts.js'
+import { name } from '#lib/info.js'
+import { extractPostMetadata } from '#lib/util.js'
 
 export const load: PageServerLoad = async () => {
   return {

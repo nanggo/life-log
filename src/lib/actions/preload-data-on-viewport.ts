@@ -1,6 +1,8 @@
+import { toStore } from 'svelte/store'
+
+import { createOptimizedIntersectionObserver } from '#lib/utils/performance.js'
 import { preloadData } from '$app/navigation'
-import { page } from '$app/stores'
-import { createOptimizedIntersectionObserver } from '$lib/utils/performance'
+import { page } from '$app/state'
 
 interface NetworkInformation {
   saveData?: boolean
@@ -29,7 +31,7 @@ const candidates = new Map<HTMLAnchorElement, PreloadCandidate>()
 const desktopMediaQueryListeners = new Set<() => void>()
 
 let activePreloadHref: string | null = null
-let currentPageUrl: URL | null = null
+let currentPageUrl: typeof page.url | null = null
 let desktopMediaQuery: MediaQueryList | null | undefined
 let observer: IntersectionObserver | null = null
 let observerGeneration = 0
@@ -85,7 +87,7 @@ const subscribeToDesktopMediaQuery = (listener: () => void): (() => void) => {
 const isCurrentLocation = (href: string): boolean => {
   try {
     const location = currentPageUrl ?? new URL(window.location.href)
-    const target = new URL(href, location)
+    const target = new URL(href, location.href)
     return (
       target.origin === location.origin &&
       target.pathname === location.pathname &&
@@ -178,14 +180,14 @@ const ensureObserver = (): IntersectionObserver | null => {
 const ensurePageSubscription = (): void => {
   if (unsubscribeFromPage) return
 
-  unsubscribeFromPage = page.subscribe(($page) => {
+  unsubscribeFromPage = toStore(() => page.url).subscribe((url) => {
     const locationChanged =
       currentPageUrl !== null &&
-      (currentPageUrl.origin !== $page.url.origin ||
-        currentPageUrl.pathname !== $page.url.pathname ||
-        currentPageUrl.search !== $page.url.search)
+      (currentPageUrl.origin !== url.origin ||
+        currentPageUrl.pathname !== url.pathname ||
+        currentPageUrl.search !== url.search)
 
-    currentPageUrl = $page.url
+    currentPageUrl = url
     if (locationChanged) {
       activePreloadHref = null
     }

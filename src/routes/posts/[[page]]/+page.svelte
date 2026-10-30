@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
-  import { CategoryFilter } from '$lib/components'
-  import { Pagination } from '$lib/components/layout'
-  import { PostsList } from '$lib/components/post'
-  import { detail, name, topic, website } from '$lib/info'
-  import type { PostMetadata } from '$lib/types'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  import { CategoryFilter } from '#lib/components/index.js'
+  import { Pagination } from '#lib/components/layout/index.js'
+  import { PostsList } from '#lib/components/post/index.js'
+  import { detail, name, topic, website } from '#lib/info.js'
+  import type { PostMetadata } from '#lib/types.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
 
   export let data: PageData
 

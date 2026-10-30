@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
-  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
-  import { generateTagClasses } from '$lib/utils/tag-styles'
+  import { preloadDataOnViewport } from '#lib/actions/preload-data-on-viewport.js'
+  import { generateTagClasses } from '#lib/utils/tag-styles.js'
 
   export let tags: string[] = []
   export let clickable: boolean = true

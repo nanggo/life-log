@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { preloadDataOnViewport as preloadDataOnViewportAction } from '$lib/actions/preload-data-on-viewport'
+  import { preloadDataOnViewport as preloadDataOnViewportAction } from '#lib/actions/preload-data-on-viewport.js'
 
   export let as: string = 'div'
   export let href: string | undefined = undefined

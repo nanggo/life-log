@@ -1,23 +1,24 @@
 <script lang="ts">
-  import { page } from '$app/stores'
-  import { Breadcrumb, Pagination } from '$lib/components/layout'
-  import { PostsList } from '$lib/components/post'
-  import { name as siteName, website, defaultOgImage } from '$lib/info'
-  import type { PostMetadata } from '$lib/types'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  import type { PageData } from './$types'
 
-  /** @type {import('./$types').PageData} */
-  export let data
+  import { Breadcrumb, Pagination } from '#lib/components/layout/index.js'
+  import { PostsList } from '#lib/components/post/index.js'
+  import { name as siteName, website, defaultOgImage } from '#lib/info.js'
+  import type { PostMetadata } from '#lib/types.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
+  import { page } from '$app/state'
+
+  const { data }: { data: PageData } = $props()
 
   // Default OG image for category pages
   const ogImage = defaultOgImage
-  $: pageUrl = new URL($page.url.pathname, website).href
+  const pageUrl = $derived(new URL(page.url.pathname, website).href)
 
   // Breadcrumb items
-  $: breadcrumbItems = [
+  const breadcrumbItems = $derived([
     { label: '포스트', href: '/posts' },
     { label: data.category, current: true }
-  ]
+  ])
 
   // URL 생성 함수
   const getPageUrl = (p: number) =>
@@ -25,7 +26,7 @@
       ? `/posts/category/${encodeURIComponent(data.category)}`
       : `/posts/category/${encodeURIComponent(data.category)}/${p}`
 
-  $: collectionPageJsonLd = {
+  const collectionPageJsonLd = $derived({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: data.seo.title,
@@ -39,7 +40,7 @@
         name: p.title
       }))
     }
-  }
+  })
 </script>
 
 <svelte:head>

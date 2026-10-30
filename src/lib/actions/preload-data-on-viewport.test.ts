@@ -1,28 +1,32 @@
+import { flushSync } from 'svelte'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { preloadDataOnViewport } from './preload-data-on-viewport'
 
-const { pageSubscribeMock, pageSubscribers, preloadDataMock } = vi.hoisted(() => {
-  const pageSubscribers = new Set<(value: { url: URL }) => void>()
-
-  return {
-    pageSubscribers,
-    pageSubscribeMock: vi.fn((subscriber: (value: { url: URL }) => void) => {
-      pageSubscribers.add(subscriber)
-      subscriber({ url: new URL(window.location.href) })
-      return () => pageSubscribers.delete(subscriber)
-    }),
-    preloadDataMock: vi.fn()
-  }
-})
+const { pageUrl, preloadDataMock } = vi.hoisted(() => ({
+  pageUrl: {} as { set: (url: URL) => void },
+  preloadDataMock: vi.fn()
+}))
 
 vi.mock('$app/navigation', () => ({
   preloadData: preloadDataMock
 }))
 
-vi.mock('$app/stores', () => ({
-  page: { subscribe: pageSubscribeMock }
-}))
+// 실제 toStore 브리지를 거치도록 page.url을 반응형 상태로 흉내 낸다
+vi.mock('$app/state', async () => {
+  const { fromStore, writable } = await import('svelte/store')
+  const url = writable(new URL(window.location.href))
+  const urlState = fromStore(url)
+  pageUrl.set = url.set
+
+  return {
+    page: {
+      get url() {
+        return urlState.current
+      }
+    }
+  }
+})
 
 interface TestObserver {
   callback: ObserverCallback
@@ -100,6 +104,11 @@ const intersect = (observer: TestObserver, entries: IntersectionObserverEntry[])
   observer.callback(entries, observer as unknown as IntersectionObserver)
 }
 
+const navigate = (path: string): void => {
+  window.history.replaceState({}, '', path)
+  flushSync(() => pageUrl.set(new URL(window.location.href)))
+}
+
 const rectAt = (top: number, height = 100): DOMRect =>
   ({
     bottom: top + height,
@@ -117,8 +126,7 @@ describe('preloadDataOnViewport', () => {
   beforeEach(() => {
     actions.length = 0
     observers.length = 0
-    pageSubscribers.clear()
-    pageSubscribeMock.mockClear()
+    flushSync(() => pageUrl.set(new URL(window.location.href)))
     preloadDataMock.mockReset()
     preloadDataMock.mockResolvedValue({ type: 'loaded', status: 200, data: {} })
     setSaveData(false)
@@ -200,7 +208,7 @@ describe('preloadDataOnViewport', () => {
   })
 
   it('현재 URL은 후보에서 제외하고 다른 가시 링크를 선로딩한다', async () => {
-    window.history.replaceState({}, '', '/tags/svelte?sort=recent')
+    navigate('/tags/svelte?sort=recent')
     const currentNode = document.createElement('a')
     const otherNode = document.createElement('a')
     vi.spyOn(currentNode, 'getBoundingClientRect').mockReturnValue(
@@ -220,7 +228,7 @@ describe('preloadDataOnViewport', () => {
   })
 
   it('같은 route 안에서 이동하면 현재 URL 후보를 다시 판정한다', async () => {
-    window.history.replaceState({}, '', '/tags/frontend')
+    navigate('/tags/frontend')
     const frontendNode = document.createElement('a')
     const testingNode = document.createElement('a')
 
@@ -234,10 +242,7 @@ describe('preloadDataOnViewport', () => {
     expect(preloadDataMock).toHaveBeenCalledWith('/tags/testing')
 
     preloadDataMock.mockClear()
-    window.history.replaceState({}, '', '/tags/testing')
-    for (const subscriber of pageSubscribers) {
-      subscriber({ url: new URL(window.location.href) })
-    }
+    navigate('/tags/testing')
     await Promise.resolve()
 
     expect(preloadDataMock).toHaveBeenCalledOnce()
@@ -245,7 +250,7 @@ describe('preloadDataOnViewport', () => {
   })
 
   it('페이지 이동으로 SvelteKit 캐시가 바뀌면 같은 dominant 후보를 다시 선로딩한다', async () => {
-    window.history.replaceState({}, '', '/tags/frontend')
+    navigate('/tags/frontend')
     const node = document.createElement('a')
 
     createAction(node, { href: '/tags/testing' })
@@ -256,10 +261,7 @@ describe('preloadDataOnViewport', () => {
     expect(preloadDataMock).toHaveBeenCalledWith('/tags/testing')
 
     preloadDataMock.mockClear()
-    window.history.replaceState({}, '', '/tags/design')
-    for (const subscriber of pageSubscribers) {
-      subscriber({ url: new URL(window.location.href) })
-    }
+    navigate('/tags/design')
     await Promise.resolve()
 
     expect(preloadDataMock).toHaveBeenCalledOnce()

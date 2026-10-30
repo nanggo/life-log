@@ -10,11 +10,11 @@ import {
   getPostsByCategory,
   getAllTagsWithCounts,
   getPostsByTag
-} from '$lib/data/posts'
-import { website } from '$lib/info'
-import { generateCacheHeaders } from '$lib/utils/cache'
-import { createSafeSlug } from '$lib/utils/posts'
-import { isTagIndexable } from '$lib/utils/seo'
+} from '#lib/data/posts.js'
+import { website } from '#lib/info.js'
+import { generateCacheHeaders } from '#lib/utils/cache.js'
+import { createSafeSlug } from '#lib/utils/posts.js'
+import { isTagIndexable } from '#lib/utils/seo.js'
 
 export const prerender = true
 
@@ -128,7 +128,7 @@ export async function GET({ setHeaders }) {
   const latestPostModified = getLatestModifiedIso(posts)
 
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Cache-Control': `max-age=0, s-maxage=3600`, // 1시간 캐시로 증가
     'Content-Type': 'application/xml',
     ETag: etag,
     'Last-Modified': lastModified

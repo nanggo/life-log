@@ -1,5 +1,4 @@
 // Route-level accessibility and navigation tests for the rendered post page.
-import type { AfterNavigate } from '@sveltejs/kit'
 import { fireEvent, render, screen, within } from '@testing-library/svelte'
 import { tick } from 'svelte'
 import { describe, expect, it, vi } from 'vitest'
@@ -16,7 +15,8 @@ vi.mock('$app/navigation', () => ({
 
 import Page from './+page.svelte'
 
-import SocialLinks from '$lib/components/layout/SocialLinks.svelte'
+import SocialLinks from '#lib/components/layout/SocialLinks.svelte'
+import type { AfterNavigate } from '$app/navigation'
 
 const data = {
   post: {

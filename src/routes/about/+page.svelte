@@ -1,10 +1,10 @@
 <script lang="ts">
-  // import ArrowLeftIcon from '$lib/components/ArrowLeftIcon.svelte'
+  // import ArrowLeftIcon from '#lib/components/ArrowLeftIcon.svelte'
   // import { afterNavigate } from '$app/navigation'
   import type { PageData } from './$types'
 
-  import { website, name, defaultOgImage } from '$lib/info'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  import { website, name, defaultOgImage } from '#lib/info.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
 
   export let data: PageData
 

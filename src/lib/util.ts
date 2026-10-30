@@ -1,5 +1,5 @@
-import type { PostMetadata } from '$lib/types'
-import type { Post } from '$lib/types/blog'
+import type { Post } from '#lib/types/blog.js'
+import type { PostMetadata } from '#lib/types.js'
 
 interface PaginateOptions {
   page?: number

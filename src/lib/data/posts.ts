@@ -3,11 +3,11 @@ import readingTime from 'reading-time'
 import type { Component } from 'svelte'
 import { render as renderComponent } from 'svelte/server'
 
-import { browser, dev } from '$app/environment'
-import type { PostMetadata } from '$lib/types'
-import { Category } from '$lib/types/blog'
-import type { Post } from '$lib/types/blog'
-import { formatDate, formatDisplayDate } from '$lib/utils/date'
+import { Category } from '#lib/types/blog.js'
+import type { Post } from '#lib/types/blog.js'
+import type { PostMetadata } from '#lib/types.js'
+import { formatDate, formatDisplayDate } from '#lib/utils/date.js'
+import { browser, dev } from '$app/env'
 
 // import.meta.glob의 타입 정의
 type PostModule = {

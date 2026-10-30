@@ -2,8 +2,8 @@
   import { onMount } from 'svelte'
   import { writable } from 'svelte/store'
 
-  import { browser } from '$app/environment'
-  import imageMetadataJson from '$lib/data/image-metadata.json'
+  import imageMetadataJson from '#lib/data/image-metadata.json'
+  import { browser } from '$app/env'
 
   // Type the metadata
   type ImageMetadata = {

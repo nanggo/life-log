@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte'
 
-  import type { Post } from '$lib/types'
+  import type { Post } from '#lib/types.js'
 
   export let items: Post[] = []
   export let itemHeight: number = 200

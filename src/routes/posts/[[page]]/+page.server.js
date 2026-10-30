@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit'
 
-import { posts as allPosts } from '$lib/data/posts'
-import { description, name } from '$lib/info'
-import { extractPostMetadata } from '$lib/util'
+import { posts as allPosts } from '#lib/data/posts.js'
+import { description, name } from '#lib/info.js'
+import { extractPostMetadata } from '#lib/util.js'
 
 // Statically generate all post list pages
 export const prerender = true

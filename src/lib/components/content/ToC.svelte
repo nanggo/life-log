@@ -3,9 +3,9 @@
 
   import { Card } from '../ui/Card'
 
-  import { browser } from '$app/environment'
-  import type { Heading, Post } from '$lib/types'
-  import { optimizedScrollHandler } from '$lib/utils/performance'
+  import type { Heading, Post } from '#lib/types.js'
+  import { optimizedScrollHandler } from '#lib/utils/performance.js'
+  import { browser } from '$app/env'
 
   export let post: Post
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
+  import { preloadDataOnViewport } from '#lib/actions/preload-data-on-viewport.js'
 
   export let tagInfos: Array<{ tag: string; count: number }> = []
   export let getTagUrl: (tagName: string) => string = (tagName: string) =>

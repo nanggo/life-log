@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { PostMetadata } from '$lib/types'
+  import type { PostMetadata } from '#lib/types.js'
 
   export let decorate: boolean
   export let post: PostMetadata

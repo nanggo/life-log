@@ -30,7 +30,7 @@ This directory contains automated workflows for maintaining the quality and SEO 
 - `src/app.html` - App template changes
 - `static/robots.txt` - SEO configuration files
 - `scripts/seo-validation.js` - SEO validation script updates
-- `svelte.config.js`, `vite.config.js` - Build configuration
+- `vite.config.ts` - Build configuration
 
 **Features**:
 

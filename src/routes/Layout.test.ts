@@ -1,5 +1,4 @@
 import { render, screen, fireEvent } from '@testing-library/svelte'
-import { readable } from 'svelte/store'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import Layout from './+layout.svelte'
@@ -11,15 +10,15 @@ vi.mock('$app/navigation', () => ({
   goto: mockGoto
 }))
 
-vi.mock('$app/stores', () => ({
-  page: readable({
+vi.mock('$app/state', () => ({
+  page: {
     url: { pathname: '/' },
     data: {},
     route: { id: null }
-  })
+  }
 }))
 
-vi.mock('$app/environment', () => ({
+vi.mock('$app/env', () => ({
   browser: true,
   dev: true
 }))
@@ -32,7 +31,7 @@ vi.mock('@vercel/speed-insights/sveltekit', () => ({
   injectSpeedInsights: vi.fn()
 }))
 
-vi.mock('$lib/info', () => ({
+vi.mock('#lib/info.js', () => ({
   name: '낭고넷',
   defaultOgImage: 'https://nanggo.net/og-default-v1.png',
   description: '개발자 낭고의 기술 블로그',
