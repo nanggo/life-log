@@ -1,16 +1,15 @@
 <script lang="ts">
-  import type { AfterNavigate } from '@sveltejs/kit'
-
   import type { PageData as BasePageData } from './$types'
 
+  import { Image, ToC } from '#lib/components/content/index.js'
+  import { Breadcrumb, SocialLinks } from '#lib/components/layout/index.js'
+  import { PostDate, PostHeroVisual, TagList } from '#lib/components/post/index.js'
+  import { ArrowLeftIcon } from '#lib/components/ui/Icon/index.js'
+  import { website, name, bio, avatar, twitterHandle, defaultOgImage } from '#lib/info.js'
+  import type { HeroImage } from '#lib/types/blog.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
   import { afterNavigate } from '$app/navigation'
-  import { Image, ToC } from '$lib/components/content'
-  import { Breadcrumb, SocialLinks } from '$lib/components/layout'
-  import { PostDate, PostHeroVisual, TagList } from '$lib/components/post'
-  import { ArrowLeftIcon } from '$lib/components/ui/Icon'
-  import { website, name, bio, avatar, twitterHandle, defaultOgImage } from '$lib/info'
-  import type { HeroImage } from '$lib/types/blog'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  import type { AfterNavigate } from '$app/navigation'
 
   interface PageData extends BasePageData {
     dynamicDescription: string

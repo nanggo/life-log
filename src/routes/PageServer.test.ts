@@ -22,12 +22,12 @@ const { mockPosts } = vi.hoisted(() => ({
   ]
 }))
 
-vi.mock('$lib/data/posts', () => ({
+vi.mock('#lib/data/posts.js', () => ({
   posts: mockPosts,
   getCategoryInfos: () => []
 }))
 
-vi.mock('$lib/info', () => ({
+vi.mock('#lib/info.js', () => ({
   name: '낭고넷'
 }))
 

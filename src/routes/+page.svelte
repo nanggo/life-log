@@ -1,12 +1,12 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
-  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
-  import { CategoryFilter } from '$lib/components'
-  import { SocialLinks } from '$lib/components/layout'
-  import { PostsList } from '$lib/components/post'
-  import { ArrowRightIcon } from '$lib/components/ui/Icon'
-  import { avatar, bio, name } from '$lib/info'
+  import { preloadDataOnViewport } from '#lib/actions/preload-data-on-viewport.js'
+  import { CategoryFilter } from '#lib/components/index.js'
+  import { SocialLinks } from '#lib/components/layout/index.js'
+  import { PostsList } from '#lib/components/post/index.js'
+  import { ArrowRightIcon } from '#lib/components/ui/Icon/index.js'
+  import { avatar, bio, name } from '#lib/info.js'
 
   export let data: PageData
 

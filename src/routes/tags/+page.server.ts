@@ -1,4 +1,4 @@
-import { getAllTagsWithCounts, posts } from '$lib/data/posts'
+import { getAllTagsWithCounts, posts } from '#lib/data/posts.js'
 
 interface TagStatistics {
   maxCount: number

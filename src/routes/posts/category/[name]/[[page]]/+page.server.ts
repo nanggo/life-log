@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit'
 
-import { getPostsByCategory, getCategoryCounts } from '$lib/data/posts'
-import { Category } from '$lib/types/blog'
-import { extractPostMetadata } from '$lib/util'
+import { getPostsByCategory, getCategoryCounts } from '#lib/data/posts.js'
+import { Category } from '#lib/types/blog.js'
+import { extractPostMetadata } from '#lib/util.js'
 
 export const prerender = true
 

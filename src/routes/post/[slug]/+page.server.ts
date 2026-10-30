@@ -2,12 +2,12 @@ import { error } from '@sveltejs/kit'
 
 import type { PageServerLoad } from './$types'
 
-import imageManifestJson from '$lib/data/image-manifest.json'
-import { posts } from '$lib/data/posts'
-import { website, author, defaultOgImage, name as siteName } from '$lib/info'
-import type { HeroImage } from '$lib/types/blog'
-import { buildSrcset, POST_IMAGE_SIZES } from '$lib/utils/image-variants'
-import { normalizeSlug, compareSlug } from '$lib/utils/posts'
+import imageManifestJson from '#lib/data/image-manifest.json'
+import { posts } from '#lib/data/posts.js'
+import { website, author, defaultOgImage, name as siteName } from '#lib/info.js'
+import type { HeroImage } from '#lib/types/blog.js'
+import { buildSrcset, POST_IMAGE_SIZES } from '#lib/utils/image-variants.js'
+import { normalizeSlug, compareSlug } from '#lib/utils/posts.js'
 
 type ImageManifestEntry = { width: number; height: number; variants: number[] }
 const imageManifest: Record<string, ImageManifestEntry> = imageManifestJson

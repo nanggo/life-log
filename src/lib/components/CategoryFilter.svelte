@@ -1,14 +1,23 @@
 <script lang="ts">
-  import { page } from '$app/stores'
-  import { Category } from '$lib/types/blog'
+  import { Category } from '#lib/types/blog.js'
+  import { page } from '$app/state'
 
-  export let currentCategory: Category | null = null
-  export let showCounts: boolean = true
-  export let variant: 'default' | 'compact' = 'default'
-  export let categoryInfos: Array<{ category: Category; count: number }> = []
+  interface Props {
+    currentCategory?: Category | null
+    showCounts?: boolean
+    variant?: 'default' | 'compact'
+    categoryInfos?: Array<{ category: Category; count: number }>
+  }
+
+  const {
+    currentCategory = null,
+    showCounts = true,
+    variant = 'default',
+    categoryInfos = []
+  }: Props = $props()
 
   // 현재 경로에서 활성 카테고리 감지
-  $: activeCategory = currentCategory || extractCategoryFromPath($page.url.pathname)
+  const activeCategory = $derived(currentCategory || extractCategoryFromPath(page.url.pathname))
 
   function extractCategoryFromPath(pathname: string): Category | null {
     const match = pathname.match(/\/posts\/category\/(.+)/)

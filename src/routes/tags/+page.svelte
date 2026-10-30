@@ -1,22 +1,22 @@
 <script lang="ts">
   import type { PageData } from './$types'
 
-  import { page } from '$app/stores'
-  import { TagCloud } from '$lib/components'
-  import { website, name, defaultOgImage } from '$lib/info'
+  import { TagCloud } from '#lib/components/index.js'
+  import { website, name, defaultOgImage } from '#lib/info.js'
+  import { page } from '$app/state'
 
-  export let data: PageData
+  const { data }: { data: PageData } = $props()
 
   // 태그 URL 생성 함수
   const getTagUrl = (tagName: string): string => {
     return `/tags/${encodeURIComponent(tagName)}`
   }
 
-  $: tagInfos = data.tagInfos
-  $: statistics = data.statistics
+  const tagInfos = $derived(data.tagInfos)
+  const statistics = $derived(data.statistics)
 
   // 페이지 URL 및 기본 OG 이미지
-  $: pageUrl = new URL($page.url.pathname, website).href
+  const pageUrl = $derived(new URL(page.url.pathname, website).href)
   const ogImage = defaultOgImage
 </script>
 

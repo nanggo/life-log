@@ -3,8 +3,8 @@ import { describe, it, expect } from 'vitest'
 
 import PostDate from './PostDate.svelte'
 
-import type { Post } from '$lib/types'
-import { Category } from '$lib/types/blog'
+import { Category } from '#lib/types/blog.js'
+import type { Post } from '#lib/types.js'
 
 describe('PostDate 컴포넌트', () => {
   const mockPost: Post = {

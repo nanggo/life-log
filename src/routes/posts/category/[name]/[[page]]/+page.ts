@@ -1,4 +1,4 @@
-import { Category } from '$lib/types/blog'
+import { Category } from '#lib/types/blog.js'
 
 export const prerender = true
 

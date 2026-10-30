@@ -1,7 +1,7 @@
 <script lang="ts">
   import { ArrowLeftIcon, ArrowRightIcon } from '../ui/Icon'
 
-  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
+  import { preloadDataOnViewport } from '#lib/actions/preload-data-on-viewport.js'
 
   export let currentPage: number
   export let totalPages: number

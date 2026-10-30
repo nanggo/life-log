@@ -2,10 +2,10 @@
 // It is OK to delete this file if you don't want an RSS feed.
 // credit: https://scottspence.com/posts/make-an-rss-feed-with-sveltekit#add-posts-for-the-rss-feed
 
-import { posts } from '$lib/data/posts'
-import { name, author, email, website } from '$lib/info'
-import { generateCacheHeaders } from '$lib/utils/cache'
-import { createSafeSlug } from '$lib/utils/posts'
+import { posts } from '#lib/data/posts.js'
+import { name, author, email, website } from '#lib/info.js'
+import { generateCacheHeaders } from '#lib/utils/cache.js'
+import { createSafeSlug } from '#lib/utils/posts.js'
 
 export const prerender = true
 
@@ -22,7 +22,7 @@ export async function GET({ setHeaders }) {
   const { etag, lastModified } = generateCacheHeaders(posts)
 
   setHeaders({
-    'Cache-Control': `max-age=0, s-max-age=3600`, // 1시간 캐시로 증가
+    'Cache-Control': `max-age=0, s-maxage=3600`, // 1시간 캐시로 증가
     'Content-Type': 'application/xml',
     ETag: etag,
     'Last-Modified': lastModified

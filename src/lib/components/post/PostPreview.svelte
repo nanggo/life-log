@@ -2,10 +2,10 @@
   import { Card } from '../ui/Card'
   import { ArrowRightIcon } from '../ui/Icon'
 
-  import { preloadDataOnViewport } from '$lib/actions/preload-data-on-viewport'
-  import type { PostMetadata } from '$lib/types'
-  import { createSafeSlug } from '$lib/utils/posts'
-  import { TAG_STYLES } from '$lib/utils/tag-styles'
+  import { preloadDataOnViewport } from '#lib/actions/preload-data-on-viewport.js'
+  import type { PostMetadata } from '#lib/types.js'
+  import { createSafeSlug } from '#lib/utils/posts.js'
+  import { TAG_STYLES } from '#lib/utils/tag-styles.js'
 
   export let post: PostMetadata
   // 프리뷰에서 최대로 표시할 태그 개수 (기본값: 3개)

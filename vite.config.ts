@@ -1,14 +1,53 @@
+import adapter from '@sveltejs/adapter-vercel'
 import { sveltekit } from '@sveltejs/kit/vite'
+import { mdsvex } from 'mdsvex'
 import { visualizer } from 'rollup-plugin-visualizer'
+import preprocess from 'svelte-preprocess'
 import { defineConfig } from 'vite'
 import compression from 'vite-plugin-compression2'
 
+import mdsvexConfig from './mdsvex.config.js'
 import postLoaders from './scripts/post-loaders.js'
 
 export default defineConfig(({ mode }) => ({
   plugins: [
     postLoaders(),
-    sveltekit(),
+    sveltekit({
+      extensions: ['.svelte', ...mdsvexConfig.extensions],
+
+      // Consult https://github.com/sveltejs/svelte-preprocess
+      // for more information about preprocessors
+      preprocess: [
+        preprocess({
+          postcss: true
+        }),
+        mdsvex(mdsvexConfig)
+      ],
+
+      adapter: adapter({
+        runtime: 'nodejs24.x'
+      }),
+
+      prerender: {
+        entries: ['/', '/about', '/posts', '/tags', '/sitemap.xml', '/rss.xml'],
+        handleMissingId: 'warn',
+        handleHttpError: ({ status, path, referrer, message }) => {
+          // Ignore 404 errors for asset files during prerendering
+          if (
+            status === 404 &&
+            (path.includes('.png') ||
+              path.includes('.jpg') ||
+              path.includes('.jpeg') ||
+              path.includes('.webp') ||
+              path.includes('.avif'))
+          ) {
+            console.warn(`Ignoring missing image during prerender: ${path}`)
+            return
+          }
+          throw new Error(`${status} ${path} (referenced from ${referrer}): ${message}`)
+        }
+      }
+    }),
     compression({
       algorithm: ['gzip', 'brotliCompress'],
       deleteOriginalAssets: false
@@ -44,7 +83,7 @@ export default defineConfig(({ mode }) => ({
     // 소스맵 최적화 (프로덕션에서는 hidden)
     sourcemap: mode === 'development' ? true : 'hidden',
     // 압축 최적화
-    minify: 'esbuild',
+    minify: 'oxc',
     // 청크 크기 경고 임계값 증가
     chunkSizeWarningLimit: 1000,
     // 에셋 관련 최적화
@@ -58,11 +97,9 @@ export default defineConfig(({ mode }) => ({
     assetsDir: 'assets',
 
     // 캐시 버스팅을 위한 파일명 해시 전략
-    rollupOptions: {
+    rolldownOptions: {
       // Tree shaking 안전성 우선 설정
-      treeshake: {
-        preset: 'recommended'
-      },
+      treeshake: true,
       output: {
         // 기존 manualChunks 설정은 유지...
         manualChunks: (id) => {

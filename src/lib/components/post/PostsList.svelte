@@ -2,7 +2,7 @@
   import PostDate from './PostDate.svelte'
   import PostPreview from './PostPreview.svelte'
 
-  import type { PostMetadata } from '$lib/types'
+  import type { PostMetadata } from '#lib/types.js'
 
   export let posts: PostMetadata[]
 

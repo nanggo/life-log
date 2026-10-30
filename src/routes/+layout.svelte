@@ -2,11 +2,10 @@
   import '../app.css'
   import '../prism.css'
   import { MoonIcon, SunIcon } from 'heroicons-svelte/20/solid'
+  import type { Snippet } from 'svelte'
 
   import type { LayoutData } from './$types'
 
-  import { browser, dev } from '$app/environment'
-  import { page } from '$app/stores'
   import {
     name,
     defaultOgImage,
@@ -27,19 +26,21 @@
     github,
     linkedin,
     email
-  } from '$lib/info'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  } from '#lib/info.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
+  import { browser, dev } from '$app/env'
+  import { page } from '$app/state'
 
-  export let data: LayoutData
+  const { data, children }: { data: LayoutData; children?: Snippet } = $props()
 
-  let isDarkMode: boolean = browser
-    ? Boolean(document.documentElement.classList.contains('dark'))
-    : true
+  let isDarkMode: boolean = $state(
+    browser ? Boolean(document.documentElement.classList.contains('dark')) : true
+  )
 
   // 페이지가 자체 seo.description을 내려주면 우선 사용 (예: 포스트 목록 페이지네이션)
-  $: metaDescription = $page.data.seo?.description ?? description
-  $: metaTitle = $page.data.seo?.title ?? data.title
-  $: robots = $page.data.seo?.robots ?? 'index, follow, max-image-preview:large'
+  const metaDescription = $derived(page.data.seo?.description ?? description)
+  const metaTitle = $derived(page.data.seo?.title ?? data.title)
+  const robots = $derived(page.data.seo?.robots ?? 'index, follow, max-image-preview:large')
 
   const _organizationSchema = {
     '@context': 'https://schema.org',
@@ -257,12 +258,12 @@
 <svelte:head>
   <title>{metaTitle}</title>
   <meta name="robots" content={robots} />
-  {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
+  {#if !page.data.post && !page.route.id?.includes('/about') && !page.route.id?.startsWith('/tags') && !page.route.id?.startsWith('/posts/category')}
     <meta name="description" content={metaDescription} />
   {/if}
   <meta name="author" content={author} />
-  {#if !$page.data.post}
-    <link rel="canonical" href={new URL($page.url.pathname, website).href} />
+  {#if !page.data.post}
+    <link rel="canonical" href={new URL(page.url.pathname, website).href} />
   {/if}
   <link rel="alternate" type="application/rss+xml" title={`${name} life log`} href="/rss.xml" />
 
@@ -274,9 +275,9 @@
   <meta name="color-scheme" content="light dark" />
 
   <!-- Open Graph / Facebook -->
-  {#if !$page.data.post && !$page.route.id?.includes('/about') && !$page.route.id?.startsWith('/tags') && !$page.route.id?.startsWith('/posts/category')}
+  {#if !page.data.post && !page.route.id?.includes('/about') && !page.route.id?.startsWith('/tags') && !page.route.id?.startsWith('/posts/category')}
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={new URL($page.url.pathname, website).href} />
+    <meta property="og:url" content={new URL(page.url.pathname, website).href} />
     <meta property="og:title" content={metaTitle} />
     <meta property="og:description" content={metaDescription} />
     <meta property="og:image" content={defaultOgImage} />
@@ -327,7 +328,7 @@
         aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
         aria-checked={isDarkMode}
         class="w-11 h-11 sm:h-12 sm:w-12 flex items-center justify-center rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all duration-200 touch-manipulation focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
-        on:click={() => {
+        onclick={() => {
           isDarkMode = !isDarkMode
           localStorage.setItem('isDarkMode', isDarkMode.toString())
 
@@ -347,9 +348,9 @@
     <main
       id="main-content"
       class="flex flex-col flex-grow w-full mx-auto"
-      class:max-w-2xl={!$page.data.layout?.fullWidth}
+      class:max-w-2xl={!page.data.layout?.fullWidth}
     >
-      <slot />
+      {@render children?.()}
     </main>
     <footer
       class="w-full max-w-2xl mx-auto py-8 text-center text-sm text-zinc-500 dark:text-zinc-400"

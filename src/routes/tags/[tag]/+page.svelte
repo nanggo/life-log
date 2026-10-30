@@ -1,30 +1,33 @@
 <script lang="ts">
-  import { page } from '$app/stores'
-  import { Breadcrumb } from '$lib/components/layout'
-  import { PostsList, TagList } from '$lib/components/post'
-  import { name, website, defaultOgImage } from '$lib/info'
-  import type { PostMetadata } from '$lib/types'
-  import { jsonLdScript } from '$lib/utils/json-ld'
+  import type { PageData } from './$types'
 
-  /** @type {import('./$types').PageData} */
-  export let data
+  import { Breadcrumb } from '#lib/components/layout/index.js'
+  import { PostsList, TagList } from '#lib/components/post/index.js'
+  import { name, website, defaultOgImage } from '#lib/info.js'
+  import type { PostMetadata } from '#lib/types.js'
+  import { jsonLdScript } from '#lib/utils/json-ld.js'
+  import { page } from '$app/state'
+
+  const { data }: { data: PageData } = $props()
 
   // OG defaults and page URL
   const ogImage = defaultOgImage
-  $: pageUrl = new URL($page.url.pathname, website).href
+  const pageUrl = $derived(new URL(page.url.pathname, website).href)
 
   // Extract unique tags from posts (excluding current tag)
-  $: allTagsFromPosts = [...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))]
-    .filter((tag) => tag !== data.tagName)
-    .sort()
+  const allTagsFromPosts = $derived(
+    [...new Set((data.posts as PostMetadata[]).flatMap((post) => post.tags))]
+      .filter((tag) => tag !== data.tagName)
+      .sort()
+  )
 
   // Breadcrumb items
-  $: breadcrumbItems = [
+  const breadcrumbItems = $derived([
     { label: '태그', href: '/tags' },
     { label: `#${data.tagName}`, current: true }
-  ]
+  ])
 
-  $: collectionPageJsonLd = {
+  const collectionPageJsonLd = $derived({
     '@context': 'https://schema.org',
     '@type': 'CollectionPage',
     name: `${data.seo.title} - ${name}'s life log`,
@@ -38,7 +41,7 @@
         name: p.title
       }))
     }
-  }
+  })
 </script>
 
 <svelte:head>

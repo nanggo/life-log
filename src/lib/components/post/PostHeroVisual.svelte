@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { HeroImage, Post } from '$lib/types/blog'
+  import type { HeroImage, Post } from '#lib/types/blog.js'
 
   export let post: Pick<Post, 'image' | 'imageAlt' | 'title' | 'firstImageUrl'>
   export let heroImage: HeroImage | null = null

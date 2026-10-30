@@ -2,9 +2,9 @@ import { error } from '@sveltejs/kit'
 
 import type { PageServerLoad } from './$types'
 
-import { getPostsByTag, getAllTagsWithCounts } from '$lib/data/posts'
-import { extractPostMetadata } from '$lib/util'
-import { isTagIndexable } from '$lib/utils/seo'
+import { getPostsByTag, getAllTagsWithCounts } from '#lib/data/posts.js'
+import { extractPostMetadata } from '#lib/util.js'
+import { isTagIndexable } from '#lib/utils/seo.js'
 
 export const prerender = true
 

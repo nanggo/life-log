@@ -34,8 +34,8 @@ const { mockPost, mockBodyImagePost } = vi.hoisted(() => ({
   }
 }))
 
-vi.mock('$lib/data/posts', () => ({ posts: [mockPost, mockBodyImagePost] }))
-vi.mock('$lib/data/image-manifest.json', () => ({
+vi.mock('#lib/data/posts.js', () => ({ posts: [mockPost, mockBodyImagePost] }))
+vi.mock('#lib/data/image-manifest.json', () => ({
   default: {
     '/current-post/cover.webp': {
       width: 1200,
@@ -49,7 +49,7 @@ vi.mock('$lib/data/image-manifest.json', () => ({
     }
   }
 }))
-vi.mock('$lib/info', () => ({
+vi.mock('#lib/info.js', () => ({
   website: 'https://example.com',
   author: '낭고',
   defaultOgImage: 'https://example.com/og.png',

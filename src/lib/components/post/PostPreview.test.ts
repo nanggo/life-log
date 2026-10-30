@@ -3,11 +3,11 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 import PostPreview from './PostPreview.svelte'
 
-import type { Post } from '$lib/types'
-import { Category } from '$lib/types/blog'
+import { Category } from '#lib/types/blog.js'
+import type { Post } from '#lib/types.js'
 
 // Mock createSafeSlug function
-vi.mock('$lib/utils/posts', () => ({
+vi.mock('#lib/utils/posts.js', () => ({
   createSafeSlug: vi.fn((slug: string) => slug)
 }))
 
