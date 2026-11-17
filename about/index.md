@@ -4,7 +4,7 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ## 유지성
 
-<div align="right"><sub><i>Last updated: 2025.10.16</i></sub></div>
+<div align="right"><sub><i>Last updated: 2026.11.17</i></sub></div>
 
 **저는 `______` 엔지니어입니다.**
 
@@ -30,16 +30,29 @@ title: About NANGGO | NANGGO's LIFELOG
 
 ### [OTS Korea](https://ots.one-line.com/kr)
 
-|              |                                                       |
-| -----------: | ----------------------------------------------------- |
-|   **period** | 2025.08 ~ 현재                                        |
-| **position** | Frontend Developer 겸 Technical Architect (freelance) |
-| **projects** | Shipping Instruction 개발                             |
-|       _tech_ | TypeScript, Next.js (React), Tailwind CSS             |
+|              |                                                                           |
+| -----------: | ------------------------------------------------------------------------- |
+|   **period** | 2025.08 ~ 현재                                                            |
+| **position** | Frontend Engineer 겸 Dev Lead (freelance)                                 |
+| **projects** | New VGM, New Admin, MDS(Magenta Design System) 전환, Shipping Instruction |
+|       _tech_ | TypeScript, Next.js (React), Tailwind CSS                                 |
 
-#### Shipping Instruction 개발
+#### New VGM (진행 중)
+
+- VGM(Verified Gross Mass) 서비스 리뉴얼
+
+#### New Admin (분석 및 설계 중)
+
+- Admin 서비스 신규 구축을 위한 분석 및 설계
+
+#### MDS(Magenta Design System) 전환
+
+- 운영 중인 서비스의 디자인 시스템을 MDS로 전환 완료 (~ 2026.10)
+
+#### Shipping Instruction 개발 및 운영
 
 - 선적 지시서 작성 및 관리 기능 개발
+- 서비스 운영 및 기능 개선(Enhancement)
 - Micro Frontend 아키텍처 적용
 - Cookie Consent 구현
 - GitOps 관리
